@@ -90,7 +90,7 @@ Representação abstrata de um sistema real usando linguagem matemática, que pe
 
     \node[box] (bio) {Sistema Biológico};
     \node[box, right of=bio] (modelo) {Modelo Matemático};
-    \node[box, below of=modelo] (analise) {Análise\\Computacional};
+    \node[box, below of=modelo] (analise) {Analise\\Computacional};
     \node[box, left of=analise] (pred) {Previsões\\Hipóteses};
 
     \draw[->, thick, azulescuro] (bio) -- node[above, font=\tiny] {Abstração} (modelo);
@@ -262,7 +262,7 @@ X(t+1) = X(t) + \text{prod} - \text{deg}
         \item Condições iniciais e de contorno
     \end{itemize}
 
-    \item \textbf{Análise e simulação}
+    \item \textbf{Analise e simulação}
 \end{enumerate}
 \end{frame}
 
@@ -313,8 +313,8 @@ N_num = odeint(decay, N0, t, args=(lambda_val,))
 N_ana = N0 * np.exp(-lambda_val * t)
 
 # Plotar
-plt.plot(t, N_num, 'b-', label='Numérica')
-plt.plot(t, N_ana, 'r--', label='Analítica')
+plt.plot(t, N_num, 'b-', label='Numerica')
+plt.plot(t, N_ana, 'r--', label='Analitica')
 plt.xlabel('Tempo')
 plt.ylabel('N(t)')
 plt.legend()
@@ -374,7 +374,7 @@ onde:
 
 \begin{frame}{Exemplo: Crescimento Exponencial}
 \begin{block}{Modelo Simples de Crescimento}
-Uma população cresce proporcionalmente ao seu tamanho:
+Uma populacao cresce proporcionalmente ao seu tamanho:
 \begin{equation*}
 \derivada{N}{t} = rN
 \end{equation*}
@@ -402,7 +402,7 @@ $t_{2} = \frac{\ln 2}{r}$
 
 \begin{frame}{Exemplo: Crescimento Logístico}
 \begin{block}{Modelo de Verhulst}
-População com capacidade de suporte limitada $K$:
+Populacao com capacidade de suporte limitada $K$:
 \begin{equation*}
 \derivada{N}{t} = rN\left(1 - \frac{N}{K}\right)
 \end{equation*}
@@ -433,7 +433,6 @@ N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
     \node[below] at (2.5,0) {Tempo};
 \end{tikzpicture}
 \end{center}
-\end{column>
 \end{columns}
 \end{frame}
 
@@ -464,7 +463,7 @@ plt.plot(t, N, 'b-', linewidth=2, label='N(t)')
 plt.axhline(y=K, color='r', linestyle='--',
             label=f'K = {K}')
 plt.xlabel('Tempo')
-plt.ylabel('População N(t)')
+plt.ylabel('Populacao N(t)')
 plt.legend()
 plt.grid(True)
 \end{lstlisting}
@@ -503,8 +502,8 @@ Quando múltiplas variáveis interagem:
 
 onde:
 \begin{itemize}
-    \item $V$ = população de presas
-    \item $P$ = população de predadores
+    \item $V$ = populacao de presas
+    \item $P$ = populacao de predadores
     \item $\alpha$ = taxa de crescimento das presas
     \item $\beta$ = taxa de predação
     \item $\gamma$ = taxa de morte dos predadores
@@ -523,7 +522,7 @@ onde:
 
 \begin{itemize}
     \item Crescem exponencialmente sem predadores
-    \item Perdem indivíduos por predação
+    \item Perdem individuos por predação
     \item Taxa de predação $\propto$ encontros ($VP$)
 \end{itemize}
 
@@ -590,7 +589,7 @@ plt.plot(sol[:, 0], sol[:, 1],
          'g-', linewidth=2)
 plt.plot(sol[0, 0], sol[0, 1],
          'go', markersize=10,
-         label='Início')
+         label='Inicio')
 plt.xlabel('Presas (V)')
 plt.ylabel('Predadores (P)')
 plt.title('Retrato de Fase')
@@ -639,7 +638,7 @@ plt.quiver(V_grid, P_grid,
 % ============================================================================
 % SEÇÃO 6: PONTOS DE EQUILÍBRIO
 % ============================================================================
-\section{Análise de Equilíbrio}
+\section{Analise de Equilíbrio}
 
 \begin{frame}{Pontos de Equilíbrio (Steady States)}
 \definicao{Ponto de Equilíbrio}{
@@ -701,7 +700,7 @@ Pontos de equilíbrio:
 \end{center}
 \end{frame}
 
-\begin{frame}{Análise de Estabilidade Linear}
+\begin{frame}{Analise de Estabilidade Linear}
 \begin{block}{Linearização em Torno do Equilíbrio}
 Para $\vect{x} = \vect{x}^* + \delta\vect{x}$ (pequena perturbação):
 \begin{equation*}
@@ -719,7 +718,7 @@ O equilíbrio $\vect{x}^*$ é estável se todos os autovalores de $\mathbf{J}(\v
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Exemplo: Análise do Crescimento Logístico}
+\begin{frame}{Exemplo: Analise do Crescimento Logístico}
 \begin{block}{Modelo}
 \begin{equation*}
 \derivada{N}{t} = f(N) = rN\left(1 - \frac{N}{K}\right)
@@ -738,12 +737,12 @@ J = \derivada{f}{N} = r\left(1 - \frac{2N}{K}\right)
 \end{itemize}
 
 \importante{
-A população converge para a capacidade de suporte $K$
+A populacao converge para a capacidade de suporte $K$
 }
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Estabilidade Computacional}
-\begin{lstlisting}[language=Python, caption=Análise de autovalores]
+\begin{frame}[fragile]{Analise de Estabilidade Computacional}
+\begin{lstlisting}[language=Python, caption=Analise de autovalores]
 import numpy as np
 from scipy.linalg import eig
 
@@ -903,9 +902,9 @@ x_exact = x0[0] * np.exp(0.5 * t)
 % ============================================================================
 % SEÇÃO 8: ANÁLISE DE SENSIBILIDADE
 % ============================================================================
-\section{Análise de Sensibilidade}
+\section{Analise de Sensibilidade}
 
-\begin{frame}{Análise de Sensibilidade}
+\begin{frame}{Analise de Sensibilidade}
 \definicao{Sensibilidade}{
 Medida de como a saída de um modelo varia em resposta a mudanças nos parâmetros de entrada.
 }
@@ -930,7 +929,7 @@ Sensibilidade relativa normalizada
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Tipos de Análise de Sensibilidade}
+\begin{frame}{Tipos de Analise de Sensibilidade}
 \begin{block}{Local}
 \begin{itemize}
     \item Variação em torno de um ponto nominal
@@ -953,7 +952,7 @@ Global: abrangente mas custosa
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Sensibilidade Local}
+\begin{frame}[fragile]{Analise de Sensibilidade Local}
 \begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas]
 def sensitivity_local(model, params, param_names,
                        perturbation=0.01):
@@ -1095,14 +1094,14 @@ onde:
     \item $R$ = recuperados
     \item $\beta$ = taxa de transmissão
     \item $\gamma$ = taxa de recuperação
-    \item $N = S + I + R$ = população total
+    \item $N = S + I + R$ = populacao total
 \end{itemize}
 \end{block}
 \end{frame}
 
-\begin{frame}{Número Básico de Reprodução}
+\begin{frame}{Numero Básico de Reprodução}
 \definicao{$R_0$ (R-naught)}{
-Número médio de infecções secundárias causadas por um indivíduo infectado em uma população totalmente susceptível.
+Numero médio de infecções secundárias causadas por um indivíduo infectado em uma populacao totalmente susceptível.
 }
 
 \vspace{0.3cm}
@@ -1155,8 +1154,8 @@ sol = odeint(sir_model, y0, t, args=(beta, gamma))
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Análise e Visualização}
-\begin{lstlisting}[language=Python, caption=Análise do modelo SIR]
+\begin{frame}[fragile]{Analise e Visualização}
+\begin{lstlisting}[language=Python, caption=Analise do modelo SIR]
 S, I, R = sol.T
 
 # Plotar dinamica
