@@ -204,7 +204,7 @@ Critérios:
 \end{frame}
 
 \begin{frame}[fragile]{Busca de ORFs Computacional}
-\begin{lstlisting}[language=Python, caption=Identificação de ORFs]
+\begin{lstlisting}[language=Python, caption=Identificação de ORFs, basicstyle=\ttfamily\footnotesize]
 def find_orfs(sequence, min_length=100):
     """
     Encontra ORFs em uma sequencia de DNA
@@ -391,7 +391,7 @@ onde:
 \end{frame}
 
 \begin{frame}[fragile]{Simulação de Regulação Gênica}
-\begin{lstlisting}[language=Python, caption=Função de Hill]
+\begin{lstlisting}[language=Python, caption=Função de Hill, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -765,7 +765,7 @@ Regulação pós-transcricional e pós-traducional
 \end{frame}
 
 \begin{frame}[fragile]{Análise de Dados de RNA-seq}
-\begin{lstlisting}[language=Python, caption=Análise de expressão diferencial]
+\begin{lstlisting}[language=Python, caption=Análise de expressão diferencial, basicstyle=\ttfamily\footnotesize]
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -803,7 +803,7 @@ log_fc, p_val = differential_expression(
 \end{frame}
 
 \begin{frame}[fragile]{Visualização: Volcano Plot}
-\begin{lstlisting}[language=Python, caption=Volcano plot para DE genes]
+\begin{lstlisting}[language=Python, caption=Volcano plot para DE genes, basicstyle=\ttfamily\footnotesize]
 import matplotlib.pyplot as plt
 
 # Calcular -log10(p-value)
@@ -907,7 +907,7 @@ Usa dados experimentais:
 \end{frame}
 
 \begin{frame}[fragile]{Exemplo: Usando BioPython para Anotação}
-\begin{lstlisting}[language=Python, caption=Busca de ORFs com BioPython]
+\begin{lstlisting}[language=Python, caption=Busca de ORFs com BioPython, basicstyle=\ttfamily\footnotesize]
 from Bio import SeqIO
 from Bio.SeqUtils import GC
 
@@ -987,7 +987,7 @@ ORIGIN
 \end{frame}
 
 \begin{frame}[fragile]{Acessando GenBank com BioPython}
-\begin{lstlisting}[language=Python, caption=Download de sequências]
+\begin{lstlisting}[language=Python, caption=Download de sequências, basicstyle=\ttfamily\footnotesize]
 from Bio import Entrez, SeqIO
 
 # Sempre fornecer email
@@ -1025,7 +1025,7 @@ print(f"Tamanho: {len(seq)} bp")
 \end{frame}
 
 \begin{frame}[fragile]{Análise de Features no GenBank}
-\begin{lstlisting}[language=Python, caption=Extrair features]
+\begin{lstlisting}[language=Python, caption=Extrair features, basicstyle=\ttfamily\footnotesize]
 def extract_features(record):
     """Extrai features de um registro GenBank"""
     features_dict = {

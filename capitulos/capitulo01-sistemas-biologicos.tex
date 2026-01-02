@@ -376,7 +376,7 @@ Arranjo espacial resultante do pareamento de bases complementares dentro da mesm
 Algoritmo de programação dinâmica para predizer estrutura secundária de RNA:
 \end{exampleblock}
 
-\begin{lstlisting}[language=Python, caption=Pseudocódigo para Nussinov]
+\begin{lstlisting}[language=Python, caption=Pseudocódigo para Nussinov, basicstyle=\ttfamily\footnotesize]
 def nussinov(sequence):
     n = len(sequence)
     dp = [[0] * n for _ in range(n)]
@@ -723,7 +723,7 @@ Quando $[S] = K_M$, então $v = V_{max}/2$
 \end{frame}
 
 \begin{frame}[fragile]{Modelando Cinética Enzimática}
-\begin{lstlisting}[language=Python, caption=Simulação de Michaelis-Menten]
+\begin{lstlisting}[language=Python, caption=Simulação de Michaelis-Menten, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
 
