@@ -1,0 +1,1405 @@
+% ============================================================================
+% CAPÍTULO 2: INTRODUÇÃO À MODELAGEM MATEMÁTICA
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 2: Modelagem Matemática]{Capítulo 2: Introdução à Modelagem Matemática}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{2.1 Introdução à Modelagem Matemática}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender o que são modelos matemáticos
+    \item Aprender a construir modelos para sistemas biológicos
+    \item Dominar técnicas de análise de modelos
+    \item Aplicar modelagem a problemas reais
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\definicao{Modelo Matemático}{
+Representação abstrata de um sistema real usando linguagem matemática, que permite fazer previsões quantitativas sobre o comportamento do sistema.
+}
+\end{frame}
+
+\begin{frame}{Por que Modelar Sistemas Biológicos?}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Vantagens da Modelagem:}
+\begin{itemize}
+    \item Previsão de comportamento
+    \item Teste de hipóteses \textit{in silico}
+    \item Otimização de experimentos
+    \item Identificação de componentes chave
+    \item Design racional de sistemas
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Dinâmica de populações
+    \item Vias metabólicas
+    \item Redes regulatórias
+    \item Farmacocinética
+    \item Biologia sintética
+    \item Medicina personalizada
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+"All models are wrong, but some are useful" --- George Box
+}
+\end{frame}
+
+\begin{frame}{O Ciclo da Modelagem}
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.2cm, text centered, rounded corners, minimum height=1cm}]
+
+    \node[box] (bio) {Sistema Biológico};
+    \node[box, right of=bio] (modelo) {Modelo Matemático};
+    \node[box, below of=modelo] (analise) {Análise\\Computacional};
+    \node[box, left of=analise] (pred) {Previsões\\Hipóteses};
+
+    \draw[->, thick, azulescuro] (bio) -- node[above, font=\tiny] {Abstração} (modelo);
+    \draw[->, thick, azulescuro] (modelo) -- node[right, font=\tiny] {Simulação} (analise);
+    \draw[->, thick, azulescuro] (analise) -- node[below, font=\tiny] {Interpretação} (pred);
+    \draw[->, thick, azulescuro] (pred) -- node[left, font=\tiny] {Validação} (bio);
+
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Ciclo Iterativo}
+O processo é iterativo: modelos são refinados com base em novos dados experimentais
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: TIPOS DE MODELOS
+% ============================================================================
+\section{Tipos de Modelos}
+
+\begin{frame}{Classificação de Modelos}
+\begin{block}{Por Natureza Matemática}
+\begin{itemize}
+    \item \textbf{Determinísticos:} resultado único para cada conjunto de condições
+    \item \textbf{Estocásticos:} incorporam aleatoriedade e probabilidade
+\end{itemize}
+\end{block}
+
+\begin{block}{Por Dependência Temporal}
+\begin{itemize}
+    \item \textbf{Estáticos:} não mudam com o tempo (redes, equilíbrio)
+    \item \textbf{Dinâmicos:} evolução temporal (EDOs, EDPs)
+\end{itemize}
+\end{block}
+
+\begin{block}{Por Escala}
+\begin{itemize}
+    \item \textbf{Microscópicos:} nível molecular/celular
+    \item \textbf{Mesoscópicos:} populações celulares
+    \item \textbf{Macroscópicos:} tecidos, órgãos, organismos
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Modelos Contínuos vs Discretos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Modelos Contínuos}
+\begin{itemize}
+    \item Variáveis contínuas
+    \item Equações diferenciais
+    \item Concentrações
+    \item Grande número de moléculas
+\end{itemize}
+
+\textbf{Exemplo:}
+\begin{equation*}
+\derivada{[X]}{t} = k_1 - k_2[X]
+\end{equation*}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Modelos Discretos}
+\begin{itemize}
+    \item Contagem de moléculas
+    \item Algoritmos estocásticos
+    \item Eventos discretos
+    \item Pequeno número de moléculas
+\end{itemize}
+
+\textbf{Exemplo:}
+\begin{equation*}
+X(t+1) = X(t) + \text{prod} - \text{deg}
+\end{equation*}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Quando usar cada tipo?}
+\begin{itemize}
+    \item Contínuo: \textgreater 100 moléculas
+    \item Discreto: \textless 100 moléculas
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Modelos Empíricos vs Mecanísticos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Empíricos}
+\textbf{Baseados em dados}
+
+\begin{itemize}
+    \item Ajuste de curvas
+    \item Regressão estatística
+    \item Machine learning
+    \item Pouca interpretação biológica
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Simples e rápidos
+    \item Bom ajuste aos dados
+\end{itemize}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Pouco poder preditivo
+    \item Extrapolação arriscada
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Mecanísticos}
+\textbf{Baseados em mecanismos}
+
+\begin{itemize}
+    \item Representam processos reais
+    \item Leis de conservação
+    \item Princípios físico-químicos
+    \item Interpretação biológica
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Poder preditivo
+    \item Extrapolação confiável
+\end{itemize}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Complexos
+    \item Muitos parâmetros
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: CONSTRUÇÃO DE MODELOS
+% ============================================================================
+\section{Construção de Modelos}
+
+\begin{frame}{Etapas da Construção de Modelos}
+\begin{enumerate}
+    \item \textbf{Definição do problema}
+    \begin{itemize}
+        \item Objetivo claro
+        \item Escopo bem definido
+        \item Questões a responder
+    \end{itemize}
+
+    \item \textbf{Identificação de variáveis}
+    \begin{itemize}
+        \item Variáveis de estado
+        \item Parâmetros
+        \item Entradas e saídas
+    \end{itemize}
+
+    \item \textbf{Formulação de equações}
+    \begin{itemize}
+        \item Leis de conservação
+        \item Cinéticas de reação
+        \item Condições iniciais e de contorno
+    \end{itemize}
+
+    \item \textbf{Análise e simulação}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Exemplo: Modelo de Decaimento Radioativo}
+\begin{block}{Sistema}
+Um isótopo radioativo decai espontaneamente ao longo do tempo
+\end{block}
+
+\textbf{1. Variável de estado:} $N(t)$ = número de núcleos no tempo $t$
+
+\textbf{2. Hipótese:} Taxa de decaimento proporcional ao número de núcleos
+
+\textbf{3. Equação:}
+\destaque{
+\begin{equation*}
+\derivada{N}{t} = -\lambda N
+\end{equation*}
+}
+
+\textbf{4. Solução analítica:}
+\begin{equation*}
+N(t) = N_0 e^{-\lambda t}
+\end{equation*}
+
+onde $N_0 = N(0)$ é a condição inicial e $\lambda$ é a constante de decaimento.
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Decaimento Radioativo}
+\begin{lstlisting}[language=Python, caption=Solução numérica do decaimento]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+# Definir a EDO
+def decay(N, t, lam):
+    """Taxa de variacao de N"""
+    return -lam * N
+
+# Parametros
+lambda_val = 0.5  # constante de decaimento
+N0 = 100          # quantidade inicial
+t = np.linspace(0, 10, 100)
+
+# Resolver numericamente
+N_num = odeint(decay, N0, t, args=(lambda_val,))
+
+# Solucao analitica
+N_ana = N0 * np.exp(-lambda_val * t)
+
+# Plotar
+plt.plot(t, N_num, 'b-', label='Numérica')
+plt.plot(t, N_ana, 'r--', label='Analítica')
+plt.xlabel('Tempo')
+plt.ylabel('N(t)')
+plt.legend()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: EQUAÇÕES DIFERENCIAIS
+% ============================================================================
+\section{Equações Diferenciais em Biologia}
+
+\begin{frame}{Equações Diferenciais Ordinárias (EDOs)}
+\definicao{EDO}{
+Equação que relaciona uma função com suas derivadas em relação a uma variável independente (geralmente o tempo).
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Forma Geral}
+\begin{equation*}
+\derivada{\vect{x}}{t} = \vect{f}(\vect{x}, t, \vect{p})
+\end{equation*}
+
+onde:
+\begin{itemize}
+    \item $\vect{x}$ = vetor de variáveis de estado
+    \item $t$ = tempo
+    \item $\vect{p}$ = vetor de parâmetros
+    \item $\vect{f}$ = função que define a dinâmica
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Classificação de EDOs}
+\begin{block}{Por Ordem}
+\begin{itemize}
+    \item \textbf{Primeira ordem:} $\derivada{x}{t} = f(x,t)$
+    \item \textbf{Segunda ordem:} $\frac{d^2x}{dt^2} = f(x, \derivada{x}{t}, t)$
+    \item \textbf{Ordem n:} derivadas até $n$-ésima ordem
+\end{itemize}
+\end{block}
+
+\begin{block}{Por Linearidade}
+\begin{itemize}
+    \item \textbf{Linear:} $\derivada{x}{t} = ax + b$
+    \item \textbf{Não-linear:} $\derivada{x}{t} = ax^2 + bx$
+\end{itemize}
+\end{block}
+
+\begin{block}{Por Autonomia}
+\begin{itemize}
+    \item \textbf{Autônoma:} $\derivada{x}{t} = f(x)$ (não depende explicitamente de $t$)
+    \item \textbf{Não-autônoma:} $\derivada{x}{t} = f(x,t)$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exemplo: Crescimento Exponencial}
+\begin{block}{Modelo Simples de Crescimento}
+Uma população cresce proporcionalmente ao seu tamanho:
+\begin{equation*}
+\derivada{N}{t} = rN
+\end{equation*}
+
+onde $r$ é a taxa de crescimento per capita.
+\end{block}
+
+\textbf{Solução analítica:}
+\begin{equation*}
+N(t) = N_0 e^{rt}
+\end{equation*}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Se $r > 0$:} crescimento\\
+\textbf{Se $r < 0$:} decaimento\\
+\textbf{Se $r = 0$:} estacionário
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Tempo de Duplicação}
+$t_{2} = \frac{\ln 2}{r}$
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Exemplo: Crescimento Logístico}
+\begin{block}{Modelo de Verhulst}
+População com capacidade de suporte limitada $K$:
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right)
+\end{equation*}
+\end{block}
+
+\textbf{Solução analítica:}
+\begin{equation*}
+N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
+\end{equation*}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Comportamento:}
+\begin{itemize}
+    \item $N \to K$ quando $t \to \infty$
+    \item Forma sigmoidal
+    \item Ponto de inflexão em $N = K/2$
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    \draw[->] (0,0) -- (5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,4) node[above] {$N$};
+    \draw[thick, azulescuro, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3/(1+2*exp(-1.5*\x))});
+    \draw[dashed, verdeacido] (0,3) -- (5,3) node[right, font=\tiny] {$K$};
+    \node[below] at (2.5,0) {Tempo};
+\end{tikzpicture}
+\end{center}
+\end{column>
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Crescimento Logístico}
+\begin{lstlisting}[language=Python, caption=Modelo logístico]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def logistic(N, t, r, K):
+    """Modelo de crescimento logistico"""
+    return r * N * (1 - N/K)
+
+# Parametros
+r = 0.5    # taxa de crescimento
+K = 100    # capacidade de suporte
+N0 = 10    # populacao inicial
+
+# Tempo
+t = np.linspace(0, 20, 200)
+
+# Resolver
+N = odeint(logistic, N0, t, args=(r, K))
+
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.plot(t, N, 'b-', linewidth=2, label='N(t)')
+plt.axhline(y=K, color='r', linestyle='--',
+            label=f'K = {K}')
+plt.xlabel('Tempo')
+plt.ylabel('População N(t)')
+plt.legend()
+plt.grid(True)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: SISTEMAS DE EDOs
+% ============================================================================
+\section{Sistemas de EDOs}
+
+\begin{frame}{Sistemas Acoplados}
+\begin{block}{Sistema Geral}
+Quando múltiplas variáveis interagem:
+\begin{align*}
+\derivada{x_1}{t} &= f_1(x_1, x_2, \ldots, x_n, t)\\
+\derivada{x_2}{t} &= f_2(x_1, x_2, \ldots, x_n, t)\\
+&\vdots\\
+\derivada{x_n}{t} &= f_n(x_1, x_2, \ldots, x_n, t)
+\end{align*}
+\end{block}
+
+\textbf{Notação vetorial:}
+\destaque{
+\begin{equation*}
+\derivada{\vect{x}}{t} = \vect{f}(\vect{x}, t)
+\end{equation*}
+}
+\end{frame}
+
+\begin{frame}{Exemplo: Modelo Predador-Presa (Lotka-Volterra)}
+\begin{block}{Sistema}
+\begin{align*}
+\derivada{V}{t} &= \alpha V - \beta V P \quad \text{(Presas)}\\
+\derivada{P}{t} &= \delta \beta V P - \gamma P \quad \text{(Predadores)}
+\end{align*}
+
+onde:
+\begin{itemize}
+    \item $V$ = população de presas
+    \item $P$ = população de predadores
+    \item $\alpha$ = taxa de crescimento das presas
+    \item $\beta$ = taxa de predação
+    \item $\gamma$ = taxa de morte dos predadores
+    \item $\delta$ = eficiência de conversão
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Interpretação do Modelo Predador-Presa}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Equação das Presas:}
+\begin{equation*}
+\derivada{V}{t} = \underbrace{\alpha V}_{\text{crescimento}} - \underbrace{\beta V P}_{\text{predação}}
+\end{equation*}
+
+\begin{itemize}
+    \item Crescem exponencialmente sem predadores
+    \item Perdem indivíduos por predação
+    \item Taxa de predação $\propto$ encontros ($VP$)
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Equação dos Predadores:}
+\begin{equation*}
+\derivada{P}{t} = \underbrace{\delta \beta V P}_{\text{crescimento}} - \underbrace{\gamma P}_{\text{morte}}
+\end{equation*}
+
+\begin{itemize}
+    \item Crescem ao consumir presas
+    \item Morrem naturalmente
+    \item Dependem das presas para sobreviver
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Este sistema exibe oscilações periódicas características!
+}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Lotka-Volterra}
+\begin{lstlisting}[language=Python, caption=Sistema predador-presa]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def lotka_volterra(y, t, alpha, beta, delta, gamma):
+    """Sistema Lotka-Volterra"""
+    V, P = y
+    dVdt = alpha*V - beta*V*P
+    dPdt = delta*beta*V*P - gamma*P
+    return [dVdt, dPdt]
+
+# Parametros
+alpha = 1.0
+beta = 0.1
+delta = 0.75
+gamma = 1.5
+
+# Condicoes iniciais
+y0 = [10, 5]  # [V0, P0]
+t = np.linspace(0, 50, 1000)
+
+# Resolver
+sol = odeint(lotka_volterra, y0, t,
+             args=(alpha, beta, delta, gamma))
+
+# Plotar series temporais
+plt.plot(t, sol[:, 0], 'b-', label='Presas')
+plt.plot(t, sol[:, 1], 'r-', label='Predadores')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Retrato de Fase}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=Python, caption=Plano de fase, basicstyle=\ttfamily\tiny]
+# Retrato de fase
+plt.figure()
+plt.plot(sol[:, 0], sol[:, 1],
+         'g-', linewidth=2)
+plt.plot(sol[0, 0], sol[0, 1],
+         'go', markersize=10,
+         label='Início')
+plt.xlabel('Presas (V)')
+plt.ylabel('Predadores (P)')
+plt.title('Retrato de Fase')
+plt.legend()
+plt.grid(True)
+
+# Campo vetorial
+V = np.linspace(0, 20, 20)
+P = np.linspace(0, 15, 20)
+V_grid, P_grid = np.meshgrid(V, P)
+dV, dP = lotka_volterra(
+    [V_grid, P_grid], 0,
+    alpha, beta, delta, gamma)
+plt.quiver(V_grid, P_grid,
+           dV, dP, alpha=0.5)
+\end{lstlisting}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (4,0) node[right] {$V$};
+    \draw[->] (0,0) -- (0,4) node[above] {$P$};
+
+    % Trajetoria em espiral
+    \draw[thick, verdeacido, domain=0:720, samples=200, smooth]
+        plot ({2 + 1.5*cos(\x)/(1+\x/360)},
+              {2 + 1.5*sin(\x)/(1+\x/360)});
+
+    % Ponto de equilibrio
+    \fill[red] (2,2) circle (2pt) node[right, font=\tiny] {Equilíbrio};
+
+    \node[below] at (2,-0.2) {Presas};
+    \node[left, rotate=90] at (-0.3,2) {Predadores};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Trajetórias fechadas
+    \item Oscilações periódicas
+    \item Centro estável
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: PONTOS DE EQUILÍBRIO
+% ============================================================================
+\section{Análise de Equilíbrio}
+
+\begin{frame}{Pontos de Equilíbrio (Steady States)}
+\definicao{Ponto de Equilíbrio}{
+Estado no qual o sistema não muda com o tempo:
+\begin{equation*}
+\derivada{\vect{x}}{t} = \vect{0} \quad \Rightarrow \quad \vect{f}(\vect{x}^*, t) = \vect{0}
+\end{equation*}
+}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplo: Crescimento Logístico}
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right) = 0
+\end{equation*}
+
+Pontos de equilíbrio:
+\begin{itemize}
+    \item $N^*_1 = 0$ (extinção)
+    \item $N^*_2 = K$ (capacidade de suporte)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Estabilidade de Pontos de Equilíbrio}
+\begin{block}{Classificação}
+\begin{itemize}
+    \item \textbf{Estável:} sistema retorna ao equilíbrio após perturbação
+    \item \textbf{Instável:} sistema se afasta após perturbação
+    \item \textbf{Marginalmente estável:} comportamento intermediário
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Estavel
+    \begin{scope}
+        \draw[->] (-1,0) -- (3,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,2) node[above] {$\dot{x}$};
+        \draw[thick, azulescuro] (-0.5,1.5) parabola bend (1,0) (2.5,1.5);
+        \fill[verdeacido] (1,0) circle (2pt) node[below, font=\tiny] {Estável};
+        \draw[->, thick, red] (0.5,0.3) -- (1,0.1);
+        \draw[->, thick, red] (1.5,0.3) -- (1,0.1);
+    \end{scope}
+
+    % Instavel
+    \begin{scope}[xshift=5cm]
+        \draw[->] (-1,0) -- (3,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,2) node[above] {$\dot{x}$};
+        \draw[thick, azulescuro] (-0.5,-1.5) parabola[bend at end] (1,0);
+        \draw[thick, azulescuro] (1,0) parabola (2.5,-1.5);
+        \fill[red] (1,0) circle (2pt) node[below, font=\tiny] {Instável};
+        \draw[->, thick, verdeacido] (0.5,-0.3) -- (0,-0.5);
+        \draw[->, thick, verdeacido] (1.5,-0.3) -- (2,-0.5);
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Análise de Estabilidade Linear}
+\begin{block}{Linearização em Torno do Equilíbrio}
+Para $\vect{x} = \vect{x}^* + \delta\vect{x}$ (pequena perturbação):
+\begin{equation*}
+\derivada{\delta\vect{x}}{t} = \mathbf{J}(\vect{x}^*) \delta\vect{x}
+\end{equation*}
+
+onde $\mathbf{J}$ é a matriz Jacobiana:
+\begin{equation*}
+J_{ij} = \parcial{f_i}{x_j}\Bigg|_{\vect{x}^*}
+\end{equation*}
+\end{block}
+
+\begin{exampleblock}{Critério de Estabilidade}
+O equilíbrio $\vect{x}^*$ é estável se todos os autovalores de $\mathbf{J}(\vect{x}^*)$ têm parte real negativa.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Exemplo: Análise do Crescimento Logístico}
+\begin{block}{Modelo}
+\begin{equation*}
+\derivada{N}{t} = f(N) = rN\left(1 - \frac{N}{K}\right)
+\end{equation*}
+\end{block}
+
+\textbf{Jacobiano (1D):}
+\begin{equation*}
+J = \derivada{f}{N} = r\left(1 - \frac{2N}{K}\right)
+\end{equation*}
+
+\textbf{Nos pontos de equilíbrio:}
+\begin{itemize}
+    \item $N^* = 0$: $J(0) = r > 0$ $\Rightarrow$ \textcolor{red}{instável}
+    \item $N^* = K$: $J(K) = -r < 0$ $\Rightarrow$ \textcolor{verdeacido}{estável}
+\end{itemize}
+
+\importante{
+A população converge para a capacidade de suporte $K$
+}
+\end{frame}
+
+\begin{frame}[fragile]{Análise de Estabilidade Computacional}
+\begin{lstlisting}[language=Python, caption=Análise de autovalores]
+import numpy as np
+from scipy.linalg import eig
+
+def jacobian_lotka_volterra(y, alpha, beta,
+                              delta, gamma):
+    """Calcula Jacobiano do sistema LV"""
+    V, P = y
+    J = np.array([
+        [alpha - beta*P, -beta*V],
+        [delta*beta*P, delta*beta*V - gamma]
+    ])
+    return J
+
+# Ponto de equilibrio
+V_eq = gamma / (delta * beta)
+P_eq = alpha / beta
+
+# Calcular Jacobiano no equilibrio
+J = jacobian_lotka_volterra([V_eq, P_eq],
+                             alpha, beta, delta, gamma)
+
+# Autovalores
+eigenvalues, eigenvectors = eig(J)
+print(f"Autovalores: {eigenvalues}")
+print(f"Partes reais: {eigenvalues.real}")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: MÉTODOS NUMÉRICOS
+% ============================================================================
+\section{Métodos Numéricos}
+
+\begin{frame}{Por que Métodos Numéricos?}
+\begin{alertblock}{Limitações das Soluções Analíticas}
+\begin{itemize}
+    \item Maioria dos sistemas biológicos são não-lineares
+    \item Poucos modelos têm solução analítica fechada
+    \item Sistemas complexos requerem aproximação numérica
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.3cm}
+
+\begin{block}{Métodos Numéricos Comuns}
+\begin{itemize}
+    \item \textbf{Euler:} simples, primeira ordem
+    \item \textbf{Runge-Kutta (RK4):} preciso, quarta ordem
+    \item \textbf{Métodos adaptativos:} passo variável (RK45, Dormand-Prince)
+    \item \textbf{Métodos implícitos:} sistemas rígidos (BDF)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Método de Euler}
+\begin{block}{Ideia Básica}
+Aproximar derivada por diferença finita:
+\begin{equation*}
+\derivada{x}{t} \approx \frac{x(t+h) - x(t)}{h}
+\end{equation*}
+\end{block}
+
+\destaque{
+\begin{equation*}
+x(t+h) = x(t) + h \cdot f(x(t), t)
+\end{equation*}
+}
+
+\textbf{Algoritmo:}
+\begin{enumerate}
+    \item Partir de $x_0$ em $t_0$
+    \item Calcular $x_1 = x_0 + h \cdot f(x_0, t_0)$
+    \item Repetir: $x_{n+1} = x_n + h \cdot f(x_n, t_n)$
+\end{enumerate}
+
+\begin{exampleblock}{Erro}
+Erro local: $O(h^2)$, Erro global: $O(h)$
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação do Método de Euler}
+\begin{lstlisting}[language=Python, caption=Euler forward]
+def euler(f, x0, t):
+    """
+    Metodo de Euler para resolver EDOs
+    f: funcao dx/dt = f(x, t)
+    x0: condicao inicial
+    t: array de tempos
+    """
+    n = len(t)
+    x = np.zeros((n, len(x0)))
+    x[0] = x0
+
+    for i in range(n-1):
+        h = t[i+1] - t[i]
+        x[i+1] = x[i] + h * np.array(f(x[i], t[i]))
+
+    return x
+
+# Exemplo: crescimento exponencial
+def exp_growth(x, t, r=0.5):
+    return r * x
+
+t = np.linspace(0, 10, 100)
+x0 = [1.0]
+x_euler = euler(lambda x,t: exp_growth(x,t), x0, t)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Método de Runge-Kutta de 4ª Ordem (RK4)}
+\begin{block}{Ideia}
+Usar múltiplas avaliações da derivada para melhor aproximação
+\end{block}
+
+\destaque{
+\begin{align*}
+k_1 &= f(x_n, t_n)\\
+k_2 &= f(x_n + \frac{h}{2}k_1, t_n + \frac{h}{2})\\
+k_3 &= f(x_n + \frac{h}{2}k_2, t_n + \frac{h}{2})\\
+k_4 &= f(x_n + hk_3, t_n + h)\\
+x_{n+1} &= x_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+}
+
+\begin{exampleblock}{Precisão}
+Erro local: $O(h^5)$, Erro global: $O(h^4)$
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação do RK4}
+\begin{lstlisting}[language=Python, caption=Runge-Kutta 4]
+def rk4(f, x0, t):
+    """Metodo Runge-Kutta de 4a ordem"""
+    n = len(t)
+    x = np.zeros((n, len(x0)))
+    x[0] = x0
+
+    for i in range(n-1):
+        h = t[i+1] - t[i]
+        k1 = np.array(f(x[i], t[i]))
+        k2 = np.array(f(x[i] + h*k1/2, t[i] + h/2))
+        k3 = np.array(f(x[i] + h*k2/2, t[i] + h/2))
+        k4 = np.array(f(x[i] + h*k3, t[i] + h))
+
+        x[i+1] = x[i] + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
+
+    return x
+
+# Usar
+x_rk4 = rk4(lambda x,t: exp_growth(x,t), x0, t)
+
+# Comparar com solucao analitica
+x_exact = x0[0] * np.exp(0.5 * t)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: ANÁLISE DE SENSIBILIDADE
+% ============================================================================
+\section{Análise de Sensibilidade}
+
+\begin{frame}{Análise de Sensibilidade}
+\definicao{Sensibilidade}{
+Medida de como a saída de um modelo varia em resposta a mudanças nos parâmetros de entrada.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Por que é importante?}
+\begin{itemize}
+    \item Identificar parâmetros críticos
+    \item Priorizar experimentos para estimar parâmetros
+    \item Avaliar robustez do modelo
+    \item Simplificar modelos complexos
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Coeficiente de Sensibilidade}
+\begin{equation*}
+S_{x,p} = \parcial{x}{p} \cdot \frac{p}{x} = \frac{\parcial \ln x}{\parcial \ln p}
+\end{equation*}
+
+Sensibilidade relativa normalizada
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Tipos de Análise de Sensibilidade}
+\begin{block}{Local}
+\begin{itemize}
+    \item Variação em torno de um ponto nominal
+    \item Derivadas parciais
+    \item Rápida e analítica (quando possível)
+\end{itemize}
+\end{block}
+
+\begin{block}{Global}
+\begin{itemize}
+    \item Exploração de todo o espaço de parâmetros
+    \item Métodos de amostragem (Monte Carlo, Sobol)
+    \item Computacionalmente intensiva
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Trade-off}
+Local: rápida mas limitada \\
+Global: abrangente mas custosa
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Análise de Sensibilidade Local}
+\begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas]
+def sensitivity_local(model, params, param_names,
+                       perturbation=0.01):
+    """
+    Analise de sensibilidade local
+    """
+    baseline = model(params)
+    sensitivities = {}
+
+    for i, name in enumerate(param_names):
+        # Perturbar parametro
+        params_pert = params.copy()
+        params_pert[i] *= (1 + perturbation)
+
+        # Calcular saida perturbada
+        output_pert = model(params_pert)
+
+        # Sensibilidade relativa
+        S = (output_pert - baseline) / baseline / perturbation
+        sensitivities[name] = S
+
+    return sensitivities
+
+# Exemplo
+def logistic_final(params):
+    r, K, N0 = params
+    # Retorna valor final
+    return K
+
+sens = sensitivity_local(logistic_final, [0.5, 100, 10],
+                          ['r', 'K', 'N0'])
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 9: AJUSTE DE MODELOS A DADOS
+% ============================================================================
+\section{Ajuste de Modelos a Dados}
+
+\begin{frame}{Estimação de Parâmetros}
+\begin{block}{Problema}
+Dados: $(t_1, y_1), (t_2, y_2), \ldots, (t_n, y_n)$\\
+Modelo: $\hat{y}(t; \vect{p})$\\
+Objetivo: Encontrar $\vect{p}^*$ que melhor ajusta os dados
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{block}{Função Objetivo}
+Mínimos quadrados:
+\begin{equation*}
+\text{SSE}(\vect{p}) = \sum_{i=1}^{n} [y_i - \hat{y}(t_i; \vect{p})]^2
+\end{equation*}
+
+Objetivo: $\min_{\vect{p}} \text{SSE}(\vect{p})$
+\end{block}
+
+\begin{exampleblock}{Métodos de Otimização}
+\begin{itemize}
+    \item Levenberg-Marquardt
+    \item Evolução Diferencial
+    \item Algoritmos Genéticos
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Ajuste de Curvas com scipy}
+\begin{lstlisting}[language=Python, caption=Estimação de parâmetros]
+from scipy.optimize import curve_fit
+
+# Dados experimentais (com ruido)
+t_data = np.linspace(0, 10, 20)
+r_true, K_true = 0.5, 100
+N_true = K_true / (1 + (K_true/10 - 1)*np.exp(-r_true*t_data))
+N_data = N_true + np.random.normal(0, 5, len(t_data))
+
+# Modelo logistico
+def logistic_model(t, r, K):
+    N0 = 10
+    return K / (1 + (K/N0 - 1)*np.exp(-r*t))
+
+# Ajustar
+params_init = [1.0, 50]  # chute inicial
+params_opt, params_cov = curve_fit(logistic_model,
+                                     t_data, N_data,
+                                     p0=params_init)
+
+print(f"r estimado: {params_opt[0]:.3f}")
+print(f"K estimado: {params_opt[1]:.3f}")
+
+# Plotar
+plt.plot(t_data, N_data, 'o', label='Dados')
+plt.plot(t_data, logistic_model(t_data, *params_opt),
+         '-', label='Ajuste')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Validação de Modelos}
+\begin{block}{Métricas de Qualidade do Ajuste}
+\begin{itemize}
+    \item \textbf{SSE:} Soma dos erros quadrados
+    \item \textbf{R$^2$:} Coeficiente de determinação (0 a 1)
+    \item \textbf{RMSE:} Raiz do erro quadrático médio
+    \item \textbf{AIC/BIC:} Critérios de informação (penalizam complexidade)
+\end{itemize}
+\end{block}
+
+\begin{equation*}
+R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}
+\end{equation*}
+
+\begin{alertblock}{Atenção!}
+\begin{itemize}
+    \item $R^2$ alto não garante bom modelo
+    \item Validar com dados independentes
+    \item Verificar plausibilidade biológica
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 10: EXEMPLO INTEGRADO
+% ============================================================================
+\section{Estudo de Caso}
+
+\begin{frame}{Estudo de Caso: Dinâmica de Infecção Viral}
+\begin{block}{Sistema}
+Modelo SIR (Susceptible-Infected-Recovered):
+\begin{align*}
+\derivada{S}{t} &= -\beta \frac{SI}{N}\\
+\derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I\\
+\derivada{R}{t} &= \gamma I
+\end{align*}
+
+onde:
+\begin{itemize}
+    \item $S$ = susceptíveis
+    \item $I$ = infectados
+    \item $R$ = recuperados
+    \item $\beta$ = taxa de transmissão
+    \item $\gamma$ = taxa de recuperação
+    \item $N = S + I + R$ = população total
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Número Básico de Reprodução}
+\definicao{$R_0$ (R-naught)}{
+Número médio de infecções secundárias causadas por um indivíduo infectado em uma população totalmente susceptível.
+}
+
+\vspace{0.3cm}
+
+\destaque{
+\begin{equation*}
+R_0 = \frac{\beta}{\gamma}
+\end{equation*}
+}
+
+\begin{block}{Interpretação}
+\begin{itemize}
+    \item $R_0 < 1$: epidemia se extingue
+    \item $R_0 > 1$: epidemia se propaga
+    \item $R_0 = 1$: limiar epidêmico
+\end{itemize}
+\end{block}
+
+\exemplo{COVID-19}{
+$R_0$ estimado entre 2-6, dependendo da variante e medidas de controle
+}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação do Modelo SIR}
+\begin{lstlisting}[language=Python, caption=Modelo SIR completo]
+def sir_model(y, t, beta, gamma):
+    """Modelo SIR"""
+    S, I, R = y
+    N = S + I + R
+    dSdt = -beta * S * I / N
+    dIdt = beta * S * I / N - gamma * I
+    dRdt = gamma * I
+    return [dSdt, dIdt, dRdt]
+
+# Parametros
+beta = 0.5   # taxa de transmissao (1/dia)
+gamma = 0.1  # taxa de recuperacao (1/dia)
+R0 = beta / gamma  # R0 = 5
+
+# Condicoes iniciais
+N = 1000
+I0 = 10
+S0 = N - I0
+R0_pop = 0
+y0 = [S0, I0, R0_pop]
+
+# Simular
+t = np.linspace(0, 200, 1000)
+sol = odeint(sir_model, y0, t, args=(beta, gamma))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Análise e Visualização}
+\begin{lstlisting}[language=Python, caption=Análise do modelo SIR]
+S, I, R = sol.T
+
+# Plotar dinamica
+plt.figure(figsize=(10, 6))
+plt.plot(t, S, 'b-', label='Susceptiveis', linewidth=2)
+plt.plot(t, I, 'r-', label='Infectados', linewidth=2)
+plt.plot(t, R, 'g-', label='Recuperados', linewidth=2)
+plt.xlabel('Tempo (dias)')
+plt.ylabel('Numero de individuos')
+plt.title(f'Modelo SIR ($R_0$ = {R0:.1f})')
+plt.legend()
+plt.grid(True)
+
+# Encontrar pico de infeccao
+peak_idx = np.argmax(I)
+peak_time = t[peak_idx]
+peak_infected = I[peak_idx]
+
+print(f"Pico de infeccao: {peak_infected:.0f} individuos")
+print(f"Tempo do pico: {peak_time:.1f} dias")
+print(f"Ataque final: {R[-1]/N*100:.1f}% da populacao")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 11: BOAS PRÁTICAS
+% ============================================================================
+\section{Boas Práticas em Modelagem}
+
+\begin{frame}{Princípios de Modelagem}
+\begin{block}{1. Simplicidade vs Realismo}
+\begin{itemize}
+    \item Comece simples, adicione complexidade gradualmente
+    \item "Make things as simple as possible, but not simpler" --- Einstein
+    \item Balanceie entre descrição acurada e tratabilidade
+\end{itemize}
+\end{block}
+
+\begin{block}{2. Validação}
+\begin{itemize}
+    \item Compare com dados experimentais
+    \item Teste previsões em novos experimentos
+    \item Valide em múltiplas escalas/condições
+\end{itemize}
+\end{block}
+
+\begin{block}{3. Documentação}
+\begin{itemize}
+    \item Documente hipóteses claramente
+    \item Registre origem de parâmetros
+    \item Mantenha código reproduzível
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Armadilhas Comuns}
+\begin{alertblock}{Erros Frequentes}
+\begin{enumerate}
+    \item \textbf{Overfitting:} modelo complexo demais para os dados
+    \item \textbf{Parâmetros não-identificáveis:} múltiplas soluções
+    \item \textbf{Unidades inconsistentes:} sempre verifique dimensões
+    \item \textbf{Condições iniciais irrealistas:} valores negativos, etc.
+    \item \textbf{Extrapolação excessiva:} além do regime validado
+    \item \textbf{Ignorar incerteza:} sempre quantifique incerteza
+\end{enumerate}
+\end{alertblock}
+
+\importante{
+"Remember that all models are wrong; the practical question is how wrong do they have to be to not be useful" --- George Box
+}
+\end{frame}
+
+\begin{frame}{Ferramentas Computacionais}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Python}
+\begin{itemize}
+    \item NumPy, SciPy
+    \item Matplotlib, Seaborn
+    \item PyDSTool
+    \item Tellurium
+    \item COBRApy (metabolismo)
+\end{itemize}
+\end{block}
+
+\begin{block}{R}
+\begin{itemize}
+    \item deSolve
+    \item FME (fitting)
+    \item ggplot2
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{MATLAB}
+\begin{itemize}
+    \item ode45, ode15s
+    \item SimBiology
+    \item Simbólico
+\end{itemize}
+\end{block}
+
+\begin{block}{Especializadas}
+\begin{itemize}
+    \item COPASI
+    \item CellDesigner
+    \item Virtual Cell
+    \item BioNetGen
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 12: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Modelo de Crescimento}
+Considere um modelo de crescimento com colheita constante:
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right) - H
+\end{equation*}
+
+\begin{enumerate}
+    \item Encontre os pontos de equilíbrio
+    \item Analise a estabilidade para $H < rK/4$ e $H > rK/4$
+    \item Interprete biologicamente
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Método Numérico}
+Implemente o método de Euler para resolver:
+\begin{equation*}
+\derivada{y}{t} = -y + \sin(t), \quad y(0) = 1
+\end{equation*}
+
+Compare com a solução analítica para diferentes tamanhos de passo.
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: Sistema Acoplado}
+Considere o sistema de competição:
+\begin{align*}
+\derivada{N_1}{t} &= r_1 N_1 \left(1 - \frac{N_1 + \alpha N_2}{K_1}\right)\\
+\derivada{N_2}{t} &= r_2 N_2 \left(1 - \frac{N_2 + \beta N_1}{K_2}\right)
+\end{align*}
+
+\begin{enumerate}
+    \item Implemente o modelo em Python
+    \item Encontre os pontos de equilíbrio
+    \item Simule para diferentes valores de $\alpha$ e $\beta$
+    \item O que acontece quando $\alpha\beta > 1$ vs $\alpha\beta < 1$?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{alertblock}{Projeto: Modelo SIR com Vacinação}
+Estenda o modelo SIR para incluir vacinação:
+\begin{align*}
+\derivada{S}{t} &= -\beta \frac{SI}{N} - \nu S\\
+\derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I\\
+\derivada{R}{t} &= \gamma I + \nu S
+\end{align*}
+
+onde $\nu$ é a taxa de vacinação.
+
+\begin{enumerate}
+    \item Implemente o modelo
+    \item Calcule o novo $R_0$ efetivo
+    \item Determine a taxa de vacinação necessária para controlar a epidemia ($R_0^{eff} < 1$)
+    \item Simule cenários com diferentes estratégias de vacinação
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 13: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{strogatz} Strogatz S.H. (2018). \textit{Nonlinear Dynamics and Chaos}, 2nd ed. CRC Press.
+
+\bibitem{edelstein} Edelstein-Keshet L. (2005). \textit{Mathematical Models in Biology}. SIAM.
+
+\bibitem{britton} Britton N.F. (2003). \textit{Essential Mathematical Biology}. Springer.
+
+\bibitem{murray} Murray J.D. (2002). \textit{Mathematical Biology I: An Introduction}, 3rd ed. Springer.
+
+\bibitem{keener} Keener J., Sneyd J. (2009). \textit{Mathematical Physiology}, 2nd ed. Springer.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Livros Avançados}
+\begin{itemize}
+    \item Ellner S.P., Guckenheimer J. (2011). \textit{Dynamic Models in Biology}
+    \item Alon U. (2019). \textit{An Introduction to Systems Biology}, 2nd ed.
+    \item Klipp E. et al. (2016). \textit{Systems Biology}, 2nd ed.
+\end{itemize}
+\end{block}
+
+\begin{block}{Recursos Online}
+\begin{itemize}
+    \item \textbf{Wolfram MathWorld:} \url{https://mathworld.wolfram.com}
+    \item \textbf{MIT OCW:} Mathematical Biology course
+    \item \textbf{Scipy Lecture Notes:} \url{https://scipy-lectures.org}
+\end{itemize}
+\end{block}
+
+\begin{block}{Tutoriais Python}
+\begin{itemize}
+    \item \url{https://scipy-cookbook.readthedocs.io}
+    \item \url{https://python-numerics.github.io}
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 2: Introdução à Modelagem Matemática}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Static Network Models
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

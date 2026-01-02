@@ -1,0 +1,175 @@
+% ============================================================================
+% TEMPLATE BASE PARA APRESENTAÇÕES EM BEAMER
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\documentclass[12pt, aspectratio=169]{beamer}
+
+% ============================================================================
+% PACOTES ESSENCIAIS
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, shapes, positioning, calc, decorations.pathreplacing}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+
+% ============================================================================
+% CONFIGURAÇÃO DO TEMA
+% ============================================================================
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Cores personalizadas
+\definecolor{azulescuro}{RGB}{0, 51, 102}
+\definecolor{azulclaro}{RGB}{51, 153, 255}
+\definecolor{verdeacido}{RGB}{102, 204, 0}
+\definecolor{laranjacel}{RGB}{255, 153, 51}
+\definecolor{roxodna}{RGB}{153, 51, 255}
+
+\setbeamercolor{structure}{fg=azulescuro}
+\setbeamercolor{palette primary}{bg=azulescuro,fg=white}
+\setbeamercolor{palette secondary}{bg=azulclaro,fg=white}
+\setbeamercolor{palette tertiary}{bg=azulescuro,fg=white}
+\setbeamercolor{palette quaternary}{bg=azulclaro,fg=white}
+\setbeamercolor{block title}{bg=azulescuro,fg=white}
+\setbeamercolor{block body}{bg=azulclaro!10,fg=black}
+\setbeamercolor{block title alerted}{bg=red!80,fg=white}
+\setbeamercolor{block body alerted}{bg=red!10,fg=black}
+\setbeamercolor{block title example}{bg=verdeacido!80,fg=white}
+\setbeamercolor{block body example}{bg=verdeacido!10,fg=black}
+
+% ============================================================================
+% CONFIGURAÇÃO DE CÓDIGO
+% ============================================================================
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{azulescuro}\bfseries,
+    commentstyle=\color{verdeacido},
+    stringstyle=\color{laranjacel},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    rulecolor=\color{black},
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    escapeinside={\%*}{*)},
+    xleftmargin=10pt,
+    xrightmargin=10pt
+}
+
+% Definir estilo para R
+\lstdefinestyle{Rstyle}{
+    language=R,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{azulescuro}\bfseries,
+    commentstyle=\color{verdeacido},
+    stringstyle=\color{laranjacel}
+}
+
+% Definir estilo para MATLAB
+\lstdefinestyle{MATLABstyle}{
+    language=Matlab,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{azulescuro}\bfseries,
+    commentstyle=\color{verdeacido},
+    stringstyle=\color{laranjacel}
+}
+
+% ============================================================================
+% COMANDOS PERSONALIZADOS
+% ============================================================================
+
+% Comando para equações destacadas
+\newcommand{\destaque}[1]{%
+    \begin{alertblock}{}
+        \begin{center}
+            #1
+        \end{center}
+    \end{alertblock}
+}
+
+% Comando para definições
+\newcommand{\definicao}[2]{%
+    \begin{block}{Definição: #1}
+        #2
+    \end{block}
+}
+
+% Comando para exemplos
+\newcommand{\exemplo}[2]{%
+    \begin{exampleblock}{Exemplo: #1}
+        #2
+    \end{exampleblock}
+}
+
+% Comando para observações importantes
+\newcommand{\importante}[1]{%
+    \begin{alertblock}{Importante!}
+        #1
+    \end{alertblock}
+}
+
+% Comandos matemáticos úteis
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\parcial}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\derivada}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+
+% Comandos biológicos
+\newcommand{\gene}[1]{\textit{#1}}
+\newcommand{\proteina}[1]{\textsc{#1}}
+\newcommand{\especie}[1]{\textit{#1}}
+
+% ============================================================================
+% CONFIGURAÇÃO DE RODAPÉ
+% ============================================================================
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.34\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% ============================================================================
+% CONFIGURAÇÃO DE NAVEGAÇÃO
+% ============================================================================
+\setbeamertemplate{navigation symbols}{}
+
+% ============================================================================
+% CONFIGURAÇÃO DE ITEMIZE/ENUMERATE
+% ============================================================================
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+% ============================================================================
+% FIM DO TEMPLATE
+% ============================================================================

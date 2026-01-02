@@ -1,0 +1,1147 @@
+% ============================================================================
+% CAPÍTULO 1: SISTEMAS BIOLÓGICOS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 1: Sistemas Biológicos]{Capítulo 1: Sistemas Biológicos}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender os componentes fundamentais dos sistemas biológicos
+    \item Entender a estrutura e função do DNA, RNA e proteínas
+    \item Explorar processos metabólicos básicos
+    \item Conhecer a organização celular
+\end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Por que Estudar Sistemas Biológicos?}
+A compreensão dos sistemas biológicos é fundamental para:
+\begin{itemize}
+    \item Modelagem matemática de processos biológicos
+    \item Desenvolvimento de terapias e medicamentos
+    \item Engenharia de sistemas biológicos
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{O que são Sistemas Biológicos?}
+\definicao{Sistema Biológico}{
+Um sistema biológico é uma rede complexa de componentes biologicamente relevantes que interagem entre si para realizar funções específicas.
+}
+
+\vspace{0.5cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Complexidade hierárquica
+    \item Emergência de propriedades
+    \item Autorregulação
+    \item Adaptabilidade
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Níveis de Organização:}
+\begin{itemize}
+    \item Molecular (DNA, proteínas)
+    \item Celular (organelas, células)
+    \item Tecidual
+    \item Organismo completo
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: COMPONENTES BIOLÓGICOS
+% ============================================================================
+\section{Componentes Biológicos}
+
+\begin{frame}{1.1 Componentes Biológicos}
+\begin{block}{Os Quatro Pilares da Vida}
+\begin{enumerate}
+    \item \textbf{Ácidos Nucleicos} (DNA, RNA)
+    \item \textbf{Proteínas} (enzimas, estruturais, sinalizadoras)
+    \item \textbf{Lipídios} (membranas, armazenamento)
+    \item \textbf{Carboidratos} (energia, estrutura)
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Moléculas Pequenas}
+\begin{itemize}
+    \item Nucleotídeos
+    \item Aminoácidos
+    \item Monossacarídeos
+    \item Ácidos graxos
+\end{itemize}
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Macromoléculas}
+\begin{itemize}
+    \item DNA/RNA
+    \item Proteínas
+    \item Polissacarídeos
+    \item Lipídios complexos
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Dogma Central da Biologia Molecular}
+\begin{center}
+\begin{tikzpicture}[node distance=3cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2cm, text centered, rounded corners, minimum height=1cm}]
+
+    \node[box, fill=roxodna!20] (dna) {DNA};
+    \node[box, fill=laranjacel!20, right of=dna] (rna) {RNA};
+    \node[box, fill=verdeacido!20, right of=rna] (prot) {Proteína};
+
+    \draw[->, thick, azulescuro] (dna) -- node[above] {Transcrição} (rna);
+    \draw[->, thick, azulescuro] (rna) -- node[above] {Tradução} (prot);
+    \draw[->, thick, azulescuro] (dna) to [out=135,in=45,looseness=8] node[above] {Replicação} (dna);
+
+\end{tikzpicture}
+\end{center}
+
+\importante{
+O fluxo de informação genética é unidirecional: DNA $\rightarrow$ RNA $\rightarrow$ Proteína
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: ESTRUTURA DO DNA
+% ============================================================================
+\section{Estrutura do DNA}
+
+\begin{frame}{1.2 Estrutura do DNA}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características Estruturais:}
+\begin{itemize}
+    \item Dupla hélice
+    \item Fitas antiparalelas
+    \item Pareamento de bases
+    \item Sulco maior e menor
+\end{itemize}
+
+\vspace{0.3cm}
+
+\destaque{
+$\text{A} \equiv \text{T} \quad \text{(2 ligações H)}$\\
+$\text{G} \equiv \text{C} \quad \text{(3 ligações H)}$
+}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Backbone esquerdo
+    \draw[thick, azulescuro] (0,0) -- (0,4);
+    % Backbone direito
+    \draw[thick, azulescuro] (3,0) -- (3,4);
+
+    % Pares de bases
+    \draw[thick, roxodna] (0,0.5) -- node[above, font=\tiny] {A-T} (3,0.5);
+    \draw[thick, verdeacido] (0,1.5) -- node[above, font=\tiny] {G-C} (3,1.5);
+    \draw[thick, roxodna] (0,2.5) -- node[above, font=\tiny] {T-A} (3,2.5);
+    \draw[thick, verdeacido] (0,3.5) -- node[above, font=\tiny] {C-G} (3,3.5);
+
+    % Setas de direção
+    \draw[->, thick] (-0.3,0) -- (-0.3,1) node[midway, left, font=\tiny] {5'};
+    \draw[->, thick] (3.3,4) -- (3.3,3) node[midway, right, font=\tiny] {3'};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Composição Química do DNA}
+\definicao{Nucleotídeo}{
+Unidade básica do DNA composta por três componentes:
+\begin{enumerate}
+    \item Base nitrogenada (A, T, G, C)
+    \item Açúcar (desoxirribose)
+    \item Grupo fosfato
+\end{enumerate}
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Estrutura Química}
+\begin{equation*}
+\text{Nucleotídeo} = \underbrace{\text{Base}}_{\text{Purinas/Pirimidinas}} + \underbrace{\text{Desoxirribose}}_{\text{Açúcar}} + \underbrace{\text{PO}_4^{3-}}_{\text{Fosfato}}
+\end{equation*}
+\end{block}
+
+\begin{exampleblock}{Purinas vs Pirimidinas}
+\begin{itemize}
+    \item \textbf{Purinas:} Adenina (A), Guanina (G) --- dois anéis
+    \item \textbf{Pirimidinas:} Timina (T), Citosina (C) --- um anel
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Propriedades Físico-Químicas do DNA}
+\begin{block}{Parâmetros Estruturais da Dupla Hélice}
+\begin{itemize}
+    \item \textbf{Diâmetro:} $\sim$2 nm
+    \item \textbf{Comprimento por volta:} 3.4 nm
+    \item \textbf{Pares de bases por volta:} 10 pb
+    \item \textbf{Ângulo de rotação:} 36° por pb
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Formas do DNA}
+\begin{itemize}
+    \item \textbf{B-DNA:} forma fisiológica
+    \item \textbf{A-DNA:} desidratado
+    \item \textbf{Z-DNA:} hélice esquerda
+\end{itemize}
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Desnaturação}
+\begin{itemize}
+    \item Temperatura
+    \item pH extremos
+    \item Agentes químicos
+    \item $T_m$ = temperatura de fusão
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: ESTRUTURA DO RNA
+% ============================================================================
+\section{Estrutura do RNA}
+
+\begin{frame}{1.3 Estrutura do RNA}
+\begin{block}{Diferenças DNA vs RNA}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Característica} & \textbf{DNA} & \textbf{RNA} \\
+\midrule
+Açúcar & Desoxirribose & Ribose \\
+Bases & A, T, G, C & A, U, G, C \\
+Estrutura & Dupla fita & Fita simples* \\
+Estabilidade & Alta & Menor \\
+Tamanho & Longo & Variável \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{exampleblock}{* Estrutura do RNA}
+Embora seja fita simples, o RNA pode formar estruturas secundárias e terciárias complexas por pareamento intramolecular.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Tipos de RNA}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{RNA Mensageiro (mRNA)}
+\begin{itemize}
+    \item Carrega informação genética
+    \item Traduzido em proteínas
+    \item 5\% do RNA celular
+    \item Possui códons
+\end{itemize}
+\end{block}
+
+\begin{block}{RNA Transportador (tRNA)}
+\begin{itemize}
+    \item Transporta aminoácidos
+    \item Estrutura em trevo
+    \item Anticódon
+    \item 15\% do RNA celular
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{RNA Ribossomal (rRNA)}
+\begin{itemize}
+    \item Componente dos ribossomos
+    \item Atividade catalítica
+    \item 80\% do RNA celular
+    \item Altamente conservado
+\end{itemize}
+\end{block}
+
+\begin{block}{RNAs Regulatórios}
+\begin{itemize}
+    \item microRNA (miRNA)
+    \item RNA interferente (siRNA)
+    \item RNA longo não-codificante
+    \item RNA ribossômico pequeno
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Estrutura Secundária do RNA}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Elementos Estruturais:}
+\begin{itemize}
+    \item Hairpin loops (grampos)
+    \item Bulges (protuberâncias)
+    \item Internal loops (alças internas)
+    \item Pseudoknots (pseudonós)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\definicao{Estrutura Secundária}{
+Arranjo espacial resultante do pareamento de bases complementares dentro da mesma molécula de RNA.
+}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Stem-loop structure
+    \draw[thick, azulescuro] (0,0) -- (0,2);
+    \draw[thick, azulescuro] (1,0) -- (1,2);
+    \draw[thick, azulescuro] (0,2) to [out=0, in=180] (1,2);
+
+    % Base pairs
+    \foreach \y in {0.3, 0.7, 1.1, 1.5}
+        \draw[roxodna] (0,\y) -- (1,\y);
+
+    % Labels
+    \node[left, font=\tiny] at (0,1) {5'};
+    \node[right, font=\tiny] at (1,1) {3'};
+    \node[above, font=\small] at (0.5,2.5) {Hairpin};
+
+    % Bulge example
+    \begin{scope}[xshift=3cm]
+        \draw[thick, verdeacido] (0,0) -- (0,0.5);
+        \draw[thick, verdeacido] (1,0) -- (1,1);
+        \draw[thick, verdeacido] (0,0.5) -- (-0.3,1);
+        \draw[thick, verdeacido] (-0.3,1) -- (0,1.5);
+        \draw[thick, verdeacido] (1,1) -- (1,1.5);
+
+        \node[above, font=\small] at (0.5,1.8) {Bulge};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Predição de Estrutura Secundária do RNA}
+\begin{exampleblock}{Algoritmo de Nussinov}
+Algoritmo de programação dinâmica para predizer estrutura secundária de RNA:
+\end{exampleblock}
+
+\begin{lstlisting}[language=Python, caption=Pseudocódigo para Nussinov]
+def nussinov(sequence):
+    n = len(sequence)
+    dp = [[0] * n for _ in range(n)]
+
+    for length in range(2, n + 1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            # Caso 1: i e j não pareiam
+            dp[i][j] = dp[i+1][j]
+
+            # Caso 2: i e j pareiam
+            for k in range(i, j):
+                if can_pair(sequence[i], sequence[k]):
+                    score = dp[i+1][k-1] + 1 + dp[k+1][j]
+                    dp[i][j] = max(dp[i][j], score)
+
+    return dp[0][n-1]
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: ESTRUTURA DE PROTEÍNAS
+% ============================================================================
+\section{Estrutura de Proteínas}
+
+\begin{frame}{1.4 Estrutura de Proteínas}
+\begin{block}{Níveis de Organização Proteica}
+\begin{enumerate}
+    \item \textbf{Estrutura Primária:} sequência de aminoácidos
+    \item \textbf{Estrutura Secundária:} $\alpha$-hélices, $\beta$-folhas
+    \item \textbf{Estrutura Terciária:} dobramento 3D completo
+    \item \textbf{Estrutura Quaternária:} complexos de múltiplas cadeias
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \node[draw, rectangle, fill=azulclaro!20, text width=2cm, align=center] at (0,0) {Primária\\(1D)};
+    \node[draw, rectangle, fill=azulclaro!40, text width=2cm, align=center] at (3,0) {Secundária\\(2D)};
+    \node[draw, rectangle, fill=azulclaro!60, text width=2cm, align=center] at (6,0) {Terciária\\(3D)};
+    \node[draw, rectangle, fill=azulclaro!80, text width=2cm, align=center] at (9,0) {Quaternária\\(Complexo)};
+
+    \draw[->, thick] (1,0) -- (2,0);
+    \draw[->, thick] (4,0) -- (5,0);
+    \draw[->, thick] (7,0) -- (8,0);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Aminoácidos: Blocos Construtores das Proteínas}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Estrutura Geral}
+\begin{center}
+\chemfig{H_2N-C(-[2]H)(-[6]R)-C(=[1]O)-[7]OH}
+\end{center}
+\begin{itemize}
+    \item Grupo amino (NH$_2$)
+    \item Carbono $\alpha$
+    \item Cadeia lateral (R)
+    \item Grupo carboxila (COOH)
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Classificação dos Aminoácidos}
+\begin{itemize}
+    \item \textbf{Apolar:} Ala, Val, Leu, Ile, Met, Pro, Phe, Trp
+    \item \textbf{Polar:} Ser, Thr, Cys, Tyr, Asn, Gln
+    \item \textbf{Ácido:} Asp, Glu
+    \item \textbf{Básico:} Lys, Arg, His
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Total de 20 aminoácidos padrão codificados geneticamente
+}
+\end{frame}
+
+\begin{frame}{Ligação Peptídica}
+\begin{columns}
+\column{0.6\textwidth}
+\begin{block}{Formação da Ligação Peptídica}
+Reação de condensação entre dois aminoácidos:
+\begin{equation*}
+\text{AA}_1\text{-COOH} + \text{H-NH-AA}_2 \rightarrow \text{AA}_1\text{-CO-NH-AA}_2 + \text{H}_2\text{O}
+\end{equation*}
+\end{block}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Ligação covalente
+    \item Caráter parcial de dupla ligação
+    \item Planar e rígida
+    \item Trans configuração preferida
+\end{itemize}
+
+\column{0.4\textwidth}
+\begin{alertblock}{Ângulos de Torção}
+\begin{itemize}
+    \item $\phi$ (phi): N-C$_\alpha$
+    \item $\psi$ (psi): C$_\alpha$-C
+    \item $\omega$ (omega): ligação peptídica ($\sim$180°)
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Diagrama de Ramachandran}
+Representa regiões permitidas dos ângulos $\phi$ e $\psi$
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Estrutura Secundária}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{$\alpha$-Hélice}
+\begin{itemize}
+    \item Hélice destrogira
+    \item 3.6 resíduos/volta
+    \item Ligações H: C=O(i) $\leftrightarrow$ N-H(i+4)
+    \item Compacta e estável
+\end{itemize}
+
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $\phi = -60°$
+    \item $\psi = -45°$
+    \item Passo: 5.4 Å
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Folha $\beta$}
+\begin{itemize}
+    \item Estrutura estendida
+    \item Fitas paralelas ou antiparalelas
+    \item Ligações H entre fitas
+    \item Pregueada
+\end{itemize}
+
+\textbf{Tipos:}
+\begin{itemize}
+    \item Paralela: mesma direção
+    \item Antiparalela: direções opostas
+    \item Mista
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Outras Estruturas}
+Turns (voltas), loops (alças), coils (espirais irregulares)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Estrutura Terciária e Quaternária}
+\begin{block}{Estrutura Terciária}
+Arranjo tridimensional completo de uma cadeia polipeptídica
+\begin{itemize}
+    \item \textbf{Interações:} ligações de hidrogênio, iônicas, hidrofóbicas, pontes dissulfeto
+    \item \textbf{Domínios:} unidades estruturais e funcionais
+    \item \textbf{Motifs:} padrões estruturais recorrentes
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{block}{Estrutura Quaternária}
+Associação de múltiplas cadeias polipeptídicas (subunidades)
+\end{block}
+
+\exemplo{Hemoglobina}{
+Proteína tetramérica: 2 subunidades $\alpha$ + 2 subunidades $\beta$\\
+Função: transporte de O$_2$ no sangue
+}
+\end{frame}
+
+\begin{frame}[fragile]{Bancos de Dados de Proteínas}
+\begin{block}{Protein Data Bank (PDB)}
+Principal repositório de estruturas 3D de proteínas
+\begin{itemize}
+    \item URL: \url{https://www.rcsb.org}
+    \item Mais de 200.000 estruturas
+    \item Formato PDB, mmCIF
+    \item Técnicas: Cristalografia de raios-X, NMR, Cryo-EM
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Acessando PDB com BioPython}
+\begin{lstlisting}[language=Python]
+from Bio.PDB import PDBParser
+
+parser = PDBParser()
+structure = parser.get_structure("1A3N", "1a3n.pdb")
+
+for model in structure:
+    for chain in model:
+        for residue in chain:
+            print(f"Residue: {residue.resname}")
+\end{lstlisting}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: PROCESSOS METABÓLICOS
+% ============================================================================
+\section{Processos Metabólicos}
+
+\begin{frame}{1.5 Processos Metabólicos}
+\definicao{Metabolismo}{
+Conjunto de reações químicas que ocorrem nas células para manter a vida, dividido em:
+\begin{itemize}
+    \item \textbf{Catabolismo:} degradação de moléculas (libera energia)
+    \item \textbf{Anabolismo:} síntese de moléculas (consome energia)
+\end{itemize}
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] (cat) {Catabolismo};
+    \node[draw, circle, fill=verdeacido!30, text width=2cm, align=center, right=3cm of cat] (ana) {Anabolismo};
+
+    \draw[->, thick, bend left=30] (cat) to node[above] {ATP, NADH} (ana);
+    \draw[->, thick, bend left=30] (ana) to node[below] {ADP, NAD$^+$} (cat);
+
+    \node[above=0.3cm of cat, font=\small] {Moléculas\\complexas};
+    \node[below=0.3cm of cat, font=\small] {Moléculas\\simples};
+    \node[above=0.3cm of ana, font=\small] {Moléculas\\simples};
+    \node[below=0.3cm of ana, font=\small] {Moléculas\\complexas};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Vias Metabólicas Principais}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Metabolismo de Carboidratos}
+\begin{itemize}
+    \item \textbf{Glicólise}
+    \item Ciclo de Krebs (TCA)
+    \item Fosforilação oxidativa
+    \item Gliconeogênese
+    \item Via das pentoses
+\end{itemize}
+\end{block}
+
+\begin{block}{Metabolismo de Lipídios}
+\begin{itemize}
+    \item $\beta$-oxidação
+    \item Síntese de ácidos graxos
+    \item Síntese de colesterol
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Metabolismo de Aminoácidos}
+\begin{itemize}
+    \item Transaminação
+    \item Desaminação
+    \item Ciclo da ureia
+    \item Síntese de aa
+\end{itemize}
+\end{block}
+
+\begin{block}{Metabolismo de Nucleotídeos}
+\begin{itemize}
+    \item Síntese de purinas
+    \item Síntese de pirimidinas
+    \item Vias de salvação
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Glicólise: Via Fundamental}
+\begin{block}{Visão Geral}
+\begin{equation*}
+\text{Glicose} + 2\text{NAD}^+ + 2\text{ADP} + 2\text{P}_i \rightarrow 2\text{Piruvato} + 2\text{NADH} + 2\text{ATP} + 2\text{H}_2\text{O}
+\end{equation*}
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Fase Preparatória} (consome ATP):
+\begin{enumerate}
+    \item Glicose $\rightarrow$ G6P
+    \item G6P $\rightarrow$ F6P
+    \item F6P $\rightarrow$ F1,6BP
+    \item F1,6BP $\rightarrow$ DHAP + G3P
+    \item DHAP $\rightarrow$ G3P
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Fase de Pagamento} (produz ATP):
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item G3P $\rightarrow$ 1,3BPG
+    \item 1,3BPG $\rightarrow$ 3PG
+    \item 3PG $\rightarrow$ 2PG
+    \item 2PG $\rightarrow$ PEP
+    \item PEP $\rightarrow$ Piruvato
+\end{enumerate}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Balanço líquido: 2 ATP, 2 NADH produzidos por molécula de glicose
+}
+\end{frame}
+
+\begin{frame}{Enzimas: Catalisadores Biológicos}
+\definicao{Enzima}{
+Proteína que catalisa (acelera) reações bioquímicas específicas sem ser consumida no processo.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Cinética de Michaelis-Menten}
+\begin{equation*}
+v = \frac{V_{max}[S]}{K_M + [S]}
+\end{equation*}
+
+Onde:
+\begin{itemize}
+    \item $v$ = velocidade da reação
+    \item $V_{max}$ = velocidade máxima
+    \item $[S]$ = concentração do substrato
+    \item $K_M$ = constante de Michaelis (afinidade)
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Interpretação}
+Quando $[S] = K_M$, então $v = V_{max}/2$
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Modelando Cinética Enzimática}
+\begin{lstlisting}[language=Python, caption=Simulação de Michaelis-Menten]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def michaelis_menten(S, Vmax, Km):
+    """Calcula velocidade pela equacao de MM"""
+    return (Vmax * S) / (Km + S)
+
+# Parametros
+Vmax = 100  # umol/min
+Km = 5      # mM
+
+# Concentracoes de substrato
+S = np.linspace(0, 50, 100)
+v = michaelis_menten(S, Vmax, Km)
+
+# Plotar
+plt.plot(S, v, 'b-', linewidth=2)
+plt.axhline(y=Vmax, color='r', linestyle='--',
+            label=f'Vmax = {Vmax}')
+plt.axhline(y=Vmax/2, color='g', linestyle='--')
+plt.axvline(x=Km, color='g', linestyle='--',
+            label=f'Km = {Km}')
+plt.xlabel('[S] (mM)')
+plt.ylabel('v (umol/min)')
+plt.legend()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: ORGANIZAÇÃO CELULAR
+% ============================================================================
+\section{Organização Celular}
+
+\begin{frame}{1.6 Organização Celular}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Célula Procarionte}
+\begin{itemize}
+    \item Sem núcleo definido
+    \item DNA circular
+    \item Sem organelas membranosas
+    \item Ribossomos 70S
+    \item Parede celular
+\end{itemize}
+\textbf{Exemplos:} Bactérias, Archaea
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Célula Eucarionte}
+\begin{itemize}
+    \item Núcleo definido
+    \item DNA linear + histonas
+    \item Organelas membranosas
+    \item Ribossomos 80S
+    \item Citoesqueleto
+\end{itemize}
+\textbf{Exemplos:} Animais, Plantas, Fungos
+\end{block}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Característica} & \textbf{Procarionte} & \textbf{Eucarionte} \\
+\midrule
+Tamanho típico & 1-10 $\mu$m & 10-100 $\mu$m \\
+Complexidade & Simples & Complexa \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Organelas Celulares}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Organelas Principais}
+\begin{itemize}
+    \item \textbf{Núcleo:} DNA, transcrição
+    \item \textbf{Mitocôndria:} ATP, respiração
+    \item \textbf{RE Rugoso:} síntese proteica
+    \item \textbf{RE Liso:} lipídios
+    \item \textbf{Golgi:} processamento
+    \item \textbf{Lisossomo:} digestão
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Organelas em Plantas}
+\begin{itemize}
+    \item \textbf{Cloroplasto:} fotossíntese
+    \item \textbf{Vacúolo:} armazenamento
+    \item \textbf{Parede celular:} suporte
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Teoria Endossimbiótica}
+Mitocôndrias e cloroplastos originaram-se de bactérias simbiontes
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Mitocôndria: Usina de Energia}
+\begin{columns}
+\column{0.6\textwidth}
+\textbf{Estrutura:}
+\begin{itemize}
+    \item Membrana externa (permeável)
+    \item Membrana interna (pregueada - cristas)
+    \item Matriz mitocondrial
+    \item Espaço intermembranar
+    \item DNA mitocondrial próprio
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Funções:}
+\begin{itemize}
+    \item Ciclo de Krebs (matriz)
+    \item Cadeia respiratória (membrana interna)
+    \item Síntese de ATP
+    \item Metabolismo de lipídios
+    \item Apoptose (morte celular programada)
+\end{itemize}
+
+\column{0.4\textwidth}
+\begin{alertblock}{Produção de ATP}
+\begin{equation*}
+\begin{split}
+&\text{Glicólise: } 2 \text{ ATP}\\
+&\text{Krebs: } 2 \text{ ATP}\\
+&\text{Fosf. Ox: } 34 \text{ ATP}\\
+&\hline
+&\textbf{Total: } 38 \text{ ATP}
+\end{split}
+\end{equation*}
+\end{alertblock}
+
+\begin{exampleblock}{Herança Materna}
+DNA mitocondrial é herdado apenas da mãe
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Compartimentalização Celular}
+\importante{
+A compartimentalização permite:
+\begin{itemize}
+    \item Concentração de enzimas e substratos
+    \item Ambientes químicos distintos (pH, íons)
+    \item Processos simultâneos incompatíveis
+    \item Regulação espacial do metabolismo
+\end{itemize}
+}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplo: Síntese vs Degradação}
+\begin{itemize}
+    \item \textbf{Citoplasma:} síntese de ácidos graxos
+    \item \textbf{Mitocôndria:} $\beta$-oxidação de ácidos graxos
+    \item Ambos podem ocorrer simultaneamente sem interferência
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Transporte através de Membranas}
+\begin{block}{Tipos de Transporte}
+\begin{enumerate}
+    \item \textbf{Passivo:} a favor do gradiente (sem ATP)
+    \begin{itemize}
+        \item Difusão simples
+        \item Difusão facilitada (canais, transportadores)
+    \end{itemize}
+
+    \item \textbf{Ativo:} contra o gradiente (consome ATP)
+    \begin{itemize}
+        \item Primário: bombas (Na$^+$/K$^+$-ATPase)
+        \item Secundário: cotransporte
+    \end{itemize}
+
+    \item \textbf{Em massa:}
+    \begin{itemize}
+        \item Endocitose (para dentro)
+        \item Exocitose (para fora)
+    \end{itemize}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Equação de Nernst: Potencial de Membrana}
+\begin{block}{Potencial de Equilíbrio}
+Para um íon específico:
+\begin{equation*}
+E_{ion} = \frac{RT}{zF} \ln\frac{[ion]_{ext}}{[ion]_{int}} = \frac{58\text{ mV}}{z} \log_{10}\frac{[ion]_{ext}}{[ion]_{int}}
+\end{equation*}
+
+Onde:
+\begin{itemize}
+    \item $R$ = constante dos gases
+    \item $T$ = temperatura (K)
+    \item $z$ = valência do íon
+    \item $F$ = constante de Faraday
+\end{itemize}
+\end{block}
+
+\exemplo{Potencial de K$^+$}{
+Se $[K^+]_{ext} = 5$ mM e $[K^+]_{int} = 140$ mM:\\
+$E_{K^+} = 58 \log_{10}(5/140) \approx -85$ mV
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: INTEGRAÇÃO DE SISTEMAS
+% ============================================================================
+\section{Integração de Sistemas}
+
+\begin{frame}{Visão Integrada dos Sistemas Biológicos}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.9, transform shape]
+    \node[draw, circle, fill=roxodna!30] (dna) {DNA};
+    \node[draw, circle, fill=laranjacel!30, right=of dna] (rna) {RNA};
+    \node[draw, circle, fill=verdeacido!30, right=of rna] (prot) {Proteína};
+    \node[draw, circle, fill=azulclaro!30, below=of prot] (met) {Metabólito};
+    \node[draw, circle, fill=yellow!30, below=of rna] (cel) {Célula};
+
+    \draw[->, thick] (dna) -- (rna);
+    \draw[->, thick] (rna) -- (prot);
+    \draw[->, thick] (prot) -- (met);
+    \draw[->, thick] (met) -- (cel);
+    \draw[->, thick, bend right=45] (prot) to node[left, font=\tiny] {regulação} (dna);
+    \draw[->, thick, bend left=20] (met) to node[above right, font=\tiny] {feedback} (prot);
+    \draw[->, thick] (cel) -- ($(cel) + (0,-1)$) node[below, font=\small] {Fenótipo};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Os sistemas biológicos são redes altamente interconectadas onde:
+\begin{itemize}
+    \item Genes regulam proteínas
+    \item Proteínas catalisam metabolismo
+    \item Metabólitos regulam genes
+    \item Tudo ocorre no contexto celular
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{Da Molécula ao Organismo}
+\begin{block}{Hierarquia de Organização Biológica}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \foreach \i/\name in {0/Átomo, 1/Molécula, 2/Macromolécula, 3/Organela, 4/Célula, 5/Tecido, 6/Órgão, 7/Organismo} {
+        \node[draw, rectangle, fill=azulclaro!20, minimum width=2.5cm] at (0,-\i*0.8) {\name};
+    }
+
+    \foreach \i in {0,...,6} {
+        \draw[->, thick] (-1.3,-\i*0.8-0.3) -- (-1.3,-\i*0.8-0.5);
+    }
+
+    \node[right, font=\small] at (1.5,-3.2) {Emergência};
+    \node[right, font=\small] at (1.5,-3.5) {de};
+    \node[right, font=\small] at (1.5,-3.8) {propriedades};
+\end{tikzpicture}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}{Biologia de Sistemas: Abordagem Holística}
+\definicao{Biologia de Sistemas}{
+Estudo de sistemas biológicos através da análise integrada de múltiplos níveis de organização (genoma, transcriptoma, proteoma, metaboloma).
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Abordagem Reducionista:}
+\begin{itemize}
+    \item Estudo de componentes isolados
+    \item Foco em detalhes
+    \item Experimentos controlados
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Abordagem Sistêmica:}
+\begin{itemize}
+    \item Estudo de interações
+    \item Visão do todo
+    \item Modelagem integrativa
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+A biologia de sistemas combina ambas as abordagens!
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 9: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Estrutura do DNA}
+Calcule o número total de ligações de hidrogênio em uma molécula de DNA de 100 pares de bases, sabendo que ela contém 30\% de adenina.
+\end{block}
+
+\begin{block}{Questão 2: Cinética Enzimática}
+Uma enzima tem $K_M = 2$ mM e $V_{max} = 50$ $\mu$mol/min. Calcule:
+\begin{enumerate}
+    \item A velocidade quando $[S] = 2$ mM
+    \item A concentração de substrato necessária para atingir 90\% de $V_{max}$
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 3: Código Genético}
+Quantas proteínas diferentes de 5 aminoácidos podem ser formadas teoricamente usando os 20 aminoácidos padrão?
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 4: Estrutura de Proteínas}
+Explique como cada nível de estrutura proteica (primária, secundária, terciária, quaternária) contribui para a função da hemoglobina.
+\end{block}
+
+\begin{block}{Questão 5: Metabolismo}
+Calcule o rendimento total de ATP a partir da oxidação completa de uma molécula de glicose, considerando:
+\begin{itemize}
+    \item Glicólise: 2 ATP + 2 NADH
+    \item Conversão piruvato $\rightarrow$ Acetil-CoA: 2 NADH
+    \item Ciclo de Krebs: 2 ATP + 6 NADH + 2 FADH$_2$
+    \item Cada NADH rende 2.5 ATP; cada FADH$_2$ rende 1.5 ATP
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{block}{Questão 6: Potencial de Membrana}
+Calcule o potencial de equilíbrio para Na$^+$ a 37°C, dados:
+\begin{itemize}
+    \item $[Na^+]_{ext} = 145$ mM
+    \item $[Na^+]_{int} = 12$ mM
+\end{itemize}
+Use a equação de Nernst simplificada: $E = (58/z) \log([X]_{ext}/[X]_{int})$
+\end{block}
+
+\begin{alertblock}{Projeto Prático}
+Escolha uma via metabólica e:
+\begin{enumerate}
+    \item Desenhe o diagrama completo com todas as enzimas
+    \item Identifique pontos de regulação
+    \item Proponha um modelo matemático simples para uma reação chave
+    \item Implemente o modelo em Python ou R
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 10: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{alberts} Alberts B. et al. (2022). \textit{Molecular Biology of the Cell}, 7th ed. Garland Science.
+
+\bibitem{berg} Berg J.M., Tymoczko J.L., Stryer L. (2019). \textit{Biochemistry}, 9th ed. W.H. Freeman.
+
+\bibitem{nelson} Nelson D.L., Cox M.M. (2021). \textit{Lehninger Principles of Biochemistry}, 8th ed. W.H. Freeman.
+
+\bibitem{lodish} Lodish H. et al. (2021). \textit{Molecular Cell Biology}, 9th ed. W.H. Freeman.
+
+\bibitem{palsson} Palsson B.O., Zengler K. (2010). \textit{The challenges of integrating multi-omic data sets}. Nature Chemical Biology.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Livros Recomendados}
+\begin{itemize}
+    \item Klipp E. et al. (2016). \textit{Systems Biology: A Textbook}, 2nd ed.
+    \item Alon U. (2019). \textit{An Introduction to Systems Biology}, 2nd ed.
+    \item Voit E.O. (2017). \textit{A First Course in Systems Biology}, 2nd ed.
+\end{itemize}
+\end{block}
+
+\begin{block}{Recursos Online}
+\begin{itemize}
+    \item \textbf{NCBI:} \url{https://www.ncbi.nlm.nih.gov}
+    \item \textbf{PDB:} \url{https://www.rcsb.org}
+    \item \textbf{KEGG:} \url{https://www.genome.jp/kegg}
+    \item \textbf{BioCyc:} \url{https://biocyc.org}
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 1: Sistemas Biológicos}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Introdução à Modelagem Matemática
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}
