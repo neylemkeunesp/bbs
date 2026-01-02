@@ -1,0 +1,2449 @@
+% ============================================================================
+% CAPÍTULO 14: DESIGN OF BIOLOGICAL SYSTEMS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 14: Design of Biological Systems]{Capítulo 14: Design of Biological Systems}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender princípios de engenharia aplicados à biologia
+    \item Projetar e analisar circuitos genéticos sintéticos
+    \item Aplicar engenharia metabólica para produção de compostos
+    \item Utilizar ferramentas computacionais de design
+    \item Entender desafios e perspectivas da biologia sintética
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Biologia Sintética}
+Aplicação de princípios de engenharia para projetar e construir novos sistemas biológicos ou redesenhar sistemas naturais existentes.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{O que é Biologia Sintética?}
+\definicao{Biologia Sintética}{
+Disciplina que combina biologia, engenharia e ciência da computação para projetar e construir novas funções e sistemas biológicos que não existem na natureza.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Princípios de Engenharia:}
+\begin{itemize}
+    \item Modularidade
+    \item Padronização
+    \item Abstração
+    \item Design racional
+    \item Otimização
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Biocombustíveis
+    \item Fármacos
+    \item Biosensores
+    \item Biomateriais
+    \item Terapia celular
+    \item Bioremediação
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ciclo Design-Build-Test-Learn}
+\begin{center}
+\begin{tikzpicture}[node distance=3cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.2cm, text centered, rounded corners, minimum height=1.2cm}]
+
+    \node[box, fill=roxodna!20] (design) {DESIGN\\Modelar\\Projetar};
+    \node[box, fill=verdeacido!20, right of=design] (build) {BUILD\\Construir\\Sintetizar};
+    \node[box, fill=laranjacel!20, below of=build] (test) {TEST\\Testar\\Medir};
+    \node[box, fill=azulclaro!30, left of=test] (learn) {LEARN\\Analisar\\Aprender};
+
+    \draw[->, thick, azulescuro, line width=1.5pt] (design) -- (build);
+    \draw[->, thick, azulescuro, line width=1.5pt] (build) -- (test);
+    \draw[->, thick, azulescuro, line width=1.5pt] (test) -- (learn);
+    \draw[->, thick, azulescuro, line width=1.5pt] (learn) -- (design);
+
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Processo iterativo: cada ciclo refina o design com base nos dados experimentais
+}
+\end{frame}
+
+\begin{frame}{Ética e Biossegurança}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{alertblock}{Considerações Éticas}
+\begin{itemize}
+    \item Organismos geneticamente modificados (OGMs)
+    \item Impacto ambiental
+    \item Uso dual (militar/civil)
+    \item Bioterrorismo
+    \item Propriedade intelectual
+\end{itemize}
+\end{alertblock}
+
+\column{0.5\textwidth}
+\begin{block}{Níveis de Biossegurança}
+\begin{itemize}
+    \item \textbf{BSL-1:} risco mínimo
+    \item \textbf{BSL-2:} risco moderado
+    \item \textbf{BSL-3:} alto risco
+    \item \textbf{BSL-4:} risco extremo
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Regulação}
+Protocolos de contenção, monitoramento e aprovação ética
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: CIRCUITOS GENÉTICOS SINTÉTICOS
+% ============================================================================
+\section{Circuitos Genéticos Sintéticos}
+
+\begin{frame}{Circuitos Genéticos como Dispositivos Computacionais}
+\begin{block}{Analogia com Circuitos Eletrônicos}
+Circuitos genéticos processam sinais bioquímicos assim como circuitos eletrônicos processam sinais elétricos
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Conceito} & \textbf{Eletrônica} & \textbf{Biologia} \\
+\midrule
+Sinal & Voltagem & Concentração \\
+Componente & Transistor & Gene/Proteína \\
+Estado ON & Alto voltagem & Alta expressão \\
+Estado OFF & Baixo voltagem & Baixa expressão \\
+Lógica & Portas lógicas & Regulação gênica \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\importante{
+Princípios de design modular: componentes intercambiáveis e reutilizáveis
+}
+\end{frame}
+
+\begin{frame}{BioBricks: Partes Biológicas Padronizadas}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Componentes Básicos}
+\begin{enumerate}
+    \item \textbf{Promotor:} controla transcrição
+    \item \textbf{RBS:} Ribosome Binding Site
+    \item \textbf{CDS:} Coding Sequence (gene)
+    \item \textbf{Terminador:} fim da transcrição
+\end{enumerate}
+\end{block}
+
+\textbf{Montagem Modular:}
+\begin{itemize}
+    \item BioBrick Assembly
+    \item Gibson Assembly
+    \item Golden Gate
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Promotor
+    \draw[->, thick, verdeacido, line width=2pt] (0,0) -- (1,0);
+    \node[below, font=\tiny] at (0.5,-0.1) {Promotor};
+
+    % RBS
+    \draw[thick, roxodna, fill=roxodna!30] (1.2,0) circle (0.15);
+    \node[below, font=\tiny] at (1.2,-0.3) {RBS};
+
+    % CDS
+    \draw[->, thick, azulescuro, line width=2pt] (1.5,0) -- (3.5,0);
+    \node[below, font=\tiny] at (2.5,-0.1) {Gene (CDS)};
+
+    % Terminador
+    \draw[thick, laranjacel, line width=3pt] (3.7,-0.2) -- (3.7,0.2);
+    \node[below, font=\tiny] at (3.7,-0.3) {Term};
+
+    % Expressão
+    \draw[->, thick, red, dashed] (2.5,0.5) -- (2.5,1) node[above, font=\small] {Proteína};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Registry of Standard Biological Parts}
+\url{http://parts.igem.org}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Toggle Switch: Interruptor Genético}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Gardner et al. (2000)}
+
+\begin{block}{Princípio}
+Dois repressores que se inibem mutuamente
+\begin{itemize}
+    \item Gene A reprime gene B
+    \item Gene B reprime gene A
+    \item Sistema bistável
+\end{itemize}
+\end{block}
+
+\textbf{Estados Estáveis:}
+\begin{itemize}
+    \item Estado 1: A alto, B baixo
+    \item Estado 2: A baixo, B alto
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Gene A
+    \node[draw, rectangle, fill=verdeacido!30, minimum width=2cm, minimum height=0.8cm] (geneA) at (0,2) {Gene A};
+
+    % Gene B
+    \node[draw, rectangle, fill=laranjacel!30, minimum width=2cm, minimum height=0.8cm] (geneB) at (0,0) {Gene B};
+
+    % Proteína A
+    \node[draw, circle, fill=verdeacido!50, minimum size=0.6cm] (protA) at (3,2) {A};
+
+    % Proteína B
+    \node[draw, circle, fill=laranjacel!50, minimum size=0.6cm] (protB) at (3,0) {B};
+
+    % Produção
+    \draw[->, thick, verdeacido] (geneA) -- (protA);
+    \draw[->, thick, laranjacel] (geneB) -- (protB);
+
+    % Repressão cruzada
+    \draw[-|, thick, red, bend left=30] (protA) to (geneB);
+    \draw[-|, thick, red, bend right=30] (protB) to (geneA);
+
+    \node[right, font=\tiny] at (4,2) {Repressor A};
+    \node[right, font=\tiny] at (4,0) {Repressor B};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\importante{
+Primeiro circuito genético sintético com memória bistável
+}
+\end{frame}
+
+\begin{frame}{Modelo Matemático do Toggle Switch}
+\begin{block}{Sistema de EDOs}
+\begin{align*}
+\derivada{u}{t} &= \frac{\alpha_1}{1 + v^{\beta}} - u\\
+\derivada{v}{t} &= \frac{\alpha_2}{1 + u^{\gamma}} - v
+\end{align*}
+
+onde:
+\begin{itemize}
+    \item $u, v$ = concentrações dos repressores
+    \item $\alpha_1, \alpha_2$ = taxas de produção máximas
+    \item $\beta, \gamma$ = coeficientes de Hill (cooperatividade)
+\end{itemize}
+\end{block}
+
+\textbf{Condição para Bistabilidade:}
+\destaque{
+\begin{equation*}
+\alpha_1 \alpha_2 > (\beta + 1)(\gamma + 1)
+\end{equation*}
+}
+\end{frame}
+
+\begin{frame}{Análise de Bistabilidade}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Pontos de Equilíbrio:}
+\begin{equation*}
+u = \frac{\alpha_1}{1 + v^{\beta}}, \quad v = \frac{\alpha_2}{1 + u^{\gamma}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{Análise de Estabilidade:}
+\begin{itemize}
+    \item Jacobiano
+    \item Autovalores
+    \item Diagrama de bifurcação
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Resultado}
+Sistema pode ter 1 ou 3 pontos de equilíbrio dependendo dos parâmetros
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (4,0) node[right] {$u$};
+    \draw[->] (0,0) -- (0,4) node[above] {$v$};
+
+    % Nullclines
+    \draw[thick, verdeacido, domain=0:3.5, samples=100] plot (\x, {3/(1+\x^2)});
+    \draw[thick, laranjacel, domain=0:3.5, samples=100] plot ({3/(1+\x^2)}, \x);
+
+    % Pontos de equilíbrio
+    \fill[blue] (0.5,2.8) circle (2pt) node[above right, font=\tiny] {Estável};
+    \fill[red] (1.5,1.5) circle (2pt) node[above right, font=\tiny] {Instável};
+    \fill[blue] (2.8,0.5) circle (2pt) node[above right, font=\tiny] {Estável};
+
+    % Trajetórias
+    \draw[->, thick, gray, dashed] (0.3,1.5) -- (0.4,2.5);
+    \draw[->, thick, gray, dashed] (2.5,1.5) -- (2.6,0.7);
+
+    \node[below, font=\small] at (2,-0.3) {Repressor A};
+    \node[left, font=\small, rotate=90] at (-0.5,2) {Repressor B};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Nullclines:} $\derivada{u}{t} = 0$ e $\derivada{v}{t} = 0$
+\end{columns}
+\end{frame}
+
+\begin{frame}{Repressilator: Oscilador Genético}
+\textbf{Elowitz \& Leibler (2000)}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Princípio}
+Três genes que se reprimem em cascata:
+\begin{itemize}
+    \item Gene \gene{lacI} reprime \gene{tetR}
+    \item Gene \gene{tetR} reprime \gene{cI}
+    \item Gene \gene{cI} reprime \gene{lacI}
+\end{itemize}
+\end{block}
+
+\textbf{Resultado:}
+\begin{itemize}
+    \item Oscilações periódicas
+    \item Período $\sim$ 2-3 horas
+    \item Visualização com GFP
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+    % Três genes em círculo
+    \node[draw, circle, fill=verdeacido!30, minimum size=1.2cm] (lacI) at (90:2) {\gene{lacI}};
+    \node[draw, circle, fill=laranjacel!30, minimum size=1.2cm] (tetR) at (210:2) {\gene{tetR}};
+    \node[draw, circle, fill=roxodna!30, minimum size=1.2cm] (cI) at (330:2) {\gene{cI}};
+
+    % Repressão circular
+    \draw[-|, thick, red, line width=1.5pt] (lacI) to[bend right=20] (tetR);
+    \draw[-|, thick, red, line width=1.5pt] (tetR) to[bend right=20] (cI);
+    \draw[-|, thick, red, line width=1.5pt] (cI) to[bend right=20] (lacI);
+
+    % Centro
+    \node[font=\small] at (0,0) {Ciclo de\\repressão};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\importante{
+Primeiro oscilador genético sintético
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelo Matemático do Repressilator}
+\begin{block}{Sistema de EDOs}
+\begin{align*}
+\derivada{m_i}{t} &= -m_i + \frac{\alpha}{1 + p_j^n} + \alpha_0\\
+\derivada{p_i}{t} &= -\beta(p_i - m_i)
+\end{align*}
+
+onde $i = 1, 2, 3$ (lacI, tetR, cI) e $j = i-1 \pmod{3}$
+
+\begin{itemize}
+    \item $m_i$ = concentração de mRNA do gene $i$
+    \item $p_i$ = concentração de proteína do gene $i$
+    \item $\alpha$ = taxa de transcrição máxima
+    \item $n$ = coeficiente de Hill
+    \item $\beta$ = razão de degradação proteína/mRNA
+\end{itemize}
+\end{block}
+
+\textbf{Condições para Oscilação:}
+\begin{itemize}
+    \item Repressão forte ($n$ grande)
+    \item Tempo de resposta adequado ($\beta$ apropriado)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Feed-Forward Loops (FFLs)}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Motivo de Rede}
+Padrão comum em redes regulatórias:
+\begin{itemize}
+    \item Gene X regula Y
+    \item Gene X regula Z
+    \item Gene Y regula Z
+\end{itemize}
+\end{block}
+
+\textbf{Tipos:}
+\begin{itemize}
+    \item Coherent FFL (C-FFL)
+    \item Incoherent FFL (I-FFL)
+\end{itemize}
+
+\textbf{Funções:}
+\begin{itemize}
+    \item Filtro de ruído
+    \item Detector de pulso
+    \item Acelerador de resposta
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+    % Type 1 Coherent FFL
+    \node[draw, circle, fill=verdeacido!30] (X) at (0,2) {X};
+    \node[draw, circle, fill=laranjacel!30] (Y) at (2,2) {Y};
+    \node[draw, circle, fill=roxodna!30] (Z) at (1,0) {Z};
+
+    % Ativação
+    \draw[->, thick, azulescuro, line width=1.5pt] (X) -- (Y);
+    \draw[->, thick, azulescuro, line width=1.5pt] (X) to[bend right=20] (Z);
+    \draw[->, thick, azulescuro, line width=1.5pt] (Y) to[bend left=20] (Z);
+
+    \node[above, font=\small] at (1,2.5) {C1-FFL};
+    \node[below, font=\tiny] at (1,-0.5) {AND gate};
+\end{tikzpicture}
+
+\vspace{0.5cm}
+
+\begin{tikzpicture}[scale=1.0]
+    % Type 1 Incoherent FFL
+    \node[draw, circle, fill=verdeacido!30] (X) at (0,2) {X};
+    \node[draw, circle, fill=laranjacel!30] (Y) at (2,2) {Y};
+    \node[draw, circle, fill=roxodna!30] (Z) at (1,0) {Z};
+
+    % Ativação/Repressão
+    \draw[->, thick, azulescuro, line width=1.5pt] (X) -- (Y);
+    \draw[->, thick, azulescuro, line width=1.5pt] (X) to[bend right=20] (Z);
+    \draw[-|, thick, red, line width=1.5pt] (Y) to[bend left=20] (Z);
+
+    \node[above, font=\small] at (1,2.5) {I1-FFL};
+    \node[below, font=\tiny] at (1,-0.5) {Pulse detector};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Portas Lógicas Genéticas}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % AND gate
+    \begin{scope}
+        \node[draw, rectangle, fill=azulclaro!30, minimum width=1.5cm, minimum height=1cm] (and) at (0,0) {AND};
+        \draw[<-] (and.west) ++(-0.5,0.2) -- (and.west |- 0,0.2) node[left, font=\tiny] {A};
+        \draw[<-] (and.west) ++(-0.5,-0.2) -- (and.west |- 0,-0.2) node[left, font=\tiny] {B};
+        \draw[->] (and.east) -- ++(0.5,0) node[right, font=\tiny] {Out};
+        \node[below, font=\small] at (0,-0.8) {A e B ativos};
+    \end{scope}
+
+    % OR gate
+    \begin{scope}[xshift=4cm]
+        \node[draw, rectangle, fill=verdeacido!30, minimum width=1.5cm, minimum height=1cm] (or) at (0,0) {OR};
+        \draw[<-] (or.west) ++(-0.5,0.2) -- (or.west |- 0,0.2) node[left, font=\tiny] {A};
+        \draw[<-] (or.west) ++(-0.5,-0.2) -- (or.west |- 0,-0.2) node[left, font=\tiny] {B};
+        \draw[->] (or.east) -- ++(0.5,0) node[right, font=\tiny] {Out};
+        \node[below, font=\small] at (0,-0.8) {A ou B ativo};
+    \end{scope}
+
+    % NOT gate
+    \begin{scope}[xshift=8cm]
+        \node[draw, rectangle, fill=laranjacel!30, minimum width=1.5cm, minimum height=1cm] (not) at (0,0) {NOT};
+        \draw[<-] (not.west) ++(-0.5,0) -- (not.west) node[left, font=\tiny] {A};
+        \draw[->] (not.east) -- ++(0.5,0) node[right, font=\tiny] {Out};
+        \node[below, font=\small] at (0,-0.8) {Inversor};
+    \end{scope}
+
+    % NOR gate
+    \begin{scope}[xshift=11.5cm]
+        \node[draw, rectangle, fill=roxodna!30, minimum width=1.5cm, minimum height=1cm] (nor) at (0,0) {NOR};
+        \draw[<-] (nor.west) ++(-0.5,0.2) -- (nor.west |- 0,0.2) node[left, font=\tiny] {A};
+        \draw[<-] (nor.west) ++(-0.5,-0.2) -- (nor.west |- 0,-0.2) node[left, font=\tiny] {B};
+        \draw[->] (nor.east) -- ++(0.5,0) node[right, font=\tiny] {Out};
+        \node[below, font=\small] at (0,-0.8) {NOT(A OR B)};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Implementação Biológica}
+\begin{itemize}
+    \item \textbf{AND:} dois promotores necessários
+    \item \textbf{OR:} promotores alternativos
+    \item \textbf{NOT:} repressor
+    \item \textbf{NOR:} dois repressores
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Biosensores e Repórteres}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Biosensor}
+Sistema que detecta sinais químicos/físicos e produz resposta mensurável
+\end{block}
+
+\textbf{Componentes:}
+\begin{itemize}
+    \item Domínio sensor (receptor)
+    \item Domínio de sinal
+    \item Gene repórter
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Repórteres Comuns:}
+\begin{itemize}
+    \item GFP (fluorescência verde)
+    \item RFP (fluorescência vermelha)
+    \item Luciferase (bioluminescência)
+    \item LacZ ($\beta$-galactosidase)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Molécula alvo
+    \node[draw, circle, fill=red!30, minimum size=0.6cm] (target) at (0,3) {X};
+    \node[above, font=\tiny] at (0,3.4) {Analito};
+
+    % Sensor
+    \node[draw, rectangle, fill=verdeacido!30, minimum width=2.5cm, minimum height=0.8cm] (sensor) at (0,2) {Promotor\\Sensor};
+
+    % Arrow
+    \draw[->, thick, red] (target) -- (sensor);
+
+    % Gene repórter
+    \draw[->, thick, azulescuro, line width=2pt] (0,1.2) -- (2,1.2);
+    \node[below, font=\tiny] at (1,1.2) {GFP};
+
+    % Terminador
+    \draw[thick, laranjacel, line width=3pt] (2.2,1) -- (2.2,1.4);
+
+    % Fluorescência
+    \draw[->, thick, verdeacido, dashed] (1,0.8) -- (1,0.2);
+    \node[draw, star, fill=verdeacido!50, star points=5, star point ratio=2, minimum size=0.8cm] at (1,-0.3) {};
+    \node[below, font=\small] at (1,-0.8) {Fluorescência};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\exemplo{Arsênico}{
+Biosensor para detecção de arsênico em água usando promotor \textit{ars} + GFP
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação: Toggle Switch em Python}
+\begin{lstlisting}[language=Python, caption=Modelo do toggle switch, basicstyle=\ttfamily\tiny]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def toggle_switch(y, t, alpha1, alpha2, beta, gamma):
+    """Modelo do toggle switch"""
+    u, v = y
+    dudt = alpha1 / (1 + v**beta) - u
+    dvdt = alpha2 / (1 + u**gamma) - v
+    return [dudt, dvdt]
+
+# Parametros para sistema bistavel
+alpha1 = 156.25
+alpha2 = 15.6
+beta = 2.5
+gamma = 1.0
+
+# Tempo
+t = np.linspace(0, 50, 1000)
+
+# Duas condicoes iniciais diferentes
+y0_1 = [0.1, 5.0]  # Estado 1
+y0_2 = [5.0, 0.1]  # Estado 2
+
+# Resolver
+sol1 = odeint(toggle_switch, y0_1, t, args=(alpha1, alpha2, beta, gamma))
+sol2 = odeint(toggle_switch, y0_2, t, args=(alpha1, alpha2, beta, gamma))
+
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.plot(t, sol1[:, 0], 'b-', label='u (Estado 1)', linewidth=2)
+plt.plot(t, sol1[:, 1], 'r-', label='v (Estado 1)', linewidth=2)
+plt.plot(t, sol2[:, 0], 'b--', label='u (Estado 2)', linewidth=2)
+plt.plot(t, sol2[:, 1], 'r--', label='v (Estado 2)', linewidth=2)
+plt.xlabel('Tempo')
+plt.ylabel('Concentracao')
+plt.legend()
+plt.title('Toggle Switch: Bistabilidade')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação: Repressilator em Python}
+\begin{lstlisting}[language=Python, caption=Modelo do repressilator, basicstyle=\ttfamily\tiny]
+def repressilator(y, t, alpha, alpha0, beta, n):
+    """Modelo do repressilator (3 genes)"""
+    m1, p1, m2, p2, m3, p3 = y
+
+    # mRNA equations
+    dm1dt = -m1 + alpha / (1 + p3**n) + alpha0
+    dm2dt = -m2 + alpha / (1 + p1**n) + alpha0
+    dm3dt = -m3 + alpha / (1 + p2**n) + alpha0
+
+    # Protein equations
+    dp1dt = -beta * (p1 - m1)
+    dp2dt = -beta * (p2 - m2)
+    dp3dt = -beta * (p3 - m3)
+
+    return [dm1dt, dp1dt, dm2dt, dp2dt, dm3dt, dp3dt]
+
+# Parametros
+alpha = 216.0
+alpha0 = 0.0
+beta = 0.2
+n = 2.0
+
+# Condicoes iniciais
+y0 = [0.5, 1.0, 1.5, 0.5, 2.0, 1.0]
+t = np.linspace(0, 500, 5000)
+
+# Resolver
+sol = odeint(repressilator, y0, t, args=(alpha, alpha0, beta, n))
+
+# Plotar
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.plot(t, sol[:, 1], 'g-', label='Proteina 1', linewidth=2)
+plt.plot(t, sol[:, 3], 'orange', label='Proteina 2', linewidth=2)
+plt.plot(t, sol[:, 5], 'purple', label='Proteina 3', linewidth=2)
+plt.xlabel('Tempo')
+plt.ylabel('Concentracao')
+plt.legend()
+plt.title('Repressilator: Series Temporais')
+
+plt.subplot(1, 2, 2)
+plt.plot(sol[:, 1], sol[:, 3], 'b-', linewidth=1)
+plt.xlabel('Proteina 1')
+plt.ylabel('Proteina 2')
+plt.title('Retrato de Fase')
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: ENGENHARIA METABÓLICA
+% ============================================================================
+\section{Engenharia Metabólica}
+
+\begin{frame}{Engenharia de Vias Metabólicas}
+\definicao{Engenharia Metabólica}{
+Modificação direcionada de vias metabólicas usando tecnologia de DNA recombinante para melhorar a produção de compostos de interesse.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Objetivos:}
+\begin{itemize}
+    \item Aumentar rendimento
+    \item Produzir novos compostos
+    \item Remover subprodutos
+    \item Melhorar eficiência
+    \item Reduzir custos
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Alvos Típicos:}
+\begin{itemize}
+    \item Biocombustíveis (etanol, biodiesel)
+    \item Fármacos (artemisinina, taxol)
+    \item Aminoácidos
+    \item Vitaminas
+    \item Polímeros biodegradáveis
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Combina biologia molecular, bioquímica e modelagem computacional
+}
+\end{frame}
+
+\begin{frame}{Estratégias de Engenharia Metabólica}
+\begin{block}{1. Overexpression (Superexpressão)}
+Aumentar expressão de enzimas limitantes da via
+\begin{itemize}
+    \item Promotores fortes
+    \item Múltiplas cópias do gene
+    \item Otimização de códons
+\end{itemize}
+\end{block}
+
+\begin{block}{2. Gene Knockout (Deleção)}
+Eliminar vias competidoras ou indesejáveis
+\begin{itemize}
+    \item CRISPR-Cas9
+    \item Recombinação homóloga
+    \item Direcionar fluxo para via de interesse
+\end{itemize}
+\end{block}
+
+\begin{block}{3. Heterologous Expression (Expressão Heteróloga)}
+Introduzir genes de outros organismos
+\begin{itemize}
+    \item Criar novas vias
+    \item Produzir compostos não-nativos
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Estratégia Push-Pull}
+\begin{center}
+\begin{tikzpicture}[scale=0.9, node distance=2cm]
+    % Substrato
+    \node[draw, circle, fill=azulclaro!30, minimum size=1cm] (S) at (0,0) {S};
+
+    % Intermediário
+    \node[draw, circle, fill=verdeacido!30, minimum size=1cm] (I) at (3,0) {I};
+
+    % Produto
+    \node[draw, circle, fill=laranjacel!30, minimum size=1cm] (P) at (6,0) {P};
+
+    % Via competidora
+    \node[draw, circle, fill=gray!30, minimum size=0.8cm] (X) at (3,-2) {X};
+
+    % Setas principais
+    \draw[->, thick, verdeacido, line width=2pt] (S) -- (I) node[midway, above, font=\small] {PUSH};
+    \draw[->, thick, laranjacel, line width=2pt] (I) -- (P) node[midway, above, font=\small] {PULL};
+
+    % Via competidora
+    \draw[->, thick, gray] (I) -- (X);
+    \draw[red, line width=3pt] (2.8,-0.8) -- (3.2,-1.2);
+    \draw[red, line width=3pt] (3.2,-0.8) -- (2.8,-1.2);
+
+    % Labels
+    \node[above, font=\small] at (1.5,0.5) {Superexpressão};
+    \node[above, font=\small] at (4.5,0.5) {Superexpressão};
+    \node[below, font=\small] at (3,-2.5) {Knockout};
+
+    \node[below, font=\tiny] at (0,-0.7) {Substrato};
+    \node[below, font=\tiny] at (3,-0.7) {Intermediário};
+    \node[below, font=\tiny] at (6,-0.7) {Produto alvo};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Estratégia}
+\begin{itemize}
+    \item \textbf{Push:} aumentar fluxo entrando na via
+    \item \textbf{Pull:} aumentar conversão para produto final
+    \item \textbf{Block:} eliminar vias competidoras
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Balanceamento de Cofatores}
+\begin{block}{Problema}
+Muitas reações requerem cofatores (NADH, NADPH, ATP)
+\begin{itemize}
+    \item Disponibilidade limitada
+    \item Necessário balanço entre vias
+    \item Afeta rendimento máximo teórico
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Ciclo NADH/NAD+
+    \node[draw, circle, fill=verdeacido!30] (nadh) at (0,0) {NADH};
+    \node[draw, circle, fill=laranjacel!30] (nad) at (3,0) {NAD$^+$};
+
+    % Reação catabólica
+    \draw[->, thick, azulescuro, bend left=45] (nad) to node[above, font=\small] {Catabolismo} (nadh);
+
+    % Reação anabólica
+    \draw[->, thick, roxodna, bend left=45] (nadh) to node[below, font=\small] {Anabolismo} (nad);
+
+    % Labels
+    \node[below, font=\small] at (1.5,-1.2) {Balanço redox};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Engenharia de cofatores: modificar especificidade de enzimas (NADH $\leftrightarrow$ NADPH)
+}
+\end{frame}
+
+\begin{frame}{Exemplo: Produção de Artemisinina}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Contexto}
+\begin{itemize}
+    \item Antimalárico potente
+    \item Extraído de \textit{Artemisia annua}
+    \item Rendimento baixo ($\sim$1\%)
+    \item Alto custo
+\end{itemize}
+\end{block}
+
+\textbf{Solução: Biologia Sintética}
+\begin{itemize}
+    \item Via heteróloga em \textit{E. coli}
+    \item Via estendida em levedura
+    \item Expressão de genes de planta
+    \item Otimização metabólica
+\end{itemize}
+
+\textbf{Resultado (Keasling lab):}
+\begin{itemize}
+    \item Produção \textgreater 25 g/L
+    \item Redução de custo 90\%
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7, node distance=1.3cm]
+    % Via do mevalonato
+    \node[draw, rectangle, fill=azulclaro!30, text width=2cm, align=center] (acetyl) at (0,4) {Acetil-CoA};
+
+    \node[draw, rectangle, fill=azulclaro!30, text width=2cm, align=center] (mev) at (0,2.5) {Mevalonato};
+
+    \node[draw, rectangle, fill=verdeacido!30, text width=2cm, align=center] (ipp) at (0,1) {IPP/DMAPP};
+
+    \node[draw, rectangle, fill=laranjacel!30, text width=2cm, align=center] (fpp) at (0,-0.5) {FPP};
+
+    \node[draw, rectangle, fill=roxodna!30, text width=2cm, align=center] (amor) at (0,-2) {Amorfa-\\dieno};
+
+    \node[draw, rectangle, fill=red!30, text width=2cm, align=center] (art) at (0,-3.5) {Ácido\\Artemisínico};
+
+    % Setas
+    \draw[->, thick] (acetyl) -- (mev) node[midway, right, font=\tiny] {ERG};
+    \draw[->, thick] (mev) -- (ipp) node[midway, right, font=\tiny] {MVA};
+    \draw[->, thick] (ipp) -- (fpp) node[midway, right, font=\tiny] {ERG20};
+    \draw[->, thick, verdeacido, line width=1.5pt] (fpp) -- (amor) node[midway, right, font=\tiny] {ADS};
+    \draw[->, thick, verdeacido, line width=1.5pt] (amor) -- (art) node[midway, right, font=\tiny] {CYP71AV1};
+
+    % Labels
+    \node[left, font=\tiny] at (-1.5,2.5) {Nativo};
+    \node[left, font=\tiny, text=verdeacido] at (-1.5,-2.5) {Heterólogo};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Exemplo: Produção de 1,3-Propanodiol}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Aplicação}
+Monômero para polímeros (PTT)
+\begin{itemize}
+    \item Carpetes, plásticos
+    \item Produção tradicional: petroquímica
+    \item Alternativa: fermentação
+\end{itemize}
+\end{block}
+
+\textbf{Via Sintética:}
+\begin{itemize}
+    \item Glicerol $\rightarrow$ 3-HPA
+    \item 3-HPA $\rightarrow$ 1,3-PDO
+    \item Genes de \textit{Klebsiella}
+    \item Expressão em \textit{E. coli}
+\end{itemize}
+
+\textbf{DuPont/Genencor:}
+\begin{itemize}
+    \item Produção industrial
+    \item Rendimento \textgreater 135 g/L
+    \item Processo econômico
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8, node distance=1.5cm]
+    % Glicerol
+    \node[draw, rectangle, fill=azulclaro!30, minimum width=2cm] (gly) at (0,3) {Glicerol};
+
+    % 3-HPA
+    \node[draw, rectangle, fill=laranjacel!30, minimum width=2cm] (hpa) at (0,1.5) {3-HPA};
+
+    % 1,3-PDO
+    \node[draw, rectangle, fill=verdeacido!30, minimum width=2cm] (pdo) at (0,0) {1,3-PDO};
+
+    % Via competidora
+    \node[draw, rectangle, fill=gray!30, minimum width=1.5cm] (dha) at (3,1.5) {DHA};
+
+    % Setas
+    \draw[->, thick, verdeacido, line width=2pt] (gly) -- (hpa) node[midway, left, font=\small] {dhaB};
+    \draw[->, thick, verdeacido, line width=2pt] (hpa) -- (pdo) node[midway, left, font=\small] {dhaT};
+
+    % Via competidora
+    \draw[->, thick, gray] (hpa) -- (dha);
+    \draw[red, line width=3pt] (2.2,1.4) -- (2.6,1.6);
+    \draw[red, line width=3pt] (2.6,1.4) -- (2.2,1.6);
+
+    % Cofatores
+    \node[right, font=\tiny] at (0.5,2.3) {NADH};
+    \node[right, font=\tiny] at (0.5,0.8) {NADH};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\importante{
+Exemplo de sucesso comercial da engenharia metabólica
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Análise de Balanço de Fluxo (FBA)}
+\begin{block}{Flux Balance Analysis}
+Método computacional para predizer fluxos metabólicos
+\begin{itemize}
+    \item Baseado em estequiometria
+    \item Estado estacionário
+    \item Otimização linear
+\end{itemize}
+\end{block}
+
+\textbf{Formulação:}
+\destaque{
+\begin{align*}
+\text{maximizar} \quad & c^T v\\
+\text{sujeito a} \quad & Sv = 0\\
+& v_{min} \leq v \leq v_{max}
+\end{align*}
+}
+
+onde:
+\begin{itemize}
+    \item $S$ = matriz estequiométrica
+    \item $v$ = vetor de fluxos
+    \item $c$ = coeficientes da função objetivo (ex: biomassa)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Identificação de Alvos Genéticos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Métodos}
+\begin{itemize}
+    \item \textbf{FBA:} predizer fluxos
+    \item \textbf{FVA:} análise de variabilidade
+    \item \textbf{MOMA:} minimização de ajuste metabólico
+    \item \textbf{OptKnock:} identificar knockouts ótimos
+\end{itemize}
+\end{block}
+
+\textbf{OptKnock:}
+\begin{itemize}
+    \item Problema bi-nível
+    \item Acoplar crescimento e produção
+    \item Identificar deleções sinérgicas
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Gráfico biomassa vs produto
+    \draw[->] (0,0) -- (4.5,0) node[right, font=\small] {Biomassa};
+    \draw[->] (0,0) -- (0,3.5) node[above, font=\small] {Produto};
+
+    % Linha de compensação wild-type
+    \draw[thick, gray, dashed] (0,0) -- (4,0.5) node[right, font=\tiny] {Wild-type};
+
+    % Região factível após knockout
+    \fill[verdeacido!30, opacity=0.5] (0,0) -- (1.5,2.5) -- (3,2) -- (4,1) -- (4,0) -- cycle;
+
+    % Ponto ótimo
+    \fill[red] (1.5,2.5) circle (2pt);
+    \node[above, font=\small] at (1.5,2.7) {Ótimo};
+
+    % Legenda
+    \node[below, font=\tiny, text width=3cm, align=center] at (2,-0.7) {OptKnock identifica knockouts para produção acoplada};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Engenharia de Cofatores}
+\begin{block}{Estratégias}
+\begin{itemize}
+    \item Modificar especificidade NADH/NADPH
+    \item Superexpressar transidrogenases
+    \item Redirecionar fluxo de cofatores
+    \item Usar vias alternativas
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Exemplo: NADPH}
+\begin{itemize}
+    \item Necessário para biossíntese
+    \item Via das pentoses (PPP)
+    \item Enzima málica
+    \item Transidrogenase PntAB
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % NADP+ e NADPH
+    \node[draw, circle, fill=laranjacel!30] (nadp) at (0,2) {NADP$^+$};
+    \node[draw, circle, fill=verdeacido!30] (nadph) at (0,0) {NADPH};
+
+    % NAD+ e NADH
+    \node[draw, circle, fill=laranjacel!30] (nad) at (3,2) {NAD$^+$};
+    \node[draw, circle, fill=verdeacido!30] (nadh) at (3,0) {NADH};
+
+    % Transidorgenase
+    \draw[->, thick, azulescuro, bend left=20] (nadh) to node[above, font=\tiny] {PntAB} (nadph);
+    \draw[->, thick, azulescuro, bend left=20] (nadp) to (nad);
+
+    % PPP
+    \draw[->, thick, roxodna] (nadp) to[out=180, in=180, looseness=2] node[left, font=\tiny] {PPP} (nadph);
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\importante{
+Balanço de cofatores é crítico para rendimento máximo
+}
+\end{frame}
+
+\begin{frame}{Regulação Dinâmica de Vias}
+\begin{block}{Controle Temporal}
+Expressão gênica responsiva a sinais metabólicos
+\begin{itemize}
+    \item Promotores induzíveis
+    \item Biosensores de metabólitos
+    \item Controle de feedback
+    \item Evitar toxicidade de intermediários
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Fase de crescimento
+    \draw[thick, verdeacido, line width=2pt] (0,0) -- (2,2) node[midway, above, sloped, font=\small] {Crescimento};
+
+    % Fase de produção
+    \draw[thick, laranjacel, line width=2pt] (2,2) -- (5,2) node[midway, above, font=\small] {Produção};
+
+    % Eixos
+    \draw[->] (0,0) -- (5.5,0) node[right, font=\small] {Tempo};
+    \draw[->] (0,0) -- (0,2.5) node[above, font=\small] {Biomassa/Produto};
+
+    % Divisão
+    \draw[dashed] (2,0) -- (2,2.5);
+    \node[below, font=\small] at (2,-0.2) {Switch};
+
+    % Labels
+    \node[below, font=\tiny] at (1,-0.5) {Via de biomassa ativa};
+    \node[below, font=\tiny] at (3.5,-0.5) {Via de produto ativa};
+\end{tikzpicture}
+\end{center}
+
+\exemplo{Sistema Bifásico}{
+Fase 1: crescimento celular (promotor constitutivo)\\
+Fase 2: produção (promotor induzível por IPTG ou temperatura)
+}
+\end{frame}
+
+\begin{frame}[fragile]{Engenharia Metabólica com COBRApy}
+\begin{lstlisting}[language=Python, caption=Análise FBA com COBRApy, basicstyle=\ttfamily\tiny]
+import cobra
+from cobra import Model, Reaction, Metabolite
+
+# Carregar modelo de E. coli
+model = cobra.io.load_json_model("e_coli_core.json")
+
+# Realizar FBA
+solution = model.optimize()
+print(f"Taxa de crescimento: {solution.objective_value:.3f} h^-1")
+
+# Analisar fluxos
+print("\nFluxos principais:")
+for rxn_id in ['BIOMASS_Ecoli_core_w_GAM', 'EX_glc__D_e', 'EX_o2_e']:
+    rxn = model.reactions.get_by_id(rxn_id)
+    print(f"{rxn.name}: {solution.fluxes[rxn_id]:.3f}")
+
+# Simular knockout
+model_ko = model.copy()
+model_ko.reactions.PGI.knock_out()  # Knockout phosphoglucose isomerase
+
+solution_ko = model_ko.optimize()
+print(f"\nCrescimento pos-knockout: {solution_ko.objective_value:.3f} h^-1")
+
+# Analise de variabilidade de fluxo (FVA)
+from cobra.flux_analysis import flux_variability_analysis
+
+fva_result = flux_variability_analysis(model, reaction_list=['PGI', 'PFK'])
+print("\nFVA:")
+print(fva_result)
+
+# Identificar genes essenciais
+from cobra.flux_analysis import single_gene_deletion
+
+deletion_results = single_gene_deletion(model)
+essential_genes = deletion_results[deletion_results['growth'] < 0.01]
+print(f"\nNumero de genes essenciais: {len(essential_genes)}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{FSEOF: Flux Scanning com Objetivo Forçado}
+\begin{lstlisting}[language=Python, caption=FSEOF para engenharia metabólica, basicstyle=\ttfamily\tiny]
+def fseof_analysis(model, target_reaction, biomass_fraction=0.1):
+    """
+    Flux Scanning based on Enforced Objective Flux
+    Identifica reacoes para superexpressao/delecao
+    """
+    import pandas as pd
+
+    # Forcar producao minima de biomassa
+    biomass_rxn = model.reactions.BIOMASS_Ecoli_core_w_GAM
+    max_biomass = model.optimize().objective_value
+    biomass_rxn.bounds = (biomass_fraction * max_biomass, 1000)
+
+    # Maximizar produto alvo
+    model.objective = target_reaction
+
+    results = []
+
+    # Escanear cada reacao
+    for rxn in model.reactions:
+        if rxn.id == target_reaction.id:
+            continue
+
+        # Estado original
+        original_bounds = rxn.bounds
+
+        # Testar knockout
+        rxn.bounds = (0, 0)
+        sol_ko = model.optimize()
+        flux_ko = sol_ko.objective_value if sol_ko.status == 'optimal' else 0
+
+        # Testar superexpressao (aumentar limite superior)
+        rxn.bounds = (original_bounds[0], original_bounds[1] * 10)
+        sol_oe = model.optimize()
+        flux_oe = sol_oe.objective_value if sol_oe.status == 'optimal' else 0
+
+        # Restaurar
+        rxn.bounds = original_bounds
+
+        results.append({
+            'reaction': rxn.id,
+            'knockout_effect': flux_ko,
+            'overexpression_effect': flux_oe
+        })
+
+    return pd.DataFrame(results)
+
+# Executar FSEOF
+target = model.reactions.EX_succ_e  # Succinato como produto alvo
+fseof_results = fseof_analysis(model, target)
+
+# Identificar alvos promissores
+print("Melhores alvos para superexpressao:")
+print(fseof_results.nlargest(5, 'overexpression_effect'))
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: FERRAMENTAS DE DESIGN E MODELAGEM
+% ============================================================================
+\section{Ferramentas de Design e Modelagem}
+
+\begin{frame}{Ferramentas CAD para Biologia Sintética}
+\begin{block}{Computer-Aided Design (CAD)}
+Software para projetar circuitos e vias biológicas
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Ferramentas Principais:}
+\begin{itemize}
+    \item \textbf{Cello:} design automático de circuitos
+    \item \textbf{j5:} montagem de DNA
+    \item \textbf{Eugene:} linguagem de design
+    \item \textbf{SBOLDesigner:} editor visual
+    \item \textbf{iBioSim:} modelagem e simulação
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Funcionalidades:}
+\begin{itemize}
+    \item Design de construtos
+    \item Predição de comportamento
+    \item Otimização de parâmetros
+    \item Seleção de partes
+    \item Planejamento de montagem
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Cello}
+Entrada: especificação lógica (Verilog)\\
+Saída: sequência de DNA otimizada
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Caracterização e Padronização de Partes}
+\begin{block}{Caracterização}
+Medição quantitativa de propriedades de partes biológicas
+\begin{itemize}
+    \item Força de promotor (PoPS - Polymerase per Second)
+    \item Eficiência de RBS (taxa de tradução)
+    \item Taxa de degradação
+    \item Resposta a indutores
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Registry of Standard Biological Parts}
+\begin{itemize}
+    \item \textgreater 20,000 partes
+    \item Caracterização padronizada
+    \item Compartilhamento comunitário
+    \item iGEM competition
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Eixos
+    \draw[->] (0,0) -- (4,0) node[right, font=\small] {[Indutor]};
+    \draw[->] (0,0) -- (0,3) node[above, font=\small] {Expressão};
+
+    % Curva dose-resposta
+    \draw[thick, verdeacido, domain=0:3.5, samples=100] plot (\x, {2.5/(1+exp(-2*(\x-1.5)))});
+
+    % Parâmetros
+    \draw[dashed] (0,1.25) -- (1.5,1.25) -- (1.5,0);
+    \node[left, font=\tiny] at (0,1.25) {$K_{1/2}$};
+    \node[below, font=\tiny] at (1.5,0) {EC$_{50}$};
+    \draw[dashed] (0,2.5) -- (3.8,2.5);
+    \node[left, font=\tiny] at (0,2.5) {Max};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Curva dose-resposta}
+\end{columns}
+\end{frame}
+
+\begin{frame}{SBOL: Synthetic Biology Open Language}
+\definicao{SBOL}{
+Formato de dados padronizado para representar designs de biologia sintética
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Objetivos:}
+\begin{itemize}
+    \item Interoperabilidade entre ferramentas
+    \item Compartilhamento de designs
+    \item Documentação estruturada
+    \item Reprodutibilidade
+\end{itemize}
+
+\textbf{Componentes:}
+\begin{itemize}
+    \item ComponentDefinition
+    \item ModuleDefinition
+    \item Sequence
+    \item Interaction
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Diagrama hierárquico
+    \node[draw, rectangle, fill=azulclaro!30, text width=2.5cm, align=center] (design) at (0,3) {Design};
+
+    \node[draw, rectangle, fill=verdeacido!30, text width=1.8cm, align=center] (module) at (-1.5,1.5) {Módulo};
+    \node[draw, rectangle, fill=laranjacel!30, text width=1.8cm, align=center] (comp) at (1.5,1.5) {Componente};
+
+    \node[draw, rectangle, fill=roxodna!30, text width=1.5cm, align=center] (seq) at (0,0) {Sequência};
+
+    \draw[->, thick] (design) -- (module);
+    \draw[->, thick] (design) -- (comp);
+    \draw[->, thick] (module) -- (seq);
+    \draw[->, thick] (comp) -- (seq);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\textbf{Versão atual: SBOL 3.0}
+\end{columns}
+
+\importante{
+Padrão aceito pela comunidade para intercâmbio de dados
+}
+\end{frame}
+
+\begin{frame}{Frameworks de Modelagem}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Modelos Determinísticos}
+\begin{itemize}
+    \item \textbf{ODEs:} sistemas contínuos
+    \item \textbf{Steady-state:} FBA
+    \item Ferramentas: COPASI, Tellurium
+\end{itemize}
+\end{block}
+
+\begin{block}{Modelos Estocásticos}
+\begin{itemize}
+    \item \textbf{Gillespie:} simulação exata
+    \item \textbf{Tau-leaping:} aproximado
+    \item Para baixo número de moléculas
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Modelos Espaciais}
+\begin{itemize}
+    \item \textbf{PDEs:} difusão e reação
+    \item \textbf{Agent-based:} células individuais
+    \item Virtual Cell
+\end{itemize}
+\end{block}
+
+\begin{block}{Modelos Multi-escala}
+\begin{itemize}
+    \item Integrar múltiplos níveis
+    \item Molecular $\rightarrow$ Celular $\rightarrow$ População
+    \item CompuCell3D
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Escolha do Modelo}
+Depende da escala, número de moléculas e questão biológica
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Algoritmos de Otimização para Design}
+\begin{block}{OptKnock}
+Identifica knockouts genéticos ótimos
+\begin{itemize}
+    \item Problema bi-nível
+    \item Otimização mista inteira (MILP)
+    \item Acopla crescimento e produção
+\end{itemize}
+\end{block}
+
+\begin{block}{OptGene}
+Extensão usando algoritmos genéticos
+\begin{itemize}
+    \item Busca heurística
+    \item Múltiplos objetivos
+    \item Mais flexível que OptKnock
+\end{itemize}
+\end{block}
+
+\begin{block}{OptForce}
+Identifica intervenções mínimas
+\begin{itemize}
+    \item Superexpressão e knockout
+    \item Garante produção mínima
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Machine Learning para Predição de Partes}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Aplicações de ML}
+\begin{itemize}
+    \item Predição de força de promotor
+    \item Otimização de RBS
+    \item Predição de estrutura de RNA
+    \item Design de proteínas
+    \item Predição de interações
+\end{itemize}
+\end{block}
+
+\textbf{Métodos:}
+\begin{itemize}
+    \item Regressão
+    \item Redes neurais
+    \item Random forests
+    \item Deep learning
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Rede neural simples
+    % Input layer
+    \foreach \i in {1,2,3} {
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (i\i) at (0,\i) {};
+    }
+    \node[above, font=\small] at (0,3.5) {Input};
+
+    % Hidden layer
+    \foreach \i in {1,2,3,4} {
+        \node[draw, circle, fill=verdeacido!30, minimum size=0.5cm] (h\i) at (2,\i-0.5) {};
+    }
+    \node[above, font=\small] at (2,3.5) {Hidden};
+
+    % Output layer
+    \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (o1) at (4,2) {};
+    \node[above, font=\small] at (4,2.7) {Output};
+
+    % Connections
+    \foreach \i in {1,2,3} {
+        \foreach \j in {1,2,3,4} {
+            \draw[->, thin, gray] (i\i) -- (h\j);
+        }
+    }
+    \foreach \i in {1,2,3,4} {
+        \draw[->, thin, gray] (h\i) -- (o1);
+    }
+
+    \node[below, font=\tiny] at (0,0.5) {Sequência};
+    \node[below, font=\tiny] at (4,1.5) {Expressão};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\importante{
+ML acelera ciclo de design-build-test-learn
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação Estocástica: Algoritmo de Gillespie}
+\begin{lstlisting}[language=Python, caption=Gillespie SSA para circuitos genéticos, basicstyle=\ttfamily\tiny]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def gillespie_ssa(reactions, initial_state, tmax):
+    """
+    Gillespie Stochastic Simulation Algorithm
+    reactions: lista de (propensity_func, stoichiometry_change)
+    """
+    state = np.array(initial_state, dtype=float)
+    time = 0
+    times = [time]
+    states = [state.copy()]
+
+    while time < tmax:
+        # Calcular propensidades
+        propensities = np.array([prop(state) for prop, _ in reactions])
+        a0 = propensities.sum()
+
+        if a0 == 0:
+            break
+
+        # Tempo ate proxima reacao
+        tau = np.random.exponential(1/a0)
+
+        # Escolher reacao
+        r = np.random.random() * a0
+        cumsum = 0
+        for i, a in enumerate(propensities):
+            cumsum += a
+            if cumsum >= r:
+                _, change = reactions[i]
+                state += change
+                break
+
+        time += tau
+        times.append(time)
+        states.append(state.copy())
+
+    return np.array(times), np.array(states)
+
+# Exemplo: producao e degradacao de proteina
+k_prod = 10.0  # taxa de producao
+k_deg = 0.5    # taxa de degradacao
+
+reactions = [
+    (lambda s: k_prod, np.array([1])),        # Producao
+    (lambda s: k_deg * s[0], np.array([-1]))  # Degradacao
+]
+
+times, states = gillespie_ssa(reactions, [0], tmax=20)
+plt.plot(times, states[:, 0])
+plt.xlabel('Tempo')
+plt.ylabel('Numero de moleculas')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Otimização de Vias com Algoritmos Genéticos}
+\begin{lstlisting}[language=Python, caption=AG para otimização de expressão gênica, basicstyle=\ttfamily\tiny]
+import numpy as np
+from scipy.integrate import odeint
+
+def pathway_model(y, t, gene_expression_levels):
+    """Modelo de via metabolica simples"""
+    S, I, P = y
+    k1, k2 = gene_expression_levels  # Niveis de expressao
+
+    dSdt = -k1 * S
+    dIdt = k1 * S - k2 * I
+    dPdt = k2 * I
+
+    return [dSdt, dIdt, dPdt]
+
+def fitness_function(gene_levels):
+    """Objetivo: maximizar produto final"""
+    y0 = [10, 0, 0]  # [S, I, P]
+    t = np.linspace(0, 10, 100)
+    sol = odeint(pathway_model, y0, t, args=(gene_levels,))
+    return sol[-1, 2]  # Concentracao final de P
+
+def genetic_algorithm(pop_size=50, generations=100):
+    """Algoritmo genetico simples"""
+    # Populacao inicial
+    population = np.random.uniform(0, 10, (pop_size, 2))
+
+    for gen in range(generations):
+        # Avaliar fitness
+        fitness = np.array([fitness_function(ind) for ind in population])
+
+        # Selecao
+        sorted_idx = np.argsort(fitness)[::-1]
+        population = population[sorted_idx]
+
+        # Elitismo: manter melhores 20%
+        n_elite = pop_size // 5
+        new_pop = population[:n_elite].copy()
+
+        # Crossover e mutacao
+        while len(new_pop) < pop_size:
+            parents = population[np.random.choice(n_elite, 2, replace=False)]
+            child = (parents[0] + parents[1]) / 2  # Crossover
+            child += np.random.normal(0, 0.5, 2)   # Mutacao
+            child = np.clip(child, 0, 10)
+            new_pop = np.vstack([new_pop, child])
+
+        population = new_pop[:pop_size]
+
+    return population[0]
+
+# Executar
+optimal_levels = genetic_algorithm()
+print(f"Niveis otimos de expressao: {optimal_levels}")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: BIOLOGIA SINTÉTICA DE CÉLULAS INTEIRAS
+% ============================================================================
+\section{Biologia Sintética de Células Inteiras}
+
+\begin{frame}{Genomas Mínimos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Conceito}
+Conjunto mínimo de genes necessários para vida
+\begin{itemize}
+    \item Redução sistemática do genoma
+    \item Identificar genes essenciais
+    \item Criar chassis simplificado
+\end{itemize}
+\end{block}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Menor carga metabólica
+    \item Mais previsível
+    \item Reduz interações indesejadas
+    \item Plataforma para engenharia
+\end{itemize}
+
+\column{0.5\textwidth}
+\exemplo{JCVI-syn3.0}{
+\begin{itemize}
+    \item \textit{Mycoplasma mycoides}
+    \item 531 kb (vs 1079 kb original)
+    \item 473 genes
+    \item Primeiro genoma mínimo sintético
+    \item Venter Institute, 2016
+\end{itemize}
+}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Desafios}
+\begin{itemize}
+    \item Crescimento lento
+    \item Genes de função desconhecida
+    \item Dependência de contexto
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Xenobiologia e Código Genético Expandido}
+\begin{columns}
+\column{0.5\textwidth}
+\definicao{Xenobiologia}{
+Criação de sistemas biológicos com química alternativa à base da vida natural
+}
+
+\textbf{Abordagens:}
+\begin{itemize}
+    \item Bases não-naturais (X, Y)
+    \item Aminoácidos sintéticos
+    \item XNA (xeno nucleic acids)
+    \item Ribossomos ortogonais
+\end{itemize}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Contenção biológica
+    \item Propriedades novas
+    \item Bioortogonalidade
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % DNA natural
+    \node[draw, rectangle, fill=azulclaro!30, text width=2.5cm, align=center] (nat) at (0,2.5) {DNA Natural\\A, T, G, C};
+
+    % DNA expandido
+    \node[draw, rectangle, fill=verdeacido!30, text width=2.5cm, align=center] (exp) at (0,0.8) {DNA Expandido\\A, T, G, C, X, Y};
+
+    % Seta
+    \draw[->, thick, laranjacel, line width=2pt] (nat) -- (exp);
+    \node[right, font=\small] at (0.5,1.6) {Expansão};
+
+    % Aplicações
+    \node[draw, rectangle, fill=roxodna!30, text width=2.5cm, align=center] (app) at (0,-0.8) {Proteínas com\\aminoácidos\\não-naturais};
+
+    \draw[->, thick] (exp) -- (app);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\importante{
+Romesberg lab: organismos com 6 letras genéticas (2017)
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Sistemas Cell-Free}
+\begin{block}{Síntese Cell-Free}
+Produção de proteínas e metabolismo sem células vivas
+\begin{itemize}
+    \item Extratos celulares
+    \item Componentes purificados (PURE system)
+    \item Adicionar DNA/RNA template
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Sem viabilidade celular
+    \item Controle preciso
+    \item Sem membranas
+    \item Prototipagem rápida
+    \item Proteínas tóxicas
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Produção de proteínas
+    \item Biossensores
+    \item Terapêutica
+    \item Educação
+    \item Biologia sintética
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Produtos Comerciais}
+\begin{itemize}
+    \item PURExpress (NEB)
+    \item myTXTL (Arbor Biosciences)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Protocélulas e Células Artificiais}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Protocélulas}
+Estruturas sintéticas que mimetizam propriedades celulares
+\begin{itemize}
+    \item Vesículas lipídicas
+    \item Contêm maquinaria molecular
+    \item Auto-replicação primitiva
+    \item Origem da vida
+\end{itemize}
+\end{block}
+
+\textbf{Componentes:}
+\begin{itemize}
+    \item Membrana (lipossomas)
+    \item Genoma (DNA/RNA)
+    \item Metabolismo (enzimas)
+    \item Informação hereditária
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+    % Membrana
+    \draw[thick, azulescuro, fill=azulclaro!10] (0,0) circle (1.5);
+
+    % DNA
+    \draw[thick, roxodna, decorate, decoration={snake, amplitude=0.3mm, segment length=2mm}] (-0.8,-0.3) -- (0.8,0.3);
+    \node[below, font=\tiny, text=roxodna] at (0,-0.5) {DNA};
+
+    % Ribossomos
+    \fill[verdeacido] (-0.5,0.5) circle (1.5pt);
+    \fill[verdeacido] (0.3,0.7) circle (1.5pt);
+    \fill[verdeacido] (0.6,-0.4) circle (1.5pt);
+    \node[above, font=\tiny, text=verdeacido] at (0,0.9) {Ribossomos};
+
+    % Enzimas
+    \draw[thick, laranjacel] (-0.6,-0.7) -- (-0.4,-0.9);
+    \draw[thick, laranjacel] (0.5,0.2) circle (2pt);
+    \node[below, font=\tiny, text=laranjacel] at (0.5,-1.0) {Enzimas};
+
+    % Label
+    \node[above, font=\small] at (0,1.8) {Protocélula};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\importante{
+Objetivo de longo prazo: criar vida artificial de novo
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Sistemas Biológicos Ortogonais}
+\definicao{Ortogonalidade}{
+Sistemas que operam independentemente dos sistemas naturais da célula hospedeira
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Exemplos:}
+\begin{itemize}
+    \item Ribossomos ortogonais
+    \item tRNAs ortogonais
+    \item Aminoacil-tRNA sintetases
+    \item Códons não-naturais
+    \item Fatores de transcrição ortogonais
+\end{itemize}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Sem interferência com host
+    \item Controle independente
+    \item Segurança biológica
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Sistema natural
+    \draw[thick, azulclaro, fill=azulclaro!10] (-1.5,1.5) rectangle (1.5,3.5);
+    \node[above, font=\small] at (0,3.5) {Sistema Natural};
+
+    \node[font=\tiny] at (0,2.5) {Ribossomo};
+    \draw[->, thick] (-0.8,2.2) -- (-0.8,1.8) node[below, font=\tiny] {Proteína};
+
+    % Sistema ortogonal
+    \draw[thick, verdeacido, fill=verdeacido!10] (-1.5,-0.5) rectangle (1.5,1.5);
+    \node[above, font=\small] at (0,1.5) {Sistema Ortogonal};
+
+    \node[font=\tiny] at (0,0.5) {O-Ribossomo};
+    \draw[->, thick] (0.8,0.2) -- (0.8,-0.2) node[below, font=\tiny] {O-Proteína};
+
+    % Sem interferência
+    \draw[red, thick, dashed] (-1.5,1.5) -- (1.5,1.5);
+    \node[right, font=\tiny, text=red] at (1.6,1.5) {Isolamento};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\exemplo{Aplicação}{
+Incorporar aminoácidos não-naturais sem afetar proteoma endógeno
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Aplicações: Células Terapêuticas}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Imunoterapia CAR-T}
+Células T modificadas para atacar câncer
+\begin{itemize}
+    \item Receptor quimérico (CAR)
+    \item Reconhece antígeno tumoral
+    \item Resposta imune direcionada
+    \item FDA aprovado (2017)
+\end{itemize}
+\end{block}
+
+\textbf{Melhorias Sintéticas:}
+\begin{itemize}
+    \item Switches suicidas
+    \item Controle temporal
+    \item Multi-targeting
+    \item Resistência à exaustão
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Célula T
+    \draw[thick, azulclaro, fill=azulclaro!20] (0,0) circle (1.2);
+    \node[font=\small] at (0,0.5) {CAR-T};
+
+    % CAR
+    \draw[thick, verdeacido, line width=2pt] (-0.8,0.8) -- (-1.3,1.5);
+    \node[above, font=\tiny, text=verdeacido] at (-1.3,1.6) {CAR};
+
+    % Célula tumoral
+    \draw[thick, red, fill=red!20] (3.5,0) circle (1.0);
+    \node[font=\small] at (3.5,0) {Tumor};
+
+    % Antígeno
+    \draw[thick, red, fill=red!50] (2.5,0) circle (0.2);
+    \node[below, font=\tiny] at (2.5,-0.4) {Antígeno};
+
+    % Reconhecimento
+    \draw[->, thick, verdeacido, line width=2pt] (-1.3,1.5) to[out=0, in=120] (2.5,0.2);
+
+    % Morte celular
+    \node[below, font=\small] at (3.5,-1.5) {Morte celular};
+    \draw[->, thick, red, dashed] (3.5,-0.8) -- (3.5,-1.2);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\importante{
+Biologia sintética na medicina personalizada
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Aplicações: Living Sensors}
+\begin{block}{Biosensores Vivos}
+Células modificadas para detectar e responder a sinais ambientais
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Detecção de poluentes
+    \item Diagnóstico de doenças
+    \item Monitoramento intestinal
+    \item Detecção de explosivos
+    \item Controle de qualidade
+\end{itemize}
+
+\textbf{Componentes:}
+\begin{itemize}
+    \item Sensor (promotor responsivo)
+    \item Processamento (circuito)
+    \item Repórter (GFP, luz, etc)
+    \item Memória (opcional)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Molécula alvo
+    \node[draw, circle, fill=red!30, minimum size=0.6cm] (target) at (0,3) {Pb$^{2+}$};
+
+    % Bactéria
+    \draw[thick, azulclaro, fill=azulclaro!10, rounded corners] (-1.2,0.5) rectangle (1.2,2);
+    \node[above, font=\small] at (0,2.2) {Bactéria sensora};
+
+    % Circuito genético
+    \draw[->, thick, verdeacido, line width=1.5pt] (-0.8,1.5) -- (0,1.5);
+    \node[below, font=\tiny] at (-0.4,1.5) {Promotor};
+
+    \draw[->, thick, roxodna, line width=1.5pt] (0.2,1.5) -- (0.8,1.5);
+    \node[below, font=\tiny] at (0.5,1.5) {GFP};
+
+    % Sinal de entrada
+    \draw[->, thick, red] (target) -- (0,2);
+
+    % Sinal de saída
+    \draw[->, thick, verdeacido, dashed] (0,0.5) -- (0,0);
+    \node[draw, star, fill=verdeacido!50, star points=5, minimum size=0.6cm] at (0,-0.5) {};
+    \node[below, font=\small] at (0,-1) {Fluorescência};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\exemplo{Probiotic Sensor}{
+\textit{E. coli} engineered para detectar inflamação intestinal e liberar terapêuticos
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: DESAFIOS E PERSPECTIVAS
+% ============================================================================
+\section{Desafios e Perspectivas}
+
+\begin{frame}{Context Dependence e Genetic Burden}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{alertblock}{Context Dependence}
+Comportamento de partes biológicas depende do contexto
+\begin{itemize}
+    \item Efeitos de posição
+    \item Disponibilidade de recursos
+    \item Carga de expressão
+    \item Crosstalk regulatório
+\end{itemize}
+\end{alertblock}
+
+\textbf{Problemas:}
+\begin{itemize}
+    \item Comportamento imprevisível
+    \item Não-composicionalidade
+    \item Necessidade de re-caracterização
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Genetic Burden}
+Custo metabólico da expressão heteróloga
+\begin{itemize}
+    \item Ribossomos
+    \item RNA polimerases
+    \item Precursores (aminoácidos, NTPs)
+    \item Energia (ATP, GTP)
+\end{itemize}
+\end{alertblock}
+
+\textbf{Consequências:}
+\begin{itemize}
+    \item Crescimento lento
+    \item Baixa produtividade
+    \item Instabilidade
+    \item Seleção contra circuito
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Design deve considerar carga metabólica e recursos compartilhados
+}
+\end{frame}
+
+\begin{frame}{Estabilidade Evolutiva}
+\begin{block}{Problema}
+Circuitos sintéticos podem ser perdidos ou modificados por evolução
+\begin{itemize}
+    \item Pressão seletiva contra carga metabólica
+    \item Mutações inativadoras
+    \item Perda de plasmídeos
+    \item Rearranjos cromossomais
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Estratégias de Estabilização:}
+\begin{itemize}
+    \item Integração cromossomal
+    \item Acoplamento essencial
+    \item Contenção genética
+    \item Seleção positiva
+    \item Toxina-antitoxina
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Eixos
+    \draw[->] (0,0) -- (4,0) node[right, font=\small] {Tempo};
+    \draw[->] (0,0) -- (0,3) node[above, font=\small] {Função};
+
+    % Circuito instável
+    \draw[thick, red, domain=0:3.5] plot (\x, {2.5*exp(-0.5*\x)});
+    \node[right, font=\tiny, text=red] at (3.5,0.5) {Instável};
+
+    % Circuito estável
+    \draw[thick, verdeacido, domain=0:3.5] plot (\x, {2});
+    \node[right, font=\tiny, text=verdeacido] at (3.5,2) {Estável};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\importante{
+Trade-off entre função e fitness evolutivo
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Escalonamento: Do Laboratório à Indústria}
+\begin{block}{Desafios de Scale-up}
+\begin{itemize}
+    \item Condições de fermentação diferentes
+    \item Gradientes de nutrientes e oxigênio
+    \item Heterogeneidade populacional
+    \item Controle de processo
+    \item Custo de produção
+    \item Regulação e aprovação
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Etapas:}
+\begin{enumerate}
+    \item Shake flask (mL)
+    \item Biorreator bancada (L)
+    \item Piloto (10-100 L)
+    \item Industrial (10,000+ L)
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Considerações:}
+\begin{itemize}
+    \item Mistura e aeração
+    \item Controle pH e T
+    \item Feeding strategies
+    \item Downstream processing
+    \item Purificação
+    \item Custo de meios
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\exemplo{Sucesso}{
+Produção de artemisinina e 1,3-PDO em escala industrial
+}
+\end{frame}
+
+\begin{frame}{Questões Regulatórias e Éticas}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{alertblock}{Regulação}
+\begin{itemize}
+    \item Organismos Geneticamente Modificados (OGM)
+    \item Protocolos de biossegurança
+    \item Aprovação de produtos (FDA, EMA)
+    \item Liberação ambiental
+    \item Rastreabilidade
+\end{itemize}
+\end{alertblock}
+
+\textbf{Níveis de Contenção:}
+\begin{itemize}
+    \item Física (laboratório)
+    \item Biológica (auxotrofia)
+    \item Genética (switches suicidas)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Questões Éticas}
+\begin{itemize}
+    \item "Brincar de Deus"
+    \item Impacto ecológico
+    \item Bioterrorismo
+    \item Acesso e equidade
+    \item Propriedade intelectual
+    \item Consentimento informado
+\end{itemize}
+\end{alertblock}
+
+\begin{exampleblock}{Diretrizes}
+\begin{itemize}
+    \item Protocolo de Cartagena
+    \item Convenção de Armas Biológicas
+    \item iGEM Safety Committee
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Biossegurança e Dual-Use}
+\begin{block}{Dual-Use Research}
+Pesquisa com potencial para uso benéfico e maléfico
+\begin{itemize}
+    \item Síntese de patógenos
+    \item Engenharia de virulência
+    \item Resistência a antibióticos
+    \item Toxinas
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Medidas de Segurança:}
+\begin{itemize}
+    \item Screening de síntese de DNA
+    \item Controle de acesso
+    \item Revisão ética
+    \item Educação em biossegurança
+    \item Códigos de conduta
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Casos Históricos:}
+\begin{itemize}
+    \item Síntese de poliovírus (2002)
+    \item Influenza 1918 (2005)
+    \item H5N1 transmissível (2011)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\importante{
+Balanço entre progresso científico e segurança pública
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Direções Futuras}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{AI-Driven Design}
+\begin{itemize}
+    \item Machine learning para predição
+    \item Design generativo
+    \item Otimização automática
+    \item Análise de big data
+    \item Modelagem multi-escala
+\end{itemize}
+\end{block}
+
+\begin{block}{Foundries Automatizadas}
+\begin{itemize}
+    \item Robótica
+    \item High-throughput
+    \item Design-build-test automático
+    \item Cloud labs
+    \item Redução de custos e tempo
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Novas Aplicações}
+\begin{itemize}
+    \item Medicina regenerativa
+    \item Agricultura sustentável
+    \item Materiais vivos
+    \item Computação biológica
+    \item Terraformação
+    \item Exploração espacial
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Visão}
+Biologia sintética como engenharia madura com design preditivo e confiável
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Convergência de biologia, engenharia, computação e IA
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Análise de Bistabilidade}
+Considere o toggle switch com parâmetros $\alpha_1 = 100$, $\alpha_2 = 20$, $\beta = 2$, $\gamma = 2$.
+
+\begin{enumerate}
+    \item Encontre os pontos de equilíbrio numericamente
+    \item Calcule o Jacobiano em cada ponto
+    \item Determine a estabilidade
+    \item Verifique a condição de bistabilidade: $\alpha_1 \alpha_2 > (\beta + 1)(\gamma + 1)$
+    \item Simule o sistema para diferentes condições iniciais
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Design de Biosensor}
+Projete um biosensor para detectar glicose:
+\begin{enumerate}
+    \item Identifique promotor responsivo a glicose
+    \item Escolha gene repórter apropriado
+    \item Desenhe o construto genético (BioBrick format)
+    \item Estime a sensibilidade e faixa dinâmica
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: Otimização Metabólica}
+Para produção de succinato em \textit{E. coli}:
+
+\begin{enumerate}
+    \item Use COBRApy para carregar modelo \textit{E. coli} core
+    \item Maximize produção de succinato via FBA
+    \item Identifique genes para knockout usando FSEOF
+    \item Simule o efeito de knockouts
+    \item Calcule rendimento teórico máximo (g succinato / g glicose)
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Dica}
+Succinato: \texttt{EX\_succ\_e}\\
+Glicose uptake: \texttt{EX\_glc\_\_D\_e}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{block}{Questão 4: Simulação Estocástica}
+Implemente simulação de Gillespie para repressilator:
+
+\begin{enumerate}
+    \item Defina reações de transcrição e tradução
+    \item Inclua degradação de mRNA e proteína
+    \item Simule para 500 unidades de tempo
+    \item Compare com solução determinística (ODEs)
+    \item Analise variabilidade célula-a-célula
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 5: Design de Circuito Lógico}
+Projete um circuito genético que implementa porta NAND:
+
+\begin{enumerate}
+    \item Desenhe diagrama do circuito
+    \item Especifique componentes (promotores, genes, repressores)
+    \item Construa tabela verdade
+    \item Estime parâmetros necessários
+    \item Discuta possíveis problemas de implementação
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Projeto Integrador}
+\begin{alertblock}{Projeto: Engenharia de Via para Produção de Bioplástico}
+Objetivo: Produzir poli-3-hidroxibutirato (PHB) em \textit{E. coli}
+
+\textbf{Tarefas:}
+\begin{enumerate}
+    \item \textbf{Design:}
+    \begin{itemize}
+        \item Identificar genes necessários (phaA, phaB, phaC)
+        \item Projetar construtos com promotores apropriados
+        \item Planejar estratégia de integração/plasmídeo
+    \end{itemize}
+
+    \item \textbf{Modelagem:}
+    \begin{itemize}
+        \item Construir modelo ODE da via
+        \item Usar FBA para predizer rendimento
+        \item Identificar gargalos metabólicos
+    \end{itemize}
+
+    \item \textbf{Otimização:}
+    \begin{itemize}
+        \item Propor knockouts para aumentar fluxo
+        \item Balancear cofatores (NADPH)
+        \item Simular estratégias de regulação dinâmica
+    \end{itemize}
+
+    \item \textbf{Análise:}
+    \begin{itemize}
+        \item Calcular rendimento teórico máximo
+        \item Estimar custos de produção
+        \item Discutir viabilidade comercial
+    \end{itemize}
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{gardner2000} Gardner, T.S., Cantor, C.R., \& Collins, J.J. (2000). Construction of a genetic toggle switch in \textit{Escherichia coli}. \textit{Nature}, 403, 339-342.
+
+\bibitem{elowitz2000} Elowitz, M.B. \& Leibler, S. (2000). A synthetic oscillatory network of transcriptional regulators. \textit{Nature}, 403, 335-338.
+
+\bibitem{keasling2010} Keasling, J.D. (2010). Manufacturing molecules through metabolic engineering. \textit{Science}, 330, 1355-1358.
+
+\bibitem{nielsen2013} Nielsen, J. \& Keasling, J.D. (2016). Engineering cellular metabolism. \textit{Cell}, 164, 1185-1197.
+
+\bibitem{cameron2014} Cameron, D.E., Bashor, C.J., \& Collins, J.J. (2014). A brief history of synthetic biology. \textit{Nature Reviews Microbiology}, 12, 381-390.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Livros}
+\begin{itemize}
+    \item Channon, K., Bromley, E.H., \& Woolfson, D.N. (2008). \textit{Synthetic Biology}. Oxford University Press.
+    \item Smolke, C.D. (2018). \textit{The Metabolic Pathway Engineering Handbook}. CRC Press.
+    \item Keasling, J.D. \& Venter, J.C. (2012). \textit{Synthetic Biology}. Academic Press.
+\end{itemize}
+\end{block}
+
+\begin{block}{Reviews}
+\begin{itemize}
+    \item Khalil, A.S. \& Collins, J.J. (2010). Synthetic biology: applications come of age. \textit{Nature Reviews Genetics}, 11, 367-379.
+    \item Church, G.M. et al. (2014). Realizing the potential of synthetic biology. \textit{Nature Reviews Molecular Cell Biology}, 15, 289-294.
+    \item Lim, W.A. (2010). Designing customized cell signalling circuits. \textit{Nature Reviews Molecular Cell Biology}, 11, 393-403.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Recursos e Ferramentas}
+\begin{block}{Software e Ferramentas}
+\begin{itemize}
+    \item \textbf{COBRApy:} \url{https://opencobra.github.io/cobrapy/}
+    \item \textbf{Tellurium:} \url{http://tellurium.analogmachine.org}
+    \item \textbf{COPASI:} \url{http://copasi.org}
+    \item \textbf{SBOLDesigner:} \url{https://github.com/SynBioDex/SBOLDesigner}
+    \item \textbf{Cello:} \url{http://www.cellocad.org}
+\end{itemize}
+\end{block}
+
+\begin{block}{Repositórios de Partes}
+\begin{itemize}
+    \item \textbf{iGEM Registry:} \url{http://parts.igem.org}
+    \item \textbf{Addgene:} \url{https://www.addgene.org}
+    \item \textbf{JBEI Registry:} \url{https://public-registry.jbei.org}
+\end{itemize}
+\end{block}
+
+\begin{block}{Cursos Online}
+\begin{itemize}
+    \item MIT OpenCourseWare: Synthetic Biology
+    \item Coursera: Bioinformatics Specialization
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 14: Design of Biological Systems}
+
+\vspace{1cm}
+
+\textbf{Tópicos Abordados:}\\
+Circuitos genéticos sintéticos, engenharia metabólica,\\
+ferramentas de design, células inteiras, desafios e perspectivas
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

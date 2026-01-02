@@ -1,0 +1,2024 @@
+% ============================================================================
+% CAPÍTULO 9: SIGNALING SYSTEMS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 9: Signaling Systems]{Capítulo 9: Signaling Systems}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{9.1 Introdução aos Sistemas de Sinalização}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender os princípios básicos da sinalização celular
+    \item Conhecer os principais tipos de receptores e vias de sinalização
+    \item Entender a dinâmica e propriedades emergentes de redes de sinalização
+    \item Modelar matematicamente cascatas de sinalização
+    \item Simular sistemas de sinalização usando Python
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+A sinalização celular é essencial para:
+\begin{itemize}
+    \item Coordenação entre células
+    \item Resposta a estímulos ambientais
+    \item Diferenciação e desenvolvimento
+    \item Homeostase e sobrevivência
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{Papel da Sinalização Celular}
+\definicao{Sinalização Celular}{
+Processo pelo qual células detectam, transmitem e respondem a sinais químicos ou físicos, permitindo comunicação intra e intercelular.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2cm, text centered, rounded corners, minimum height=1cm, font=\small}]
+
+    \node[box, fill=laranjacel!30] (signal) {Sinal\\Extracelular};
+    \node[box, fill=roxodna!30, right of=signal] (receptor) {Receptor};
+    \node[box, fill=verdeacido!30, right of=receptor] (transd) {Transdução};
+    \node[box, fill=azulclaro!30, right of=transd] (response) {Resposta};
+
+    \draw[->, ultra thick, azulescuro] (signal) -- (receptor);
+    \draw[->, ultra thick, azulescuro] (receptor) -- (transd);
+    \draw[->, ultra thick, azulescuro] (transd) -- (response);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplos de Respostas Celulares}
+\begin{itemize}
+    \item Alteração na expressão gênica
+    \item Modificação do metabolismo
+    \item Reorganização do citoesqueleto
+    \item Proliferação, diferenciação ou apoptose
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Tipos de Sinalização}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Classificação por Alcance:}
+
+\begin{itemize}
+    \item \textbf{Autócrina:} célula responde ao próprio sinal
+    \item \textbf{Parácrina:} sinal atua em células vizinhas (curta distância)
+    \item \textbf{Endócrina:} hormônios transportados pelo sangue (longa distância)
+    \item \textbf{Justácrina:} contato direto entre células
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Autocrine
+    \draw[fill=azulclaro!30] (0,3) circle (0.5);
+    \node at (0,3) {\tiny A};
+    \draw[->, thick, roxodna] (0.5,3.3) to [out=60, in=120, looseness=8] (0.5,2.7);
+    \node[below, font=\tiny] at (0,2.3) {Autócrina};
+
+    % Paracrine
+    \draw[fill=azulclaro!30] (3,3) circle (0.5);
+    \draw[fill=verdeacido!30] (5,3) circle (0.5);
+    \draw[->, thick, laranjacel] (3.5,3) -- (4.5,3);
+    \node[below, font=\tiny] at (4,2.3) {Parácrina};
+
+    % Endocrine
+    \draw[fill=azulclaro!30] (0,0.5) circle (0.5);
+    \draw[fill=verdeacido!30] (5,0.5) circle (0.5);
+    \draw[->, thick, red, dashed] (0.5,0.5) to [out=0, in=180] (4.5,0.5);
+    \node[below, font=\tiny] at (2.5,-0.2) {Endócrina};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplos}
+\begin{itemize}
+    \item \textbf{Autócrina:} fatores de crescimento em câncer
+    \item \textbf{Parácrina:} neurotransmissores na sinapse
+    \item \textbf{Endócrina:} insulina, hormônios tireoidianos
+    \item \textbf{Justácrina:} sinalização Notch-Delta
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: RECEPTORES E MECANISMOS
+% ============================================================================
+\section{Receptores e Mecanismos de Ativação}
+
+\begin{frame}{9.2 Receptores Celulares: Visão Geral}
+\begin{block}{Classificação de Receptores}
+\begin{enumerate}
+    \item \textbf{Receptores acoplados à proteína G (GPCRs)}
+    \item \textbf{Receptores tirosina quinase (RTKs)}
+    \item \textbf{Receptores de canais iônicos}
+    \item \textbf{Receptores nucleares}
+    \item \textbf{Receptores de citocinas (JAK-STAT)}
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Membrane
+    \draw[thick, double] (0,0) -- (10,0);
+    \node[left, font=\tiny] at (0,0.3) {Extracelular};
+    \node[left, font=\tiny] at (0,-0.3) {Intracelular};
+
+    % GPCR
+    \draw[thick, azulclaro, fill=azulclaro!20] (1,-0.5) rectangle (2,0.5);
+    \node[below, font=\tiny] at (1.5,-0.8) {GPCR};
+
+    % RTK
+    \draw[thick, verdeacido, fill=verdeacido!20] (3,-0.5) rectangle (4,0.5);
+    \node[below, font=\tiny] at (3.5,-0.8) {RTK};
+
+    % Ion channel
+    \draw[thick, laranjacel, fill=laranjacel!20] (5,-0.5) rectangle (6,0.5);
+    \node[below, font=\tiny] at (5.5,-0.8) {Canal};
+
+    % Nuclear receptor
+    \draw[thick, roxodna, fill=roxodna!20] (7.5,-1) circle (0.3);
+    \node[below, font=\tiny] at (7.5,-1.5) {Nuclear};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Receptores Acoplados à Proteína G (GPCRs)}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item 7 domínios transmembrana
+    \item Maior família de receptores ($\sim$800 em humanos)
+    \item Acoplados a proteínas G heterotriméricas
+    \item Alvos de $\sim$50\% dos fármacos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Subtipos de Proteína G:}
+\begin{itemize}
+    \item \textbf{G$_s$:} estimula adenilil ciclase $\uparrow$ cAMP
+    \item \textbf{G$_i$:} inibe adenilil ciclase $\downarrow$ cAMP
+    \item \textbf{G$_q$:} ativa fosfolipase C $\uparrow$ IP$_3$/DAG
+    \item \textbf{G$_{12/13}$:} regula citoesqueleto
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.65]
+    % Membrane
+    \draw[thick, double] (-1,0) -- (4,0);
+
+    % GPCR serpentine
+    \foreach \x in {0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4} {
+        \draw[thick, azulclaro, fill=azulclaro!30] (\x,-0.7) rectangle (\x+0.3,0.7);
+    }
+
+    % Ligand
+    \draw[fill=laranjacel!50] (1,1.5) circle (0.3);
+    \node[above, font=\tiny] at (1,1.8) {Ligante};
+    \draw[->, dashed] (1,1.2) -- (1,0.7);
+
+    % G-protein heterotrimer
+    \draw[fill=verdeacido!50] (1.2,-1.5) circle (0.4);
+    \node[font=\scriptsize] at (1.2,-1.5) {$\alpha$};
+    \draw[fill=roxodna!50] (2,-1.3) circle (0.25);
+    \node[font=\scriptsize] at (2,-1.3) {$\beta$};
+    \draw[fill=roxodna!50] (2,-1.7) circle (0.25);
+    \node[font=\scriptsize] at (2,-1.7) {$\gamma$};
+
+    % GTP/GDP
+    \node[font=\tiny] at (1.2,-2.2) {GDP/GTP};
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Exemplos}
+\begin{itemize}
+    \item Receptores adrenérgicos
+    \item Receptores muscarínicos
+    \item Receptores de olfato
+    \item Rodopsina (visão)
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Mecanismo de Ativação de GPCRs}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, scale=0.85, transform shape]
+    % Estado inativo
+    \node[draw, rectangle, fill=azulclaro!20, text width=3cm, align=center, minimum height=1.5cm] (inactive) {
+        \textbf{Estado Inativo}\\
+        GPCR + G$\alpha\beta\gamma$-GDP
+    };
+
+    % Ligante se liga
+    \node[draw, rectangle, fill=laranjacel!20, text width=3cm, align=center, minimum height=1.5cm, right of=inactive, node distance=4cm] (bound) {
+        \textbf{Ligante Ligado}\\
+        L-GPCR* + G$\alpha\beta\gamma$-GDP
+    };
+
+    % Ativação
+    \node[draw, rectangle, fill=verdeacido!20, text width=3cm, align=center, minimum height=1.5cm, below of=bound] (active) {
+        \textbf{Estado Ativo}\\
+        G$\alpha$-GTP + G$\beta\gamma$\\
+        \small(separados)
+    };
+
+    % GTP hidrolisado
+    \node[draw, rectangle, fill=roxodna!20, text width=3cm, align=center, minimum height=1.5cm, below of=inactive] (hydrolyze) {
+        \textbf{Terminação}\\
+        G$\alpha$-GDP + G$\beta\gamma$\\
+        \small(reassociam)
+    };
+
+    \draw[->, thick] (inactive) -- node[above, font=\small] {ligante} (bound);
+    \draw[->, thick] (bound) -- node[right, font=\small] {troca GDP/GTP} (active);
+    \draw[->, thick] (active) -- node[below, font=\small] {GTPase} (hydrolyze);
+    \draw[->, thick] (hydrolyze) -- node[left, font=\small] {reciclagem} (inactive);
+\end{tikzpicture}
+\end{center}
+
+\importante{
+G$\alpha$-GTP e G$\beta\gamma$ ativam efetores downstream independentemente!
+}
+\end{frame}
+
+\begin{frame}{Receptores Tirosina Quinase (RTKs)}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Domínio extracelular (ligação)
+    \item Domínio transmembrana único
+    \item Domínio intracelular (quinase)
+    \item Ativados por dimerização
+    \item Autofosforilação em tirosinas
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Famílias Importantes:}
+\begin{itemize}
+    \item \textbf{EGFR:} EGF receptor
+    \item \textbf{PDGFR:} PDGF receptor
+    \item \textbf{FGFR:} FGF receptor
+    \item \textbf{InsR:} Insulin receptor
+    \item \textbf{VEGFR:} VEGF receptor
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Membrane
+    \draw[thick, double] (-1,0) -- (5,0);
+
+    % Inactive monomers
+    \begin{scope}[xshift=-1cm]
+        \draw[thick, azulclaro, fill=azulclaro!30] (0,0.5) ellipse (0.5 and 0.8);
+        \draw[thick, azulclaro, fill=azulclaro!30] (0,0) rectangle (0.5,-0.3);
+        \draw[thick, azulclaro, fill=azulclaro!30] (0.25,-0.8) circle (0.5);
+        \node[font=\tiny] at (0.25,-0.8) {K};
+    \end{scope}
+
+    \begin{scope}[xshift=1.5cm]
+        \draw[thick, azulclaro, fill=azulclaro!30] (0,0.5) ellipse (0.5 and 0.8);
+        \draw[thick, azulclaro, fill=azulclaro!30] (0,0) rectangle (0.5,-0.3);
+        \draw[thick, azulclaro, fill=azulclaro!30] (0.25,-0.8) circle (0.5);
+        \node[font=\tiny] at (0.25,-0.8) {K};
+    \end{scope}
+
+    \node[font=\small] at (0.5,1.8) {Inativo};
+
+    % Arrow
+    \draw[->, ultra thick] (2.5,0) -- (3.5,0);
+
+    % Active dimer
+    \begin{scope}[xshift=4.5cm]
+        % Ligand
+        \draw[fill=laranjacel!50] (0,1.5) circle (0.3);
+
+        % RTK dimer
+        \draw[thick, verdeacido, fill=verdeacido!30] (-0.5,0.5) ellipse (0.5 and 0.8);
+        \draw[thick, verdeacido, fill=verdeacido!30] (0.5,0.5) ellipse (0.5 and 0.8);
+
+        \draw[thick, verdeacido, fill=verdeacido!30] (-0.5,0) rectangle (-0.2,-0.3);
+        \draw[thick, verdeacido, fill=verdeacido!30] (0.2,0) rectangle (0.5,-0.3);
+
+        \draw[thick, verdeacido, fill=verdeacido!30] (-0.35,-0.8) circle (0.5);
+        \draw[thick, verdeacido, fill=verdeacido!30] (0.35,-0.8) circle (0.5);
+
+        % Phosphorylations
+        \foreach \y in {-1.2, -1.4, -1.6} {
+            \node[font=\scriptsize, red] at (-0.35,\y) {P};
+            \node[font=\scriptsize, red] at (0.35,\y) {P};
+        }
+
+        \node[font=\small] at (0,2) {Ativo};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.3cm}
+
+\exemplo{EGFR em Câncer}{
+Mutações/superexpressão de EGFR estão associadas a diversos cânceres. Inibidores de tirosina quinase (TKIs) como gefitinib são usados em terapia.
+}
+\end{frame}
+
+\begin{frame}{Receptores de Canais Iônicos e Nucleares}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Canais Iônicos Ligante-Dependentes}
+\begin{itemize}
+    \item Resposta ultrarrápida (ms)
+    \item Alteração do potencial de membrana
+    \item Influxo/efluxo de íons
+\end{itemize}
+
+\textbf{Exemplos:}
+\begin{itemize}
+    \item Receptor nicotínico (ACh)
+    \item Receptor GABA$_A$
+    \item Receptor glutamato (NMDA)
+    \item Receptor 5-HT$_3$ (serotonina)
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Receptores Nucleares}
+\begin{itemize}
+    \item Fatores de transcrição ativados por ligantes
+    \item Ligantes hidrofóbicos (atravessam membrana)
+    \item Resposta lenta (horas)
+\end{itemize}
+
+\textbf{Exemplos:}
+\begin{itemize}
+    \item Receptores de esteroides (GR, ER, AR)
+    \item Receptores de hormônios tireoidianos
+    \item Receptores de retinoides (RAR)
+    \item PPAR (metabolismo lipídico)
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Mecanismo de Receptores Nucleares}
+Hormônio $\rightarrow$ Atravessa membrana $\rightarrow$ Liga ao receptor no citoplasma/núcleo $\rightarrow$ Dimerização $\rightarrow$ Liga ao DNA (HRE) $\rightarrow$ Ativa/reprime transcrição
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Ligação Ligante-Receptor: Cinética}
+\begin{block}{Modelo de Equilíbrio}
+\begin{equation*}
+L + R \underset{k_{off}}{\overset{k_{on}}{\rightleftharpoons}} LR
+\end{equation*}
+
+\textbf{Constante de Dissociação:}
+\begin{equation*}
+K_d = \frac{k_{off}}{k_{on}} = \frac{[L][R]}{[LR]}
+\end{equation*}
+
+\textbf{Fração de Receptores Ocupados:}
+\begin{equation*}
+\theta = \frac{[LR]}{[R]_{total}} = \frac{[L]}{K_d + [L]}
+\end{equation*}
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Interpretação de $K_d$}
+\begin{itemize}
+    \item $K_d$ baixo $\rightarrow$ alta afinidade
+    \item Quando $[L] = K_d$, $\theta = 0.5$
+    \item $K_d$ típicos: nM - $\mu$M
+\end{itemize}
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Capacidade Máxima}
+\begin{equation*}
+B_{max} = [R]_{total}
+\end{equation*}
+Número máximo de sítios de ligação disponíveis
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Modelagem de Ligação Receptor-Ligante}
+\begin{lstlisting}[language=Python, caption=Curva de ligação, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def receptor_binding(L, Kd, Bmax):
+    """Calcula ligacao pelo modelo de equilibrio"""
+    return (Bmax * L) / (Kd + L)
+
+# Parametros
+Kd = 10  # nM
+Bmax = 100  # unidades arbitrarias
+
+# Concentracoes de ligante
+L = np.logspace(-1, 3, 100)  # 0.1 - 1000 nM
+bound = receptor_binding(L, Kd, Bmax)
+
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.semilogx(L, bound, 'b-', linewidth=2)
+plt.axhline(y=Bmax/2, color='r', linestyle='--',
+            label=f'50% ocupacao')
+plt.axvline(x=Kd, color='r', linestyle='--',
+            label=f'Kd = {Kd} nM')
+plt.xlabel('[Ligante] (nM)')
+plt.ylabel('Receptores Ocupados')
+plt.title('Curva de Ligacao Ligante-Receptor')
+plt.legend()
+plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Cinética de Ativação de Receptores}
+\begin{block}{Modelo com Estado Ativo/Inativo}
+\begin{equation*}
+\begin{aligned}
+\frac{d[R]}{dt} &= -k_{on}[L][R] + k_{off}[LR] + k_{inact}[R^*]\\
+\frac{d[LR]}{dt} &= k_{on}[L][R] - k_{off}[LR] - k_{act}[LR]\\
+\frac{d[R^*]}{dt} &= k_{act}[LR] - k_{inact}[R^*]
+\end{aligned}
+\end{equation*}
+
+Onde $R^*$ é o receptor ativo que inicia a sinalização.
+\end{block}
+
+\begin{exampleblock}{Estado Estacionário}
+No equilíbrio ($\frac{d}{dt} = 0$):
+\begin{equation*}
+[R^*]_{ss} = \frac{k_{act} \cdot k_{on}[L][R]_{total}}{k_{inact}(k_{off} + k_{act}) + k_{act} \cdot k_{on}[L]}
+\end{equation*}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: REDES DE TRANSDUÇÃO
+% ============================================================================
+\section{Redes de Transdução de Sinal}
+
+\begin{frame}{9.3 Redes de Transdução: Visão Geral}
+\begin{block}{Principais Vias de Sinalização}
+\begin{enumerate}
+    \item \textbf{MAPK/ERK:} proliferação, diferenciação
+    \item \textbf{PI3K/Akt:} sobrevivência, metabolismo
+    \item \textbf{JAK-STAT:} resposta a citocinas
+    \item \textbf{Wnt:} desenvolvimento, polaridade celular
+    \item \textbf{Notch:} decisões de destino celular
+    \item \textbf{TGF-$\beta$/Smad:} crescimento, diferenciação
+    \item \textbf{NF-$\kappa$B:} inflamação, imunidade
+    \item \textbf{Hedgehog:} padronização no desenvolvimento
+\end{enumerate}
+\end{block}
+
+\importante{
+Estas vias não operam isoladamente! Existe extenso \textbf{crosstalk} (diálogo cruzado) entre elas.
+}
+\end{frame}
+
+\begin{frame}{Via MAPK/ERK: Cascata Canônica}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.85, transform shape,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.5cm, text centered, rounded corners, minimum height=0.8cm}]
+
+    % Receptor
+    \node[box, fill=laranjacel!30] (rtk) {RTK\\(EGFR, PDGFR)};
+
+    % Adapter proteins
+    \node[box, fill=roxodna!20, below of=rtk, node distance=1.2cm] (grb) {Grb2/SOS};
+
+    % Ras
+    \node[box, fill=verdeacido!30, below of=grb, node distance=1.2cm] (ras) {Ras-GTP};
+
+    % MAPKKK
+    \node[box, fill=azulclaro!40, below of=ras, node distance=1.2cm] (raf) {Raf\\(MAPKKK)};
+
+    % MAPKK
+    \node[box, fill=azulclaro!50, below of=raf, node distance=1.2cm] (mek) {MEK\\(MAPKK)};
+
+    % MAPK
+    \node[box, fill=azulclaro!60, below of=mek, node distance=1.2cm] (erk) {ERK\\(MAPK)};
+
+    % Transcription factors
+    \node[box, fill=yellow!30, below of=erk, node distance=1.2cm] (tf) {Fatores de\\Transcrição\\(c-Fos, Elk-1)};
+
+    % Arrows
+    \draw[->, thick] (rtk) -- (grb);
+    \draw[->, thick] (grb) -- node[right, font=\tiny] {ativação} (ras);
+    \draw[->, thick] (ras) -- (raf);
+    \draw[->, thick] (raf) -- node[right, font=\tiny] {P} (mek);
+    \draw[->, thick] (mek) -- node[right, font=\tiny] {P P} (erk);
+    \draw[->, thick] (erk) -- (tf);
+
+    % Response
+    \node[below of=tf, node distance=1.2cm, text width=3cm, align=center, font=\small] (resp) {\textbf{Resposta:}\\Proliferação\\Diferenciação\\Sobrevivência};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Via PI3K/Akt: Sobrevivência e Metabolismo}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, scale=0.75, transform shape,
+    box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
+
+    \node[box, fill=laranjacel!30] (rtk) {RTK/GPCR};
+    \node[box, fill=azulclaro!30, below of=rtk] (pi3k) {PI3K};
+    \node[box, fill=verdeacido!30, below of=pi3k] (pip3) {PIP$_3$};
+    \node[box, fill=roxodna!30, below of=pip3] (pdk) {PDK1};
+    \node[box, fill=yellow!30, below of=pdk] (akt) {Akt (PKB)};
+
+    \draw[->, thick] (rtk) -- (pi3k);
+    \draw[->, thick] (pi3k) -- node[right, font=\tiny] {PIP$_2$ $\rightarrow$ PIP$_3$} (pip3);
+    \draw[->, thick] (pip3) -- (pdk);
+    \draw[->, thick] (pdk) -- node[right, font=\tiny] {P} (akt);
+
+    % PTEN
+    \node[box, fill=red!20, right of=pip3, node distance=3cm, text width=1.5cm] (pten) {PTEN\\(fosfatase)};
+    \draw[-|, thick, red] (pten) -- (pip3);
+\end{tikzpicture}
+\end{center}
+
+\column{0.5\textwidth}
+\textbf{Alvos de Akt:}
+\begin{itemize}
+    \item \textbf{mTOR:} síntese proteica $\uparrow$
+    \item \textbf{GSK3:} glicogênio síntese $\uparrow$
+    \item \textbf{Bad:} apoptose $\downarrow$
+    \item \textbf{FoxO:} gliconeogênese $\downarrow$
+    \item \textbf{MDM2:} p53 $\downarrow$
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Relevância Clínica}
+\begin{itemize}
+    \item \textbf{PTEN:} supressor tumoral frequentemente mutado
+    \item \textbf{PI3K/Akt:} hiperativa em $\sim$30\% dos cânceres
+    \item \textbf{Diabetes:} resistência à insulina via Akt
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Via JAK-STAT: Sinalização de Citocinas}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.8, transform shape]
+    % Membrane
+    \draw[thick, double] (-2,0) -- (6,0);
+    \node[left, font=\tiny] at (-2,0.3) {Extracelular};
+    \node[left, font=\tiny] at (-2,-0.3) {Intracelular};
+
+    % Cytokine receptor dimer
+    \draw[thick, azulclaro, fill=azulclaro!30] (0,-0.3) rectangle (0.5,1);
+    \draw[thick, azulclaro, fill=azulclaro!30] (1.5,-0.3) rectangle (2,1);
+
+    % Cytokine
+    \draw[fill=laranjacel!50] (1,1.5) circle (0.3);
+    \node[above, font=\small] at (1,1.8) {Citocina};
+
+    % JAK proteins
+    \draw[thick, verdeacido, fill=verdeacido!30] (0,-0.8) circle (0.4);
+    \draw[thick, verdeacido, fill=verdeacido!30] (2,-0.8) circle (0.4);
+    \node[font=\small] at (0,-0.8) {JAK};
+    \node[font=\small] at (2,-0.8) {JAK};
+
+    % Phosphorylations
+    \foreach \x in {0, 2} {
+        \foreach \y in {-1.4, -1.6, -1.8} {
+            \node[font=\scriptsize, red] at (\x,\y) {P};
+        }
+    }
+
+    % STAT proteins
+    \draw[thick, roxodna, fill=roxodna!30] (1,-2.3) ellipse (0.5 and 0.3);
+    \node[font=\small] at (1,-2.3) {STAT};
+    \draw[->, thick] (1,-1.9) -- (1,-2);
+
+    % Nucleus
+    \draw[thick, dashed] (3.5,-3) rectangle (5.5,-4.5);
+    \node[font=\small] at (4.5,-3.2) {Núcleo};
+
+    % STAT dimer in nucleus
+    \draw[thick, yellow, fill=yellow!30] (4.5,-3.9) ellipse (0.6 and 0.3);
+    \node[font=\small] at (4.5,-3.9) {STAT};
+    \node[font=\tiny, red] at (4.5,-3.6) {P P};
+
+    % Arrow to nucleus
+    \draw[->, thick, bend right=30] (1.5,-2.5) to node[below, font=\tiny] {dimerização} (3.5,-3.8);
+
+    % DNA
+    \draw[thick, azulescuro] (4,-4.3) -- (5,-4.3);
+    \node[below, font=\tiny] at (4.5,-4.5) {Gene alvo};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Via rápida e direta: do receptor à transcrição gênica sem cascatas intermediárias complexas!
+}
+\end{frame}
+
+\begin{frame}{Via Wnt: Desenvolvimento e Polaridade}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Via Canônica Wnt/$\beta$-catenina:}
+
+\begin{enumerate}
+    \item \textbf{Sem Wnt:}
+    \begin{itemize}
+        \item $\beta$-catenina fosforilada por complexo de destruição (GSK3, APC, Axina)
+        \item Ubiquitinação e degradação
+    \end{itemize}
+
+    \vspace{0.2cm}
+
+    \item \textbf{Com Wnt:}
+    \begin{itemize}
+        \item Wnt liga a Frizzled + LRP5/6
+        \item Dishevelled (Dvl) ativado
+        \item Complexo de destruição inibido
+        \item $\beta$-catenina acumula
+        \item Entra no núcleo
+        \item Ativa transcrição (TCF/LEF)
+    \end{itemize}
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % OFF state
+    \begin{scope}
+        \node[font=\small, align=center] at (0,3) {\textbf{OFF}\\(sem Wnt)};
+
+        % Destruction complex
+        \draw[thick, fill=red!20] (0,1.5) ellipse (1 and 0.6);
+        \node[font=\tiny, align=center] at (0,1.5) {Complexo\\destruição\\GSK3/APC};
+
+        % beta-catenin degraded
+        \draw[thick, fill=azulclaro!30] (0,0.5) rectangle (0.8,0.9);
+        \node[font=\tiny] at (0.4,0.7) {$\beta$-cat};
+        \node[red, font=\tiny] at (0.4,0.3) {P};
+        \draw[->, thick, red] (0.4,0.2) -- (0.4,-0.3);
+        \node[font=\tiny] at (0.4,-0.6) {Degradação};
+    \end{scope}
+
+    % ON state
+    \begin{scope}[xshift=4cm]
+        \node[font=\small, align=center] at (0,3) {\textbf{ON}\\(com Wnt)};
+
+        % Wnt ligand
+        \draw[fill=laranjacel!50] (0,2.3) circle (0.2);
+        \node[font=\tiny, above] at (0,2.5) {Wnt};
+
+        % Receptors
+        \draw[thick, azulclaro] (0,1.5) rectangle (0.3,2.2);
+
+        % Destruction complex inhibited
+        \draw[thick, fill=gray!20] (0,0.8) ellipse (1 and 0.6);
+        \node[font=\tiny, align=center] at (0,0.8) {Complexo\\inativo};
+
+        % beta-catenin accumulates
+        \draw[thick, fill=verdeacido!30] (-0.5,0) rectangle (-0.1,0.4);
+        \draw[thick, fill=verdeacido!30] (0.1,0) rectangle (0.5,0.4);
+        \node[font=\tiny] at (0,0.2) {$\beta$-cat};
+
+        % Nucleus
+        \draw[thick, dashed] (-0.8,-1) rectangle (0.8,-2.2);
+        \node[font=\tiny] at (0,-1.2) {Núcleo};
+
+        % beta-catenin in nucleus
+        \draw[thick, fill=yellow!30] (0,-1.7) rectangle (0.4,-1.5);
+        \node[font=\tiny] at (0.2,-1.6) {$\beta$-cat};
+
+        \draw[->, thick] (0.2,-0.2) -- (0.2,-1);
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.2cm}
+
+\exemplo{Wnt em Câncer}{
+Mutações em APC (via Wnt) são encontradas em $>$80\% dos cânceres colorretais.
+}
+\end{frame>
+
+\begin{frame}{Via Notch: Decisões de Destino Celular}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Cell 1 (sending)
+    \begin{scope}
+        \draw[thick] (-2,-1) rectangle (0,3);
+        \node[font=\small] at (-1,2.5) {Célula Sinalizadora};
+
+        % Delta ligand
+        \draw[thick, fill=laranjacel!40] (-0.3,1) -- (0.3,1) -- (0.3,1.8) -- (-0.3,1.8) -- cycle;
+        \node[font=\tiny, right] at (0.3,1.4) {Delta};
+    \end{scope}
+
+    % Cell 2 (receiving)
+    \begin{scope}[xshift=4cm]
+        \draw[thick] (-2,-1) rectangle (0,3);
+        \node[font=\small] at (-1,2.5) {Célula Receptora};
+
+        % Notch receptor
+        \draw[thick, fill=azulclaro!40] (-2.3,0.8) -- (-2.3,2) -- (-1.5,2) -- (-1.5,0.8);
+        \node[font=\tiny, left] at (-2.3,1.4) {Notch};
+
+        % Extracellular domain (NECD)
+        \draw[thick, fill=roxodna!30] (-2.7,1.5) circle (0.3);
+        \node[font=\tiny] at (-2.7,1.5) {NECD};
+
+        % Intracellular domain (NICD)
+        \draw[thick, fill=verdeacido!30] (-1.3,1.2) ellipse (0.4 and 0.3);
+        \node[font=\tiny] at (-1.3,1.2) {NICD};
+
+        % Cleavage
+        \draw[->, thick, red] (-2.7,1.1) -- (-3.2,0.5);
+        \node[font=\tiny, red] at (-3.2,0.3) {clivagem};
+
+        % NICD to nucleus
+        \draw[->, thick] (-1,1) -- (-1,0);
+
+        % Nucleus
+        \draw[thick, dashed] (-1.8,-0.3) rectangle (-0.2,-1.8);
+        \node[font=\tiny] at (-1,-0.5) {Núcleo};
+
+        % NICD + CSL
+        \draw[thick, fill=yellow!30] (-1.5,-1) rectangle (-0.5,-1.3);
+        \node[font=\tiny] at (-1,-1.15) {NICD+CSL};
+
+        % DNA
+        \draw[thick, azulescuro] (-1.7,-1.5) -- (-0.3,-1.5);
+        \node[font=\tiny, below] at (-1,-1.7) {Gene alvo};
+    \end{scope}
+
+    % Interaction
+    \draw[<->, thick, laranjacel] (0.3,1.4) -- (1.7,1.4);
+    \node[font=\tiny, above] at (1,1.4) {Interação};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Notch é único: o receptor é clivado e o fragmento intracelular vai diretamente ao núcleo!
+}
+\end{frame}
+
+\begin{frame}{Via TGF-$\beta$/Smad}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, scale=0.7, transform shape,
+    box/.style={rectangle, draw, text width=2.2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
+
+    % Membrane
+    \draw[thick, double] (-1,0) -- (3,0);
+
+    % TGF-beta ligand
+    \draw[fill=laranjacel!50] (1,0.8) circle (0.3);
+    \node[above, font=\tiny] at (1,1.1) {TGF-$\beta$};
+
+    % Type II and Type I receptors
+    \draw[thick, fill=azulclaro!30] (0.3,-0.2) rectangle (0.8,0.5);
+    \draw[thick, fill=azulclaro!30] (1.2,-0.2) rectangle (1.7,0.5);
+    \node[font=\tiny] at (0.55,-0.5) {TβRII};
+    \node[font=\tiny] at (1.45,-0.5) {TβRI};
+
+    % R-Smads
+    \node[box, fill=verdeacido!30] at (1,-1.5) {R-Smad\\(Smad2/3)};
+
+    % Co-Smad
+    \node[box, fill=roxodna!30] at (1,-2.5) {Co-Smad\\(Smad4)};
+
+    % Complex
+    \node[box, fill=yellow!30] at (1,-3.5) {Complexo\\Smad};
+
+    % Nucleus
+    \draw[thick, dashed] (0,-4.5) rectangle (2,-5.5);
+    \node[font=\tiny] at (1,-4.7) {Núcleo};
+
+    % Transcription
+    \node[font=\tiny, align=center] at (1,-5.2) {Transcrição\\Gene alvo};
+
+    % Arrows
+    \draw[->, thick] (1,-0.7) -- (1,-1.2);
+    \draw[->, thick] (1,-1.8) -- (1,-2.2);
+    \draw[->, thick] (1,-2.8) -- (1,-3.2);
+    \draw[->, thick] (1,-3.8) -- (1,-4.3);
+\end{tikzpicture}
+\end{center}
+
+\column{0.5\textwidth}
+\textbf{Regulação:}
+\begin{itemize}
+    \item \textbf{I-Smads} (Smad6/7): inibem R-Smads (feedback negativo)
+    \item \textbf{Ubiquitinação:} degradação de R-Smads
+    \item \textbf{Fosfatases:} desfosforilam Smads
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Funções Biológicas:}
+\begin{itemize}
+    \item Diferenciação celular
+    \item Apoptose
+    \item Transição epitélio-mesênquima (EMT)
+    \item Fibrose
+    \item Imunossupressão
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Dual Role}
+TGF-$\beta$ age como \textbf{supressor tumoral} em estágios iniciais, mas promove \textbf{metástase} em estágios avançados.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Crosstalk entre Vias de Sinalização}
+\begin{center}
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\small}]
+    % Central pathways as nodes
+    \node[draw, circle, fill=azulclaro!30, text width=1.5cm, align=center] (mapk) at (0,0) {MAPK/\\ERK};
+    \node[draw, circle, fill=verdeacido!30, text width=1.5cm, align=center] (pi3k) at (3,1.5) {PI3K/\\Akt};
+    \node[draw, circle, fill=roxodna!30, text width=1.5cm, align=center] (jak) at (3,-1.5) {JAK-\\STAT};
+    \node[draw, circle, fill=laranjacel!30, text width=1.5cm, align=center] (wnt) at (6,0) {Wnt};
+    \node[draw, circle, fill=yellow!30, text width=1.5cm, align=center] (tgf) at (4.5,-3) {TGF-$\beta$};
+    \node[draw, circle, fill=red!20, text width=1.5cm, align=center] (nfkb) at (1.5,-3) {NF-$\kappa$B};
+
+    % Crosstalk arrows
+    \draw[<->, thick, azulescuro] (mapk) -- node[above, font=\tiny] {Ras-PI3K} (pi3k);
+    \draw[<->, thick, azulescuro] (mapk) -- node[below, font=\tiny] {ERK-STAT} (jak);
+    \draw[<->, thick, azulescuro] (pi3k) -- node[right, font=\tiny] {GSK3} (wnt);
+    \draw[<->, thick, azulescuro] (pi3k) -- (jak);
+    \draw[<->, thick, azulescuro] (jak) -- (nfkb);
+    \draw[<->, thick, azulescuro] (mapk) -- (nfkb);
+    \draw[<->, thick, azulescuro] (tgf) -- (mapk);
+    \draw[<->, thick, azulescuro] (tgf) -- (wnt);
+\end{tikzpicture}
+\end{center}
+
+\importante{
+O crosstalk permite:
+\begin{itemize}
+    \item Integração de múltiplos sinais
+    \item Ajuste fino da resposta celular
+    \item Comportamentos complexos (biestabilidade, oscilações)
+    \item Robustez e redundância
+\end{itemize}
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: CASCATAS DE QUINASES
+% ============================================================================
+\section{Cascatas de Proteínas Quinases}
+
+\begin{frame}{9.4 Cascatas de Fosforilação}
+\definicao{Cascata de Quinases}{
+Sequência de reações onde uma quinase ativa outra por fosforilação, resultando em amplificação de sinal.
+}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.9, transform shape]
+    % Generic cascade
+    \node[draw, rectangle, fill=azulclaro!30, text width=2.5cm, align=center] (k1) {Quinase 1\\(inativa)};
+    \node[draw, rectangle, fill=azulclaro!50, text width=2.5cm, align=center, right of=k1, node distance=4cm] (k1a) {Quinase 1*\\(ativa)};
+
+    \node[draw, rectangle, fill=verdeacido!30, text width=2.5cm, align=center, below of=k1a] (k2) {Quinase 2\\(inativa)};
+    \node[draw, rectangle, fill=verdeacido!50, text width=2.5cm, align=center, right of=k2, node distance=4cm] (k2a) {Quinase 2**\\(ativa)};
+
+    \node[draw, rectangle, fill=laranjacel!30, text width=2.5cm, align=center, below of=k2a] (k3) {Quinase 3\\(inativa)};
+    \node[draw, rectangle, fill=laranjacel!50, text width=2.5cm, align=center, right of=k3, node distance=4cm] (k3a) {Quinase 3***\\(ativa)};
+
+    % Arrows
+    \draw[->, thick, red] (k1) -- node[above, font=\small] {sinal} (k1a);
+    \draw[->, thick] (k1a) -- node[right, font=\small] {P} (k2);
+    \draw[->, thick] (k2) -- (k2a);
+    \draw[->, thick] (k2a) -- node[right, font=\small] {P P} (k3);
+    \draw[->, thick] (k3) -- (k3a);
+
+    % Amplification labels
+    \node[right, font=\small, text width=2cm] at (9.5,0) {1 molécula};
+    \node[right, font=\small, text width=2cm] at (9.5,-1.5) {10-100\\moléculas};
+    \node[right, font=\small, text width=2cm] at (9.5,-3) {100-1000\\moléculas};
+\end{tikzpicture}
+\end{center>
+
+\importante{
+Cascatas proporcionam \textbf{amplificação}, \textbf{ultrassensibilidade} e \textbf{integração} de sinais!
+}
+\end{frame}
+
+\begin{frame}{Cascata MAPK: MAPKKK $\rightarrow$ MAPKK $\rightarrow$ MAPK}
+\begin{block}{Estrutura da Cascata}
+\begin{equation*}
+\text{MAPKKK} \xrightarrow{P} \text{MAPKK} \xrightarrow{P \, P} \text{MAPK} \xrightarrow{P} \text{Substrato}
+\end{equation*}
+
+\begin{itemize}
+    \item \textbf{MAPKKK:} Raf, MEKK, MLK, TAK1
+    \item \textbf{MAPKK:} MEK1/2, MKK3/6, MKK4/7
+    \item \textbf{MAPK:} ERK1/2, p38, JNK
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Dupla Fosforilação de MAPK}
+MAPK requer fosforilação em \textbf{dois} resíduos (Thr e Tyr no motif TXY) para ativação completa:
+\begin{equation*}
+\text{MAPK} \xrightarrow{\text{MAPKK}} \text{MAPK-P} \xrightarrow{\text{MAPKK}} \text{MAPK-PP*}
+\end{equation*}
+
+Isso confere \textbf{ultrassensibilidade}!
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Ultrassensibilidade: Função de Goldbeter-Koshland}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Modelo de GK}
+Para um ciclo de modificação (fosforilação/desfosforilação):
+
+\begin{equation*}
+\frac{[X^*]}{[X]_{total}} = \frac{2vq}{v + q - v + q - (v - q)^2 + 4vq}
+\end{equation*}
+
+Onde:
+\begin{itemize}
+    \item $v = \frac{V_1[S]}{K_1 + [S]}$ (quinase)
+    \item $q = \frac{V_2}{K_2}$ (fosfatase)
+\end{itemize}
+
+Quando $K_1, K_2 \ll [X]_{total}$: comportamento \textbf{ultrassensível}
+\end{block}
+
+\column{0.5\textwidth}
+\textbf{Coeficiente de Hill Efetivo:}
+\begin{equation*}
+n_{H} \approx 1 + \frac{2[X]_{total}}{K_1 + K_2}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Interpretação}
+\begin{itemize}
+    \item $n_H = 1$: resposta hiperbólica (Michaelis-Menten)
+    \item $n_H > 1$: ultrassensível (switch-like)
+    \item Cascatas de MAPK: $n_H$ pode chegar a 5-10!
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Ultrassensibilidade permite decisões binárias (ON/OFF) mesmo com sinais graduais!
+}
+\end{frame}
+
+\begin{frame}{Amplificação de Sinal em Cascatas}
+\begin{block}{Modelo de Amplificação}
+Para uma cascata de $n$ níveis, cada nível com ganho $g_i$:
+
+\begin{equation*}
+\text{Amplificação Total} = \prod_{i=1}^{n} g_i = g_1 \times g_2 \times \cdots \times g_n
+\end{equation*}
+
+\textbf{Ganho em cada nível:}
+\begin{equation*}
+g_i = \frac{k_{cat,i}}{k_{inact,i}} \times \frac{[K_i]_{total}}{[K_{i-1}]_{ativo}}
+\end{equation*}
+\end{block}
+
+\exemplo{Cascata MAPK Típica}{
+\begin{itemize}
+    \item Raf: 10 moléculas ativas
+    \item MEK: 100 moléculas ativas (ganho = 10)
+    \item ERK: 1000 moléculas ativas (ganho = 10)
+    \item \textbf{Amplificação total:} $10 \times 10 = 100\times$
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{Fosforilação Distributiva vs Processiva}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Distributiva}
+Substrato se dissocia após cada fosforilação:
+
+\vspace{0.2cm}
+
+\begin{tikzpicture}[scale=0.6]
+    \node[draw, fill=azulclaro!30] (s) at (0,0) {S};
+    \node[draw, fill=verdeacido!30] (k) at (2,0) {K};
+    \node[draw, fill=azulclaro!50] (sp) at (0,-1.5) {SP};
+    \node[draw, fill=azulclaro!70] (spp) at (0,-3) {SPP};
+
+    \draw[->, thick] (s) -- (k);
+    \draw[->, thick] (k) -- (sp);
+    \draw[->, thick, dashed, red] (sp) -- (0,-1) node[right, font=\tiny] {dissocia};
+    \draw[->, thick] (sp) -- (k);
+    \draw[->, thick] (k) -- (spp);
+\end{tikzpicture}
+
+\begin{itemize}
+    \item Mais comum
+    \item Gera \textbf{ultrassensibilidade}
+    \item Coeficiente de Hill alto
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Processiva}
+Substrato permanece ligado:
+
+\vspace{0.2cm}
+
+\begin{tikzpicture}[scale=0.6]
+    \node[draw, fill=azulclaro!30] (s) at (0,0) {S};
+    \node[draw, fill=verdeacido!30] (k) at (2,0) {K};
+    \node[draw, fill=azulclaro!50] (sp) at (2,-1.5) {S-K-P};
+    \node[draw, fill=azulclaro!70] (spp) at (2,-3) {SPP};
+
+    \draw[->, thick] (s) -- (k);
+    \draw[->, thick] (k) -- node[right, font=\tiny] {P} (sp);
+    \draw[->, thick] (sp) -- node[right, font=\tiny] {P} (spp);
+    \draw[->, thick] (spp) -- (0,-3);
+\end{tikzpicture}
+
+\begin{itemize}
+    \item Menos comum
+    \item Resposta mais gradual
+    \item Coeficiente de Hill $\approx 1$
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{MAPK é Distributiva}
+MEK fosforila ERK de forma distributiva $\rightarrow$ ultrassensibilidade!
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Biestabilidade em Cascatas de Sinalização}
+\begin{columns}
+\column{0.5\textwidth}
+\definicao{Biestabilidade}{
+Sistema com dois estados estáveis (ON e OFF) separados por ponto de instabilidade.
+}
+
+\textbf{Requisitos:}
+\begin{itemize}
+    \item Ultrassensibilidade ($n_H > 1$)
+    \item Feedback positivo
+    \item Saturação de fosfatases
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Consequências:}
+\begin{itemize}
+    \item Memória celular
+    \item Decisões irreversíveis
+    \item Histerese
+    \item Resistência a ruído
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Axes
+    \draw[->] (0,0) -- (5,0) node[right, font=\small] {Estímulo};
+    \draw[->] (0,0) -- (0,4) node[above, font=\small] {Resposta};
+
+    % Bistable curve (hysteresis)
+    \draw[thick, azulescuro] (0.5,0.5) -- (2,0.7);
+    \draw[thick, azulescuro] (2,0.7) -- (2.2,2.5);
+    \draw[thick, azulescuro] (2.2,2.5) -- (4.5,3.5);
+
+    \draw[thick, red, dashed] (0.5,0.5) -- (3,1);
+    \draw[thick, red, dashed] (3,1) -- (3.2,2.8);
+    \draw[thick, red, dashed] (3.2,2.8) -- (4.5,3.5);
+
+    % Labels
+    \node[font=\small] at (1,0.3) {OFF};
+    \node[font=\small] at (4,3.8) {ON};
+    \node[font=\tiny, red] at (2.6,1.8) {Instável};
+
+    % Arrows showing hysteresis
+    \draw[->, thick, verdeacido] (1.5,1.5) to [out=30, in=150] (3.5,2);
+    \draw[->, thick, laranjacel] (3.5,2.5) to [out=210, in=330] (1.5,2);
+
+    \node[font=\tiny] at (2.5,0.5) {$S_{ON}$};
+    \node[font=\tiny] at (3.5,0.5) {$S_{OFF}$};
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Histerese}
+Threshold para ativar $\neq$ threshold para desativar!
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação de Cascata MAPK}
+\begin{lstlisting}[language=Python, caption=Modelo simplificado de cascata MAPK, basicstyle=\ttfamily\scriptsize]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def mapk_cascade(y, t, stimulus):
+    """Modelo de cascata MAPK de 3 niveis"""
+    K1, K1p, K2, K2p, K3, K3p = y
+
+    # Parametros
+    k1 = 0.1 * stimulus  # ativacao de K1
+    k2 = 0.5              # K1p ativa K2
+    k3 = 1.0              # K2p ativa K3
+    d1 = 0.1              # desfosforilacao
+    d2 = 0.2
+    d3 = 0.3
+
+    # ODEs
+    dK1 = -k1*K1 + d1*K1p
+    dK1p = k1*K1 - d1*K1p
+
+    dK2 = -k2*K1p*K2 + d2*K2p
+    dK2p = k2*K1p*K2 - d2*K2p
+
+    dK3 = -k3*K2p*K3 + d3*K3p
+    dK3p = k3*K2p*K3 - d3*K3p
+
+    return [dK1, dK1p, dK2, dK2p, dK3, dK3p]
+
+# Condicoes iniciais (total = 100 para cada nivel)
+y0 = [100, 0, 100, 0, 100, 0]
+t = np.linspace(0, 50, 500)
+stimulus = 1.0
+
+sol = odeint(mapk_cascade, y0, t, args=(stimulus,))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação de Cascata MAPK (cont.)}
+\begin{lstlisting}[language=Python, caption=Visualização da cascata, basicstyle=\ttfamily\scriptsize]
+# Plotar resultados
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.plot(t, sol[:, 1], 'b-', linewidth=2, label='K1* (MAPKKK)')
+plt.plot(t, sol[:, 3], 'g-', linewidth=2, label='K2* (MAPKK)')
+plt.plot(t, sol[:, 5], 'r-', linewidth=2, label='K3* (MAPK)')
+plt.xlabel('Tempo')
+plt.ylabel('Concentracao (forma ativa)')
+plt.title('Dinamica Temporal da Cascata MAPK')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+# Dose-response
+plt.subplot(1, 2, 2)
+stimuli = np.logspace(-2, 1, 20)
+responses = []
+
+for stim in stimuli:
+    sol = odeint(mapk_cascade, y0, t, args=(stim,))
+    responses.append(sol[-1, 5])  # K3p no equilibrio
+
+plt.semilogx(stimuli, responses, 'ro-', linewidth=2)
+plt.xlabel('Estimulo (log scale)')
+plt.ylabel('MAPK ativa (equilibrio)')
+plt.title('Curva Dose-Resposta (Ultrassensibilidade)')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: SEGUNDOS MENSAGEIROS
+% ============================================================================
+\section{Segundos Mensageiros}
+
+\begin{frame}{9.5 Segundos Mensageiros}
+\definicao{Segundo Mensageiro}{
+Molécula intracelular pequena que propaga o sinal de um receptor para efetores intracelulares, amplificando e difundindo o sinal.
+}
+
+\begin{block}{Principais Segundos Mensageiros}
+\begin{itemize}
+    \item \textbf{cAMP} (AMP cíclico)
+    \item \textbf{cGMP} (GMP cíclico)
+    \item \textbf{Ca}$^{2+}$ (cálcio)
+    \item \textbf{IP}$_3$ (inositol 1,4,5-trifosfato)
+    \item \textbf{DAG} (diacilglicerol)
+    \item \textbf{NO} (óxido nítrico)
+\end{itemize}
+\end{block}
+
+\importante{
+Segundos mensageiros permitem:
+\begin{itemize}
+    \item \textbf{Amplificação:} 1 receptor $\rightarrow$ milhares de moléculas de 2º mensageiro
+    \item \textbf{Difusão:} sinal se espalha pelo citoplasma
+    \item \textbf{Integração:} múltiplos sinais convergem
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{cAMP: Sinalização via Adenilil Ciclase}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Via de Síntese:}
+\begin{enumerate}
+    \item GPCR ativa G$_s$-$\alpha$
+    \item G$_s$-$\alpha$-GTP ativa adenilil ciclase (AC)
+    \item AC converte ATP $\rightarrow$ cAMP
+    \item cAMP ativa PKA (proteína quinase A)
+    \item PKA fosforila alvos downstream
+    \item Fosfodiesterase (PDE) degrada cAMP $\rightarrow$ AMP
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Alvos de PKA:}
+\begin{itemize}
+    \item CREB (transcrição)
+    \item Enzimas metabólicas
+    \item Canais iônicos
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, scale=0.7, transform shape,
+    box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
+
+    \node[box, fill=laranjacel!30] (gpcr) {GPCR};
+    \node[box, fill=verdeacido!30, below of=gpcr] (gs) {G$_s$-$\alpha$};
+    \node[box, fill=azulclaro!30, below of=gs] (ac) {Adenilil\\Ciclase};
+    \node[box, fill=yellow!30, below of=ac] (camp) {cAMP};
+    \node[box, fill=roxodna!30, below of=camp] (pka) {PKA\\(ativa)};
+    \node[box, fill=red!20, below of=pka] (target) {Alvos\\(fosforilados)};
+
+    \draw[->, thick] (gpcr) -- (gs);
+    \draw[->, thick] (gs) -- (ac);
+    \draw[->, thick] (ac) -- node[right, font=\tiny] {ATP} (camp);
+    \draw[->, thick] (camp) -- (pka);
+    \draw[->, thick] (pka) -- node[right, font=\tiny] {P} (target);
+
+    % PDE
+    \draw[-|, thick, red] (3,-3) node[right, font=\tiny] {PDE} -- (camp);
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Exemplos}
+\begin{itemize}
+    \item Epinefrina $\rightarrow$ glicogenólise
+    \item ACTH $\rightarrow$ síntese de cortisol
+    \item Glucagon $\rightarrow$ liberação de glicose
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Sinalização por Ca$^{2+}$: Oscilações e Ondas}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Fontes de Ca$^{2+}$:}
+\begin{itemize}
+    \item \textbf{Intracelular:} retículo endoplasmático (ER)
+    \item \textbf{Extracelular:} através de canais
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Concentrações:}
+\begin{itemize}
+    \item [Ca$^{2+}$]$_{cito,repouso}$ $\sim$ 100 nM
+    \item [Ca$^{2+}$]$_{ER}$ $\sim$ 0.5 mM
+    \item [Ca$^{2+}$]$_{extra}$ $\sim$ 1-2 mM
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Sensores de Ca$^{2+}$:}
+\begin{itemize}
+    \item \textbf{Calmodulina (CaM)}
+    \item \textbf{Troponina C} (músculo)
+    \item \textbf{PKC} (proteína quinase C)
+    \item \textbf{CaMKII}
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Axes
+    \draw[->] (0,0) -- (6,0) node[right, font=\small] {Tempo};
+    \draw[->] (0,0) -- (0,4) node[above, font=\small] {[Ca$^{2+}$]};
+
+    % Baseline
+    \draw[thick, gray, dashed] (0,0.5) -- (6,0.5);
+    \node[left, font=\tiny] at (0,0.5) {basal};
+
+    % Oscillations
+    \draw[thick, azulescuro, domain=0:6, samples=100, smooth]
+        plot (\x, {0.5 + 2.5*exp(-0.2*\x)*sin(360*\x)});
+
+    \node[font=\small, align=center] at (3,-1) {Oscilações de Ca$^{2+}$};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Padrões de Ca$^{2+}$}
+\begin{itemize}
+    \item \textbf{Transiente:} pico único
+    \item \textbf{Oscilações:} picos periódicos
+    \item \textbf{Ondas:} propagação espacial
+\end{itemize}
+
+Frequência e amplitude codificam informação!
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Via IP$_3$/DAG: Fosfolipase C}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.85, transform shape]
+    % Membrane
+    \draw[thick, double] (-2,0) -- (6,0);
+    \node[left, font=\tiny] at (-2,0.3) {Extracelular};
+    \node[left, font=\tiny] at (-2,-0.3) {Intracelular};
+
+    % GPCR
+    \draw[thick, fill=laranjacel!30] (0,-0.3) rectangle (0.5,0.5);
+    \node[above, font=\tiny] at (0.25,0.7) {GPCR};
+
+    % Gq-alpha
+    \draw[thick, fill=verdeacido!30] (1,-0.7) circle (0.4);
+    \node[font=\small] at (1,-0.7) {G$_q$};
+
+    % PLC
+    \draw[thick, fill=azulclaro!30] (2.5,-0.7) ellipse (0.6 and 0.4);
+    \node[font=\small] at (2.5,-0.7) {PLC};
+
+    % PIP2 in membrane
+    \draw[thick, fill=roxodna!30] (2.5,0) circle (0.2);
+    \node[above, font=\tiny] at (2.5,0.3) {PIP$_2$};
+
+    % IP3 and DAG
+    \node[draw, rectangle, fill=yellow!30, rounded corners] (ip3) at (4.5,-1.5) {IP$_3$};
+    \node[draw, rectangle, fill=red!20, rounded corners] (dag) at (2.5,-1.5) {DAG};
+
+    % Arrows
+    \draw[->, thick] (0.25,-0.3) -- (1,-0.3);
+    \draw[->, thick] (1.4,-0.7) -- (1.9,-0.7);
+    \draw[->, thick] (2.5,-0.3) -- (2.5,-1);
+    \draw[->, thick] (2.7,-1.1) -- (ip3);
+    \draw[->, thick] (2.3,-1.1) -- (dag);
+
+    % ER and Ca2+
+    \draw[thick, dashed] (4,-3) rectangle (6,-4);
+    \node[font=\tiny] at (5,-3.2) {ER};
+    \node[font=\small] at (5,-3.6) {Ca$^{2+}$};
+
+    % IP3 receptor
+    \draw[->, thick, red] (ip3) -- (5,-2.8);
+    \node[right, font=\tiny] at (5,-2.5) {IP$_3$R};
+
+    % Ca2+ release
+    \foreach \i in {1,2,3} {
+        \draw[->, thick, red] (5,-2.8) -- ++(0.2*\i, 0.5*\i);
+    }
+
+    % PKC activation
+    \node[draw, rectangle, fill=verdeacido!40, rounded corners] at (1,-3) {PKC};
+    \draw[->, thick] (dag) -- (1,-2);
+    \draw[->, thick] (4,-2) to [out=180, in=90] (1,-2.7);
+    \node[left, font=\tiny] at (2.5,-2.5) {Ca$^{2+}$};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+IP$_3$ e DAG atuam sinergisticamente: IP$_3$ libera Ca$^{2+}$, Ca$^{2+}$ + DAG ativam PKC!
+}
+\end{frame}
+
+\begin{frame}{Modelo Matemático de Oscilações de Ca$^{2+}$}
+\begin{block}{Modelo Simplificado}
+\begin{equation*}
+\begin{aligned}
+\frac{d[Ca^{2+}]}{dt} &= v_{in} - v_{out} + v_{release} - v_{uptake}\\
+v_{release} &= k_{rel} \cdot [IP_3] \cdot \frac{[Ca^{2+}]^2}{K_1^2 + [Ca^{2+}]^2}\\
+v_{uptake} &= k_{uptake} \cdot [Ca^{2+}]
+\end{aligned}
+\end{equation*}
+
+\textbf{CICR (Calcium-Induced Calcium Release):}
+\begin{itemize}
+    \item Ca$^{2+}$ estimula sua própria liberação (feedback positivo)
+    \item Combinado com uptake (feedback negativo)
+    \item Resultado: oscilações!
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Codificação por Frequência (Frequency Encoding)}
+A \textbf{frequência} das oscilações de Ca$^{2+}$ codifica a intensidade do estímulo:
+\begin{itemize}
+    \item Estímulo fraco $\rightarrow$ baixa frequência
+    \item Estímulo forte $\rightarrow$ alta frequência
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação de Oscilações de Ca$^{2+}$}
+\begin{lstlisting}[language=Python, caption=Modelo de oscilações de cálcio, basicstyle=\ttfamily\scriptsize]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def ca_oscillations(y, t, IP3):
+    """Modelo simplificado de oscilacoes de Ca2+"""
+    Ca = y[0]
+
+    # Parametros
+    k_rel = 2.0       # liberacao do ER
+    k_uptake = 0.5    # recaptura para o ER
+    K1 = 0.3          # constante para CICR
+    v_in = 0.1        # influxo externo
+    v_out = 0.05      # efluxo
+
+    # Liberacao induzida por IP3 e Ca (CICR)
+    v_release = k_rel * IP3 * (Ca**2 / (K1**2 + Ca**2))
+
+    # Uptake pelo ER (SERCA pumps)
+    v_uptake_rate = k_uptake * Ca
+
+    # ODE
+    dCa = v_in - v_out + v_release - v_uptake_rate
+
+    return [dCa]
+
+# Simular para diferentes niveis de IP3
+t = np.linspace(0, 100, 1000)
+IP3_levels = [0.5, 1.0, 1.5]
+
+plt.figure(figsize=(12, 4))
+for i, IP3 in enumerate(IP3_levels):
+    Ca0 = [0.1]
+    sol = odeint(ca_oscillations, Ca0, t, args=(IP3,))
+    plt.subplot(1, 3, i+1)
+    plt.plot(t, sol[:, 0], 'b-', linewidth=2)
+    plt.xlabel('Tempo')
+    plt.ylabel('[Ca2+]')
+    plt.title(f'IP3 = {IP3}')
+    plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{cGMP e Sinalização por NO}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Via NO/cGMP:}
+\begin{enumerate}
+    \item NO (óxido nítrico) produzido por NOS (NO sintase)
+    \item NO difunde através de membranas
+    \item NO ativa guanilil ciclase solúvel (sGC)
+    \item sGC converte GTP $\rightarrow$ cGMP
+    \item cGMP ativa PKG (proteína quinase G)
+    \item PKG fosforila alvos
+    \item Fosfodiesterase degrada cGMP
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Características:}
+\begin{itemize}
+    \item NO é gasoso, lipofilico
+    \item Meia-vida curta ($\sim$ segundos)
+    \item Sinalização parácrina
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, scale=0.7, transform shape,
+    box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
+
+    \node[box, fill=laranjacel!30] (stim) {Estímulo\\(ACh, Shear)};
+    \node[box, fill=verdeacido!30, below of=stim] (nos) {NOS\\(NO sintase)};
+    \node[box, fill=azulclaro!30, below of=nos] (no) {NO};
+    \node[box, fill=roxodna!30, below of=no] (sgc) {sGC\\(guanilil ciclase)};
+    \node[box, fill=yellow!30, below of=sgc] (cgmp) {cGMP};
+    \node[box, fill=red!20, below of=cgmp] (pkg) {PKG};
+
+    \draw[->, thick] (stim) -- (nos);
+    \draw[->, thick] (nos) -- node[right, font=\tiny] {L-Arg} (no);
+    \draw[->, thick] (no) -- (sgc);
+    \draw[->, thick] (sgc) -- node[right, font=\tiny] {GTP} (cgmp);
+    \draw[->, thick] (cgmp) -- (pkg);
+
+    \node[below of=pkg, text width=2.5cm, align=center, font=\tiny] {Relaxamento\\Vascular\\(vasodilatação)};
+\end{tikzpicture}
+\end{center>
+
+\begin{exampleblock}{Aplicação Clínica}
+\textbf{Viagra (sildenafil):} inibe fosfodiesterase que degrada cGMP $\rightarrow$ prolonga efeito vasodilatador!
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: DINÂMICA E PROPRIEDADES EMERGENTES
+% ============================================================================
+\section{Dinâmica e Propriedades Emergentes}
+
+\begin{frame}{9.6 Dinâmica Temporal de Sinalização}
+\begin{block}{Padrões Temporais}
+\begin{itemize}
+    \item \textbf{Transiente:} resposta rápida que retorna ao basal
+    \item \textbf{Sustentada:} resposta mantida enquanto estímulo presente
+    \item \textbf{Adaptação:} resposta diminui apesar de estímulo constante
+    \item \textbf{Oscilações:} ciclos periódicos de ativação/desativação
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Transient
+    \begin{scope}
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {t};
+        \draw[->] (0,0) -- (0,2);
+        \draw[thick, azulescuro] (0,0) -- (0.3,0) -- (0.5,1.5) -- (1,1.2) -- (2,0.2) -- (3,0);
+        \node[below, font=\small] at (1.5,-0.5) {Transiente};
+    \end{scope}
+
+    % Sustained
+    \begin{scope}[xshift=4cm]
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {t};
+        \draw[->] (0,0) -- (0,2);
+        \draw[thick, verdeacido] (0,0) -- (0.3,0) -- (0.5,1.5) -- (3,1.5);
+        \node[below, font=\small] at (1.5,-0.5) {Sustentada};
+    \end{scope}
+
+    % Adaptation
+    \begin{scope}[xshift=8cm]
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {t};
+        \draw[->] (0,0) -- (0,2);
+        \draw[thick, laranjacel] (0,0) -- (0.3,0) -- (0.5,1.5) -- (1.5,0.5) -- (3,0.2);
+        \node[below, font=\small] at (1.5,-0.5) {Adaptação};
+    \end{scope}
+
+    % Oscillations
+    \begin{scope}[xshift=12cm]
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {t};
+        \draw[->] (0,0) -- (0,2);
+        \draw[thick, roxodna, domain=0.3:3, samples=50]
+            plot (\x, {0.8 + 0.7*sin(360*\x)});
+        \node[below, font=\small] at (1.5,-0.5) {Oscilações};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Feedback Loops: Positivo e Negativo}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Feedback Negativo}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \node[draw, circle, fill=azulclaro!30] (a) at (0,0) {A};
+    \node[draw, circle, fill=verdeacido!30] (b) at (2.5,0) {B};
+
+    \draw[->, thick] (a) to [out=30, in=150] (b);
+    \draw[-|, thick, red] (b) to [out=210, in=330] (a);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Propriedades:}
+\begin{itemize}
+    \item Estabilidade
+    \item Homeostase
+    \item Adaptação
+    \item Reduz variabilidade
+\end{itemize}
+
+\textbf{Exemplos:}
+\begin{itemize}
+    \item Inibição por produto
+    \item Desensibilização de receptores
+    \item I-Smads na via TGF-$\beta$
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Feedback Positivo}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \node[draw, circle, fill=azulclaro!30] (a) at (0,0) {A};
+    \node[draw, circle, fill=verdeacido!30] (b) at (2.5,0) {B};
+
+    \draw[->, thick] (a) to [out=30, in=150] (b);
+    \draw[->, thick, verdeacido] (b) to [out=210, in=330] (a);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Propriedades:}
+\begin{itemize}
+    \item Amplificação
+    \item Biestabilidade
+    \item Memória
+    \item Decisões irreversíveis
+\end{itemize}
+
+\textbf{Exemplos:}
+\begin{itemize}
+    \item CICR (Ca$^{2+}$)
+    \item Ativação de caspases (apoptose)
+    \item Ciclo celular (checkpoints)
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Combinações de feedbacks positivo e negativo geram oscilações!
+}
+\end{frame}
+
+\begin{frame}{Gradientes Espaciais e Morfógenos}
+\definicao{Morfógeno}{
+Molécula sinalizadora que forma gradiente de concentração e especifica diferentes destinos celulares dependendo da concentração local.
+}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Source
+    \draw[thick, fill=laranjacel!50] (0,0) rectangle (0.5,3);
+    \node[left, font=\small] at (0,1.5) {Fonte};
+
+    % Gradient
+    \foreach \x in {1,2,...,8} {
+        \pgfmathsetmacro{\opacity}{100 - 10*\x}
+        \draw[fill=azulclaro!\opacity] (\x*0.5,0) rectangle (\x*0.5+0.5,3);
+    }
+
+    % Concentration profile
+    \draw[->, thick] (0,-1) -- (5,-1) node[right, font=\small] {Distância};
+    \draw[->, thick] (0,-1) -- (0,-0.5) node[above, font=\small] {[M]};
+
+    \draw[thick, roxodna, domain=0:4.5, samples=50]
+        plot (\x, {-1 + 2*exp(-0.8*\x)});
+
+    % Thresholds
+    \draw[dashed, red] (0,-0.5) -- (4.5,-0.5);
+    \draw[dashed, red] (0,-0.7) -- (4.5,-0.7);
+
+    \node[right, font=\tiny] at (4.5,-0.5) {Threshold 1};
+    \node[right, font=\tiny] at (4.5,-0.7) {Threshold 2};
+
+    % Cell fates
+    \node[below, font=\small, align=center] at (0.5,-1.8) {Tipo\\Celular A};
+    \node[below, font=\small, align=center] at (2,-1.8) {Tipo\\Celular B};
+    \node[below, font=\small, align=center] at (3.5,-1.8) {Tipo\\Celular C};
+\end{tikzpicture}
+\end{center}
+
+\exemplo{Morfógenos em Desenvolvimento}{
+\begin{itemize}
+    \item \textbf{Bicoid:} padrão ântero-posterior em \textit{Drosophila}
+    \item \textbf{Shh (Sonic Hedgehog):} tubo neural e membros
+    \item \textbf{BMP:} padrão dorso-ventral
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{Oscilações em Sistemas de Sinalização}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Requisitos para Oscilações:}
+\begin{itemize}
+    \item Feedback negativo com atraso
+    \item Não-linearidade (Hill, saturação)
+    \item Separação de escalas temporais
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Exemplos Biológicos:}
+\begin{enumerate}
+    \item \textbf{NF-$\kappa$B:} oscilações em resposta a TNF-$\alpha$
+    \item \textbf{p53:} pulsos em resposta a dano ao DNA
+    \item \textbf{Ca}$^{2+}$: oscilações citosólicas
+    \item \textbf{ERK:} pulsos vs sustentado
+    \item \textbf{Hes1:} oscilações no relógio de segmentação
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Caso: p53}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \node[draw, circle, fill=azulclaro!30] (p53) at (0,0) {p53};
+    \node[draw, circle, fill=verdeacido!30] (mdm2) at (3,0) {Mdm2};
+
+    \draw[->, thick] (p53) to [out=30, in=150] node[above, font=\tiny] {ativa} (mdm2);
+    \draw[-|, thick, red] (mdm2) to [out=210, in=330] node[below, font=\tiny] {degrada} (p53);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+
+p53 ativa Mdm2 $\rightarrow$ Mdm2 degrada p53 $\rightarrow$ oscilações!
+
+\vspace{0.3cm}
+
+\textbf{Significado Funcional:}
+\begin{itemize}
+    \item Pulsos de p53 permitem reparo do DNA
+    \item p53 sustentado $\rightarrow$ apoptose
+    \item Número de pulsos codifica severidade do dano
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Adaptação e Desensibilização}
+\begin{block}{Mecanismos de Adaptação}
+\begin{enumerate}
+    \item \textbf{Fosforilação de receptores:} reduz afinidade/atividade
+    \item \textbf{Internalização de receptores:} endocitose mediada
+    \item \textbf{Indução de fosfatases/inibidores:} feedback negativo
+    \item \textbf{Depleção de segundos mensageiros:} exaustão de estoques
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\exemplo{Desensibilização de GPCRs}{
+\begin{enumerate}
+    \item GPCR ativo é fosforilado por \textbf{GRKs} (GPCR kinases)
+    \item \textbf{$\beta$-arrestina} liga ao receptor fosforilado
+    \item Bloqueia acoplamento com proteína G
+    \item Promove internalização via endocitose
+    \item Receptor pode ser reciclado ou degradado
+\end{enumerate}
+}
+
+\vspace{0.3cm}
+
+\importante{
+Adaptação permite que células detectem \textbf{mudanças} no estímulo, não apenas intensidade absoluta!
+}
+\end{frame}
+
+\begin{frame}{Robustez e Sensibilidade}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Robustez}
+Capacidade do sistema manter função apesar de perturbações.
+
+\vspace{0.2cm}
+
+\textbf{Mecanismos:}
+\begin{itemize}
+    \item Feedback negativo
+    \item Redundância (vias paralelas)
+    \item Buffering (sequestro)
+    \item Compartimentalização
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Exemplo}
+Via MAPK é robusta a variações em concentração de componentes devido a feedbacks múltiplos.
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{block}{Sensibilidade}
+Capacidade de responder a pequenas mudanças no estímulo.
+
+\vspace{0.2cm}
+
+\textbf{Mecanismos:}
+\begin{itemize}
+    \item Amplificação (cascatas)
+    \item Ultrassensibilidade (Hill)
+    \item Feedback positivo
+    \item Cooperatividade
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Exemplo}
+Cascata MAPK amplifica sinal $>$100$\times$ e exibe ultrassensibilidade (Hill $n \sim 5$).
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Sistemas de sinalização equilibram \textbf{robustez} (resistência a ruído) com \textbf{sensibilidade} (detecção de sinais)!
+}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 7: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Ligação Receptor-Ligante}
+Um receptor tem $K_d = 5$ nM e $B_{max} = 1000$ receptores/célula.
+\begin{enumerate}
+    \item Calcule a ocupação quando [Ligante] = 5 nM
+    \item Que concentração de ligante resulta em 90\% de ocupação?
+    \item Se $k_{on} = 10^6$ M$^{-1}$s$^{-1}$, qual é $k_{off}$?
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Amplificação em Cascata}
+Uma cascata MAPK tem 3 níveis. Cada quinase ativada fosforila 10 moléculas do próximo nível. Se 5 moléculas de MAPKKK são ativadas:
+\begin{enumerate}
+    \item Quantas moléculas de MAPKK são ativadas?
+    \item Quantas moléculas de MAPK são ativadas?
+    \item Qual é o fator de amplificação total?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: Ultrassensibilidade}
+Uma quinase exibe comportamento ultrassensível com coeficiente de Hill $n_H = 4$ e $K_{0.5} = 10$ $\mu$M.
+\begin{enumerate}
+    \item Escreva a equação de Hill para a ativação
+    \item Calcule a fração ativa quando [S] = 5, 10, 15 $\mu$M
+    \item Compare com Michaelis-Menten ($n_H = 1$)
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 4: Segundos Mensageiros}
+cAMP é produzido a $v_{synth} = 0.5$ $\mu$M/s e degradado com constante $k_{deg} = 0.1$ s$^{-1}$.
+\begin{enumerate}
+    \item Escreva a equação diferencial para [cAMP]
+    \item Calcule a concentração no estado estacionário
+    \item Quanto tempo leva para atingir 90\% do steady-state após estimulação?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{alertblock}{Questão 5: Simulação de Cascata MAPK}
+Use Python para simular a cascata MAPK:
+\begin{enumerate}
+    \item Implemente o modelo de 3 níveis (MAPKKK $\rightarrow$ MAPKK $\rightarrow$ MAPK)
+    \item Inclua fosforilação e desfosforilação
+    \item Simule a dinâmica temporal para um estímulo em degrau
+    \item Gere curva dose-resposta variando intensidade do estímulo
+    \item Calcule o coeficiente de Hill efetivo a partir da curva dose-resposta
+\end{enumerate}
+\end{alertblock}
+
+\begin{block}{Questão 6: Oscilações de Ca$^{2+}$}
+Modifique o código de oscilações de Ca$^{2+}$ para:
+\begin{enumerate}
+    \item Incluir feedback negativo via inativação do receptor IP$_3$
+    \item Simular ondas de Ca$^{2+}$ (1D ou 2D com difusão)
+    \item Investigar como parâmetros afetam frequência de oscilação
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 4}
+\begin{alertblock}{Projeto Prático: Modelagem de Via Completa}
+Escolha uma via de sinalização (MAPK, PI3K/Akt, JAK-STAT) e:
+\begin{enumerate}
+    \item Desenhe diagrama completo da via com todas as interações
+    \item Identifique pontos de regulação (feedbacks, crosstalk)
+    \item Construa modelo matemático (ODEs) com 5-10 componentes
+    \item Implemente o modelo em Python usando \texttt{scipy.integrate.odeint}
+    \item Simule perturbações (knockout de componente, inibidor farmacológico)
+    \item Analise sensibilidade dos parâmetros
+    \item Compare previsões do modelo com dados experimentais da literatura
+    \item Gere visualizações: dinâmica temporal, espaço de fases, bifurcações
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{alberts} Alberts B. et al. (2022). \textit{Molecular Biology of the Cell}, 7th ed. Garland Science.
+
+\bibitem{lodish} Lodish H. et al. (2021). \textit{Molecular Cell Biology}, 9th ed. W.H. Freeman.
+
+\bibitem{alon} Alon U. (2019). \textit{An Introduction to Systems Biology: Design Principles of Biological Circuits}, 2nd ed. CRC Press.
+
+\bibitem{kholodenko} Kholodenko B.N. (2006). Cell-signalling dynamics in time and space. \textit{Nature Reviews Molecular Cell Biology} 7:165-176.
+
+\bibitem{ferrell} Ferrell J.E. (1996). Tripping the switch fantastic: how a protein kinase cascade can convert graded inputs into switch-like outputs. \textit{Trends in Biochemical Sciences} 21:460-466.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Livros}
+\begin{itemize}
+    \item Tyson J.J., Novak B. (2020). \textit{The Cell Cycle: Principles of Control}. Oxford.
+    \item Klipp E. et al. (2016). \textit{Systems Biology: A Textbook}, 2nd ed.
+    \item Fall C.P. et al. (2002). \textit{Computational Cell Biology}. Springer.
+\end{itemize}
+\end{block}
+
+\begin{block}{Artigos Clássicos}
+\begin{itemize}
+    \item Goldbeter A., Koshland D.E. (1981). Ultrasensitivity in biochemical systems. \textit{PNAS}.
+    \item Bhalla U.S., Iyengar R. (1999). Emergent properties of networks of signaling pathways. \textit{Science}.
+    \item Dolmetsch R.E. et al. (1998). Calcium oscillations increase efficiency of gene expression. \textit{Nature}.
+\end{itemize}
+\end{block}
+
+\begin{block}{Recursos Online}
+\begin{itemize}
+    \item \textbf{KEGG Pathway:} \url{https://www.genome.jp/kegg/pathway.html}
+    \item \textbf{Reactome:} \url{https://reactome.org}
+    \item \textbf{SignaLink:} \url{http://signalink.org}
+    \item \textbf{PathwayCommons:} \url{https://www.pathwaycommons.org}
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 9: Signaling Systems}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Metabolic Systems (Sistemas Metabólicos)
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

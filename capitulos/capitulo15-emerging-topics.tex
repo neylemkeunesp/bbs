@@ -1,0 +1,1469 @@
+% ============================================================================
+% CAPÍTULO 15: EMERGING TOPICS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 15: Emerging Topics]{Capítulo 15: Emerging Topics}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Explorar tópicos emergentes em biologia de sistemas
+    \item Compreender modelagem multi-escala
+    \item Conhecer análise de célula única e transcriptômica espacial
+    \item Aprender sobre inteligência artificial aplicada à biologia
+    \item Discutir doenças complexas, envelhecimento e medicina de precisão
+    \item Vislumbrar direções futuras da área
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+Este é o capítulo final do curso, onde integramos conhecimentos anteriores e olhamos para o futuro da biologia de sistemas!
+}
+\end{frame}
+
+\begin{frame}{Evolução Rápida da Biologia de Sistemas}
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=1cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (genomics) {Genômica\\(2000s)};
+    \node[box, fill=laranjacel!30, right of=genomics] (omics) {Multi-\\Omics\\(2010s)};
+    \node[box, fill=verdeacido!30, right of=omics] (sc) {Single-\\Cell\\(2015+)};
+    \node[box, fill=azulclaro!30, right of=sc] (ai) {AI +\\Systems\\(2020+)};
+
+    \draw[->, thick] (genomics) -- (omics);
+    \draw[->, thick] (omics) -- (sc);
+    \draw[->, thick] (sc) -- (ai);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Tendências Atuais}
+\begin{itemize}
+    \item Integração de múltiplas camadas ômicas
+    \item Resolução de célula única e espacial
+    \item Modelagem multi-escala (molécula $\rightarrow$ organismo)
+    \item IA para descoberta e predição
+    \item Medicina personalizada e digital twins
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: MODELAGEM MULTI-ESCALA
+% ============================================================================
+\section{Modelagem Multi-Escala}
+
+\begin{frame}{15.1 Modelagem Multi-Escala}
+\definicao{Modelagem Multi-Escala}{
+Integração de modelos computacionais em diferentes níveis de organização biológica: molecular, celular, tecidual, órgão e organismo completo.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Desafios da Integração Multi-Escala}
+\begin{enumerate}
+    \item \textbf{Escalas temporais:} ms (cinética enzimática) $\rightarrow$ anos (envelhecimento)
+    \item \textbf{Escalas espaciais:} nm (proteínas) $\rightarrow$ m (organismo)
+    \item \textbf{Complexidade:} $10^{12}$ moléculas $\rightarrow$ trilhões de células
+    \item \textbf{Heterogeneidade:} variabilidade celular e individual
+    \item \textbf{Computação:} custo proibitivo de simulações completas
+\end{enumerate}
+\end{block}
+
+\importante{
+Nenhum modelo único pode capturar todos os níveis simultaneamente!
+}
+\end{frame}
+
+\begin{frame}{Hierarquia Multi-Escala}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Multi-scale hierarchy
+    \foreach \y/\scale/\color/\time in {
+        0/Organismo/azulclaro/anos,
+        1.2/Órgão/verdeacido/meses,
+        2.4/Tecido/laranjacel/dias,
+        3.6/Célula/roxodna/horas,
+        4.8/Via/azulescuro/minutos,
+        6/Molécula/red/ms-s
+    } {
+        \draw[fill=\color!30, draw=\color!80, thick]
+            (-3+\y*0.3,-\y*0.8) rectangle (3-\y*0.3,-\y*0.8-0.6);
+        \node[font=\small] at (0,-\y*0.8-0.3) {\scale};
+        \node[right, font=\tiny] at (3.2-\y*0.3,-\y*0.8-0.3) {\time};
+    }
+
+    % Arrows
+    \foreach \y in {0,1.2,2.4,3.6,4.8} {
+        \draw[->, thick, gray] (-3.5,-\y*0.8-0.7) -- (-3.5,-\y*0.8-1.1);
+    }
+
+    \node[left, font=\small, rotate=90] at (-4,-2.4) {Crescente complexidade};
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Exemplo: Metabolismo da Glicose}
+\begin{itemize}
+    \item \textbf{Molecular:} cinética de hexoquinase
+    \item \textbf{Via:} glicólise completa
+    \item \textbf{Celular:} hepatócito produzindo ATP
+    \item \textbf{Órgão:} fígado regulando glicemia
+    \item \textbf{Organismo:} homeostase sistêmica
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Modelos Baseados em Agentes (ABM)}
+\definicao{Agent-Based Model}{
+Modelo computacional onde entidades autônomas (agentes) seguem regras simples, e comportamentos complexos emergem das interações.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Agentes autônomos
+    \item Regras locais simples
+    \item Interações entre agentes
+    \item Ambiente compartilhado
+    \item Emergência de padrões
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Crescimento tumoral
+    \item Resposta imune
+    \item Morfogênese
+    \item Dinâmica de populações
+    \item Epidemiologia
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplo: Tumor}
+Cada célula é um agente que pode: proliferar, migrar, morrer, ou entrar em quiescência baseado em sinais locais (nutrientes, fatores de crescimento).
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo Simples de ABM em Python}
+\begin{lstlisting}[language=Python, caption=Agent-Based Model básico, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Cell:
+    """Agente representando uma celula"""
+    def __init__(self, x, y, cell_type='normal'):
+        self.x = x
+        self.y = y
+        self.type = cell_type
+        self.alive = True
+
+    def proliferate(self, environment):
+        """Celula pode proliferar se houver espaco"""
+        if environment.nutrient_level[self.x, self.y] > 0.5:
+            # Criar celula filha adjacente
+            new_x = self.x + np.random.randint(-1, 2)
+            new_y = self.y + np.random.randint(-1, 2)
+            if environment.is_empty(new_x, new_y):
+                return Cell(new_x, new_y, self.type)
+        return None
+
+    def move(self, environment):
+        """Celula se move aleatoriamente"""
+        dx, dy = np.random.randint(-1, 2, 2)
+        new_x, new_y = self.x + dx, self.y + dy
+        if environment.is_valid(new_x, new_y):
+            self.x, self.y = new_x, new_y
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Modelos Híbridos: Discreto + Contínuo}
+\begin{block}{Abordagem Híbrida}
+Combina modelos discretos (células individuais) com modelos contínuos (difusão de nutrientes, fatores de crescimento).
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Continuous field (gradient)
+    \foreach \x in {0,...,5} {
+        \foreach \y in {0,...,5} {
+            \pgfmathsetmacro{\conc}{100 - 10*sqrt((\x-2.5)^2 + (\y-2.5)^2)}
+            \definecolor{fieldcolor}{rgb}{1,\conc/100,\conc/100}
+            \fill[fieldcolor] (\x*0.8,\y*0.8) rectangle (\x*0.8+0.8,\y*0.8+0.8);
+        }
+    }
+
+    % Discrete agents (cells)
+    \foreach \pos in {(1.2,1.2), (2.4,1.6), (1.8,2.8), (3.2,2.4), (2.0,3.6)} {
+        \fill[azulescuro] \pos circle (0.2);
+    }
+
+    \node[below, font=\small] at (2,-0.5) {Campo contínuo (nutrientes)};
+    \node[above, font=\small] at (2,5.5) {Agentes discretos (células)};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Equações acopladas:}
+\begin{itemize}
+    \item \textbf{Contínuo:} $\parcial{C}{t} = D\nabla^2 C - \sum_i \text{uptake}_i(C)$
+    \item \textbf{Discreto:} crescimento celular baseado em $C(x_i, y_i)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Órgãos Virtuais e Fisiologia de Corpo Inteiro}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Órgãos Virtuais:}
+\begin{itemize}
+    \item Coração virtual (eletrof.)
+    \item Fígado virtual (metabolismo)
+    \item Pulmão virtual (ventilação)
+    \item Rim virtual (filtração)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Projetos Internacionais:}
+\begin{itemize}
+    \item \textbf{Virtual Physiological Human}
+    \item \textbf{Physiome Project}
+    \item \textbf{Human Brain Project}
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Body outline
+    \draw[thick, azulescuro] (0,0) ellipse (1 and 2);
+
+    % Organs
+    \fill[red!50] (0,1) circle (0.3); % brain
+    \node[font=\tiny] at (0,1) {Cérebro};
+
+    \fill[laranjacel!50] (-0.5,0.2) circle (0.2); % heart
+    \node[font=\tiny] at (-0.5,0.2) {C};
+
+    \fill[verdeacido!50] (0,-0.3) circle (0.25); % liver
+    \node[font=\tiny] at (0,-0.3) {Fíg};
+
+    \fill[azulclaro!50] (0.5,-0.8) circle (0.15); % kidney
+    \fill[azulclaro!50] (-0.5,-0.8) circle (0.15);
+    \node[font=\tiny] at (0,-1.2) {Rins};
+
+    % Connections
+    \draw[<->, thick, red] (-0.5,0.2) -- (0,1);
+    \draw[<->, thick, red] (0,-0.3) -- (-0.5,0.2);
+\end{tikzpicture}
+\end{center}
+
+\begin{alertblock}{Desafio}
+Integrar dinâmicas de múltiplos órgãos acoplados!
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Exemplo: Metabolismo Hepático Multi-Escala}
+\begin{block}{Níveis Integrados}
+\begin{enumerate}
+    \item \textbf{Molecular:} cinética de enzimas (CYP450, glicoquinase)
+    \item \textbf{Celular:} hepatócitos individuais (zonas periportal/pericentral)
+    \item \textbf{Lobular:} gradiente de O$_2$ e nutrientes
+    \item \textbf{Órgão:} fluxo sanguíneo, metabolismo sistêmico
+    \item \textbf{Organismo:} regulação hormonal (insulina, glucagon)
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Modelagem}
+\begin{itemize}
+    \item ODEs para metabolismo celular
+    \item PDEs para difusão espacial
+    \item ABM para heterogeneidade hepatócito
+    \item Controle sistêmico (feedback hormonal)
+\end{itemize}
+\end{exampleblock}
+
+\importante{
+Permite simular resposta a drogas, doenças hepáticas, cirrose!
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: BIOLOGIA DE SISTEMAS DE CÉLULA ÚNICA
+% ============================================================================
+\section{Biologia de Sistemas de Célula Única}
+
+\begin{frame}{15.2 Biologia de Sistemas de Célula Única}
+\begin{block}{Revolução da Célula Única}
+Tecnologias que permitem medir milhares de moléculas em células individuais, revelando heterogeneidade antes invisível.
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Técnicas Principais:}
+\begin{itemize}
+    \item scRNA-seq
+    \item scATAC-seq (cromatina)
+    \item scProteomics (CyTOF)
+    \item scMetabolomics
+    \item Multi-omic single-cell
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Descoberta de tipos celulares
+    \item Trajetórias de diferenciação
+    \item Heterogeneidade tumoral
+    \item Desenvolvimento embrionário
+    \item Resposta imune
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+A célula única é a unidade fundamental da vida. Tecidos aparentemente homogêneos são, na verdade, mosaicos heterogêneos!
+}
+\end{frame}
+
+\begin{frame}{Single-Cell RNA-seq (scRNA-seq)}
+\begin{center}
+\begin{tikzpicture}[node distance=1.8cm, auto,
+    box/.style={rectangle, draw, text width=2.5cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (tissue) {Tecido\\Heterogêneo};
+    \node[box, fill=laranjacel!30, below of=tissue] (dissoc) {Dissociação\\em Células};
+    \node[box, fill=verdeacido!30, below of=dissoc] (capture) {Captura de\\Células};
+    \node[box, fill=azulclaro!30, below of=capture] (seq) {Sequenciamento\\cDNA};
+    \node[box, fill=yellow!30, below of=seq] (analysis) {Análise\\Bioinformática};
+
+    \draw[->, thick] (tissue) -- (dissoc);
+    \draw[->, thick] (dissoc) -- (capture);
+    \draw[->, thick] (capture) -- (seq);
+    \draw[->, thick] (seq) -- (analysis);
+
+    % Annotations
+    \node[right, font=\tiny, text width=2.5cm] at (3.5,-1.8) {Droplet-based\\(10x Genomics)};
+    \node[right, font=\tiny, text width=2.5cm] at (3.5,-7.2) {Clustering, DE,\\Trajectories};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Identificação de Tipos Celulares e Clustering}
+\begin{block}{Pipeline de Análise scRNA-seq}
+\begin{enumerate}
+    \item \textbf{Controle de qualidade:} remover células de baixa qualidade
+    \item \textbf{Normalização:} corrigir profundidade de sequenciamento
+    \item \textbf{Seleção de genes:} genes altamente variáveis
+    \item \textbf{Redução de dimensionalidade:} PCA, UMAP, t-SNE
+    \item \textbf{Clustering:} Louvain, Leiden
+    \item \textbf{Anotação:} marcadores conhecidos
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Ferramentas}
+\begin{itemize}
+    \item \textbf{Scanpy} (Python)
+    \item \textbf{Seurat} (R)
+    \item \textbf{Monocle} (trajectories)
+    \item \textbf{Cell Ranger} (10x)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Análise scRNA-seq com Scanpy}
+\begin{lstlisting}[language=Python, caption=Análise básica com scanpy, basicstyle=\ttfamily\footnotesize]
+import scanpy as sc
+import numpy as np
+
+# Carregar dados
+adata = sc.read_10x_mtx('filtered_feature_bc_matrix/')
+
+# QC: filtrar celulas e genes
+sc.pp.filter_cells(adata, min_genes=200)
+sc.pp.filter_genes(adata, min_cells=3)
+
+# Calcular % mitocondriais
+adata.var['mt'] = adata.var_names.str.startswith('MT-')
+sc.pp.calculate_qc_metrics(
+    adata, qc_vars=['mt'], inplace=True
+)
+
+# Filtrar celulas ruins
+adata = adata[adata.obs.pct_counts_mt < 5, :]
+
+# Normalizar e log-transformar
+sc.pp.normalize_total(adata, target_sum=1e4)
+sc.pp.log1p(adata)
+
+# Identificar genes altamente variaveis
+sc.pp.highly_variable_genes(adata, n_top_genes=2000)
+
+# PCA
+sc.tl.pca(adata, svd_solver='arpack')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Clustering e Visualização}
+\begin{lstlisting}[language=Python, caption=Clustering e UMAP, basicstyle=\ttfamily\footnotesize]
+# Construir grafo de vizinhos
+sc.pp.neighbors(adata, n_neighbors=10, n_pcs=40)
+
+# Clustering com algoritmo Leiden
+sc.tl.leiden(adata, resolution=0.5)
+
+# UMAP para visualizacao
+sc.tl.umap(adata)
+
+# Plotar
+sc.pl.umap(adata, color=['leiden', 'n_genes'])
+
+# Encontrar genes marcadores
+sc.tl.rank_genes_groups(adata, 'leiden', method='wilcoxon')
+sc.pl.rank_genes_groups(adata, n_genes=20, sharey=False)
+
+# Anotar clusters manualmente
+cluster_names = {
+    '0': 'T cells',
+    '1': 'B cells',
+    '2': 'Monocytes',
+    '3': 'NK cells',
+    '4': 'Dendritic cells'
+}
+adata.obs['cell_type'] = adata.obs['leiden'].map(cluster_names)
+sc.pl.umap(adata, color='cell_type')
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Pseudotempo e Inferência de Trajetórias}
+\definicao{Pseudotempo}{
+Ordem inferida de células ao longo de um processo dinâmico (diferenciação, ativação) baseada em similaridade transcricional.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Start cell
+    \fill[verdeacido!50] (0,0) circle (0.3);
+    \node[below] at (0,-0.5) {Stem};
+
+    % Trajectory 1
+    \foreach \x in {1,...,4} {
+        \fill[verdeacido!50, opacity={1-\x*0.2}] (\x*1.5,1) circle (0.2);
+        \draw[->, thick] (\x*1.5-0.7,0.9) -- (\x*1.5-0.3,1);
+    }
+    \node[above] at (6,1) {Tipo A};
+
+    % Trajectory 2
+    \foreach \x in {1,...,4} {
+        \fill[azulclaro!50, opacity={1-\x*0.2}] (\x*1.5,-1) circle (0.2);
+        \draw[->, thick] (\x*1.5-0.7,-0.9) -- (\x*1.5-0.3,-1);
+    }
+    \node[below] at (6,-1) {Tipo B};
+
+    % Connection from start
+    \draw[->, thick] (0.3,0) -- (0.8,1);
+    \draw[->, thick] (0.3,0) -- (0.8,-1);
+
+    % Pseudotime axis
+    \draw[->, thick] (-0.5,-2.5) -- (6.5,-2.5);
+    \node[below] at (3,-2.5) {Pseudotempo $\rightarrow$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Algoritmos:} Monocle, Slingshot, PAGA, RNA velocity
+\end{frame}
+
+\begin{frame}{Transcriptômica Espacial}
+\begin{block}{Resolvendo a Localização}
+scRNA-seq perde informação espacial. Novas tecnologias preservam contexto espacial:
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tecnologias:}
+\begin{itemize}
+    \item \textbf{Visium} (10x): arrays espaciais
+    \item \textbf{MERFISH}: imaging baseado em FISH
+    \item \textbf{seqFISH+}: multiplexado
+    \item \textbf{Slide-seq}: beads espaciais
+    \item \textbf{Stereo-seq}: ultra-alta resolução
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Arquitetura tecidual
+    \item Microambiente tumoral
+    \item Organização cerebral
+    \item Nicho de células-tronco
+    \item Desenvolvimento embrionário
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Combina melhor dos dois mundos: expressão gênica detalhada + localização espacial!
+}
+\end{frame>
+
+\begin{frame}{Comunicação Célula-Célula}
+\begin{block}{Inferindo Interações}
+Análise de pares ligante-receptor para identificar comunicação entre tipos celulares.
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Cell types
+    \node[draw, circle, fill=verdeacido!30, minimum size=1.5cm] (cellA) at (0,0) {Célula A};
+    \node[draw, circle, fill=azulclaro!30, minimum size=1.5cm] (cellB) at (4,0) {Célula B};
+
+    % Ligand-receptor pairs
+    \draw[->, thick, laranjacel, line width=2pt] (0.75,0.3) -- node[above, font=\small] {VEGF} (3.25,0.3);
+    \node[right, font=\tiny] at (4.75,0.3) {VEGFR};
+
+    \draw[->, thick, roxodna, line width=2pt] (3.25,-0.3) -- node[below, font=\small] {PD-L1} (0.75,-0.3);
+    \node[left, font=\tiny] at (-0.75,-0.3) {PD-1};
+\end{tikzpicture}
+\end{center>
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Ferramentas}
+\begin{itemize}
+    \item \textbf{CellPhoneDB}
+    \item \textbf{NicheNet}
+    \item \textbf{CellChat}
+    \item \textbf{LIANA}
+\end{itemize}
+\end{exampleblock}
+
+\textbf{Aplicação:} microambiente tumoral, resposta imune, nicho de células-tronco
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: INTELIGÊNCIA ARTIFICIAL EM BIOLOGIA DE SISTEMAS
+% ============================================================================
+\section{Inteligência Artificial em Biologia de Sistemas}
+
+\begin{frame}{15.3 IA em Biologia de Sistemas}
+\begin{block}{A Revolução da IA}
+Machine learning e deep learning estão transformando a biologia de sistemas, permitindo análise de dados massivos e descoberta de padrões complexos.
+\end{block>
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Machine Learning:}
+\begin{itemize}
+    \item Supervisionado (classificação)
+    \item Não-supervisionado (clustering)
+    \item Reforço (otimização)
+    \item Ensemble methods
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Deep Learning:}
+\begin{itemize}
+    \item Redes neurais profundas
+    \item CNNs (imagens)
+    \item RNNs/Transformers (sequências)
+    \item GNNs (grafos/redes)
+    \item GANs (geração)
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+IA não substitui modelagem mecanística, mas complementa: híbrido é o futuro!
+}
+\end{frame}
+
+\begin{frame}{Aprendizado Profundo para Dados Biológicos}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Input layer
+    \foreach \y in {1,...,4} {
+        \node[draw, circle, fill=roxodna!30, minimum size=0.6cm] (i\y) at (0,\y) {};
+    }
+    \node[below] at (0,0.5) {Input};
+
+    % Hidden layer 1
+    \foreach \y in {0.5,...,4.5} {
+        \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (h1\y) at (2,\y) {};
+    }
+    \node[below] at (2,0) {Hidden 1};
+
+    % Hidden layer 2
+    \foreach \y in {0.5,...,4.5} {
+        \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (h2\y) at (4,\y) {};
+    }
+    \node[below] at (4,0) {Hidden 2};
+
+    % Output layer
+    \foreach \y in {1.5,3.5} {
+        \node[draw, circle, fill=verdeacido!30, minimum size=0.6cm] (o\y) at (6,\y) {};
+    }
+    \node[below] at (6,0) {Output};
+
+    % Connections (simplified)
+    \foreach \i in {1,...,4} {
+        \foreach \h in {0.5,1.5,2.5,3.5,4.5} {
+            \draw[->, thin, gray] (i\i) -- (h1\h);
+        }
+    }
+\end{tikzpicture}
+\end{center}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Predição de expressão gênica
+    \item Classificação de tipos celulares
+    \item Predição de estrutura proteica (AlphaFold)
+    \item Design de drogas
+    \item Diagnóstico de imagens médicas
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Rede Neural para Classificação}
+\begin{lstlisting}[language=Python, caption=RNA simples com PyTorch, basicstyle=\ttfamily\footnotesize]
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+class GeneExpressionClassifier(nn.Module):
+    """Rede neural para classificar amostras"""
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super().__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim // 2)
+        self.fc3 = nn.Linear(hidden_dim // 2, output_dim)
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        x = self.fc3(x)
+        return self.softmax(x)
+
+# Inicializar modelo
+model = GeneExpressionClassifier(
+    input_dim=20000,  # genes
+    hidden_dim=256,
+    output_dim=5      # classes
+)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Graph Neural Networks (GNNs)}
+\definicao{GNN}{
+Redes neurais que operam diretamente em grafos, aprendendo representações de nós e arestas. Ideais para redes biológicas!
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Predição de função de proteínas
+    \item Descoberta de drogas
+    \item Propriedades moleculares
+    \item Redes regulatórias
+    \item Interações proteína-proteína
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Graph
+    \foreach \i/\x/\y in {1/0/0, 2/2/1, 3/2/-1, 4/4/0} {
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.8cm] (n\i) at (\x,\y) {\i};
+    }
+
+    \draw[thick] (n1) -- (n2);
+    \draw[thick] (n1) -- (n3);
+    \draw[thick] (n2) -- (n4);
+    \draw[thick] (n3) -- (n4);
+
+    \node[below] at (2,-2) {Rede PPI};
+
+    % Embedding
+    \draw[->, ultra thick] (5,0) -- (6,0);
+    \node[above] at (5.5,0) {GNN};
+
+    % Embeddings
+    \foreach \i/\y in {1/1.5, 2/0.5, 3/-0.5, 4/-1.5} {
+        \fill[verdeacido!50] (7,\y) rectangle (8.5,\y+0.3);
+    }
+    \node[below] at (7.75,-2) {Embeddings};
+\end{tikzpicture}
+\end{center}
+\end{columns>
+
+\vspace{0.3cm}
+
+\textbf{Modelos:} GCN, GraphSAGE, GAT, Message Passing NN
+\end{frame}
+
+\begin{frame}[fragile]{GNN Básico para Rede Molecular}
+\begin{lstlisting}[language=Python, caption=GNN com PyTorch Geometric, basicstyle=\ttfamily\footnotesize]
+import torch
+from torch_geometric.nn import GCNConv, global_mean_pool
+
+class MolecularGNN(torch.nn.Module):
+    """GNN para predicao de propriedades moleculares"""
+    def __init__(self, num_features, hidden_dim, num_classes):
+        super().__init__()
+        self.conv1 = GCNConv(num_features, hidden_dim)
+        self.conv2 = GCNConv(hidden_dim, hidden_dim)
+        self.conv3 = GCNConv(hidden_dim, hidden_dim)
+        self.fc = torch.nn.Linear(hidden_dim, num_classes)
+
+    def forward(self, x, edge_index, batch):
+        # Node embeddings
+        x = self.conv1(x, edge_index)
+        x = torch.relu(x)
+        x = self.conv2(x, edge_index)
+        x = torch.relu(x)
+        x = self.conv3(x, edge_index)
+
+        # Graph-level pooling
+        x = global_mean_pool(x, batch)
+
+        # Prediction
+        return self.fc(x)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Transformers e AlphaFold}
+\begin{block}{Mecanismo de Atenção}
+Transformers usam "attention" para capturar dependências de longo alcance em sequências.
+\end{block}
+
+\begin{exampleblock}{AlphaFold 2 (DeepMind, 2020)}
+\begin{itemize}
+    \item Revolucionou predição de estrutura proteica
+    \item Precisão próxima a estruturas experimentais
+    \item Baseia-se em: transformers + MSA + embeddings estruturais
+    \item Predisse estrutura de \textgreater200M proteínas (AlphaFold DB)
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\importante{
+AlphaFold é um dos maiores sucessos de IA em biologia!
+}
+
+\textbf{Sequência $\rightarrow$ MSA $\rightarrow$ Transformer $\rightarrow$ Estrutura 3D}
+\end{frame}
+
+\begin{frame}{Modelos Generativos: Design de Moléculas}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Generative Models:}
+\begin{itemize}
+    \item \textbf{VAE:} Variational Autoencoder
+    \item \textbf{GAN:} Generative Adversarial Network
+    \item \textbf{Diffusion:} Diffusion models
+    \item \textbf{RL:} Reinforcement learning
+\end{itemize>
+
+\vspace{0.3cm}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Design de proteínas
+    \item Design de drogas (SMILES)
+    \item Otimização de anticorpos
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Generator
+    \node[draw, rectangle, fill=laranjacel!30, text width=2cm, align=center] (gen) at (0,2) {Generator};
+
+    % Discriminator
+    \node[draw, rectangle, fill=azulclaro!30, text width=2cm, align=center] (disc) at (0,0) {Discriminator};
+
+    % Real data
+    \node[draw, ellipse, fill=verdeacido!30] (real) at (-3,0) {Real};
+
+    % Fake data
+    \draw[->, thick] (gen) -- node[right, font=\tiny] {Fake} (disc);
+    \draw[->, thick] (real) -- (disc);
+
+    % Noise
+    \node[above] at (0,3) {Noise $z$};
+    \draw[->, thick] (0,2.8) -- (gen);
+
+    % Loss
+    \draw[->, thick, red] (disc) -- node[right, font=\tiny] {Loss} ++(2,-1);
+    \draw[->, thick, red, bend right] (2,-1) -- (gen);
+\end{tikzpicture}
+\end{center}
+
+\begin{alertblock}{Exemplo}
+MegaMolBART (transformers) gera moléculas drug-like otimizadas
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{IA Interpretável e Explicável}
+\importante{
+Modelos de caixa-preta são problemáticos em biologia e medicina!
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Abordagens para Interpretabilidade}
+\begin{enumerate}
+    \item \textbf{Feature importance:} quais genes são mais importantes?
+    \item \textbf{SHAP values:} contribuição de cada feature
+    \item \textbf{Attention maps:} o que o modelo está "olhando"
+    \item \textbf{Layer-wise relevance propagation (LRP)}
+    \item \textbf{Modelos híbridos:} integrar conhecimento biológico
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Inferência Causal vs Correlação}
+\begin{itemize}
+    \item Correlação: $A$ e $B$ variam juntos
+    \item Causação: $A \rightarrow B$ (mudança em $A$ causa mudança em $B$)
+    \item Ferramentas: causal graphs, do-calculus, experimentos perturbacionais
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: DOENÇAS COMPLEXAS E ENVELHECIMENTO
+% ============================================================================
+\section{Doenças Complexas e Envelhecimento}
+
+\begin{frame}{15.4 Doenças Complexas como Perturbações de Rede}
+\begin{block}{Abordagem de Network Medicine}
+Doenças complexas (câncer, diabetes, Alzheimer) não resultam de defeito em gene único, mas de perturbações em redes moleculares.
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Healthy network
+    \begin{scope}
+        \foreach \i in {1,...,8} {
+            \pgfmathsetmacro{\angle}{360/8 * \i}
+            \node[draw, circle, fill=verdeacido!30, minimum size=0.5cm] (h\i) at (\angle:1.5) {};
+        }
+        \foreach \i in {1,...,8} {
+            \pgfmathsetmacro{\j}{mod(\i, 8) + 1}
+            \draw[thick] (h\i) -- (h\j);
+        }
+        \node[below] at (0,-2.5) {Saudável};
+    \end{scope}
+
+    % Disease network
+    \begin{scope}[xshift=5cm]
+        \foreach \i in {1,...,8} {
+            \pgfmathsetmacro{\angle}{360/8 * \i}
+            \pgfmathsetmacro{\col}{(\i == 2 || \i == 3) ? "red" : "azulclaro"}
+            \node[draw, circle, fill=\col!30, minimum size=0.5cm] (d\i) at (\angle:1.5) {};
+        }
+        \foreach \i in {1,...,8} {
+            \pgfmathsetmacro{\j}{mod(\i, 8) + 1}
+            \pgfmathsetmacro{\col}{(\i == 2 || \i == 3) ? "red" : "black"}
+            \draw[thick, \col] (d\i) -- (d\j);
+        }
+        \node[below] at (0,-2.5) {Doença};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\textbf{Nós vermelhos:} genes mutados/desregulados\\
+\textbf{Propagação:} perturbação se espalha pela rede
+\end{frame}
+
+\begin{frame}{Multi-Omics para Envelhecimento}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Hallmarks of Aging:}
+\begin{enumerate}\small
+    \item Instabilidade genômica
+    \item Atrito de telômeros
+    \item Alterações epigenéticas
+    \item Perda de proteostase
+    \item Senescência celular
+    \item Disfunção mitocondrial
+    \item Desregulação nutricional
+    \item Exaustão de células-tronco
+    \item Comunicação intercelular alterada
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Abordagem Multi-Omic:}
+\begin{itemize}
+    \item Genômica (mutações)
+    \item Epigenômica (metilação)
+    \item Transcriptômica (expressão)
+    \item Proteômica (proteostase)
+    \item Metabolômica (NAD$^+$, etc.)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Relógios Epigenéticos}
+DNA methylation age: preditor de idade biológica (Horvath clock)
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Vias de Longevidade}
+\begin{block}{Pathways Conservados}
+Vias moleculares que modulam longevidade em múltiplas espécies:
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, text width=2.2cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (igf) {IGF-1/Insulina};
+    \node[box, fill=laranjacel!30, right of=igf] (tor) {mTOR};
+    \node[box, fill=verdeacido!30, right of=tor] (sirt) {Sirtuínas};
+    \node[box, fill=azulclaro!30, below of=tor] (ampk) {AMPK};
+
+    \draw[->, thick] (igf) -- (tor);
+    \draw[->, thick] (tor) -- (sirt);
+    \draw[->, thick] (ampk) -- (tor);
+    \draw[-|, thick, red] (sirt) to[bend left] (igf);
+
+    \node[below=0.5cm of ampk, font=\small] {Longevidade $\uparrow$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Intervenções:}
+\begin{itemize}
+    \item Restrição calórica
+    \item Rapamicina (inibe mTOR)
+    \item Metformina (ativa AMPK)
+    \item NAD$^+$ boosters (ativam sirtuínas)
+    \item Senolytics (eliminam células senescentes)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Redes de Comorbidade}
+\begin{block}{Comorbidity Networks}
+Grafos representando co-ocorrência de doenças em populações, revelando mecanismos compartilhados.
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Diseases as nodes
+    \node[draw, circle, fill=red!30, minimum size=1cm] (dm) at (0,0) {DM2};
+    \node[draw, circle, fill=orange!30, minimum size=0.8cm] (htn) at (2.5,1) {HTN};
+    \node[draw, circle, fill=yellow!30, minimum size=0.7cm] (cad) at (2.5,-1) {CAD};
+    \node[draw, circle, fill=green!30, minimum size=0.6cm] (ckd) at (-2,1) {CKD};
+    \node[draw, circle, fill=blue!30, minimum size=0.5cm] (stroke) at (-2,-1) {AVC};
+
+    % Edges (comorbidity)
+    \draw[thick, line width=3pt] (dm) -- (htn);
+    \draw[thick, line width=2.5pt] (dm) -- (cad);
+    \draw[thick, line width=2pt] (dm) -- (ckd);
+    \draw[thick, line width=1.5pt] (htn) -- (cad);
+    \draw[thick, line width=1.5pt] (htn) -- (stroke);
+    \draw[thick, line width=1pt] (ckd) -- (stroke);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Insight:} diabetes mellitus tipo 2 (DM2) é hub central\\
+\textbf{Aplicação:} priorizar intervenções, predizer risco
+\end{frame}
+
+\begin{frame}{Sistemas para Preparação Pandêmica}
+\importante{
+COVID-19 demonstrou necessidade de biologia de sistemas para resposta rápida!
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Abordagens Sistêmicas}
+\begin{enumerate}
+    \item \textbf{Vigilância genômica:} sequenciamento em tempo real de variantes
+    \item \textbf{Modelos epidemiológicos:} previsão de disseminação (SIR, SEIR)
+    \item \textbf{Multi-omics de hospedeiro:} identificar fatores de risco
+    \item \textbf{Drug repurposing:} IA para identificar drogas existentes
+    \item \textbf{Design de vacinas:} epitopos computacionais
+    \item \textbf{Network medicine:} entender síndrome pós-COVID
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\textbf{Lição:} integração de dados heterogêneos + modelos + infraestrutura computacional
+\end{frame>
+
+\begin{frame}{Medicina de Precisão: Futuro}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{De População para Indivíduo:}
+\begin{itemize}
+    \item Genoma pessoal (WGS)
+    \item Multi-omics longitudinal
+    \item Microbioma
+    \item Wearables (monitoramento)
+    \item Histórico médico completo
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Desafios:}
+\begin{itemize}
+    \item Custo
+    \item Interpretação clínica
+    \item Privacidade
+    \item Equidade de acesso
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Individual
+    \node[draw, circle, fill=azulclaro!30, minimum size=1.5cm] (person) at (0,0) {Paciente};
+
+    % Data sources
+    \node[draw, ellipse, fill=roxodna!30, font=\tiny] (genome) at (-2,2) {Genoma};
+    \node[draw, ellipse, fill=laranjacel!30, font=\tiny] (omics) at (0,2.5) {Multi-\\omics};
+    \node[draw, ellipse, fill=verdeacido!30, font=\tiny] (micro) at (2,2) {Micro-\\bioma};
+    \node[draw, ellipse, fill=yellow!30, font=\tiny] (wear) at (2.5,0) {Wear-\\ables};
+    \node[draw, ellipse, fill=red!30, font=\tiny] (ehr) at (-2.5,0) {EHR};
+
+    % Connections
+    \foreach \src in {genome, omics, micro, wear, ehr} {
+        \draw[->, thick] (\src) -- (person);
+    }
+
+    % Output
+    \draw[->, ultra thick, blue] (person) -- ++(0,-2) node[below, font=\small] {Tratamento\\Personalizado};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 6: DIREÇÕES FUTURAS
+% ============================================================================
+\section{Direções Futuras}
+
+\begin{frame}{15.5 Direções Futuras}
+\begin{block}{O Futuro da Biologia de Sistemas}
+A área está em rápida evolução. Várias tecnologias e abordagens prometem revolucionar nossa compreensão da vida.
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tecnologias Emergentes:}
+\begin{itemize}
+    \item Laboratórios automatizados
+    \item Plataformas robóticas
+    \item Microfluídica
+    \item Organoides e organs-on-chip
+    \item Edição genômica (CRISPR)
+    \item Biologia sintética
+\end{itemize>
+
+\column{0.5\textwidth}
+\textbf{Computação:}
+\begin{itemize}
+    \item Computação quântica
+    \item Edge computing
+    \item Federated learning
+    \item Blockchain para dados
+    \item Cloud-based pipelines
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Laboratórios Automatizados e Robótica}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Self-driving lab
+    \draw[thick] (0,0) rectangle (8,4);
+    \node[above] at (4,4) {\textbf{Laboratório Autônomo}};
+
+    % Components
+    \node[draw, rectangle, fill=roxodna!30, text width=1.5cm, align=center, font=\tiny] at (1,3) {Robô\\Líquidos};
+    \node[draw, rectangle, fill=laranjacel!30, text width=1.5cm, align=center, font=\tiny] at (4,3) {Sequen-\\ciador};
+    \node[draw, rectangle, fill=verdeacido!30, text width=1.5cm, align=center, font=\tiny] at (7,3) {Microscópio\\Automatizado};
+
+    % AI controller
+    \node[draw, rectangle, fill=azulclaro!30, text width=2cm, align=center] at (4,1) {Controlador\\IA};
+
+    % Arrows
+    \draw[->, thick] (4,1.5) -- (1,2.5);
+    \draw[->, thick] (4,1.5) -- (4,2.5);
+    \draw[->, thick] (4,1.5) -- (7,2.5);
+
+    % Feedback
+    \draw[->, thick, red, bend right=45] (7,2.5) to node[right, font=\tiny] {Dados} (4,0.5);
+\end{tikzpicture}
+\end{center>
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Experimentos 24/7
+    \item Alta reprodutibilidade
+    \item Exploração massiva do espaço de parâmetros
+    \item Loop fechado: IA propõe experimentos $\rightarrow$ robô executa $\rightarrow$ análise $\rightarrow$ nova hipótese
+\end{itemize}
+
+\textbf{Exemplos:} Emerald Cloud Lab, Strateos, Ada (Carnegie Mellon)
+\end{frame}
+
+\begin{frame}{Geração de Hipóteses por IA}
+\begin{block}{IA Criativa}
+Sistemas de IA que não apenas analisam dados, mas propõem novas hipóteses biológicas testáveis.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Abordagens}
+\begin{enumerate}
+    \item \textbf{Mineração de literatura:} extrair relações de milhões de papers
+    \item \textbf{Knowledge graphs:} raciocínio sobre entidades e relações
+    \item \textbf{Reinforcement learning:} explorar espaço de experimentos
+    \item \textbf{Generative models:} propor novas moléculas, vias
+    \item \textbf{Causal inference:} identificar relações causais
+\end{enumerate}
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\importante{
+Humanos continuam essenciais: interpretar, validar, contextualizar!
+}
+\end{frame}
+
+\begin{frame}{Digital Twins para Medicina Personalizada}
+\definicao{Digital Twin}{
+Réplica computacional dinâmica de um paciente individual, integrando dados multi-omics, fisiológicos e clínicos em tempo real.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Real patient
+    \node[draw, rectangle, fill=azulclaro!30, text width=2cm, align=center] (patient) at (0,0) {Paciente\\Real};
+
+    % Digital twin
+    \node[draw, rectangle, fill=laranjacel!30, text width=2cm, align=center] (twin) at (5,0) {Digital\\Twin};
+
+    % Data flow
+    \draw[->, thick, blue] (patient) -- node[above, font=\small] {Dados} (twin);
+
+    % Simulation
+    \node[draw, cloud, fill=verdeacido!30, text width=1.5cm, align=center, font=\small] (sim) at (5,2.5) {Simulações};
+    \draw[->, thick] (twin) -- (sim);
+
+    % Predictions
+    \draw[->, thick, red] (sim) to[bend left] node[right, font=\small] {Predições} (patient);
+
+    % Wearables
+    \node[font=\tiny] at (0,-1.5) {Wearables, EHR,\\omics, microbioma};
+\end{tikzpicture}
+\end{center>
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Testar tratamentos \textit{in silico}
+    \item Predizer resposta a drogas
+    \item Otimizar dosagem
+    \item Antecipar eventos adversos
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Computação Quântica para Simulação Biológica}
+\begin{block}{Computação Quântica}
+Computadores quânticos exploram superposição e entrelaçamento para resolver problemas intratáveis classicamente.
+\end{block}
+
+\textbf{Aplicações Potenciais em Biologia:}
+\begin{enumerate}
+    \item \textbf{Simulação quântica de moléculas:} dinâmica eletrônica precisa
+    \item \textbf{Folding de proteínas:} explorar espaço conformacional exponencial
+    \item \textbf{Drug discovery:} otimização combinatorial
+    \item \textbf{Análise de grafos:} redes biológicas massivas
+    \item \textbf{Machine learning quântico:} aceleração de algoritmos
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Realidade Atual}
+Ainda estamos na era NISQ (Noisy Intermediate-Scale Quantum). Aplicações práticas em biologia ainda distantes, mas pesquisa ativa!
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Integração de Microbioma e Fatores Ambientais}
+\importante{
+O hospedeiro não pode ser estudado isoladamente: microbioma e ambiente são partes integrantes do sistema!
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Microbioma:}
+\begin{itemize}
+    \item 10$\times$ mais células que humanas
+    \item Metabolismo complementar
+    \item Modulação imune
+    \item Eixo intestino-cérebro
+    \item Resistência a patógenos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Metagenômica:}
+\begin{itemize}
+    \item 16S rRNA-seq (taxonomia)
+    \item Shotgun metagenomics (função)
+    \item Metatranscriptomics
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Exposoma:}
+\begin{itemize}
+    \item Dieta
+    \item Poluentes
+    \item Estresse
+    \item Atividade física
+    \item Sono
+    \item Medicamentos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Holobionte}
+Organismo + microbioma = unidade evolutiva e funcional
+\end{exampleblock}
+\end{columns}
+\end{frame>
+
+\begin{frame}{Ciência Aberta e Compartilhamento de Dados}
+\begin{block}{Movimento Open Science}
+Transparência, reprodutibilidade e acesso aberto são cruciais para acelerar descobertas.
+\end{block}
+
+\textbf{Princípios FAIR:}
+\begin{itemize}
+    \item \textbf{F}indable: dados encontráveis
+    \item \textbf{A}ccessible: acessíveis
+    \item \textbf{I}nteroperable: interoperáveis
+    \item \textbf{R}eusable: reutilizáveis
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Recursos:}
+\begin{itemize}
+    \item Repositórios públicos (GEO, SRA, PDB, etc.)
+    \item Pré-prints (bioRxiv, medRxiv)
+    \item Código aberto (GitHub)
+    \item Notebooks reprodutíveis (Jupyter)
+    \item Protocolos detalhados (protocols.io)
+\end{itemize}
+
+\importante{
+Colaboração global é essencial para enfrentar desafios complexos!
+}
+\end{frame}
+
+\begin{frame}{Considerações Éticas}
+\begin{alertblock}{Questões Éticas Emergentes}
+\begin{enumerate}
+    \item \textbf{Privacidade:} genomas pessoais, re-identificação
+    \item \textbf{Consentimento informado:} uso secundário de dados
+    \item \textbf{Equidade:} acesso a tecnologias avançadas (precision medicine gap)
+    \item \textbf{Viés algorítmico:} datasets não-representativos
+    \item \textbf{Edição germline:} CRISPR em embriões
+    \item \textbf{Biologia sintética:} biossegurança, dual use
+    \item \textbf{Propriedade intelectual:} patentes de genes, dados
+\end{enumerate}
+\end{alertblock}
+
+\vspace{0.3cm}
+
+\importante{
+Cientistas têm responsabilidade de considerar implicações sociais de seu trabalho!
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Modelagem Multi-Escala}
+Descreva como você modelaria o metabolismo da glicose integrando os níveis:
+\begin{enumerate}
+    \item Molecular (cinética de hexoquinase)
+    \item Celular (hepatócito)
+    \item Órgão (fígado)
+\end{enumerate}
+Quais são os principais desafios de acoplamento entre escalas?
+\end{block}
+
+\begin{block}{Questão 2: Single-Cell RNA-seq}
+Dado um dataset scRNA-seq de um tumor:
+\begin{enumerate}
+    \item Como você identificaria diferentes tipos celulares?
+    \item Como inferiria comunicação entre células tumorais e células imunes?
+    \item Qual a importância da informação espacial?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: Machine Learning}
+\begin{enumerate}
+    \item Quando usar modelos de ML vs. modelos mecanísticos?
+    \item Explique o problema de interpretabilidade em redes neurais profundas.
+    \item Como você validaria um modelo de ML para predição clínica?
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Projeto Prático}
+Escolha um tópico emergente (célula única, IA, envelhecimento) e:
+\begin{enumerate}
+    \item Revise a literatura recente (últimos 2 anos)
+    \item Identifique um dataset público relevante
+    \item Aplique pelo menos uma técnica computacional
+    \item Gere visualizações e interprete resultados
+    \item Discuta limitações e direções futuras
+\end{enumerate>
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{jumper2021} Jumper J. et al. (2021). Highly accurate protein structure prediction with AlphaFold. \textit{Nature}.
+
+\bibitem{wolf2018} Wolf F.A. et al. (2018). SCANPY: large-scale single-cell gene expression data analysis. \textit{Genome Biology}.
+
+\bibitem{lopez2020} López-Otín C. et al. (2023). Hallmarks of aging: An expanding universe. \textit{Cell}.
+
+\bibitem{barabasi2011} Barabási A.L. et al. (2011). Network medicine: a network-based approach to human disease. \textit{Nature Reviews Genetics}.
+
+\bibitem{moses2021} Moses C. et al. (2021). Museum of spatial transcriptomics. \textit{Nature Methods}.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Artigos de Revisão Recentes}
+\begin{itemize}
+    \item Integrative multi-omics approaches (Nature Reviews, 2023)
+    \item Single-cell multi-omics technologies (Nature Biotechnology, 2023)
+    \item AI for drug discovery (Nature Machine Intelligence, 2024)
+    \item Digital twins in healthcare (Nature Medicine, 2023)
+    \item Longevity and healthspan interventions (Cell, 2023)
+\end{itemize}
+\end{block>
+
+\begin{block}{Recursos Online}
+\begin{itemize}
+    \item \textbf{AlphaFold DB:} \url{https://alphafold.ebi.ac.uk}
+    \item \textbf{Single Cell Portal:} \url{https://singlecell.broadinstitute.org}
+    \item \textbf{Human Cell Atlas:} \url{https://www.humancellatlas.org}
+    \item \textbf{PyTorch Geometric:} \url{https://pytorch-geometric.readthedocs.io}
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL: CONCLUSÃO DO CURSO
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{0.5cm}
+
+{\Large Capítulo 15: Emerging Topics}
+
+\vspace{1cm}
+
+\begin{block}{Conclusão do Curso}
+Este curso cobriu desde fundamentos de sistemas biológicos até os tópicos mais avançados e emergentes da biologia de sistemas. Vocês agora têm as ferramentas conceituais e computacionais para:
+\begin{itemize}
+    \item Modelar sistemas biológicos em múltiplos níveis
+    \item Analisar dados omics em larga escala
+    \item Integrar conhecimento multi-escala e multi-omic
+    \item Aplicar IA e aprendizado de máquina
+    \item Contribuir para o futuro da medicina de precisão
+\end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+
+\textit{O futuro da biologia de sistemas é brilhante.\\Boa sorte em suas jornadas científicas!}
+\end{center}
+\end{frame}
+
+\end{document}

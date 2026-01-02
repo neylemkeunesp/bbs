@@ -1,0 +1,2051 @@
+% ============================================================================
+% CAPÍTULO 12: PHYSIOLOGICAL SYSTEMS - HEART
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% Pacotes adicionais
+\usepackage{chemfig}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 12: Heart Physiology]{Capítulo 12: Physiological Systems - Heart}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{O Coração como Sistema Complexo}
+\definicao{Sistema Cardíaco}{
+O coração é um sistema fisiológico complexo que integra eletrofisiologia, mecânica e regulação para bombear sangue continuamente através do organismo.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Bomba muscular rítmica
+    \item Automaticidade intrínseca
+    \item Acoplamento elétrico-mecânico
+    \item Regulação autônoma
+    \item Adaptação à demanda metabólica
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Heart outline simplified
+    \draw[thick, fill=red!30] (0,0) .. controls (0,1) and (1,1.5) .. (1.5,1.5)
+        .. controls (2,1.5) and (3,1) .. (3,0)
+        .. controls (2.5,-1) and (2,-2) .. (1.5,-2.5)
+        .. controls (1,-2) and (0.5,-1) .. (0,0);
+
+    % Heart chambers indication
+    \draw[thick] (1.5,1) -- (1.5,-1.5);
+    \draw[thick] (0.7,0.5) -- (2.3,0.5);
+
+    % Labels
+    \node[font=\tiny] at (0.7,1) {AE};
+    \node[font=\tiny] at (2.3,1) {AD};
+    \node[font=\tiny] at (0.7,-0.5) {VE};
+    \node[font=\tiny] at (2.3,-0.5) {VD};
+\end{tikzpicture}
+\end{center}
+\textbf{Frequência:} 60-100 bpm\\
+\textbf{Débito:} 5 L/min (repouso)
+\end{columns}
+\end{frame}
+
+\begin{frame}{Níveis de Organização Cardíaca}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (canal) {Canais Iônicos};
+    \node[box, fill=laranjacel!30, below of=canal] (celula) {Cardiomiócito};
+    \node[box, fill=verdeacido!30, below of=celula] (tecido) {Tecido Cardíaco};
+    \node[box, fill=azulclaro!30, below of=tecido] (orgao) {Órgão (Coração)};
+    \node[box, fill=yellow!30, below of=orgao] (sistema) {Sistema Cardiovascular};
+
+    \draw[->, thick] (canal) -- (celula);
+    \draw[->, thick] (celula) -- (tecido);
+    \draw[->, thick] (tecido) -- (orgao);
+    \draw[->, thick] (orgao) -- (sistema);
+
+    % Annotations
+    \node[right, font=\tiny, text width=3cm] at (4,0) {Na$^+$, K$^+$, Ca$^{2+}$};
+    \node[right, font=\tiny, text width=3cm] at (4,-2) {Potencial de ação};
+    \node[right, font=\tiny, text width=3cm] at (4,-4) {Propagação elétrica};
+    \node[right, font=\tiny, text width=3cm] at (4,-6) {Contração coordenada};
+    \node[right, font=\tiny, text width=3cm] at (4,-8) {Perfusão tecidual};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender a anatomia e fisiologia cardíaca
+    \item Dominar a eletrofisiologia do cardiomiócito
+    \item Estudar modelos matemáticos de células cardíacas
+    \item Entender o acoplamento excitação-contração
+    \item Explorar mecanismos de arritmias
+    \item Aplicar modelagem computacional ao coração
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+O coração é um dos sistemas fisiológicos mais bem modelados matematicamente, com implicações clínicas diretas para diagnóstico e terapia de doenças cardiovasculares.
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: ANATOMIA E FISIOLOGIA CARDÍACA
+% ============================================================================
+\section{Anatomia e Fisiologia Cardíaca}
+
+\begin{frame}{Estrutura Anatômica do Coração}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Câmaras:}
+\begin{itemize}
+    \item \textbf{Átrios:} direito e esquerdo\\
+    (recepção de sangue)
+    \item \textbf{Ventrículos:} direito e esquerdo\\
+    (bombeamento)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Valvas:}
+\begin{itemize}
+    \item \textbf{Atrioventriculares:}\\
+    Tricúspide (AD-VD)\\
+    Mitral (AE-VE)
+    \item \textbf{Semilunares:}\\
+    Pulmonar (VD)\\
+    Aórtica (VE)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Heart chambers
+    % Right atrium
+    \draw[thick, fill=azulclaro!20] (0,1) rectangle (1.5,3);
+    \node at (0.75,2) {\tiny AD};
+
+    % Right ventricle
+    \draw[thick, fill=azulclaro!40] (0,-1.5) -- (0,0.5) -- (1.5,0.5) -- (1.8,-1.5) -- cycle;
+    \node at (0.75,-0.5) {\tiny VD};
+
+    % Left atrium
+    \draw[thick, fill=red!20] (2,1) rectangle (3.5,3);
+    \node at (2.75,2) {\tiny AE};
+
+    % Left ventricle
+    \draw[thick, fill=red!40] (1.7,-1.5) -- (2,0.5) -- (3.5,0.5) -- (3.5,-1.5) -- cycle;
+    \node at (2.75,-0.5) {\tiny VE};
+
+    % Valves
+    \draw[thick, red] (0.5,0.5) -- (1,0.5);
+    \node[left, font=\tiny] at (0.3,0.5) {Tric};
+
+    \draw[thick, red] (2.5,0.5) -- (3,0.5);
+    \node[right, font=\tiny] at (3.3,0.5) {Mitral};
+
+    % Great vessels
+    \draw[->, ultra thick, azulclaro] (0.75,-1.5) -- (0.75,-2.5) node[below, font=\tiny] {Pulmonar};
+    \draw[->, ultra thick, red] (2.75,-1.5) -- (2.75,-2.5) node[below, font=\tiny] {Aorta};
+
+    % Septum
+    \draw[thick, dashed] (1.75,3) -- (1.75,-1.5);
+    \node[right, font=\tiny] at (1.75,1.5) {Septo};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Circulação}
+\textbf{Direito:} sangue venoso $\rightarrow$ pulmões (oxigenação)\\
+\textbf{Esquerdo:} sangue arterial $\rightarrow$ corpo (perfusão sistêmica)
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Ciclo Cardíaco}
+\begin{block}{Fases do Ciclo}
+\begin{enumerate}
+    \item \textbf{Diástole:} relaxamento e enchimento
+    \begin{itemize}
+        \item Enchimento ventricular passivo
+        \item Contração atrial (sístole atrial)
+    \end{itemize}
+    \item \textbf{Sístole:} contração e ejeção
+    \begin{itemize}
+        \item Contração isovolumétrica
+        \item Ejeção ventricular
+        \item Relaxamento isovolumétrico
+    \end{itemize}
+\end{enumerate}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Pressure-volume loop
+    \draw[->] (0,0) -- (5,0) node[right] {Volume (mL)};
+    \draw[->] (0,0) -- (0,4) node[above] {Pressão (mmHg)};
+
+    % Loop
+    \draw[thick, azulescuro, ->] (1,0.5) -- node[below] {\tiny Enchimento} (3.5,0.5);
+    \draw[thick, azulescuro, ->] (3.5,0.5) -- node[right] {\tiny Contração isovolumétrica} (3.5,3);
+    \draw[thick, azulescuro, ->] (3.5,3) -- node[above] {\tiny Ejeção} (1,3);
+    \draw[thick, azulescuro, ->] (1,3) -- node[left] {\tiny Relaxamento isovolumétrico} (1,0.5);
+
+    % Labels
+    \node[below] at (1,0) {\tiny ESV};
+    \node[below] at (3.5,0) {\tiny EDV};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Duração típica: $\sim$0.8 s a 75 bpm (diástole $\sim$0.5 s, sístole $\sim$0.3 s)
+}
+\end{frame>
+
+\begin{frame}{Sistema de Condução Elétrica}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Componentes:}
+\begin{enumerate}
+    \item \textbf{Nó Sinoatrial (SA):}\\
+    Marca-passo natural\\
+    60-100 bpm
+
+    \item \textbf{Nó Atrioventricular (AV):}\\
+    Atraso de condução\\
+    $\sim$0.1 s
+
+    \item \textbf{Feixe de His:}\\
+    Condução rápida
+
+    \item \textbf{Ramos (direito/esquerdo):}\\
+    Distribuição ventricular
+
+    \item \textbf{Fibras de Purkinje:}\\
+    Ativação endocárdio
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Heart outline
+    \draw[thick] (0,0) ellipse (1.5cm and 2cm);
+
+    % SA node
+    \node[circle, draw, fill=red!50, minimum size=0.4cm] (sa) at (0.5,1.5) {};
+    \node[right, font=\tiny] at (0.7,1.5) {Nó SA};
+
+    % Atrial conduction
+    \draw[->, thick, red] (sa) -- (-0.5,1);
+
+    % AV node
+    \node[circle, draw, fill=yellow!50, minimum size=0.4cm] (av) at (0,0.3) {};
+    \node[right, font=\tiny] at (0.2,0.3) {Nó AV};
+
+    % Bundle of His
+    \draw[->, thick, verdeacido] (av) -- (0,-0.5);
+    \node[right, font=\tiny] at (0.2,-0.5) {Feixe His};
+
+    % Bundle branches
+    \draw[->, thick, azulclaro] (0,-0.5) -- (-0.8,-1.5);
+    \draw[->, thick, azulclaro] (0,-0.5) -- (0.8,-1.5);
+
+    % Purkinje fibers
+    \draw[thick, roxodna, decoration={coil, amplitude=1pt}, decorate]
+        (-0.8,-1.5) -- (-1.2,-1.8);
+    \draw[thick, roxodna, decoration={coil, amplitude=1pt}, decorate]
+        (0.8,-1.5) -- (1.2,-1.8);
+    \node[below, font=\tiny] at (0,-2) {Fibras Purkinje};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.3cm}
+
+\destaque{
+Velocidade de condução: Purkinje (4 m/s) $>$ His (1-1.5 m/s) $>$ AV (0.05 m/s)
+}
+\end{frame>
+
+\begin{frame}{Eletrocardiograma (ECG)}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Ondas do ECG:}
+\begin{itemize}
+    \item \textbf{Onda P:} despolarização atrial
+    \item \textbf{Complexo QRS:} despolarização ventricular
+    \item \textbf{Onda T:} repolarização ventricular
+    \item \textbf{Intervalo PR:} 0.12-0.20 s
+    \item \textbf{Intervalo QT:} 0.35-0.44 s
+    \item \textbf{Segmento ST:} platô ventricular
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Significado Clínico}
+\begin{itemize}
+    \item Arritmias
+    \item Isquemia/infarto
+    \item Distúrbios de condução
+    \item Efeitos de drogas
+\end{itemize}
+\end{alertblock}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % ECG trace
+    \draw[->] (0,0) -- (8,0) node[right] {Tempo (s)};
+    \draw[->] (0,-1) -- (0,3) node[above] {mV};
+
+    % Baseline
+    \draw[help lines] (0,0) -- (8,0);
+
+    % P wave
+    \draw[thick, azulescuro] (1,0) .. controls (1.2,0.3) and (1.4,0.3) .. (1.6,0);
+    \node[above, font=\tiny] at (1.3,0.4) {P};
+
+    % QRS complex
+    \draw[thick, azulescuro] (2.5,0) -- (2.7,-0.5) -- (3,2.5) -- (3.3,-0.7) -- (3.5,0);
+    \node[below, font=\tiny] at (2.7,-0.6) {Q};
+    \node[above, font=\tiny] at (3,2.7) {R};
+    \node[below, font=\tiny] at (3.3,-0.8) {S};
+
+    % ST segment
+    \draw[thick, azulescuro] (3.5,0) -- (4.5,0);
+
+    % T wave
+    \draw[thick, azulescuro] (4.5,0) .. controls (5,0.8) and (5.5,0.8) .. (6,0);
+    \node[above, font=\tiny] at (5.2,0.9) {T};
+
+    % Intervals
+    \draw[<->, red] (1.3,-1.5) -- node[below, font=\tiny] {Intervalo PR} (2.5,-1.5);
+    \draw[<->, verdeacido] (2.5,-2) -- node[below, font=\tiny] {Intervalo QT} (6,-2);
+\end{tikzpicture}
+\end{center>
+\end{columns}
+\end{frame}
+
+\begin{frame}{Circulação Coronariana}
+\begin{block}{Artérias Coronárias}
+\begin{itemize}
+    \item \textbf{Coronária Direita (CD):} VD, parede inferior VE, nó SA/AV
+    \item \textbf{Artéria Descendente Anterior Esquerda (DAE):} septo, parede anterior VE
+    \item \textbf{Artéria Circunflexa (Cx):} parede lateral e posterior VE
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Fluxo principalmente diastólico
+    \item Autorregulação metabólica
+    \item Alta extração de O$_2$ ($\sim$75\%)
+    \item Reserva vasodilatadora limitada
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Fluxo Coronariano}
+\begin{equation*}
+Q = \frac{\Delta P}{R_{cor}}
+\end{equation*}
+onde:
+\begin{itemize}
+    \item $Q$ = fluxo ($\sim$250 mL/min)
+    \item $\Delta P$ = gradiente de pressão
+    \item $R_{cor}$ = resistência coronariana
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Isquemia ocorre quando demanda de O$_2$ excede oferta (estenose, espasmo, aumento de demanda)
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: ELETROFISIOLOGIA DO CARDIOMIÓCITO
+% ============================================================================
+\section{Eletrofisiologia do Cardiomiócito}
+
+\begin{frame}{Potencial de Ação Cardíaco}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Fases (Ventricular):}
+\begin{enumerate}
+    \item[\textbf{0:}] Despolarização rápida\\
+    Entrada de Na$^+$ (I$_{Na}$)
+
+    \item[\textbf{1:}] Repolarização inicial\\
+    Saída de K$^+$ (I$_{to}$)
+
+    \item[\textbf{2:}] Platô\\
+    Entrada Ca$^{2+}$ (I$_{Ca,L}$)\\
+    Saída K$^+$ (I$_{Kr}$, I$_{Ks}$)
+
+    \item[\textbf{3:}] Repolarização final\\
+    Saída de K$^+$ (I$_{K1}$)
+
+    \item[\textbf{4:}] Repouso\\
+    Potencial de membrana estável
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Axes
+    \draw[->] (0,0) -- (6,0) node[right, font=\tiny] {Tempo (ms)};
+    \draw[->] (0,-1) -- (0,4) node[above, font=\tiny] {V$_m$ (mV)};
+
+    % Resting potential
+    \draw[thick, azulescuro] (0,0) -- (1,0);
+    \node[left, font=\tiny] at (0,0) {-90};
+
+    % Phase 0 - upstroke
+    \draw[thick, azulescuro] (1,0) -- (1.3,3.5);
+    \node[right, font=\tiny, red] at (1.3,1.5) {0};
+    \node[left, font=\tiny] at (1.3,3.5) {+30};
+
+    % Phase 1 - early repol
+    \draw[thick, azulescuro] (1.3,3.5) -- (1.7,2.8);
+    \node[right, font=\tiny, red] at (1.5,3) {1};
+
+    % Phase 2 - plateau
+    \draw[thick, azulescuro] (1.7,2.8) -- (3.5,2.5);
+    \node[above, font=\tiny, red] at (2.5,2.7) {2};
+
+    % Phase 3 - repolarization
+    \draw[thick, azulescuro] (3.5,2.5) -- (4.5,0);
+    \node[right, font=\tiny, red] at (4,1.2) {3};
+
+    % Phase 4 - resting
+    \draw[thick, azulescuro] (4.5,0) -- (6,0);
+    \node[below, font=\tiny, red] at (5.2,-0.2) {4};
+
+    % Ion currents
+    \draw[->, verdeacido, very thick] (1.1,0.5) -- (1.1,1.5) node[left, font=\tiny] {Na$^+$};
+    \draw[->, laranjacel, very thick] (2.5,2.2) -- (2.5,1.7) node[below, font=\tiny] {Ca$^{2+}$};
+    \draw[->, roxodna, very thick] (4,1.5) -- (4,0.5) node[right, font=\tiny] {K$^+$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Duração:} 200-400 ms\\
+\textbf{Amplitude:} $\sim$120 mV
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+O platô prolongado (Fase 2) previne tetania cardíaca e garante enchimento ventricular adequado
+}
+\end{frame}
+
+\begin{frame}{Canais Iônicos Cardíacos}
+\begin{block}{Principais Correntes Iônicas}
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Corrente} & \textbf{Canal} & \textbf{Fase} & \textbf{Função} \\
+\midrule
+I$_{Na}$ & Nav1.5 & 0 & Despolarização \\
+I$_{to}$ & Kv4.3 & 1 & Repol. inicial \\
+I$_{Ca,L}$ & Cav1.2 & 2 & Platô, entrada Ca$^{2+}$ \\
+I$_{Kr}$ & hERG & 2-3 & Repol. (rápido) \\
+I$_{Ks}$ & KCNQ1/KCNE1 & 2-3 & Repol. (lento) \\
+I$_{K1}$ & Kir2.x & 3-4 & Repol. final, repouso \\
+I$_{f}$ & HCN & 4 & Automaticidade (SA) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Gating}
+Canais possuem gates (comportas):
+\begin{itemize}
+    \item \textbf{m:} ativação
+    \item \textbf{h:} inativação rápida
+    \item \textbf{j:} inativação lenta
+\end{itemize}
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Canalopatias}
+Mutações em canais causam:
+\begin{itemize}
+    \item Síndrome do QT longo
+    \item Síndrome de Brugada
+    \item Taquicardia ventricular
+    \item Morte súbita
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Potencial de Membrana em Repouso}
+\begin{block}{Equação de Goldman-Hodgkin-Katz}
+Para múltiplos íons:
+\begin{equation*}
+V_m = \frac{RT}{F}\ln\left(\frac{P_K[K^+]_o + P_{Na}[Na^+]_o + P_{Cl}[Cl^-]_i}{P_K[K^+]_i + P_{Na}[Na^+]_i + P_{Cl}[Cl^-]_o}\right)
+\end{equation*}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Concentrações Típicas (mM):}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Íon} & \textbf{Intra} & \textbf{Extra} \\
+\midrule
+K$^+$ & 140 & 5 \\
+Na$^+$ & 10 & 145 \\
+Ca$^{2+}$ & 0.0001 & 2 \\
+Cl$^-$ & 10 & 110 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\column{0.5\textwidth}
+\textbf{Potenciais de Equilíbrio:}
+\begin{align*}
+E_K &\approx -90 \text{ mV} \\
+E_{Na} &\approx +70 \text{ mV} \\
+E_{Ca} &\approx +130 \text{ mV} \\
+E_{Cl} &\approx -70 \text{ mV}
+\end{align*}
+
+Em repouso (Fase 4):\\
+$V_m \approx -85$ a $-90$ mV\\
+(próximo de $E_K$)
+\end{columns}
+
+\vspace{0.3cm}
+
+\destaque{
+$V_m$ em repouso dominado por permeabilidade ao K$^+$ via I$_{K1}$
+}
+\end{frame>
+
+\begin{frame}{Mecanismo do Platô (Fase 2)}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Balanço de Correntes:}
+
+\vspace{0.3cm}
+
+\textbf{Entrada de carga (+):}
+\begin{itemize}
+    \item I$_{Ca,L}$: corrente de Ca$^{2+}$ tipo-L
+    \item Pequena corrente Na$^+$ persistente
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Saída de carga (+):}
+\begin{itemize}
+    \item I$_{Kr}$: corrente retificadora rápida
+    \item I$_{Ks}$: corrente retificadora lenta
+    \item I$_{to}$: corrente transitória externa
+\end{itemize}
+
+\vspace{0.3cm}
+
+\importante{
+Equilíbrio delicado:\\
+$I_{Ca,L} \approx I_{Kr} + I_{Ks}$
+}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Voltage trace
+    \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {t};
+    \draw[->] (0,0) -- (0,4) node[above, font=\tiny] {V$_m$};
+
+    % AP trace
+    \draw[thick, azulescuro] (0.5,0.3) -- (1,3.5) -- (1.3,2.8) -- (3,2.7) -- (4,0.3);
+
+    % Current traces below
+    \begin{scope}[yshift=-2.5cm]
+        \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {t};
+        \draw[->] (0,-1.5) -- (0,1) node[above, font=\tiny] {I};
+
+        % INa
+        \draw[thick, verdeacido] (1,0) -- (1,-1.2) -- (1.2,-1.2) -- (1.2,0);
+        \node[left, font=\tiny] at (1,-0.6) {I$_{Na}$};
+
+        % ICaL
+        \draw[thick, laranjacel] (1.2,0) -- (1.2,-0.6) -- (3.2,-0.6) -- (3.2,0);
+        \node[above, font=\tiny] at (2.2,-0.4) {I$_{Ca,L}$};
+
+        % IK
+        \draw[thick, roxodna] (1.5,0) -- (1.5,0.6) -- (4.2,0.8) -- (4.2,0);
+        \node[above, font=\tiny] at (3,0.7) {I$_K$};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{columns>
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Importância Clínica}
+Bloqueio de I$_{Kr}$ (drogas, mutações) $\rightarrow$ prolongamento QT $\rightarrow$ torsades de pointes
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Período Refratário Efetivo}
+\definicao{Período Refratário}{
+Intervalo após um potencial de ação durante o qual a célula não pode ser reexcitada (período refratário absoluto) ou requer estímulo maior (período refratário relativo).
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Mecanismo:}
+\begin{itemize}
+    \item Inativação de canais Na$^+$
+    \item Recuperação dependente de voltagem
+    \item Recuperação lenta ($\sim$200 ms)
+    \item Prolonga com frequência
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Significado:}
+\begin{itemize}
+    \item Previne reentrada
+    \item Limita frequência máxima
+    \item Protege contra tetania
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % AP
+    \draw[->] (0,0) -- (6,0) node[right, font=\tiny] {Tempo};
+    \draw[->] (0,-0.5) -- (0,3.5) node[above, font=\tiny] {V$_m$};
+
+    % First AP
+    \draw[thick, azulescuro] (0.5,0) -- (1,3) -- (1.3,2.5) -- (3,2.4) -- (3.5,0) -- (4.5,0);
+
+    % Refractory periods
+    \fill[red!20, opacity=0.5] (0.5,0) rectangle (3.5,3.5);
+    \node[font=\tiny, rotate=90] at (0.3,1.5) {Absoluto};
+
+    \fill[yellow!20, opacity=0.5] (3.5,0) rectangle (4.5,3.5);
+    \node[font=\tiny, rotate=90] at (3.3,1.5) {Relativo};
+
+    % Attempted stimuli
+    \draw[->, red, thick] (2,-0.3) -- (2,0.3) node[above, font=\tiny] {\xmark};
+    \draw[->, verdeacido, thick] (4,-0.3) -- (4,0.3) node[above, font=\tiny] {\checkmark};
+
+    % Second AP (reduced)
+    \draw[thick, azulescuro, dashed] (4.5,0) -- (4.8,2) -- (5,1.7) -- (6,0);
+\end{tikzpicture}
+\end{center>
+\end{columns>
+
+\vspace{0.3cm}
+
+\importante{
+ERP cardíaco ($\sim$200-400 ms) é muito maior que neuronal ($\sim$1-2 ms)
+}
+\end{frame}
+
+\begin{frame}{Formalismo de Hodgkin-Huxley}
+\begin{block}{Modelo Matemático de Canais Iônicos}
+Hodgkin e Huxley (1952) descreveram canais como gates probabilísticos:
+
+\begin{equation*}
+I_{ion} = g_{ion} \cdot (V_m - E_{ion})
+\end{equation*}
+
+onde a condutância é modulada por variáveis de gating:
+\begin{equation*}
+g_{ion} = \bar{g}_{ion} \cdot m^p \cdot h^q
+\end{equation*}
+
+\begin{itemize}
+    \item $m$: ativação (abertura)
+    \item $h$: inativação (fechamento)
+    \item $p, q$: expoentes de cooperatividade
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Dinâmica de Gating}
+\begin{equation*}
+\frac{dm}{dt} = \alpha_m(V)(1-m) - \beta_m(V)m = \frac{m_\infty(V) - m}{\tau_m(V)}
+\end{equation*}
+\end{exampleblock}
+\end{frame>
+
+\begin{frame}{Corrente de Sódio: I$_{Na}$}
+\begin{block}{Modelo de I$_{Na}$}
+\begin{equation*}
+I_{Na} = g_{Na} m^3 h j (V_m - E_{Na})
+\end{equation*}
+
+\textbf{Três gates:}
+\begin{itemize}
+    \item $m$: ativação rápida ($\tau \sim 0.1$ ms)
+    \item $h$: inativação rápida ($\tau \sim 1-5$ ms)
+    \item $j$: inativação lenta ($\tau \sim 20-200$ ms)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Steady-state (exemplo):}
+\begin{align*}
+m_\infty &= \frac{1}{1 + e^{-(V+40)/5}} \\
+h_\infty &= \frac{1}{1 + e^{(V+65)/7}}
+\end{align*}
+
+\column{0.5\textwidth}
+\textbf{Time constants (exemplo):}
+\begin{align*}
+\tau_m &= 0.12 \text{ ms} \\
+\tau_h &= \frac{1}{0.13(1+e^{-(V+10)/10})}
+\end{align*}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Bloqueio de I$_{Na}$ (classe I antiarrítmicos) reduz velocidade de condução
+}
+\end{frame>
+
+\begin{frame}{Correntes de Potássio e Cálcio}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{I$_{Ca,L}$ (Corrente-L de Ca$^{2+}$):}
+\begin{equation*}
+I_{Ca,L} = g_{Ca} d f f_{Ca} (V - E_{Ca})
+\end{equation*}
+\begin{itemize}
+    \item $d$: ativação
+    \item $f$: inativação voltagem-dependente
+    \item $f_{Ca}$: inativação Ca$^{2+}$-dependente
+    \item Ativa em $\sim$-40 mV
+    \item Crucial para contração
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Bloqueadores:}
+\begin{itemize}
+    \item Dihidropiridinas (nifedipina)
+    \item Verapamil, diltiazem
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{I$_{Kr}$ (Rapid delayed rectifier):}
+\begin{equation*}
+I_{Kr} = g_{Kr} x_{Kr1} x_{Kr2} (V - E_K)
+\end{equation*}
+\begin{itemize}
+    \item hERG channel (Kv11.1)
+    \item Ativação lenta
+    \item Retificação interna
+    \item Repolarização Fase 3
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{I$_{Ks}$ (Slow delayed rectifier):}
+\begin{equation*}
+I_{Ks} = g_{Ks} x_s^2 (V - E_K)
+\end{equation*}
+\begin{itemize}
+    \item KCNQ1/KCNE1
+    \item Ativação muito lenta
+    \item Importante em frequências altas
+\end{itemize}
+\end{columns}
+\end{frame>
+
+\begin{frame}[fragile]{Simulação: Potencial de Ação Simples}
+\begin{lstlisting}[language=Python, caption=Modelo simplificado de PA cardíaco, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def simple_cardiac_ap(t, V, gates):
+    """Modelo simplificado de PA cardiaco"""
+    m, h, d, f, x = gates
+
+    # Parametros
+    gNa, gCa, gK = 23, 0.09, 0.282
+    ENa, ECa, EK = 50, 60, -85
+
+    # Correntes ionicas
+    INa = gNa * m**3 * h * (V - ENa)
+    ICa = gCa * d * f * (V - ECa)
+    IK = gK * x * (V - EK)
+
+    # Capacitancia
+    Cm = 1.0  # uF/cm^2
+
+    # dV/dt
+    dVdt = -(INa + ICa + IK) / Cm
+
+    # Gating variables (simplified)
+    m_inf = 1/(1 + np.exp(-(V+40)/5))
+    h_inf = 1/(1 + np.exp((V+65)/7))
+    d_inf = 1/(1 + np.exp(-(V+10)/6.24))
+    f_inf = 1/(1 + np.exp((V+32)/8))
+    x_inf = 1/(1 + np.exp(-(V+20)/15))
+
+    tau_m, tau_h = 0.1, 2.0
+    tau_d, tau_f, tau_x = 3.0, 20.0, 100.0
+
+    dmdt = (m_inf - m) / tau_m
+    dhdt = (h_inf - h) / tau_h
+    dddt = (d_inf - d) / tau_d
+    dfdt = (f_inf - f) / tau_f
+    dxdt = (x_inf - x) / tau_x
+
+    return dVdt, [dmdt, dhdt, dddt, dfdt, dxdt]
+\end{lstlisting}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 4: MODELOS DE CARDIOMIÓCITOS
+% ============================================================================
+\section{Modelos de Cardiomiócitos}
+
+\begin{frame}{História dos Modelos Cardíacos}
+\begin{block}{Evolução Temporal}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Ano} & \textbf{Modelo} & \textbf{Características} \\
+\midrule
+1962 & Noble & Primeira célula cardíaca (Purkinje) \\
+     &       & 4 correntes, 6 variáveis \\
+\midrule
+1977 & Beeler-Reuter & Ventricular mamífero \\
+     &               & 4 correntes, 8 variáveis \\
+\midrule
+1991 & Luo-Rudy I (LR1) & Dinâmica de Ca$^{2+}$ \\
+     &                   & 6 correntes \\
+\midrule
+1994 & Luo-Rudy II (LR2) & Ca$^{2+}$ intracelular detalhado \\
+\midrule
+2004 & ten Tusscher & Ventricular humano \\
+     &              & Epi, M, Endo cells \\
+\midrule
+2011 & O'Hara-Rudy & Ventricular humano \\
+     &             & Baseado em dados experimentais \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\importante{
+Modelos mais recentes: $>$15 correntes, $>$40 variáveis de estado
+}
+\end{frame>
+
+\begin{frame}{Modelo de Noble (1962)}
+\exemplo{Primeiro Modelo Cardíaco}{
+Denis Noble adaptou o modelo de Hodgkin-Huxley para fibras de Purkinje cardíacas.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Correntes:}
+\begin{itemize}
+    \item I$_{Na}$: corrente de sódio
+    \item I$_{K}$: corrente de potássio
+    \item I$_{leak}$: corrente de vazamento
+    \item I$_{an}$: corrente aniônica
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Equação de Membrana:}
+\begin{equation*}
+C_m \frac{dV}{dt} = -I_{Na} - I_K - I_{leak} - I_{an}
+\end{equation*}
+
+\column{0.5\textwidth}
+\textbf{Realizações:}
+\begin{itemize}
+    \item Reproduziu PA de Purkinje
+    \item Automaticidade espontânea
+    \item Resposta a estímulos
+    \item Base para modelos futuros
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Limitações}
+\begin{itemize}
+    \item Sem Ca$^{2+}$ intracelular
+    \item Sem compartimentos
+    \item Cinética simplificada
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame>
+
+\begin{frame}{Modelo de Luo-Rudy (LR1, 1991)}
+\begin{block}{Avanços do LR1}
+\begin{itemize}
+    \item Primeiro modelo ventricular com dinâmica de Ca$^{2+}$ detalhada
+    \item Retículo sarcoplasmático (SR)
+    \item Bomba Na$^+$/K$^+$-ATPase
+    \item Trocador Na$^+$/Ca$^{2+}$ (NCX)
+    \item Acoplamento excitação-contração
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Correntes (6):}
+\begin{itemize}
+    \item I$_{Na}$, I$_{Ca,L}$
+    \item I$_{K}$, I$_{K1}$
+    \item I$_{Kp}$
+    \item I$_{b}$ (background)
+\end{itemize>
+
+\textbf{Bombas e Trocadores:}
+\begin{itemize}
+    \item Na$^+$/K$^+$ pump
+    \item Na$^+$/Ca$^{2+}$ exchanger
+    \item Ca$^{2+}$ pump (sarcolemma)
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Compartimentos:}
+\begin{itemize}
+    \item Citosol
+    \item SR (uptake/release)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Cell membrane
+    \draw[thick] (0,0) rectangle (4,3);
+    \node[above] at (2,3) {\tiny Sarcolema};
+
+    % SR
+    \draw[thick, roxodna] (0.5,0.5) rectangle (3.5,2.5);
+    \node at (2,1.5) {\tiny SR};
+
+    % Ca fluxes
+    \draw[->, thick, red] (0.2,2) -- node[left, font=\tiny] {I$_{Ca,L}$} (0.2,1);
+    \draw[->, thick, verdeacido] (2,0.5) -- node[below, font=\tiny] {Uptake} (2,0.2);
+    \draw[->, thick, azulclaro] (2,2.5) -- node[above, font=\tiny] {Release} (2,2.8);
+\end{tikzpicture}
+\end{center>
+\end{columns>
+\end{frame>
+
+\begin{frame}{Modelo ten Tusscher (2004)}
+\begin{block}{Modelo Ventricular Humano Detalhado}
+Desenvolvido a partir de dados experimentais humanos
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Três Tipos Celulares:}
+\begin{itemize}
+    \item \textbf{Endocárdio:} PA mais curto
+    \item \textbf{M cells:} PA mais longo (mid-myocardium)
+    \item \textbf{Epicárdio:} I$_{to}$ proeminente
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Correntes (12):}
+\begin{itemize}
+    \item I$_{Na}$, I$_{to}$, I$_{Kr}$, I$_{Ks}$
+    \item I$_{K1}$, I$_{Ca,L}$, I$_{NaCa}$
+    \item I$_{NaK}$, I$_{pCa}$, I$_{pK}$
+    \item I$_{bNa}$, I$_{bCa}$
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Dispersão transmural da repolarização
+    \item Efeitos pró-arrítmicos de drogas
+    \item Síndrome do QT longo
+    \item Fibrilação ventricular
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Heterogeneidade}
+A diferença entre tipos celulares cria gradiente de repolarização que gera a onda T do ECG
+\end{exampleblock>
+\end{columns>
+
+\vspace{0.3cm}
+
+\importante{
+Modelo amplamente usado: $>$500 citações, base para estudos de arritmias
+}
+\end{frame>
+
+\begin{frame}{Comparação: Modelos Atriais vs Ventriculares}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Característica} & \textbf{Atrial} & \textbf{Ventricular} \\
+\midrule
+Duração PA & 150-300 ms & 200-400 ms \\
+Platô & Menos pronunciado & Pronunciado \\
+I$_{to}$ & Grande & Variável \\
+I$_{K,ACh}$ & Presente & Ausente \\
+I$_{Kur}$ & Presente (atrial) & Ausente \\
+APD adaptação & Rápida & Lenta \\
+Velocidade condução & 0.5-1 m/s & 0.3-0.5 m/s \\
+\bottomrule
+\end{tabular}
+\end{center>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Modelos Atriais:}
+\begin{itemize}
+    \item Courtemanche et al. (1998)
+    \item Nygren et al. (1998)
+    \item Grandi et al. (2011)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Diferenças Importantes}
+Modelos atriais essenciais para estudar fibrilação atrial, a arritmia cardíaca mais comum
+\end{alertblock}
+\end{columns>
+\end{frame>
+
+\begin{frame}{Complexidade Computacional}
+\begin{block}{Trade-off: Realismo vs Custo}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Axes
+    \draw[->] (0,0) -- (8,0) node[right] {Complexidade};
+    \draw[->] (0,0) -- (0,5) node[above] {Realismo/Custo};
+
+    % Curve for realism
+    \draw[thick, verdeacido, domain=0:7, samples=100]
+        plot (\x, {3.5*(1-exp(-\x/2))}) node[right] {\tiny Realismo};
+
+    % Curve for computational cost
+    \draw[thick, red, domain=0:7, samples=100]
+        plot (\x, {0.3*\x}) node[right] {\tiny Custo};
+
+    % Model points
+    \node[circle, fill=azulclaro, minimum size=0.3cm] at (1.5,1.5) {};
+    \node[below, font=\tiny] at (1.5,1) {Noble};
+
+    \node[circle, fill=azulclaro, minimum size=0.3cm] at (3,2.5) {};
+    \node[below, font=\tiny] at (3,2) {LR1};
+
+    \node[circle, fill=azulclaro, minimum size=0.3cm] at (5,3.2) {};
+    \node[below, font=\tiny] at (5,2.7) {ten Tusscher};
+
+    \node[circle, fill=azulclaro, minimum size=0.3cm] at (6.5,3.4) {};
+    \node[below, font=\tiny] at (6.5,2.9) {O'Hara-Rudy};
+\end{tikzpicture}
+\end{center>
+\end{block>
+
+\importante{
+Para simulações de tecido 3D: modelos simplificados (FitzHugh-Nagumo, Aliev-Panfilov)
+}
+\end{frame>
+
+\begin{frame}[fragile]{Implementação: Modelo Simplificado}
+\begin{lstlisting}[language=Python, caption=Modelo cardíaco simplificado, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+from scipy.integrate import odeint
+
+def cardiac_model(y, t, I_stim):
+    """Modelo simplificado baseado em LR1"""
+    V, m, h, j, d, f, X = y
+
+    # Parametros
+    gNa, gCa, gK, gK1 = 23, 0.09, 0.282, 0.6047
+    ENa, ECa, EK = 54.4, 65, -77
+
+    # Gating steady-states e time constants
+    m_inf = 1/(1 + np.exp(-(V+47.13)/10.3))
+    h_inf = 1/(1 + np.exp((V+78.5)/6.22))
+    # ... (outros gates)
+
+    # Correntes
+    INa = gNa * m**3 * h * j * (V - ENa)
+    ICa = gCa * d * f * (V - ECa)
+    IK = gK * X * (V - EK)
+    IK1 = gK1 * (V - EK) / (1 + np.exp(0.07*(V+80)))
+
+    # dV/dt
+    Cm = 1.0
+    dVdt = -(INa + ICa + IK + IK1 - I_stim) / Cm
+
+    # Gating kinetics
+    dmdt = (m_inf - m) / tau_m
+    dhdt = (h_inf - h) / tau_h
+    # ... (outros gates)
+
+    return [dVdt, dmdt, dhdt, djdt, dddt, dfdt, dXdt]
+
+# Simulacao
+t = np.linspace(0, 500, 5000)
+y0 = [-85, 0.01, 0.99, 0.99, 0.001, 0.99, 0.01]
+I_stim = lambda t: 50 if 5 < t < 6 else 0
+
+sol = odeint(cardiac_model, y0, t, args=(I_stim,))
+\end{lstlisting}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 5: ACOPLAMENTO EXCITAÇÃO-CONTRAÇÃO
+% ============================================================================
+\section{Acoplamento Excitação-Contração}
+
+\begin{frame}{Acoplamento Excitação-Contração (EC)}
+\definicao{Acoplamento EC}{
+Processo pelo qual o potencial de ação elétrico desencadeia a contração mecânica do cardiomiócito através da regulação do Ca$^{2+}$ intracelular.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Sequência de Eventos}
+\begin{enumerate}
+    \item PA despolariza membrana
+    \item Abertura de canais Ca$^{2+}$ tipo-L (DHPR)
+    \item Entrada de Ca$^{2+}$ no citosol (I$_{Ca,L}$)
+    \item \textbf{Ca$^{2+}$-induced Ca$^{2+}$ release (CICR)}
+    \item Receptores de rianodina (RyR) no SR liberam Ca$^{2+}$
+    \item $[Ca^{2+}]_i$ aumenta de $\sim$0.1 $\mu$M para $\sim$1-10 $\mu$M
+    \item Ca$^{2+}$ liga-se à troponina C
+    \item Contração dos filamentos de actina-miosina
+    \item Recaptação de Ca$^{2+}$ pelo SR (SERCA)
+    \item Relaxamento
+\end{enumerate}
+\end{block>
+\end{frame>
+
+\begin{frame}{CICR: Liberação de Ca$^{2+}$ Induzida por Ca$^{2+}$}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Mecanismo:}
+\begin{itemize}
+    \item Pequena entrada Ca$^{2+}$ via DHPR
+    \item Ativa receptores RyR2 no SR
+    \item Liberação massiva de Ca$^{2+}$
+    \item Amplificação: 1:10 ou maior
+    \item "Calcium sparks"
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Regulação:}
+\begin{itemize}
+    \item [Ca$^{2+}$]$_{SR}$: carga do SR
+    \item Fosforilação de RyR
+    \item Calmodulina
+    \item ATP, Mg$^{2+}$
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % T-tubule and SR
+    \draw[thick] (0,0) -- (4,0) node[right, font=\tiny] {T-tubule};
+    \draw[thick, roxodna] (0,-2) -- (4,-2) node[right, font=\tiny] {SR};
+
+    % DHPR (L-type Ca channel)
+    \draw[thick, fill=laranjacel!50] (1.5,-0.3) rectangle (1.8,0.3);
+    \node[above, font=\tiny] at (1.65,0.5) {DHPR};
+
+    % RyR
+    \draw[thick, fill=verdeacido!50] (1.5,-2.3) rectangle (1.8,-1.7);
+    \node[below, font=\tiny] at (1.65,-2.5) {RyR};
+
+    % Ca influx
+    \draw[->, ultra thick, red] (1.65,0.3) -- (1.65,-0.8) node[midway, right, font=\tiny] {Ca$^{2+}$};
+
+    % CICR
+    \draw[->, ultra thick, red] (1.65,-1) to[out=-90, in=90] (1.65,-1.7);
+    \node[right, font=\tiny] at (1.9,-1.35) {Trigger};
+
+    % Ca release from SR
+    \draw[->, ultra thick, red] (1.65,-2.3) -- (1.65,-3) node[below, font=\tiny] {Ca$^{2+}$ release};
+
+    % Amplification
+    \foreach \x in {0.8, 1.1, 1.4, 2, 2.3, 2.6} {
+        \draw[->, red, thick] (\x,-2.3) -- (\x,-2.8);
+    }
+\end{tikzpicture}
+\end{center>
+\end{columns>
+
+\vspace{0.3cm}
+
+\importante{
+Falha do CICR: causa principal de insuficiência cardíaca sistólica
+}
+\end{frame>
+
+\begin{frame}{Dinâmica de Ca$^{2+}$ no Retículo Sarcoplasmático}
+\begin{block}{Compartimentos de Ca$^{2+}$}
+\begin{itemize}
+    \item \textbf{Citosol:} [Ca$^{2+}$]$_i$ $\sim$0.1 $\mu$M (diástole) $\rightarrow$ 1-10 $\mu$M (sístole)
+    \item \textbf{SR:} [Ca$^{2+}$]$_{SR}$ $\sim$1 mM (reservatório)
+    \item \textbf{Subsarcolemmal:} [Ca$^{2+}$]$_{ss}$ (microdomínio)
+\end{itemize}
+\end{block>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Fluxos:}
+\begin{itemize}
+    \item \textbf{Uptake (SERCA):}\\
+    $J_{up} = V_{max,up} \frac{[Ca^{2+}]_i^2}{K_m^2 + [Ca^{2+}]_i^2}$
+
+    \item \textbf{Release (RyR):}\\
+    $J_{rel} = k_{rel} [Ca^{2+}]_{SR} \cdot O_{RyR}$
+
+    \item \textbf{Leak:}\\
+    $J_{leak} = k_{leak}([Ca^{2+}]_{SR} - [Ca^{2+}]_i)$
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Equação de Balanço:}
+\begin{equation*}
+\frac{d[Ca^{2+}]_i}{dt} = J_{rel} - J_{up} + J_{leak} + \frac{I_{Ca,L}}{2FV_{cell}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{Para o SR:}
+\begin{equation*}
+\frac{d[Ca^{2+}]_{SR}}{dt} = J_{up} - J_{rel} - J_{leak}
+\end{equation*}
+\end{columns>
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Buffers}
+Ca$^{2+}$ é tamponado por troponina C, calmodulina, calsequestrin (SR)
+\end{exampleblock>
+\end{frame>
+
+\begin{frame}{Geração de Força: Cross-Bridge Cycling}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Ciclo de Pontes Cruzadas:}
+\begin{enumerate}
+    \item Ca$^{2+}$ liga troponina C
+    \item Conformação da tropomiosina
+    \item Exposição de sítios de ligação
+    \item Miosina liga actina
+    \item Power stroke (ADP liberado)
+    \item ATP liga miosina
+    \item Desligamento
+    \item Hidrólise ATP (recarga)
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Força:}
+\begin{equation*}
+F = F_{max} \cdot f([Ca^{2+}]_i) \cdot g(L)
+\end{equation*}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Thin filament (actin)
+    \draw[thick, verdeacido] (0,2) -- (5,2);
+    \node[above, font=\tiny] at (2.5,2) {Actina};
+
+    % Thick filament (myosin)
+    \draw[thick, roxodna] (0,0) -- (5,0);
+    \node[below, font=\tiny] at (2.5,0) {Miosina};
+
+    % Myosin heads
+    \foreach \x in {1, 2, 3, 4} {
+        \draw[thick] (\x,0) -- (\x,0.8);
+        \draw[thick, fill=laranjacel!50] (\x,0.8) circle (0.15);
+    }
+
+    % Ca2+ and Troponin
+    \draw[fill=red, circle] (2.5,2.5) circle (0.1) node[above, font=\tiny] {Ca$^{2+}$};
+    \draw[thick, azulclaro] (2.3,2) rectangle (2.7,2.2);
+    \node[right, font=\tiny] at (2.8,2.1) {TnC};
+
+    % Power stroke
+    \draw[->, ultra thick, red] (2,0.8) -- (2.3,1.7);
+    \node[right, font=\tiny] at (2.3,1.2) {Power stroke};
+
+    % Sarcomere shortening
+    \draw[<->, thick] (0,-0.5) -- (5,-0.5);
+    \node[below, font=\tiny] at (2.5,-0.5) {Encurtamento};
+\end{tikzpicture}
+\end{center>
+
+\vspace{0.3cm}
+
+\textbf{Dependência de Ca$^{2+}$:}
+\begin{equation*}
+f([Ca^{2+}]) = \frac{[Ca^{2+}]_i^n}{K_d^n + [Ca^{2+}]_i^n}
+\end{equation*}
+Hill coefficient $n \approx 4-6$
+\end{columns>
+\end{frame>
+
+\begin{frame}{Relação Comprimento-Tensão (Frank-Starling)}
+\definicao{Lei de Frank-Starling}{
+A força de contração do coração é proporcional ao comprimento inicial das fibras musculares (pré-carga), dentro de limites fisiológicos.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Mecanismo Molecular:}
+\begin{itemize}
+    \item Sobreposição actina-miosina ótima
+    \item Sensibilidade ao Ca$^{2+}$ aumenta com comprimento
+    \item Alinhamento de filamentos
+    \item Recrutamento de pontes cruzadas
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Significado Fisiológico:}
+\begin{itemize}
+    \item Ajuste do débito cardíaco
+    \item Compensação de alterações de pré-carga
+    \item Equilíbrio entre ventrículos
+\end{itemize>
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Force-length curve
+    \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {Comprimento (L/L$_0$)};
+    \draw[->] (0,0) -- (0,4) node[above, font=\tiny] {Força};
+
+    % Ascending limb
+    \draw[thick, azulescuro, domain=0.8:2, samples=50]
+        plot (\x, {2.5*(\x-0.8)});
+
+    % Plateau
+    \draw[thick, azulescuro] (2,3) -- (2.8,3);
+
+    % Descending limb
+    \draw[thick, azulescuro, domain=2.8:4.5, samples=50]
+        plot (\x, {3 - 0.8*(\x-2.8)});
+
+    % Optimal length
+    \draw[dashed, red] (2.4,0) -- (2.4,3);
+    \node[below, font=\tiny] at (2.4,0) {L$_0$};
+
+    % Regions
+    \node[font=\tiny] at (1.5,1) {Subótimo};
+    \node[font=\tiny] at (2.4,3.5) {Ótimo};
+    \node[font=\tiny] at (3.7,1) {Superestirado};
+\end{tikzpicture}
+\end{center>
+\end{columns>
+
+\vspace{0.3cm}
+
+\importante{
+Comprimento ótimo do sarcômero: 2.0-2.2 $\mu$m (máxima sobreposição)
+}
+\end{frame>
+
+\begin{frame}[fragile]{Modelo de Contração}
+\begin{lstlisting}[language=Python, caption=Modelo simplificado de contração, basicstyle=\ttfamily\footnotesize]
+def contraction_model(Ca_i, SL):
+    """
+    Modelo de geracao de forca
+    Ca_i: concentracao de calcio intracelular (uM)
+    SL: sarcomere length (um)
+    """
+    # Parametros
+    Ca_50 = 1.0  # uM, [Ca] para 50% ativacao
+    n_Hill = 4   # Coeficiente de Hill
+    F_max = 100  # kPa, forca maxima
+    L_0 = 2.0    # um, comprimento otimo
+
+    # Dependencia de Ca2+
+    Ca_activation = Ca_i**n_Hill / (Ca_50**n_Hill + Ca_i**n_Hill)
+
+    # Dependencia de comprimento (Frank-Starling)
+    if SL < 1.6:
+        length_dep = 0
+    elif SL < L_0:
+        length_dep = (SL - 1.6) / (L_0 - 1.6)
+    elif SL < 2.4:
+        length_dep = 1.0
+    else:
+        length_dep = 1.0 - 0.5*(SL - 2.4)
+
+    # Forca total
+    Force = F_max * Ca_activation * length_dep
+
+    return Force
+
+# Exemplo
+import numpy as np
+import matplotlib.pyplot as plt
+
+Ca_range = np.linspace(0.1, 10, 100)
+SL_values = [1.8, 2.0, 2.2]
+
+plt.figure(figsize=(10, 6))
+for SL in SL_values:
+    F = [contraction_model(ca, SL) for ca in Ca_range]
+    plt.plot(Ca_range, F, linewidth=2, label=f'SL = {SL} um')
+
+plt.xlabel('[Ca2+]i (uM)')
+plt.ylabel('Forca (kPa)')
+plt.legend()
+plt.grid(True)
+\end{lstlisting>
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 6: PROPAGAÇÃO E ARRITMIAS
+% ============================================================================
+\section{Propagação e Arritmias}
+
+\begin{frame}{Propagação da Onda Elétrica}
+\begin{block}{Teoria do Cabo (Cable Theory)}
+Propagação do potencial em tecido cardíaco:
+\begin{equation*}
+\lambda^2 \frac{\partial^2 V}{\partial x^2} = V - V_{rest} + \tau \frac{\partial V}{\partial t}
+\end{equation*}
+
+onde:
+\begin{itemize}
+    \item $\lambda$: constante de comprimento espacial
+    \item $\tau$: constante de tempo
+    \item $V$: potencial transmembrana
+\end{itemize}
+\end{block>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Equação de Reação-Difusão:}
+\begin{equation*}
+\frac{\partial V}{\partial t} = D\nabla^2 V - \frac{I_{ion}}{C_m}
+\end{equation*}
+
+\begin{itemize}
+    \item $D$: coeficiente de difusão
+    \item $\nabla^2$: operador laplaciano
+    \item $I_{ion}$: correntes iônicas
+\end{itemize>
+
+\column{0.5\textwidth}
+\textbf{Velocidade de Condução:}
+\begin{equation*}
+\theta = \lambda \sqrt{\frac{2}{\tau}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{Fatores que Afetam $\theta$:}
+\begin{itemize}
+    \item Densidade de Na$^+$ channels
+    \item Resistência gap junctions
+    \item Geometria do tecido
+    \item Refratariedade
+    \item Isquemia, fibrose
+\end{itemize>
+\end{columns>
+\end{frame>
+
+\begin{frame}{Mecanismos de Arritmias}
+\begin{block}{Classificação}
+\begin{enumerate}
+    \item \textbf{Anormalidades de Formação do Impulso:}
+    \begin{itemize}
+        \item Automaticidade anormal
+        \item Atividade deflagrada (DADs, EADs)
+    \end{itemize}
+
+    \item \textbf{Anormalidades de Condução:}
+    \begin{itemize}
+        \item Bloqueios (AV, ramo)
+        \item Condução lenta
+    \end{itemize}
+
+    \item \textbf{Reentrada:}
+    \begin{itemize}
+        \item Circuito anatômico
+        \item Circuito funcional (spiral waves)
+    \end{itemize>
+\end{enumerate}
+\end{block>
+
+\vspace{0.3cm}
+
+\importante{
+Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
+}
+\end{frame>
+
+\begin{frame}{Reentrada e Ondas Espirais}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Critérios para Reentrada:}
+\begin{enumerate}
+    \item Circuito de condução
+    \item Bloqueio unidirecional
+    \item Condução lenta
+    \item ERP $<$ comprimento do circuito
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Comprimento de Onda ($\lambda$):}
+\begin{equation*}
+\lambda = \theta \times ERP
+\end{equation*}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Condição de Reentrada}
+\begin{equation*}
+\text{Perímetro do circuito} > \lambda
+\end{equation*}
+\end{alertblock>
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Reentry circuit
+    \draw[ultra thick, azulescuro] (0,0) circle (1.5);
+
+    % Obstacle
+    \draw[fill=gray!50] (0,0) circle (0.5);
+    \node at (0,0) {\tiny Obstáculo};
+
+    % Wave propagation (arrows)
+    \foreach \angle in {0, 45, 90, 135, 180, 225, 270, 315} {
+        \draw[->, very thick, red]
+            ({1.5*cos(\angle)}, {1.5*sin(\angle)})
+            arc (\angle:\angle+40:1.5);
+    }
+
+    % Refractory region
+    \draw[thick, fill=yellow!30, opacity=0.5]
+        (1.5,0) arc (0:90:1.5) -- (0.5,1.5) arc (90:0:0.5) -- cycle;
+    \node[font=\tiny] at (1.2,0.8) {Refratário};
+
+    % Excitable region
+    \draw[thick, fill=verdeacido!30, opacity=0.5]
+        (0,1.5) arc (90:180:1.5) -- (-0.5,0) arc (180:90:0.5) -- cycle;
+    \node[font=\tiny] at (-1.2,0.8) {Excitável};
+\end{tikzpicture}
+\end{center>
+
+\textbf{Ondas Espirais:}
+\begin{itemize}
+    \item Rotor: centro de rotação
+    \item Frequência alta
+    \item Sustentadas
+    \item Fibrilação
+\end{itemize>
+\end{columns>
+\end{frame>
+
+\begin{frame}{Fibrilação Atrial (FA)}
+\begin{block}{Epidemiologia e Impacto}
+\begin{itemize}
+    \item Arritmia sustentada mais comum
+    \item Prevalência: 1-2\% da população geral
+    \item Aumenta com idade ($>$10\% em $>$80 anos)
+    \item Risco de AVC aumentado 5x
+    \item Insuficiência cardíaca
+\end{itemize}
+\end{block>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Mecanismos:}
+\begin{itemize}
+    \item \textbf{Trigger:} focos ectópicos (veias pulmonares)
+    \item \textbf{Substrato:} remodelamento atrial
+    \item Multiple wavelets
+    \item Rotores
+    \item Fibrose
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Remodelamento Elétrico:}
+\begin{itemize}
+    \item $\downarrow$ I$_{Ca,L}$
+    \item $\uparrow$ I$_{K1}$
+    \item APD encurtado
+    \item ERP reduzido
+    \item "AF begets AF"
+\end{itemize>
+
+\column{0.5\textwidth}
+\textbf{Tratamento:}
+\begin{itemize}
+    \item \textbf{Controle de frequência:}\\
+    Beta-bloqueadores, diltiazem
+
+    \item \textbf{Controle de ritmo:}\\
+    Antiarrítmicos (classe I, III)\\
+    Cardioversão
+
+    \item \textbf{Ablação por cateter:}\\
+    Isolamento de veias pulmonares
+
+    \item \textbf{Anticoagulação:}\\
+    Prevenção de AVC
+\end{itemize>
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Modelagem}
+Modelos computacionais de FA ajudam a:
+\begin{itemize}
+    \item Identificar alvos de ablação
+    \item Prever resposta a drogas
+    \item Personalizar tratamento
+\end{itemize>
+\end{exampleblock>
+\end{columns>
+\end{frame>
+
+\begin{frame}{Fibrilação Ventricular (FV)}
+\begin{block}{Emergência Médica}
+\begin{itemize}
+    \item Causa mais comum de morte súbita cardíaca
+    \item Ritmo caótico, sem débito cardíaco efetivo
+    \item Fatal em minutos sem tratamento
+    \item Desfibrilação: único tratamento efetivo
+\end{itemize}
+\end{block>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Mecanismos:}
+\begin{itemize}
+    \item Múltiplas ondas espirais
+    \item Break-up de spiral waves
+    \item Dispersão de refratariedade
+    \item Isquemia aguda
+    \item Cicatriz pós-infarto
+\end{itemize>
+
+\vspace{0.3cm}
+
+\textbf{Fatores Precipitantes:}
+\begin{itemize}
+    \item Infarto agudo do miocárdio
+    \item Cardiomiopatia
+    \item Canalopatias (Brugada, QTL)
+    \item Drogas pró-arrítmicas
+    \item Distúrbios eletrolíticos
+\end{itemize>
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Chaotic activation
+    \draw[thick] (0,0) rectangle (4,4);
+
+    % Multiple spirals
+    \foreach \x/\y in {1/1, 2.5/3, 3.5/1.5} {
+        \draw[ultra thick, red, ->] (\x,\y)
+            .. controls ++(0.3,0.3) and ++(-0.3,0.3) .. ++( 0,0.5)
+            .. controls ++(0.3,0) and ++(0.3,0.3) .. ++(0.5,0)
+            .. controls ++(0,-0.3) and ++(0.3,-0.3) .. ++(0,-0.5);
+    }
+
+    \node[below, font=\tiny] at (2,0) {FV: Múltiplas ondas};
+
+    % ECG trace
+    \begin{scope}[yshift=-2cm, xshift=0.5cm]
+        \draw[->] (0,0) -- (3.5,0) node[right, font=\tiny] {t};
+        \draw[->] (0,-0.5) -- (0,0.5);
+
+        % Chaotic ECG
+        \draw[thick, azulescuro, domain=0:3, samples=100, smooth]
+            plot (\x, {0.2*sin(40*\x r) + 0.1*rand});
+
+        \node[below, font=\tiny] at (1.75,-0.7) {ECG em FV};
+    \end{scope>
+\end{tikzpicture}
+\end{center>
+
+\vspace{0.3cm}
+
+\textbf{Desfibrilação:}
+\begin{itemize}
+    \item Choque elétrico 200-360 J
+    \item Despolarização global
+    \item Reset do sistema
+    \item Permite retomada do ritmo sinusal
+\end{itemize>
+\end{columns>
+\end{frame>
+
+\begin{frame}{Síndrome do QT Longo (LQTS)}
+\begin{block}{Definição}
+Prolongamento do intervalo QT no ECG ($>$440 ms em homens, $>$460 ms em mulheres), associado a risco aumentado de torsades de pointes e morte súbita.
+\end{block>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tipos Genéticos:}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Tipo} & \textbf{Gene} & \textbf{Proteína} \\
+\midrule
+LQT1 & KCNQ1 & I$_{Ks}$ $\downarrow$ \\
+LQT2 & KCNH2 & I$_{Kr}$ $\downarrow$ \\
+LQT3 & SCN5A & I$_{Na}$ $\uparrow$ \\
+\bottomrule
+\end{tabular}
+\end{center>
+
+\vspace{0.3cm}
+
+\textbf{LQT Adquirido:}
+\begin{itemize}
+    \item Drogas (antiarrítmicos, antibióticos)
+    \item Distúrbios eletrolíticos (hipocalemia)
+    \item Bradicardia
+\end{itemize>
+
+\column{0.5\textwidth}
+\textbf{Mecanismo:}
+\begin{itemize}
+    \item APD prolongado
+    \item Dispersão de repolarização
+    \item Early afterdepolarizations (EADs)
+    \item Torsades de pointes
+\end{itemize>
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Normal AP
+    \draw[thick, verdeacido] (0,0) -- (0.5,0) -- (0.7,2.5) -- (1,2.3) -- (2.5,2.2) -- (3,0) -- (4,0);
+    \node[left, font=\tiny] at (0,1.2) {Normal};
+
+    % LQTS AP with EAD
+    \begin{scope}[yshift=-1.5cm]
+        \draw[thick, red] (0,0) -- (0.5,0) -- (0.7,2.5) -- (1,2.3) -- (3,2.2);
+        % EAD
+        \draw[thick, red] (2,2.2) -- (2.2,2.7) -- (2.4,2.2);
+        \draw[thick, red] (3,2.2) -- (4.5,0) -- (5.5,0);
+
+        \node[left, font=\tiny] at (0,1.2) {LQTS};
+        \draw[<->, azulclaro] (0.7,-0.5) -- (4.5,-0.5);
+        \node[below, font=\tiny] at (2.6,-0.5) {QT prolongado};
+    \end{scope>
+\end{tikzpicture}
+\end{center>
+
+\textbf{Tratamento:}
+\begin{itemize}
+    \item Beta-bloqueadores
+    \item Evitar drogas que prolongam QT
+    \item CDI (cardiodesfibrilador implantável)
+\end{itemize>
+\end{columns>
+\end{frame>
+
+\begin{frame}{Efeitos de Drogas nos Canais Iônicos}
+\begin{block}{Classes de Antiarrítmicos (Classificação de Vaughan Williams)}
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Classe} & \textbf{Alvo} & \textbf{Efeito} & \textbf{Exemplos} \\
+\midrule
+I & I$_{Na}$ & $\downarrow$ condução & Quinidina, lidocaína \\
+II & $\beta$-receptores & $\downarrow$ automaticidade & Propranolol \\
+III & I$_K$ & $\uparrow$ APD, ERP & Amiodarona, sotalol \\
+IV & I$_{Ca,L}$ & $\downarrow$ nó AV & Verapamil, diltiazem \\
+\bottomrule
+\end{tabular}
+\end{center>
+\end{block>
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Efeitos Desejados}
+\begin{itemize}
+    \item Terminação de arritmias
+    \item Prevenção de recorrência
+    \item Controle de frequência
+    \item Melhora sintomática
+\end{itemize}
+\end{exampleblock>
+
+\column{0.5\textwidth}
+\begin{alertblock}{Efeitos Adversos}
+\begin{itemize}
+    \item Pró-arritmia (paradoxal)
+    \item Bradicardia
+    \item Bloqueio AV
+    \item Prolongamento QT
+    \item Insuficiência cardíaca
+\end{itemize}
+\end{alertblock>
+\end{columns>
+
+\vspace{0.3cm}
+
+\importante{
+Modelos computacionais são usados para prever efeitos cardiotóxicos de novas drogas (teste in silico)
+}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 7: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Análise de Potencial de Ação}
+Um PA ventricular tem as seguintes características:
+\begin{itemize}
+    \item V$_{rest}$ = -85 mV
+    \item V$_{peak}$ = +30 mV
+    \item APD$_{90}$ = 300 ms
+\end{itemize}
+\begin{enumerate}
+    \item Calcule a amplitude do PA
+    \item Se a frequência cardíaca é 75 bpm, qual a porcentagem do ciclo em que a célula está refratária?
+    \item Como uma droga que bloqueia I$_{Kr}$ afetaria o APD?
+\end{enumerate}
+\end{block>
+
+\begin{block}{Questão 2: Concentrações Iônicas}
+Calcule o potencial de equilíbrio para Ca$^{2+}$ a 37°C, dados:
+\begin{itemize}
+    \item [Ca$^{2+}$]$_o$ = 2 mM
+    \item [Ca$^{2+}$]$_i$ = 0.1 $\mu$M
+\end{itemize>
+Use a equação de Nernst: $E = \frac{RT}{zF}\ln\frac{[X]_o}{[X]_i} = \frac{58}{z}\log_{10}\frac{[X]_o}{[X]_i}$ mV a 37°C
+\end{block>
+\end{frame>
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: Condutância de Canais}
+Uma célula cardíaca tem g$_{Na}$ = 23 mS/cm$^2$. Durante o upstroke do PA:
+\begin{itemize}
+    \item V$_m$ = 0 mV
+    \item E$_{Na}$ = +50 mV
+    \item Ativação: m$^3$h = 0.9 $\times$ 0.6 = 0.54
+\end{itemize>
+
+Calcule a corrente I$_{Na}$ (em $\mu$A/cm$^2$).
+\end{block>
+
+\begin{block}{Questão 4: Acoplamento EC}
+\begin{enumerate}
+    \item Desenhe o fluxograma completo do acoplamento excitação-contração
+    \item Explique como uma redução de 50\% em I$_{Ca,L}$ afetaria a contração
+    \item Por que bloqueadores de canal de Ca$^{2+}$ são efetivos no tratamento de hipertensão?
+\end{enumerate}
+\end{block>
+
+\begin{block}{Questão 5: Comprimento de Onda de Reentrada}
+Se a velocidade de condução é $\theta$ = 0.5 m/s e o ERP = 250 ms:
+\begin{enumerate}
+    \item Calcule o comprimento de onda $\lambda$
+    \item Qual o perímetro mínimo de circuito para sustentar reentrada?
+\end{enumerate}
+\end{block>
+\end{frame>
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{alertblock}{Questão 6: Projeto Computacional}
+Implemente um modelo simplificado de cardiomiócito ventricular:
+\begin{enumerate}
+    \item Use o modelo fornecido nos slides (Noble ou LR simplificado)
+    \item Simule um potencial de ação com estímulo em t = 5 ms
+    \item Plote V$_m$(t), [Ca$^{2+}$]$_i$(t) e as principais correntes iônicas
+    \item Investigue o efeito de:
+    \begin{itemize}
+        \item Redução de 50\% em g$_{Kr}$ (simulando bloqueio de hERG)
+        \item Aumento de 20\% em g$_{K1}$ (simulando hiperkalemia)
+        \item Redução de 30\% em g$_{Ca,L}$ (simulando bloqueador de canal)
+    \end{itemize}
+    \item Para cada manipulação, calcule APD$_{90}$ e compare com controle
+\end{enumerate}
+\end{alertblock>
+
+\begin{block}{Questão 7: Análise Clínica}
+Um paciente apresenta:
+\begin{itemize}
+    \item FC: 180 bpm (taquicardia)
+    \item Ritmo irregular
+    \item Ausência de ondas P
+    \item Complexo QRS estreito
+\end{itemize}
+\begin{enumerate}
+    \item Qual o diagnóstico mais provável?
+    \item Explique o mecanismo fisiopatológico
+    \item Quais opções terapêuticas você consideraria?
+\end{enumerate}
+\end{block}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 8: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{keener} Keener J., Sneyd J. (2009). \textit{Mathematical Physiology}, 2nd ed. Springer.
+
+\bibitem{katz} Katz A.M. (2010). \textit{Physiology of the Heart}, 5th ed. Lippincott Williams \& Wilkins.
+
+\bibitem{noble} Noble D. (1962). A modification of the Hodgkin-Huxley equations applicable to Purkinje fibre action and pacemaker potentials. \textit{J Physiol}.
+
+\bibitem{luo} Luo C.H., Rudy Y. (1991). A model of the ventricular cardiac action potential. \textit{Circ Res}.
+
+\bibitem{tentusscher} ten Tusscher K.H., Panfilov A.V. (2006). Alternans and spiral breakup in a human ventricular tissue model. \textit{Am J Physiol Heart Circ Physiol}.
+
+\bibitem{oruru} O'Hara T., Virág L., Varró A., Rudy Y. (2011). Simulation of the undiseased human cardiac ventricular action potential. \textit{PLoS Comput Biol}.
+\end{thebibliography}
+\end{frame>
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Livros}
+\begin{itemize}
+    \item Clayton R.H. et al. (2011). \textit{Models of cardiac tissue electrophysiology}. Prog Biophys Mol Biol.
+    \item Trayanova N.A. (2011). \textit{Whole-heart modeling}. Circ Res.
+    \item Zipes D.P., Jalife J. (2013). \textit{Cardiac Electrophysiology: From Cell to Bedside}, 6th ed.
+    \item Klabunde R. (2011). \textit{Cardiovascular Physiology Concepts}, 2nd ed.
+\end{itemize}
+\end{block>
+
+\begin{block}{Recursos Online}
+\begin{itemize}
+    \item \textbf{CellML Repository:} \url{https://models.cellml.org/electrophysiology}
+    \item \textbf{Cardiac Simulation:} \url{http://www.cardiac-sim.org}
+    \item \textbf{OpenCARP:} \url{https://opencarp.org}
+    \item \textbf{PhysioNet:} \url{https://physionet.org} (dados de ECG)
+    \item \textbf{LivingHeart Project:} \url{https://www.3ds.com/simulia}
+\end{itemize>
+\end{block>
+\end{frame>
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 12: Physiological Systems - Heart}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Physiological Systems - Neuronal Dynamics
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,2199 @@
+% ============================================================================
+% CAPÍTULO 7: PROTEIN SYSTEMS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 7: Protein Systems]{Capítulo 7: Protein Systems}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Aprofundar conhecimento sobre estrutura de proteínas
+    \item Dominar cinética enzimática avançada
+    \item Compreender cascatas de sinalização celular
+    \item Estudar modificações pós-traducionais
+    \item Explorar métodos de proteômica
+    \item Aplicar ferramentas bioinformáticas para análise de proteínas
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+Proteínas são as máquinas moleculares da vida: executam, regulam e coordenam praticamente todos os processos celulares
+}
+\end{frame}
+
+\begin{frame}{Importância das Proteínas em Sistemas Biológicos}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Funções Estruturais:}
+\begin{itemize}
+    \item Colágeno (tecido conectivo)
+    \item Queratina (cabelo, unhas)
+    \item Actina/Miosina (músculo)
+    \item Histonas (empacotamento DNA)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Funções Catalíticas:}
+\begin{itemize}
+    \item Enzimas metabólicas
+    \item DNA/RNA polimerases
+    \item Proteases
+    \item Quinases
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Funções Regulatórias:}
+\begin{itemize}
+    \item Fatores de transcrição
+    \item Hormônios peptídicos
+    \item Receptores de membrana
+    \item Proteínas G
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Funções de Sinalização:}
+\begin{itemize}
+    \item Anticorpos
+    \item Citocinas
+    \item Neurotransmissores
+    \item Mensageiros intracelulares
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Papel Central das Proteínas}
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, scale=0.85, transform shape]
+    % Central node
+    \node[draw, circle, fill=verdeacido!50, text width=2cm, align=center, font=\large\bfseries] (prot) {PROTEÍNAS};
+
+    % Surrounding functions
+    \node[draw, ellipse, fill=azulclaro!30, above left=1.5cm and 2cm of prot, text width=2cm, align=center] (est) {Estrutura\\Celular};
+    \node[draw, ellipse, fill=laranjacel!30, above right=1.5cm and 2cm of prot, text width=2cm, align=center] (cat) {Catálise\\Enzimática};
+    \node[draw, ellipse, fill=roxodna!30, below right=1.5cm and 2cm of prot, text width=2cm, align=center] (reg) {Regulação\\Gênica};
+    \node[draw, ellipse, fill=yellow!50, below left=1.5cm and 2cm of prot, text width=2cm, align=center] (sin) {Sinalização\\Celular};
+
+    % Arrows
+    \draw[->, thick, azulescuro] (prot) -- (est);
+    \draw[->, thick, azulescuro] (prot) -- (cat);
+    \draw[->, thick, azulescuro] (prot) -- (reg);
+    \draw[->, thick, azulescuro] (prot) -- (sin);
+\end{tikzpicture}
+\end{center}
+
+\destaque{
+Proteínas são o elo entre genótipo (DNA) e fenótipo (função)
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: ESTRUTURA DE PROTEÍNAS
+% ============================================================================
+\section{Estrutura de Proteínas}
+
+\begin{frame}{7.1 Estrutura de Proteínas - Revisão}
+\begin{block}{Quatro Níveis Estruturais}
+\begin{enumerate}
+    \item \textbf{Primária:} sequência linear de aminoácidos
+    \item \textbf{Secundária:} arranjos locais ($\alpha$-hélice, $\beta$-folha)
+    \item \textbf{Terciária:} estrutura 3D completa de uma cadeia
+    \item \textbf{Quaternária:} arranjo de múltiplas subunidades
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Primary
+    \draw[thick, azulescuro] (0,0) -- (2,0);
+    \foreach \x in {0.4, 0.8, 1.2, 1.6}
+        \fill[verdeacido] (\x,0) circle (2pt);
+    \node[below, font=\tiny] at (1,-0.3) {1ª};
+
+    % Secondary
+    \begin{scope}[xshift=3cm]
+        \draw[thick, azulescuro, decorate, decoration={coil, aspect=0.5, segment length=3mm, amplitude=2mm}] (0,0) -- (2,0);
+        \node[below, font=\tiny] at (1,-0.5) {2ª};
+    \end{scope}
+
+    % Tertiary
+    \begin{scope}[xshift=6cm]
+        \draw[thick, azulescuro, rounded corners=5pt] (0,0) -- (0.5,0.3) -- (1,0.1) -- (1.5,0.4) -- (2,0);
+        \node[below, font=\tiny] at (1,-0.3) {3ª};
+    \end{scope}
+
+    % Quaternary
+    \begin{scope}[xshift=9cm]
+        \draw[thick, verdeacido, fill=verdeacido!20, rounded corners=3pt] (0,0) rectangle (0.8,0.6);
+        \draw[thick, laranjacel, fill=laranjacel!20, rounded corners=3pt] (0.9,0) rectangle (1.7,0.6);
+        \node[below, font=\tiny] at (0.85,-0.3) {4ª};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Termodinâmica do Dobramento Proteico}
+\begin{block}{Energia Livre de Gibbs}
+O dobramento proteico é governado pela mudança de energia livre:
+\begin{equation*}
+\Delta G = \Delta H - T\Delta S
+\end{equation*}
+
+Onde:
+\begin{itemize}
+    \item $\Delta G < 0$: processo espontâneo (proteína dobrada é estável)
+    \item $\Delta H$: entalpia (ligações, interações)
+    \item $T\Delta S$: entropia (desordem)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Contribuições para $\Delta H$:}
+\begin{itemize}
+    \item Ligações de hidrogênio
+    \item Interações eletrostáticas
+    \item Van der Waals
+    \item Pontes dissulfeto
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Efeito Hidrofóbico:}
+\begin{itemize}
+    \item Resíduos hidrofóbicos no interior
+    \item Resíduos hidrofílicos na superfície
+    \item Minimiza contato água-hidrofóbicos
+    \item Principal força motriz
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Diagrama de Ramachandran}
+\begin{columns}
+\column{0.5\textwidth}
+\definicao{Ramachandran Plot}{
+Gráfico que mostra as combinações permitidas dos ângulos diedros $\phi$ (phi) e $\psi$ (psi) da cadeia principal proteica.
+}
+
+\vspace{0.3cm}
+
+\textbf{Regiões Favoráveis:}
+\begin{itemize}
+    \item \textbf{$\alpha$-hélice:}\\
+    $\phi \approx -60°$, $\psi \approx -45°$
+    \item \textbf{$\beta$-folha:}\\
+    $\phi \approx -120°$, $\psi \approx +120°$
+    \item \textbf{Hélice esquerda:}\\
+    $\phi \approx +60°$, $\psi \approx +45°$
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Axes
+    \draw[->, thick] (-3,0) -- (3,0) node[right] {$\phi$};
+    \draw[->, thick] (0,-3) -- (0,3) node[above] {$\psi$};
+
+    % Grid
+    \foreach \x in {-180,-90,0,90,180}
+        \draw (\x/60,-0.1) -- (\x/60,0.1);
+    \foreach \y in {-180,-90,0,90,180}
+        \draw (-0.1,\y/60) -- (0.1,\y/60);
+
+    % Alpha helix region
+    \fill[azulclaro!50, opacity=0.7] (-1.5,-1) ellipse (0.8 and 0.6);
+    \node[font=\tiny] at (-1.5,-1) {$\alpha$};
+
+    % Beta sheet region
+    \fill[verdeacido!50, opacity=0.7] (-2,2) ellipse (0.6 and 0.8);
+    \node[font=\tiny] at (-2,2) {$\beta$};
+
+    % Left-handed helix (rare)
+    \fill[laranjacel!50, opacity=0.7] (1.5,1) ellipse (0.5 and 0.5);
+    \node[font=\tiny] at (1.5,1) {L};
+
+    % Axis labels
+    \node[below, font=\tiny] at (-3,-0.2) {-180°};
+    \node[below, font=\tiny] at (0,-0.2) {0°};
+    \node[below, font=\tiny] at (3,-0.2) {180°};
+    \node[left, font=\tiny] at (-0.2,-3) {-180°};
+    \node[left, font=\tiny] at (-0.2,0) {0°};
+    \node[left, font=\tiny] at (-0.2,3) {180°};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\importante{
+Glicina (sem cadeia lateral) permite todos os ângulos. Prolina (imino ácido) restringe $\phi \approx -60°$
+}
+\end{frame}
+
+\begin{frame}{Domínios e Motivos Proteicos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Domínios}
+Unidades estruturais e funcionais independentes:
+\begin{itemize}
+    \item Dobram-se independentemente
+    \item 50-200 aminoácidos
+    \item Evolução modular
+    \item Exemplos: domínio SH2, domínio quinase
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Motivos}
+Padrões estruturais recorrentes:
+\begin{itemize}
+    \item Hélice-volta-hélice
+    \item Dedos de zinco
+    \item Barril TIM
+    \item Leucine zipper
+\end{itemize}
+\end{exampleblock}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.65]
+    % Protein with multiple domains
+    \draw[thick, fill=azulclaro!30, rounded corners=5pt] (0,0) rectangle (2,1.5);
+    \node at (1,0.75) {\tiny Domínio 1};
+
+    \draw[thick, fill=verdeacido!30, rounded corners=5pt] (2.2,0) rectangle (4.2,1.5);
+    \node at (3.2,0.75) {\tiny Domínio 2};
+
+    \draw[thick, fill=laranjacel!30, rounded corners=5pt] (4.4,0) rectangle (6,1.5);
+    \node at (5.2,0.75) {\tiny Domínio 3};
+
+    % Linker regions
+    \draw[thick, azulescuro] (2,0.75) -- (2.2,0.75);
+    \draw[thick, azulescuro] (4.2,0.75) -- (4.4,0.75);
+
+    \node[below, font=\tiny] at (3,-0.3) {Proteína Multidomínio};
+
+    % Motif example
+    \begin{scope}[yshift=-3cm]
+        % Helix-turn-helix
+        \draw[thick, verdeacido, decorate, decoration={coil, aspect=0.5, segment length=2mm, amplitude=1.5mm}] (0,0) -- (1.5,0);
+        \draw[thick, azulescuro] (1.5,0) to [out=45, in=180] (2,0.5);
+        \draw[thick, laranjacel, decorate, decoration={coil, aspect=0.5, segment length=2mm, amplitude=1.5mm}] (2,0.5) -- (3.5,0.5);
+        \node[below, font=\tiny] at (1.75,-0.5) {Motivo Hélice-Volta-Hélice};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Proteínas Intrinsecamente Desordenadas (IDPs)}
+\begin{block}{Características}
+Proteínas ou regiões sem estrutura 3D definida em condições fisiológicas:
+\begin{itemize}
+    \item Alto conteúdo de resíduos polares e carregados
+    \item Baixo conteúdo hidrofóbico
+    \item Flexibilidade conformacional
+    \item 30-40\% do proteoma eucarioto
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Funções:}
+\begin{itemize}
+    \item Sinalização celular
+    \item Regulação da transcrição
+    \item Montagem de complexos
+    \item Promiscuidade de ligação
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Exemplos}
+\begin{itemize}
+    \item p53 (supressor tumoral)
+    \item $\alpha$-sinucleína (Parkinson)
+    \item Tau (Alzheimer)
+    \item Histonas (caudas N-terminais)
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+IDPs desafiam o paradigma estrutura-função: função sem estrutura fixa!
+}
+\end{frame}
+
+\begin{frame}{Protein Data Bank (PDB)}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{O que é o PDB?}
+\begin{itemize}
+    \item Repositório global de estruturas 3D
+    \item URL: \url{https://www.rcsb.org}
+    \item Mais de 200,000 estruturas
+    \item Livre acesso
+    \item Formatos: PDB, mmCIF
+\end{itemize}
+\end{block}
+
+\textbf{Técnicas Experimentais:}
+\begin{itemize}
+    \item Cristalografia de raios-X (85\%)
+    \item Ressonância magnética nuclear (NMR)
+    \item Microscopia crioeletrônica (Cryo-EM)
+    \item Modelagem computacional
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Informações no PDB}
+\begin{itemize}
+    \item Coordenadas atômicas
+    \item Estrutura secundária
+    \item Ligantes e cofatores
+    \item Metadados experimentais
+    \item Literatura associada
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Resolução}
+Medida em Ångströms (\AA):
+\begin{itemize}
+    \item Alta resolução: $<$ 2 \AA
+    \item Média resolução: 2-3 \AA
+    \item Baixa resolução: $>$ 3 \AA
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Análise de Estruturas com BioPython}
+\begin{lstlisting}[language=Python, caption=Parser de arquivos PDB, basicstyle=\ttfamily\footnotesize]
+from Bio.PDB import PDBParser, PDBIO, Select
+from Bio.PDB.DSSP import DSSP
+import numpy as np
+
+# Carregar estrutura
+parser = PDBParser(QUIET=True)
+structure = parser.get_structure("1UBQ", "1ubq.pdb")
+
+# Extrair informacoes basicas
+model = structure[0]
+for chain in model:
+    print(f"Cadeia {chain.id}: {len(chain)} residuos")
+
+    # Calcular centro de massa
+    coords = []
+    for residue in chain:
+        if residue.id[0] == ' ':  # residuos padrao
+            for atom in residue:
+                coords.append(atom.coord)
+
+    coords = np.array(coords)
+    center_mass = coords.mean(axis=0)
+    print(f"Centro de massa: {center_mass}")
+
+# Analisar estrutura secundaria (requer DSSP)
+dssp = DSSP(model, "1ubq.pdb")
+secondary = [dssp[key][2] for key in dssp.keys()]
+print(f"Helices: {secondary.count('H')}")
+print(f"Folhas beta: {secondary.count('E')}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualização de Proteínas com PyMOL}
+\begin{lstlisting}[language=Python, caption=Script PyMOL para visualização, basicstyle=\ttfamily\footnotesize]
+from pymol import cmd
+
+# Carregar estrutura
+cmd.load("1ubq.pdb")
+
+# Colorir por estrutura secundaria
+cmd.color("red", "ss h")      # helices em vermelho
+cmd.color("yellow", "ss s")   # folhas em amarelo
+cmd.color("green", "ss l+''") # loops em verde
+
+# Mostrar superficie
+cmd.show("surface")
+cmd.set("transparency", 0.5)
+
+# Destacar residuos ativos (exemplo: His68)
+cmd.select("site", "resi 68")
+cmd.show("sticks", "site")
+cmd.color("magenta", "site")
+
+# Ajustar visualizacao
+cmd.bg_color("white")
+cmd.set("ray_shadows", 0)
+
+# Salvar imagem
+cmd.png("protein_structure.png", width=1200, dpi=300, ray=1)
+
+print("Visualizacao criada!")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: CINÉTICA ENZIMÁTICA AVANÇADA
+% ============================================================================
+\section{Cinética Enzimática Avançada}
+
+\begin{frame}{7.2 Cinética Enzimática - Revisão de Michaelis-Menten}
+\begin{block}{Equação de Michaelis-Menten}
+\begin{equation*}
+v = \frac{V_{max}[S]}{K_M + [S]}
+\end{equation*}
+
+Derivada do mecanismo:
+\begin{equation*}
+E + S \underset{k_{-1}}{\overset{k_1}{\rightleftharpoons}} ES \overset{k_{cat}}{\longrightarrow} E + P
+\end{equation*}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $K_M = \frac{k_{-1} + k_{cat}}{k_1}$
+    \item $V_{max} = k_{cat}[E]_0$
+    \item $k_{cat}$: número de turnover
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Eficiência Catalítica:}
+\begin{equation*}
+\frac{k_{cat}}{K_M} \quad \text{(M}^{-1}\text{s}^{-1}\text{)}
+\end{equation*}
+
+\begin{itemize}
+    \item Limite de difusão: $10^8$-$10^9$ M$^{-1}$s$^{-1}$
+    \item Enzimas perfeitas: anidrase carbônica, catalase
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Linearização: Gráfico de Lineweaver-Burk}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Duplo Recíproco}
+Invertendo a equação de MM:
+\begin{equation*}
+\frac{1}{v} = \frac{K_M}{V_{max}} \cdot \frac{1}{[S]} + \frac{1}{V_{max}}
+\end{equation*}
+
+Forma linear: $y = mx + b$
+\begin{itemize}
+    \item Intercepto-y: $1/V_{max}$
+    \item Intercepto-x: $-1/K_M$
+    \item Inclinação: $K_M/V_{max}$
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Axes
+    \draw[->, thick] (-2,0) -- (4,0) node[right, font=\small] {$1/[S]$};
+    \draw[->, thick] (0,-0.5) -- (0,4) node[above, font=\small] {$1/v$};
+
+    % Line
+    \draw[thick, azulescuro, domain=-1.5:3.5] plot (\x, {0.5*\x + 1.5});
+
+    % Intercepts
+    \fill[red] (0,1.5) circle (2pt);
+    \node[left, font=\tiny] at (-0.2,1.5) {$1/V_{max}$};
+
+    \fill[red] (-3,0) circle (2pt);
+    \node[below, font=\tiny] at (-3,-0.2) {$-1/K_M$};
+
+    % Slope annotation
+    \draw[dashed, verdeacido] (1,2) -- (2,2.5);
+    \node[right, font=\tiny] at (2,2.5) {Inclinação = $K_M/V_{max}$};
+\end{tikzpicture}
+\end{center}
+
+\begin{alertblock}{Desvantagens}
+\begin{itemize}
+    \item Amplifica erros em $v$ baixo
+    \item Distorce distribuição de erros
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Gráfico de Eadie-Hofstee}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Transformação Alternativa}
+Dividindo MM por $[S]$:
+\begin{equation*}
+v = -K_M \cdot \frac{v}{[S]} + V_{max}
+\end{equation*}
+
+Vantagens:
+\begin{itemize}
+    \item Melhor distribuição de erros
+    \item Detecta desvios de MM
+    \item Identifica cooperatividade
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Axes
+    \draw[->, thick] (0,0) -- (4,0) node[right, font=\small] {$v/[S]$};
+    \draw[->, thick] (0,0) -- (0,4) node[above, font=\small] {$v$};
+
+    % Line (negative slope)
+    \draw[thick, azulescuro, domain=0:3.5] plot (\x, {3.5 - 0.8*\x});
+
+    % Intercepts
+    \fill[red] (0,3.5) circle (2pt);
+    \node[left, font=\tiny] at (-0.2,3.5) {$V_{max}$};
+
+    \fill[red] (4.375,0) circle (2pt);
+    \node[below, font=\tiny] at (4.375,-0.2) {$V_{max}/K_M$};
+
+    % Slope
+    \node[right, font=\tiny, text width=2cm] at (2,2) {Inclinação = $-K_M$};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Comparação de Métodos}
+Hoje em dia, ajuste não-linear direto (regressão) é preferível às linearizações
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Ligação Cooperativa e Equação de Hill}
+\begin{block}{Cooperatividade em Enzimas Oligoméricas}
+Quando ligação de substrato afeta afinidade de outros sítios:
+\begin{equation*}
+v = \frac{V_{max}[S]^n}{K_d^n + [S]^n}
+\end{equation*}
+
+Onde $n$ é o coeficiente de Hill:
+\begin{itemize}
+    \item $n = 1$: sem cooperatividade (Michaeliano)
+    \item $n > 1$: cooperatividade positiva
+    \item $n < 1$: cooperatividade negativa
+\end{itemize}
+\end{block}
+
+\exemplo{Hemoglobina}{
+Ligação de O$_2$ é cooperativa: $n \approx 2.8$\\
+Primeira molécula de O$_2$ facilita ligação das demais (efeito sigmoide)
+}
+\end{frame}
+
+\begin{frame}{Gráfico de Hill}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Axes
+    \draw[->, thick] (0,0) -- (5,0) node[right, font=\small] {$[S]$};
+    \draw[->, thick] (0,0) -- (0,4) node[above, font=\small] {$v$};
+
+    % Curves for different n
+    \draw[thick, azulescuro, domain=0:4.8, samples=100] plot (\x, {3.5*\x/(1+\x)});
+    \node[right, font=\tiny] at (3,2.5) {$n=1$};
+
+    \draw[thick, verdeacido, domain=0:4.8, samples=100] plot (\x, {3.5*\x^2/(1+\x^2)});
+    \node[right, font=\tiny] at (2,1.5) {$n=2$};
+
+    \draw[thick, laranjacel, domain=0:4.8, samples=100] plot (\x, {3.5*\x^4/(1+\x^4)});
+    \node[right, font=\tiny] at (1.3,1) {$n=4$};
+
+    % Vmax line
+    \draw[dashed, red] (0,3.5) -- (5,3.5);
+    \node[left, font=\tiny] at (0,3.5) {$V_{max}$};
+\end{tikzpicture}
+\end{center}
+
+\column{0.5\textwidth}
+\begin{block}{Gráfico de Hill Linearizado}
+\begin{equation*}
+\log\frac{v}{V_{max}-v} = n\log[S] - \log K_d
+\end{equation*}
+
+Inclinação = $n$ (coeficiente de Hill)
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+$n > 1$ resulta em resposta switch-like: pequena mudança em $[S]$ causa grande mudança em $v$
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Regulação Alostérica: Modelos MWC e KNF}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Modelo MWC}
+\textbf{Monod-Wyman-Changeux}
+\begin{itemize}
+    \item Estados T (tenso) e R (relaxado)
+    \item Transição concertada
+    \item Todas subunidades no mesmo estado
+    \item Ligante estabiliza estado R
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+    % T state
+    \foreach \i in {0,1,2,3}
+        \draw[thick, fill=red!30] ({cos(90*\i)},{sin(90*\i)}) circle (0.3);
+    \node[below] at (0,-1.5) {\tiny T (baixa afinidade)};
+
+    % Arrow
+    \draw[->, thick] (2,0) -- (3,0);
+    \node[above, font=\tiny] at (2.5,0.2) {$+S$};
+
+    % R state
+    \begin{scope}[xshift=5.5cm]
+        \foreach \i in {0,1,2,3}
+            \draw[thick, fill=verdeacido!50] ({cos(90*\i)},{sin(90*\i)}) circle (0.3);
+        \node[below] at (0,-1.5) {\tiny R (alta afinidade)};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\column{0.5\textwidth}
+\begin{block}{Modelo KNF}
+\textbf{Koshland-Némethy-Filmer}
+\begin{itemize}
+    \item Transição sequencial
+    \item Subunidades mudam individualmente
+    \item Ligação induz mudança conformacional
+    \item Afeta subunidades vizinhas
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+    % Initial state
+    \foreach \i in {0,1,2,3}
+        \draw[thick, fill=red!30] ({cos(90*\i)},{sin(90*\i)}) circle (0.3);
+
+    % Arrow
+    \draw[->, thick] (2,0) -- (3,0);
+    \node[above, font=\tiny] at (2.5,0.2) {$+S$};
+
+    % Intermediate state
+    \begin{scope}[xshift=5.5cm]
+        \draw[thick, fill=verdeacido!50] (0,1) circle (0.3);
+        \draw[thick, fill=verdeacido!50] (1,0) circle (0.3);
+        \draw[thick, fill=red!30] (0,-1) circle (0.3);
+        \draw[thick, fill=red!30] (-1,0) circle (0.3);
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Inibição Enzimática: Tipos}
+\begin{block}{Inibição Competitiva}
+Inibidor compete com substrato pelo sítio ativo
+\begin{equation*}
+v = \frac{V_{max}[S]}{K_M\left(1 + \frac{[I]}{K_I}\right) + [S]}
+\end{equation*}
+
+$V_{max}$ inalterado, $K_M^{app}$ aumenta
+\end{block}
+
+\begin{block}{Inibição Não-Competitiva}
+Inibidor liga em sítio diferente (não afeta ligação de S)
+\begin{equation*}
+v = \frac{V_{max}[S]}{\left(1 + \frac{[I]}{K_I}\right)(K_M + [S])}
+\end{equation*}
+
+$K_M$ inalterado, $V_{max}^{app}$ diminui
+\end{block}
+\end{frame}
+
+\begin{frame}{Inibição Enzimática: Tipos Adicionais}
+\begin{block}{Inibição Incompetitiva}
+Inibidor liga apenas ao complexo ES
+\begin{equation*}
+v = \frac{V_{max}[S]}{K_M + [S]\left(1 + \frac{[I]}{K_I}\right)}
+\end{equation*}
+
+$K_M$ e $V_{max}$ ambos diminuem proporcionalmente
+\end{block}
+
+\begin{block}{Inibição Mista}
+Inibidor pode ligar tanto a E quanto a ES, com afinidades diferentes
+\begin{equation*}
+v = \frac{V_{max}[S]}{K_M\left(1 + \frac{[I]}{K_I}\right) + [S]\left(1 + \frac{[I]}{K_I'}\right)}
+\end{equation*}
+
+Afeta tanto $K_M$ quanto $V_{max}$
+\end{block}
+\end{frame}
+
+\begin{frame}{Lineweaver-Burk: Identificando Tipo de Inibição}
+\begin{center}
+\begin{tikzpicture}[scale=0.65]
+    % Competitive
+    \begin{scope}
+        \draw[->, thick] (-1.5,0) -- (3,0) node[right, font=\tiny] {$1/[S]$};
+        \draw[->, thick] (0,-0.3) -- (0,3) node[above, font=\tiny] {$1/v$};
+        \draw[azulescuro, thick, domain=-1:2.5] plot (\x, {0.5*\x + 1});
+        \draw[red, thick, domain=-0.5:2.5] plot (\x, {0.8*\x + 1});
+        \node[below, font=\tiny] at (1,-0.8) {Competitiva};
+        \node[right, font=\tiny, azulescuro] at (2.5,2.2) {Sem I};
+        \node[right, font=\tiny, red] at (2.5,3) {Com I};
+    \end{scope}
+
+    % Non-competitive
+    \begin{scope}[xshift=5.5cm]
+        \draw[->, thick] (-1.5,0) -- (3,0) node[right, font=\tiny] {$1/[S]$};
+        \draw[->, thick] (0,-0.3) -- (0,3) node[above, font=\tiny] {$1/v$};
+        \draw[azulescuro, thick, domain=-1.2:2.5] plot (\x, {0.5*\x + 1});
+        \draw[red, thick, domain=-1.2:2.5] plot (\x, {0.5*\x + 1.5});
+        \node[below, font=\tiny] at (1,-0.8) {Não-Competitiva};
+    \end{scope}
+
+    % Uncompetitive
+    \begin{scope}[yshift=-4.5cm]
+        \draw[->, thick] (-1.5,0) -- (3,0) node[right, font=\tiny] {$1/[S]$};
+        \draw[->, thick] (0,-0.3) -- (0,3) node[above, font=\tiny] {$1/v$};
+        \draw[azulescuro, thick, domain=-1.2:2.5] plot (\x, {0.5*\x + 1});
+        \draw[red, thick, domain=-0.7:2.5] plot (\x, {0.5*\x + 1.5});
+        \node[below, font=\tiny] at (1,-0.8) {Incompetitiva};
+    \end{scope}
+
+    % Mixed
+    \begin{scope}[xshift=5.5cm, yshift=-4.5cm]
+        \draw[->, thick] (-1.5,0) -- (3,0) node[right, font=\tiny] {$1/[S]$};
+        \draw[->, thick] (0,-0.3) -- (0,3) node[above, font=\tiny] {$1/v$};
+        \draw[azulescuro, thick, domain=-1.2:2.5] plot (\x, {0.5*\x + 1});
+        \draw[red, thick, domain=-0.8:2.5] plot (\x, {0.7*\x + 1.4});
+        \node[below, font=\tiny] at (1,-0.8) {Mista};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Inibição Reversível vs Irreversível}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Reversível}
+Inibidor liga não-covalentemente
+\begin{itemize}
+    \item Equilíbrio dinâmico
+    \item Pode ser removido (diálise)
+    \item Constante de dissociação $K_I$
+    \item Exemplos: metabólitos regulatórios
+\end{itemize}
+\end{block}
+
+\exemplo{Estatinas}{
+Inibidores competitivos reversíveis da HMG-CoA redutase (síntese de colesterol)
+}
+
+\column{0.5\textwidth}
+\begin{block}{Irreversível}
+Inibidor forma ligação covalente
+\begin{itemize}
+    \item Inativação permanente
+    \item Requer síntese de nova enzima
+    \item Taxa de inativação $k_{inact}$
+    \item Exemplos: toxinas, fármacos
+\end{itemize}
+\end{block}
+
+\exemplo{Aspirina}{
+Acetila irreversivelmente Ser530 da COX (inibe inflamação)
+}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+$IC_{50}$: concentração de inibidor que reduz atividade em 50\%\\
+$K_I$: constante de dissociação do complexo EI (afinidade)
+}
+\end{frame}
+
+\begin{frame}[fragile]{Ajuste de Dados de Cinética Enzimática}
+\begin{lstlisting}[language=Python, caption=Regressão não-linear para Michaelis-Menten, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+# Funcao de Michaelis-Menten
+def michaelis_menten(S, Vmax, Km):
+    return Vmax * S / (Km + S)
+
+# Dados experimentais
+S = np.array([0.5, 1, 2, 5, 10, 20, 50])  # mM
+v = np.array([15, 25, 38, 60, 75, 85, 95])  # umol/min
+
+# Ajuste nao-linear
+params, covariance = curve_fit(michaelis_menten, S, v,
+                               p0=[100, 5])  # estimativas iniciais
+
+Vmax_fit, Km_fit = params
+print(f"Vmax = {Vmax_fit:.2f} umol/min")
+print(f"Km = {Km_fit:.2f} mM")
+print(f"kcat/Km = {Vmax_fit/Km_fit:.2f} min^-1 mM^-1")
+
+# Plotar
+S_fit = np.linspace(0, 50, 200)
+v_fit = michaelis_menten(S_fit, Vmax_fit, Km_fit)
+plt.plot(S, v, 'o', label='Dados')
+plt.plot(S_fit, v_fit, '-', label='Ajuste')
+plt.xlabel('[S] (mM)')
+plt.ylabel('v (umol/min)')
+plt.legend()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Cálculo de IC50 e Ki}
+\begin{lstlisting}[language=Python, caption=Determinação de IC50, basicstyle=\ttfamily\footnotesize]
+from scipy.optimize import curve_fit
+
+# Funcao dose-resposta (Hill)
+def dose_response(I, IC50, n):
+    """Inibicao em funcao de [I]"""
+    return 100 / (1 + (I/IC50)**n)
+
+# Dados de inibicao
+I = np.array([0.01, 0.1, 1, 10, 100, 1000])  # uM
+activity = np.array([98, 90, 70, 30, 8, 2])  # % atividade
+
+# Ajuste
+params, _ = curve_fit(dose_response, I, activity, p0=[10, 1])
+IC50, n = params
+
+print(f"IC50 = {IC50:.2f} uM")
+print(f"Coeficiente de Hill = {n:.2f}")
+
+# Para inibidor competitivo, calcular Ki
+S = 5  # mM (concentracao de substrato usada)
+Km = 2  # mM
+Ki = IC50 / (1 + S/Km)
+print(f"Ki = {Ki:.2f} uM")
+
+# Plotar curva dose-resposta
+I_fit = np.logspace(-2, 3, 200)
+activity_fit = dose_response(I_fit, IC50, n)
+plt.semilogx(I, activity, 'o', label='Dados')
+plt.semilogx(I_fit, activity_fit, '-', label='Ajuste')
+plt.axhline(y=50, color='r', linestyle='--', label='IC50')
+plt.axvline(x=IC50, color='r', linestyle='--')
+plt.xlabel('[Inibidor] (uM)')
+plt.ylabel('Atividade (%)')
+plt.legend()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: CASCATAS DE SINALIZAÇÃO
+% ============================================================================
+\section{Cascatas de Sinalização Celular}
+
+\begin{frame}{7.3 Sinalização Celular: Visão Geral}
+\definicao{Transdução de Sinal}{
+Processo pelo qual uma célula converte um sinal extracelular em uma resposta intracelular específica.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, text width=2.5cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (lig) {Ligante\\(hormônio, GF)};
+    \node[box, fill=laranjacel!30, below of=lig] (rec) {Receptor\\(membrana)};
+    \node[box, fill=verdeacido!30, below of=rec] (trans) {Transdutores\\(proteínas G, quinases)};
+    \node[box, fill=azulclaro!30, below of=trans] (eff) {Efetores\\(enzimas, TFs)};
+    \node[box, fill=yellow!30, below of=eff] (resp) {Resposta\\(gene, metabolismo)};
+
+    \draw[->, thick] (lig) -- (rec);
+    \draw[->, thick] (rec) -- (trans);
+    \draw[->, thick] (trans) -- (eff);
+    \draw[->, thick] (eff) -- (resp);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Tipos de Receptores de Membrana}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{GPCRs}
+\textbf{Receptores Acoplados a Proteína G}
+\begin{itemize}
+    \item 7 hélices transmembrana
+    \item Ligação ativa proteína G
+    \item Maior família de receptores
+    \item Alvos de 30-40\% dos fármacos
+\end{itemize}
+Exemplos: receptores adrenérgicos, dopaminérgicos, olfativos
+\end{block}
+
+\begin{block}{RTKs}
+\textbf{Receptores Tirosina Quinase}
+\begin{itemize}
+    \item 1 hélice transmembrana
+    \item Atividade quinase intrínseca
+    \item Dimerização por ligante
+    \item Fosforilação de tirosinas
+\end{itemize}
+Exemplos: EGFR, VEGFR, insulina
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Canais Iônicos}
+\textbf{Receptores Ionotrópicos}
+\begin{itemize}
+    \item Ligante abre canal
+    \item Fluxo de íons (Na$^+$, K$^+$, Ca$^{2+}$, Cl$^-$)
+    \item Resposta rápida (ms)
+\end{itemize}
+Exemplos: receptor nicotínico, GABA$_A$
+\end{block}
+
+\begin{block}{Receptores Nucleares}
+\textbf{Fatores de Transcrição}
+\begin{itemize}
+    \item Intracelulares
+    \item Ligante lipofílico
+    \item Regulação direta de genes
+\end{itemize}
+Exemplos: receptores de esteroides, tireoide
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Via GPCR: Proteínas G Heterotriméricas}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Membrane
+    \draw[thick, double] (-4,0) -- (4,0);
+    \node[left, font=\tiny] at (-4,0.2) {Membrana};
+
+    % GPCR
+    \draw[thick, fill=roxodna!30] (-2,-0.5) rectangle (-1,0.5);
+    \node[font=\tiny] at (-1.5,0) {GPCR};
+
+    % Ligand
+    \node[draw, circle, fill=laranjacel!50, minimum size=0.4cm, font=\tiny] at (-1.5,1.2) {L};
+    \draw[->, thick] (-1.5,0.9) -- (-1.5,0.6);
+
+    % G protein (inactive)
+    \node[draw, circle, fill=azulclaro!30, font=\tiny] at (0,-1) {$\alpha$};
+    \node[font=\tiny] at (0,-1.3) {GDP};
+    \node[draw, ellipse, fill=verdeacido!30, font=\tiny] at (1,-1) {$\beta\gamma$};
+
+    % Arrow
+    \draw[->, ultra thick, azulescuro] (2,-1) -- (3.5,-1);
+    \node[above, font=\tiny] at (2.75,-0.8) {Ativação};
+
+    % G protein (active)
+    \begin{scope}[xshift=5.5cm]
+        \node[draw, circle, fill=red!50, font=\tiny] at (0,-1) {$\alpha$};
+        \node[font=\tiny] at (0,-1.3) {GTP};
+
+        \node[draw, ellipse, fill=verdeacido!30, font=\tiny] at (1.5,-1) {$\beta\gamma$};
+
+        \draw[->, thick] (0,-1.5) -- (0,-2.5);
+        \node[below, font=\tiny, text width=2cm, align=center] at (0,-2.8) {Ativa\\efetores};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Subunidades G$\alpha$:}
+\begin{itemize}
+    \item G$\alpha_s$: estimula adenilil ciclase
+    \item G$\alpha_i$: inibe adenilil ciclase
+    \item G$\alpha_q$: ativa fosfolipase C
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Subunidade G$\beta\gamma$:}
+\begin{itemize}
+    \item Ativa canais iônicos
+    \item Regula adenilil ciclase
+    \item Ativa PI3K
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Segundos Mensageiros}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{cAMP}
+\textbf{AMP cíclico}
+\begin{itemize}
+    \item Produzido por adenilil ciclase
+    \item Ativa PKA (proteína quinase A)
+    \item Degradado por fosfodiesterases
+    \item Via G$\alpha_s$
+\end{itemize}
+\end{block}
+
+\begin{block}{Ca$^{2+}$}
+\textbf{Cálcio intracelular}
+\begin{itemize}
+    \item Liberado do RE
+    \item Liga calmodulina
+    \item Ativa CaMK, PKC
+    \item Concentração: 100 nM $\rightarrow$ 1 $\mu$M
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{IP$_3$ e DAG}
+\textbf{Inositol-trifosfato e Diacilglicerol}
+\begin{itemize}
+    \item Produzidos por fosfolipase C
+    \item IP$_3$ libera Ca$^{2+}$ do RE
+    \item DAG ativa PKC
+    \item Via G$\alpha_q$
+\end{itemize}
+\end{block}
+
+\begin{block}{cGMP}
+\textbf{GMP cíclico}
+\begin{itemize}
+    \item Produzido por guanilil ciclase
+    \item Ativa PKG
+    \item Via óxido nítrico (NO)
+    \item Vasodilatação
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Cascata MAPK: Via Clássica}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, auto,
+    box/.style={rectangle, draw, text width=2.2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (gf) {Growth Factor};
+    \node[box, fill=laranjacel!30, below of=gf] (rtk) {RTK};
+    \node[box, fill=verdeacido!30, below of=rtk] (ras) {Ras-GTP};
+    \node[box, fill=azulclaro!30, below of=ras] (raf) {Raf (MAPKKK)};
+    \node[box, fill=yellow!30, below of=raf] (mek) {MEK (MAPKK)};
+    \node[box, fill=red!20, below of=mek] (erk) {ERK (MAPK)};
+    \node[box, fill=verdeacido!50, below of=erk] (tf) {Fatores de\\Transcrição};
+
+    \draw[->, thick] (gf) -- (rtk);
+    \draw[->, thick] (rtk) -- node[right, font=\tiny] {Grb2/SOS} (ras);
+    \draw[->, thick] (ras) -- (raf);
+    \draw[->, thick] (raf) -- node[right, font=\tiny] {P} (mek);
+    \draw[->, thick] (mek) -- node[right, font=\tiny] {P P} (erk);
+    \draw[->, thick] (erk) -- node[right, font=\tiny] {P} (tf);
+
+    % Nucleus
+    \draw[thick, dashed] (-2.5,-7.5) rectangle (2.5,-9);
+    \node[font=\tiny] at (0,-7.2) {Núcleo};
+    \node[box, fill=roxodna!30, minimum width=1.5cm] at (0,-8.25) {DNA};
+    \draw[->, thick] (tf) -- (0,-7.5);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{MAPK: Módulo de Amplificação}
+\importante{
+Cascata de fosforilação amplifica sinal:
+\begin{itemize}
+    \item 1 RTK ativa múltiplas moléculas de Ras
+    \item 1 Ras ativa múltiplas moléculas de Raf
+    \item 1 Raf fosforila múltiplas MEK
+    \item 1 MEK fosforila múltiplas ERK
+\end{itemize}
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Amplificação em Cascata}
+Se cada quinase ativa 10 moléculas da próxima:
+\begin{equation*}
+\text{Amplificação} = 10^3 = 1000\times
+\end{equation*}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Outras Vias MAPK}
+\begin{itemize}
+    \item \textbf{JNK/SAPK:} estresse, apoptose
+    \item \textbf{p38 MAPK:} inflamação, diferenciação
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Dinâmica de Fosforilação e Desfosforilação}
+\begin{block}{Ciclo de Fosforilação}
+\begin{equation*}
+\text{Proteína} + \text{ATP} \xrightarrow{\text{Quinase}} \text{Proteína-P} + \text{ADP}
+\end{equation*}
+\begin{equation*}
+\text{Proteína-P} + \text{H}_2\text{O} \xrightarrow{\text{Fosfatase}} \text{Proteína} + \text{P}_i
+\end{equation*}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Quinases:}
+\begin{itemize}
+    \item Fosforilam Ser, Thr, Tyr
+    \item $\sim$518 quinases humanas
+    \item Domínio catalítico conservado
+    \item Regulação por fosforilação
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Fosfatases:}
+\begin{itemize}
+    \item Removem fosfatos
+    \item Menos específicas
+    \item Regulação por subunidades
+    \item Antagonizam quinases
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\destaque{
+Balanço quinase/fosfatase determina estado de fosforilação
+}
+\end{frame}
+
+\begin{frame}{Ultrassensibilidade de Goldbeter-Koshland}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Modelo Matemático}
+Quando quinase e fosfatase operam próximas à saturação:
+
+\begin{equation*}
+\frac{[\text{Proteína-P}]}{[\text{Proteína}]_{total}} = \frac{v_1 - v_2}{v_1 + v_2}
+\end{equation*}
+
+Resposta switch-like mesmo sem cooperatividade!
+\end{block}
+
+\textbf{Condições:}
+\begin{itemize}
+    \item Alta [Proteína] vs. $K_M$
+    \item Ciclo de fosforilação/desfosforilação
+    \item Saturação de ambas enzimas
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Axes
+    \draw[->, thick] (0,0) -- (5,0) node[right, font=\small] {Sinal};
+    \draw[->, thick] (0,0) -- (0,4) node[above, font=\small] {Resposta};
+
+    % Michaelian (hyperbolic)
+    \draw[thick, azulescuro, domain=0:4.8, samples=100] plot (\x, {3*\x/(1+\x)});
+    \node[right, font=\tiny, text width=2cm] at (3,2) {Michaeliana\\(gradual)};
+
+    % Ultrasensitive (sigmoidal)
+    \draw[thick, red, domain=0:4.8, samples=100] plot (\x, {3*\x^4/(1+\x^4)});
+    \node[right, font=\tiny, text width=2cm] at (1.5,1) {Ultrassensível\\(switch-like)};
+
+    % Threshold
+    \draw[dashed, verdeacido] (1.5,0) -- (1.5,3.5);
+    \node[above, font=\tiny] at (1.5,3.7) {Limiar};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Permite decisões digitais (tudo-ou-nada) em sistemas analógicos
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Modelagem de Cascatas de Sinalização}
+\begin{lstlisting}[language=Python, caption=Cascata MAPK simplificada, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def mapk_cascade(y, t, k1, k2, k3):
+    """
+    Modelo simplificado de cascata MAPK
+    y = [MAPKKK*, MAPKK*, MAPK*] (* = fosforilado/ativo)
+    """
+    MAPKKK_active, MAPKK_active, MAPK_active = y
+
+    # Assumindo input constante e desfosforilacao linear
+    dMAPKKK = k1 - 0.1*MAPKKK_active
+    dMAPKK = k2*MAPKKK_active - 0.1*MAPKK_active
+    dMAPK = k3*MAPKK_active - 0.1*MAPK_active
+
+    return [dMAPKKK, dMAPKK, dMAPK]
+
+# Parametros
+k1, k2, k3 = 1.0, 2.0, 3.0  # taxas de ativacao
+y0 = [0, 0, 0]  # condicoes iniciais
+t = np.linspace(0, 50, 500)
+
+# Resolver EDO
+solution = odeint(mapk_cascade, y0, t, args=(k1, k2, k3))
+
+# Plotar
+plt.plot(t, solution[:, 0], label='MAPKKK*')
+plt.plot(t, solution[:, 1], label='MAPKK*')
+plt.plot(t, solution[:, 2], label='MAPK*', linewidth=2)
+plt.xlabel('Tempo (min)')
+plt.ylabel('Concentracao (uM)')
+plt.title('Cascata MAPK: Amplificacao de Sinal')
+plt.legend()
+plt.grid(True)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: MODIFICAÇÕES PÓS-TRADUCIONAIS
+% ============================================================================
+\section{Modificações Pós-Traducionais}
+
+\begin{frame}{7.4 Modificações Pós-Traducionais (PTMs)}
+\definicao{PTM}{
+Modificações químicas covalentes em proteínas após tradução, expandindo diversidade e regulação do proteoma.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tipos Principais:}
+\begin{itemize}
+    \item Fosforilação (Ser, Thr, Tyr)
+    \item Acetilação (Lys)
+    \item Metilação (Lys, Arg)
+    \item Ubiquitinação (Lys)
+    \item Glicosilação (Asn, Ser, Thr)
+    \item SUMOilação (Lys)
+    \item Nitrosilação (Cys)
+    \item Palmitoilação (Cys)
+\end{itemize}
+
+\column{0.5\textwidth}
+\importante{
+PTMs regulam:
+\begin{itemize}
+    \item Atividade enzimática
+    \item Localização subcelular
+    \item Interações proteína-proteína
+    \item Estabilidade
+    \item Conformação
+\end{itemize}
+}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Estatística}
+$>$400 tipos de PTMs conhecidas!\\
+Proteína média: 5-10 PTMs diferentes
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Fosforilação: PTM mais Estudada}
+\begin{block}{Características}
+\begin{itemize}
+    \item Mais abundante e dinâmica
+    \item Reversível (quinases/fosfatases)
+    \item Adição de grupo fosfato (PO$_4^{3-}$)
+    \item Carga negativa: muda interações eletrostáticas
+    \item $\sim$30\% das proteínas fosforiladas a qualquer momento
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Resíduos Alvo:}
+\begin{itemize}
+    \item \textbf{Ser:} 90\% (Ser-OH)
+    \item \textbf{Thr:} 10\% (Thr-OH)
+    \item \textbf{Tyr:} $<$1\% (Tyr-OH)
+    \item His, Asp (procariotos)
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Consequências:}
+\begin{itemize}
+    \item Ativação/inativação enzimática
+    \item Criação de sítios de ligação (SH2, 14-3-3)
+    \item Mudanças conformacionais
+    \item Marcação para degradação
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Acetilação e Metilação: Regulação Epigenética}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Acetilação}
+\textbf{Adição de grupo acetil (COCH$_3$)}
+\begin{itemize}
+    \item Principalmente em Lys
+    \item Neutraliza carga positiva
+    \item HATs: histona acetiltransferases
+    \item HDACs: histona deacetilases
+\end{itemize}
+
+\textbf{Efeitos em Histonas:}
+\begin{itemize}
+    \item Reduz afinidade DNA-histona
+    \item Cromatina aberta (eucromatina)
+    \item Ativa transcrição
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Metilação}
+\textbf{Adição de grupos metil (CH$_3$)}
+\begin{itemize}
+    \item Lys (mono, di, tri-metil)
+    \item Arg (mono, di-metil)
+    \item HMTs: histona metiltransferases
+    \item HDMs: histona demetilases
+\end{itemize}
+
+\textbf{Efeitos Contextuais:}
+\begin{itemize}
+    \item H3K4me3: ativação
+    \item H3K9me3: repressão
+    \item H3K27me3: silenciamento
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\destaque{
+Código de histonas: combinação de PTMs determina estado transcricional
+}
+\end{frame}
+
+\begin{frame}{Ubiquitinação e Degradação Proteica}
+\begin{block}{Sistema Ubiquitina-Proteassoma}
+\textbf{Ubiquitina:} proteína pequena (76 aa) que marca alvos para degradação
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, auto,
+    box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=0.6cm, font=\small}]
+
+    \node[box, fill=azulclaro!30] (e1) {E1\\(ativação)};
+    \node[box, fill=verdeacido!30, right of=e1] (e2) {E2\\(conjugação)};
+    \node[box, fill=laranjacel!30, right of=e2] (e3) {E3\\(ligação)};
+    \node[box, fill=roxodna!30, below of=e3] (target) {Proteína\\Alvo};
+    \node[box, fill=red!30, below of=e1] (protea) {Proteassoma\\26S};
+
+    \draw[->, thick] (e1) -- node[above, font=\tiny] {Ub} (e2);
+    \draw[->, thick] (e2) -- node[above, font=\tiny] {Ub} (e3);
+    \draw[->, thick] (e3) -- node[right, font=\tiny] {Ub$_n$} (target);
+    \draw[->, thick] (target) -- node[above, font=\tiny] {Ub$_4$-Proteína} (protea);
+
+    \node[below, font=\tiny, text width=3cm, align=center] at (0,-2.5) {Degradação\\a aminoácidos};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tipos de Cadeia:}
+\begin{itemize}
+    \item K48: degradação (26S)
+    \item K63: sinalização (não-degradativa)
+    \item Mono-Ub: endocitose, reparo DNA
+\end{itemize}
+
+\column{0.5\textwidth}
+\importante{
+E3 ligases conferem especificidade:\\
+$>$600 E3s humanas!
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Glicosilação: Modificação Mais Complexa}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{N-Glicosilação}
+\textbf{Em Asn (Asn-X-Ser/Thr)}
+\begin{itemize}
+    \item Ocorre no RE
+    \item Oligossacarídeo pré-formado
+    \item Transferido en bloc
+    \item Processamento no Golgi
+\end{itemize}
+\end{block}
+
+\begin{block}{O-Glicosilação}
+\textbf{Em Ser/Thr}
+\begin{itemize}
+    \item Construção sequencial
+    \item Golgi e citoplasma
+    \item Mais diversa
+    \item O-GlcNAc (citoplasma)
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\textbf{Funções:}
+\begin{itemize}
+    \item Dobramento proteico
+    \item Estabilidade
+    \item Reconhecimento celular
+    \item Adesão celular
+    \item Imunidade (anticorpos)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Importância Clínica}
+\begin{itemize}
+    \item Hemoglobina glicosilada (HbA1c): diabetes
+    \item Glicosilação aberrante: câncer
+    \item Grupo sanguíneo: glicosilação de RBCs
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Crosstalk entre PTMs}
+\importante{
+PTMs não agem isoladamente: interagem e se regulam mutuamente!
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Exemplos de Crosstalk}
+\begin{itemize}
+    \item \textbf{Fosforilação inibe acetilação:} mesmo resíduo (Ser/Thr vs. Lys adjacente)
+    \item \textbf{Ubiquitinação requer fosforilação:} fosfo-degron
+    \item \textbf{O-GlcNAcilação compete com fosforilação:} mesmas Ser/Thr
+    \item \textbf{Metilação regula fosforilação:} em histonas
+    \item \textbf{SUMOilação antagoniza ubiquitinação:} mesmas Lys
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\exemplo{p53}{
+Acetilação (ativa) vs. Ubiquitinação (degrada) em Lys$_{382}$ regula estabilidade do supressor tumoral p53
+}
+\end{frame}
+
+\begin{frame}{Bancos de Dados de PTMs}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{PhosphoSitePlus}
+\url{https://www.phosphosite.org}
+\begin{itemize}
+    \item PTMs experimentalmente verificadas
+    \item $>$500,000 sítios
+    \item Fosforilação, acetilação, ubiquitinação, etc.
+    \item Regulação up/down
+    \item Informação funcional
+\end{itemize}
+\end{block}
+
+\begin{block}{UniProt}
+\url{https://www.uniprot.org}
+\begin{itemize}
+    \item PTMs anotadas
+    \item Integração com literatura
+    \item Variantes e mutações
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Outros Recursos}
+\begin{itemize}
+    \item \textbf{dbPTM:} integração de PTMs
+    \item \textbf{PTMcode:} crosstalk
+    \item \textbf{PHOSIDA:} fosforilação
+    \item \textbf{PLMD:} metilação de lisinas
+    \item \textbf{O-GlcNAcAtlas:} O-GlcNAc
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Detecção}
+\textbf{Técnica Principal:}\\
+Espectrometria de massa (LC-MS/MS)
+\begin{itemize}
+    \item Identifica modificações
+    \item Mapeia sítios exatos
+    \item Quantificação relativa/absoluta
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{PTMs no Controle do Ciclo Celular}
+\exemplo{Fosforilação de Ciclinas/CDKs}{
+Progressão pelo ciclo celular é regulada por fosforilação:
+}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Cell cycle
+    \draw[thick] (0,0) circle (2);
+
+    % Phases
+    \node at (-1.4,1.4) {G1};
+    \node at (1.4,1.4) {S};
+    \node at (1.4,-1.4) {G2};
+    \node at (-1.4,-1.4) {M};
+
+    % CDK/Cyclin complexes
+    \node[draw, fill=verdeacido!30, rounded corners, font=\tiny] at (-1,2.5) {Cyclin D/CDK4,6};
+    \node[draw, fill=azulclaro!30, rounded corners, font=\tiny] at (2.5,1) {Cyclin E/CDK2};
+    \node[draw, fill=laranjacel!30, rounded corners, font=\tiny] at (2.5,-1) {Cyclin A/CDK2};
+    \node[draw, fill=roxodna!30, rounded corners, font=\tiny] at (-1,-2.5) {Cyclin B/CDK1};
+
+    % Arrows
+    \draw[->, thick] (-1,2.3) -- (-1,1.7);
+    \draw[->, thick] (2.3,1) -- (1.7,1);
+    \draw[->, thick] (2.3,-1) -- (1.7,-1);
+    \draw[->, thick] (-1,-2.3) -- (-1,-1.7);
+
+    % Checkpoints
+    \foreach \angle in {45, 135, 225, 315} {
+        \fill[red] ({2*cos(\angle)}, {2*sin(\angle)}) circle (2pt);
+    }
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item \textbf{Fosforilação de Rb:} libera E2F $\rightarrow$ transição G1/S
+    \item \textbf{Fosforilação de histonas:} condensação cromossomal
+    \item \textbf{Desfosforilação de CDK1:} entrada em mitose
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: PROTEÔMICA
+% ============================================================================
+\section{Proteômica}
+
+\begin{frame}{7.5 Proteômica: Estudo do Proteoma}
+\definicao{Proteoma}{
+Conjunto completo de proteínas expressas por um genoma, célula ou tecido em determinado momento e condição.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Por que Proteômica?}
+\begin{itemize}
+    \item mRNA $\neq$ Proteína
+    \item PTMs não previstas por DNA
+    \item Abundância dinâmica
+    \item Interações proteína-proteína
+    \item Localização subcelular
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Desafios:}
+\begin{itemize}
+    \item Faixa dinâmica enorme ($10^6$)
+    \item Diversidade química
+    \item Modificações pós-traducionais
+    \item Complexos transitórios
+    \item Sem amplificação (vs. PCR)
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com PTMs e isoformas)
+}
+\end{frame}
+
+\begin{frame}{Abordagens Proteômicas}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Bottom-Up}
+\textbf{Shotgun Proteomics}
+\begin{enumerate}
+    \item Digestão proteolítica (tripsina)
+    \item Peptídeos analisados por MS
+    \item Identificação por busca em banco
+    \item Reconstrução de proteínas
+\end{enumerate}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Mais sensível
+    \item Cobertura ampla
+    \item PTMs mapeadas
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Top-Down}
+\textbf{Proteínas Intactas}
+\begin{enumerate}
+    \item Proteínas inteiras no MS
+    \item Fragmentação no espectrômetro
+    \item Análise direta
+\end{enumerate}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Isoformas preservadas
+    \item Combinações de PTMs
+    \item Sem ambiguidade de montagem
+\end{itemize}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Menos sensível
+    \item Proteínas grandes difíceis
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Espectrometria de Massa: LC-MS/MS}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (sample) {Amostra\\Proteica};
+    \node[box, fill=laranjacel!30, below of=sample] (digest) {Digestão\\(Tripsina)};
+    \node[box, fill=verdeacido!30, below of=digest] (lc) {LC\\(Separação)};
+    \node[box, fill=azulclaro!30, below of=lc] (ms1) {MS1\\(m/z)};
+    \node[box, fill=yellow!30, below of=ms1] (ms2) {MS2\\(Fragmentação)};
+    \node[box, fill=red!20, below of=ms2] (id) {Identificação\\(Banco dados)};
+
+    \draw[->, thick] (sample) -- (digest);
+    \draw[->, thick] (digest) -- node[right, font=\tiny] {Peptídeos} (lc);
+    \draw[->, thick] (lc) -- (ms1);
+    \draw[->, thick] (ms1) -- node[right, font=\tiny] {Precursor} (ms2);
+    \draw[->, thick] (ms2) -- node[right, font=\tiny] {Espectro} (id);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{MS1:}
+\begin{itemize}
+    \item Massa/carga (m/z)
+    \item Intensidade do íon
+    \item Seleção de precursores
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{MS2 (Tandem MS):}
+\begin{itemize}
+    \item Fragmentação (CID, HCD, ETD)
+    \item Espectro de fragmentos
+    \item Sequência do peptídeo
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Técnicas de Ionização}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{ESI}
+\textbf{Electrospray Ionization}
+\begin{itemize}
+    \item Ionização suave
+    \item Íons múltiplos carregados
+    \item Acoplado a LC (LC-MS)
+    \item Peptídeos e proteínas pequenas
+    \item Mais usado em proteômica
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{MALDI-TOF}
+\textbf{Matrix-Assisted Laser Desorption/Ionization}
+\begin{itemize}
+    \item Laser dessorve amostra
+    \item Matriz absorve energia
+    \item Íons simples carregados
+    \item Time-of-Flight (ToF)
+    \item Bom para proteínas grandes
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{block}{Analisadores de Massa}
+\begin{itemize}
+    \item \textbf{Orbitrap:} alta resolução, alta acurácia
+    \item \textbf{Q-ToF:} tandem MS, bom para PTMs
+    \item \textbf{Triple Quad:} quantificação (SRM/MRM)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Quantificação Proteômica}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Label-Free}
+\textbf{Sem Marcação}
+\begin{itemize}
+    \item Intensidade do sinal MS1
+    \item Contagem de espectros (SpC)
+    \item iBAQ, LFQ
+    \item Simples, econômico
+    \item Variabilidade maior
+\end{itemize}
+\end{block}
+
+\begin{block}{SILAC}
+\textbf{Stable Isotope Labeling}
+\begin{itemize}
+    \item Aminoácidos marcados ($^{13}$C, $^{15}$N)
+    \item Incorporação metabólica
+    \item Multiplexação (até 3 condições)
+    \item Quantificação acurada
+    \item Requer cultura celular
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Marcação Química}
+\textbf{TMT/iTRAQ}
+\begin{itemize}
+    \item Tags isobáricas
+    \item Multiplexação (6-18 condições)
+    \item Quantificação em MS2
+    \item Versátil (qualquer amostra)
+    \item Ratio compression
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Escolha do Método}
+\begin{itemize}
+    \item \textbf{Label-free:} descoberta, custo
+    \item \textbf{SILAC:} acurácia, cultura
+    \item \textbf{TMT:} multiplexação, clínica
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Interações Proteína-Proteína}
+\begin{block}{Métodos Experimentais}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Y2H (Yeast Two-Hybrid):}
+\begin{itemize}
+    \item In vivo em levedura
+    \item Interações binárias
+    \item Triagem em larga escala
+    \item Falsos positivos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Co-IP (Co-Imunoprecipitação):}
+\begin{itemize}
+    \item Anticorpo puxa proteína
+    \item Complexos co-purificados
+    \item Condições nativas
+    \item Validação de interações
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{AP-MS (Affinity Purification-MS):}
+\begin{itemize}
+    \item Tag (FLAG, HA, Strep)
+    \item Purificação de complexos
+    \item Identificação por MS
+    \item Mapeamento de complexos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{BioID/APEX:}
+\begin{itemize}
+    \item Marcação por proximidade
+    \item Biotina em vizinhos
+    \item Interações transitórias
+    \item In vivo
+\end{itemize}
+\end{columns}
+\end{block}
+\end{frame}
+
+\begin{frame}{Bancos de Dados de Interações}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{STRING}
+\url{https://string-db.org}
+\begin{itemize}
+    \item Interações conhecidas e preditas
+    \item Integração de evidências
+    \item Scores de confiança
+    \item Visualização de redes
+    \item Análise de enriquecimento
+\end{itemize}
+\end{block}
+
+\begin{block}{BioGRID}
+\begin{itemize}
+    \item Interações experimentais
+    \item Curado manualmente
+    \item Múltiplas espécies
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{IntAct}
+\begin{itemize}
+    \item Base do EBI
+    \item Dados estruturados
+    \item PSI-MI format
+\end{itemize}
+\end{block}
+
+\begin{block}{CORUM}
+\begin{itemize}
+    \item Complexos proteicos
+    \item Mamíferos
+    \item Composição e função
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+Dados de diferentes métodos são complementares: integração é chave!
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Análise de Dados Proteômicos}
+\begin{lstlisting}[language=Python, caption=Processamento de dados MS, basicstyle=\ttfamily\footnotesize]
+import pandas as pd
+import numpy as np
+from scipy.stats import ttest_ind
+import matplotlib.pyplot as plt
+
+# Carregar dados de quantificacao (ex: MaxQuant output)
+df = pd.read_csv('proteinGroups.txt', sep='\t')
+
+# Selecionar colunas de intensidade
+control_cols = [f'LFQ intensity Ctrl_{i}' for i in range(1,4)]
+treatment_cols = [f'LFQ intensity Treat_{i}' for i in range(1,4)]
+
+# Log2 transform
+df[control_cols] = np.log2(df[control_cols].replace(0, np.nan))
+df[treatment_cols] = np.log2(df[treatment_cols].replace(0, np.nan))
+
+# Filtrar proteinas com muitos missing values
+df = df.dropna(thresh=4, subset=control_cols+treatment_cols)
+
+# Calcular fold change
+df['log2FC'] = df[treatment_cols].mean(axis=1) - \
+               df[control_cols].mean(axis=1)
+
+# Teste t
+t_stat, p_val = [], []
+for idx, row in df.iterrows():
+    ctrl = row[control_cols].dropna()
+    treat = row[treatment_cols].dropna()
+    if len(ctrl) >= 2 and len(treat) >= 2:
+        t, p = ttest_ind(ctrl, treat)
+        t_stat.append(t)
+        p_val.append(p)
+    else:
+        t_stat.append(np.nan)
+        p_val.append(np.nan)
+
+df['p_value'] = p_val
+df['-log10(p)'] = -np.log10(df['p_value'])
+\end{lstlisting}
+\end{frame>
+
+\begin{frame}[fragile]{Visualização: Volcano Plot}
+\begin{lstlisting}[language=Python, caption=Volcano plot proteômico, basicstyle=\ttfamily\footnotesize]
+# Continuacao do codigo anterior
+
+# Thresholds
+fc_thresh = 1  # log2 fold change
+p_thresh = 0.05
+
+# Classificar proteinas
+df['significant'] = 'No'
+df.loc[(df['log2FC'] > fc_thresh) & (df['p_value'] < p_thresh),
+       'significant'] = 'Up'
+df.loc[(df['log2FC'] < -fc_thresh) & (df['p_value'] < p_thresh),
+       'significant'] = 'Down'
+
+# Volcano plot
+plt.figure(figsize=(10, 8))
+colors = {'No': 'gray', 'Up': 'red', 'Down': 'blue'}
+for sig, group in df.groupby('significant'):
+    plt.scatter(group['log2FC'], group['-log10(p)'],
+                c=colors[sig], label=sig, alpha=0.6, s=20)
+
+# Threshold lines
+plt.axhline(y=-np.log10(p_thresh), color='black',
+            linestyle='--', linewidth=1)
+plt.axvline(x=fc_thresh, color='black',
+            linestyle='--', linewidth=1)
+plt.axvline(x=-fc_thresh, color='black',
+            linestyle='--', linewidth=1)
+
+plt.xlabel('log2(Fold Change)', fontsize=14)
+plt.ylabel('-log10(p-value)', fontsize=14)
+plt.title('Volcano Plot: Proteinas Diferencialmente Expressas')
+plt.legend()
+plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame>
+
+% ============================================================================
+% SEÇÃO 7: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1: Cinética Enzimática}
+\begin{block}{Questão 1: Parâmetros de MM}
+Uma enzima apresenta $K_M = 5$ mM e $V_{max} = 100$ $\mu$mol/min. Calcule:
+\begin{enumerate}
+    \item A velocidade quando $[S] = 15$ mM
+    \item A concentração de substrato para $v = 75$ $\mu$mol/min
+    \item A eficiência catalítica se $[E]_0 = 1$ $\mu$M
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Inibição}
+Um inibidor competitivo tem $K_I = 2$ mM. Se $K_M = 5$ mM e $[I] = 10$ mM:
+\begin{enumerate}
+    \item Qual é o $K_M^{app}$?
+    \item Como isso afeta o gráfico de Lineweaver-Burk?
+    \item Que concentração de substrato é necessária para superar 90\% da inibição?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2: Estrutura e Análise}
+\begin{block}{Questão 3: Ramachandran}
+Explique por que:
+\begin{enumerate}
+    \item Glicina tem maior liberdade conformacional
+    \item Prolina restringe ângulos $\phi$ e $\psi$
+    \item Regiões proibidas existem no diagrama
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Questão 4: Projeto Prático - BioPython}
+Escolha uma proteína do PDB:
+\begin{enumerate}
+    \item Baixe e parse a estrutura com BioPython
+    \item Calcule proporção de estruturas secundárias ($\alpha$, $\beta$, loop)
+    \item Identifique resíduos hidrofóbicos vs. hidrofílicos
+    \item Visualize em PyMOL colorindo por propriedade
+    \item Analise cavidades potenciais de ligação
+\end{enumerate}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3: Sinalização e PTMs}
+\begin{block}{Questão 5: Cascata MAPK}
+Considerando amplificação 10x em cada nível:
+\begin{enumerate}
+    \item Quantas moléculas de ERK são ativadas por 1 RTK?
+    \item Se 100 RTKs são ativados, quantas ERK fosforiladas?
+    \item Como feedback negativo afeta isso?
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 6: PTMs}
+Uma proteína tem os seguintes sítios:
+\begin{itemize}
+    \item Lys$_{48}$: pode ser acetilada ou ubiquitinada
+    \item Ser$_{132}$: pode ser fosforilada ou O-GlcNAcilada
+\end{itemize}
+\begin{enumerate}
+    \item Quantas combinações de PTMs são possíveis?
+    \item Como crosstalk entre PTMs regula função?
+    \item Que técnica usaria para detectar cada modificação?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 4: Proteômica}
+\begin{alertblock}{Projeto Final: Pipeline Proteômico}
+Desenvolva análise completa de dados de proteômica:
+\begin{enumerate}
+    \item Baixe dados públicos (PRIDE, ProteomeXchange)
+    \item Pré-processamento: log-transform, normalização, filtro
+    \item Análise estatística: teste t, correção FDR
+    \item Volcano plot e heatmap
+    \item Análise de enriquecimento GO/KEGG
+    \item Rede de interações proteína-proteína (STRING)
+    \item Identificação de hubs e módulos funcionais
+    \item Relatório com interpretação biológica
+\end{enumerate}
+\end{alertblock}
+
+\begin{block}{Questão 7: Quantificação}
+Compare métodos label-free, SILAC e TMT:
+\begin{itemize}
+    \item Quando usar cada um?
+    \item Vantagens e limitações?
+    \item Qual é mais apropriado para amostras clínicas?
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{berg} Berg J.M., Tymoczko J.L., Stryer L. (2019). \textit{Biochemistry}, 9th ed. W.H. Freeman.
+
+\bibitem{voet} Voet D., Voet J.G., Pratt C.W. (2016). \textit{Fundamentals of Biochemistry}, 5th ed. Wiley.
+
+\bibitem{lodish} Lodish H. et al. (2021). \textit{Molecular Cell Biology}, 9th ed. W.H. Freeman.
+
+\bibitem{aebersold} Aebersold R., Mann M. (2016). Mass-spectrometric exploration of proteome structure and function. \textit{Nature}.
+
+\bibitem{mann} Mann M., Jensen O.N. (2003). Proteomic analysis of post-translational modifications. \textit{Nature Biotechnology}.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Referências Complementares}
+\begin{thebibliography}{99}
+\bibitem{cornish} Cornish-Bowden A. (2012). \textit{Fundamentals of Enzyme Kinetics}, 4th ed. Wiley-Blackwell.
+
+\bibitem{cox} Cox J., Mann M. (2011). Quantitative, high-resolution proteomics for data-driven systems biology. \textit{Annual Review of Biochemistry}.
+
+\bibitem{koshland} Koshland D.E. et al. (1966). Comparison of experimental binding data and theoretical models in proteins containing subunits. \textit{Biochemistry}.
+
+\bibitem{goldbeter} Goldbeter A., Koshland D.E. (1981). An amplified sensitivity arising from covalent modification in biological systems. \textit{PNAS}.
+
+\bibitem{ptm} Venne A.S. et al. (2014). The next level of complexity: Crosstalk of posttranslational modifications. \textit{Proteomics}.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar e Recursos}
+\begin{block}{Livros Especializados}
+\begin{itemize}
+    \item Bairoch A. et al. (2016). \textit{The SWISS-PROT Protein Knowledgebase}
+    \item Liebler D.C. (2001). \textit{Introduction to Proteomics}
+    \item Cech T.R., Atkins J.F. (2011). \textit{RNA Worlds}, 3rd ed.
+\end{itemize}
+\end{block}
+
+\begin{block}{Recursos Online}
+\begin{itemize}
+    \item \textbf{PDB:} \url{https://www.rcsb.org}
+    \item \textbf{UniProt:} \url{https://www.uniprot.org}
+    \item \textbf{PhosphoSitePlus:} \url{https://www.phosphosite.org}
+    \item \textbf{STRING:} \url{https://string-db.org}
+    \item \textbf{PRIDE:} \url{https://www.ebi.ac.uk/pride}
+    \item \textbf{ProteomeXchange:} \url{http://www.proteomexchange.org}
+    \item \textbf{BRENDA:} \url{https://www.brenda-enzymes.org} (enzimas)
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 7: Protein Systems}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Metabolic Systems (Sistemas Metabólicos)
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

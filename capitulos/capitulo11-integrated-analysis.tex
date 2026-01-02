@@ -1,0 +1,1748 @@
+% ============================================================================
+% CAPÍTULO 11: INTEGRATED ANALYSIS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 11: Integrated Analysis]{Capítulo 11: Integrated Analysis}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender a abordagem de biologia de sistemas
+    \item Dominar estratégias de integração multi-ômica
+    \item Analisar caso de estudo: ciclo da trealose em levedura
+    \item Aplicar métodos de análise de vias integradas
+    \item Construir modelos de sistemas integrados
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Por que Análise Integrada?}
+\begin{itemize}
+    \item Visão holística de sistemas biológicos complexos
+    \item Descoberta de mecanismos regulatórios ocultos
+    \item Predição de comportamento do sistema
+    \item Identificação de alvos terapêuticos
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Abordagem de Biologia de Sistemas}
+\definicao{Biologia de Sistemas}{
+Estudo de sistemas biológicos através da integração quantitativa de dados multi-ômicos para compreender propriedades emergentes e comportamento do sistema como um todo.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8, every node/.style={font=\small}]
+    % Multi-scale integration
+    \node[draw, circle, fill=roxodna!30, text width=2cm, align=center] at (0,3) {Molecular};
+    \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] at (3,3) {Celular};
+    \node[draw, circle, fill=verdeacido!30, text width=2cm, align=center] at (6,3) {Tecido};
+    \node[draw, circle, fill=azulclaro!30, text width=2cm, align=center] at (9,3) {Organismo};
+
+    % Arrows showing integration
+    \draw[->, ultra thick] (1,3) -- (2,3);
+    \draw[->, ultra thick] (4,3) -- (5,3);
+    \draw[->, ultra thick] (7,3) -- (8,3);
+
+    % Bottom layer: omics
+    \node[font=\tiny] at (0,1.5) {Genômica};
+    \node[font=\tiny] at (2,1.5) {Transcriptômica};
+    \node[font=\tiny] at (4,1.5) {Proteômica};
+    \node[font=\tiny] at (6,1.5) {Metabolômica};
+    \node[font=\tiny] at (8,1.5) {Fenômica};
+
+    \draw[<->, thick, azulescuro] (0,2) -- (8,2);
+    \node[above, font=\footnotesize] at (4,2) {Integração Multi-Escala};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Estratégia de Integração Multi-Ômica}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Camadas de Dados:}
+\begin{itemize}
+    \item \textbf{Genômica:} sequência, variações
+    \item \textbf{Transcriptômica:} expressão gênica
+    \item \textbf{Proteômica:} abundância de proteínas
+    \item \textbf{Metabolômica:} concentrações de metabólitos
+    \item \textbf{Fluxômica:} fluxos metabólicos
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Desafios:}
+\begin{itemize}
+    \item Escalas diferentes
+    \item Heterogeidade de dados
+    \item Ruído experimental
+    \item Dados faltantes
+    \item Causalidade vs correlação
+    \item Complexidade computacional
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+A integração efetiva requer métodos estatísticos robustos e modelagem matemática rigorosa.
+}
+\end{frame}
+
+\begin{frame}{Caso de Estudo: Ciclo da Trealose em Levedura}
+\begin{block}{Por que Trealose?}
+\textit{Saccharomyces cerevisiae} utiliza trealose como:
+\begin{itemize}
+    \item Proteção contra estresse (calor, frio, dessecação)
+    \item Reserva de carbono
+    \item Sinalização celular
+    \item Regulação do metabolismo
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Vantagens para Estudo Integrado}
+\begin{itemize}
+    \item Sistema bem caracterizado
+    \item Via regulada em múltiplos níveis
+    \item Dados multi-ômicos disponíveis
+    \item Respostas mensuráveis
+    \item Modelo para outros sistemas de estresse
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: INTEGRAÇÃO MULTI-ÔMICA
+% ============================================================================
+\section{Integração Multi-Ômica}
+
+\begin{frame}{Visão Geral das Camadas Ômicas}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Central dogma with omics layers
+    \node[draw, rectangle, fill=roxodna!30, minimum width=2.5cm, minimum height=1cm] at (0,4) {Genômica};
+    \node[draw, rectangle, fill=laranjacel!30, minimum width=2.5cm, minimum height=1cm] at (0,2.5) {Transcriptômica};
+    \node[draw, rectangle, fill=verdeacido!30, minimum width=2.5cm, minimum height=1cm] at (0,1) {Proteômica};
+    \node[draw, rectangle, fill=azulclaro!30, minimum width=2.5cm, minimum height=1cm] at (0,-0.5) {Metabolômica};
+
+    % Arrows showing flow
+    \draw[->, ultra thick] (0,3.5) -- (0,3.0) node[right, midway, font=\tiny] {transcrição};
+    \draw[->, ultra thick] (0,2.0) -- (0,1.5) node[right, midway, font=\tiny] {tradução};
+    \draw[->, ultra thick] (0,0.5) -- (0,0) node[right, midway, font=\tiny] {catálise};
+
+    % Characteristics on right
+    \node[right, font=\tiny, text width=3.5cm] at (2,4) {DNA: estático, variações\\SNPs, CNVs, mutações};
+    \node[right, font=\tiny, text width=3.5cm] at (2,2.5) {mRNA: dinâmico, 10$^3$-10$^7$ cópias\\responde rapidamente};
+    \node[right, font=\tiny, text width=3.5cm] at (2,1) {Proteínas: funcional, modificações\\10$^4$-10$^6$ moléculas};
+    \node[right, font=\tiny, text width=3.5cm] at (2,-0.5) {Metabólitos: fenotípico\\10$^{-9}$-10$^{-3}$ M};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Cada camada adiciona informação complementar sobre o estado do sistema.
+}
+\end{frame}
+
+\begin{frame}{Tipos e Características de Dados}
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Ômica} & \textbf{Técnica} & \textbf{Elementos} & \textbf{Faixa Dinâmica} & \textbf{Ruído} \\
+\midrule
+Genômica & WGS, SNP & $\sim$10$^4$ genes & Baixa & Baixo \\
+Transcriptômica & RNA-seq & $\sim$10$^4$ mRNAs & Alta (10$^6$) & Médio \\
+Proteômica & MS, Western & $\sim$10$^3$ prot. & Média (10$^4$) & Alto \\
+Metabolômica & MS, NMR & $\sim$10$^2$ met. & Muito alta (10$^9$) & Alto \\
+Fluxômica & $^{13}$C-MFA & $\sim$10$^2$ fluxos & Média & Médio \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Implicações para Integração}
+\begin{itemize}
+    \item Normalização entre escalas
+    \item Tratamento de valores faltantes
+    \item Métodos estatísticos robustos
+    \item Validação experimental
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Estratégias de Integração: Early, Intermediate, Late Fusion}
+\begin{center}
+\begin{tikzpicture}[scale=0.7, every node/.style={font=\tiny}]
+    % Early fusion
+    \node[font=\small, above] at (2,5) {\textbf{Early Fusion}};
+    \node[draw, fill=roxodna!30] (g1) at (0,4) {Genômica};
+    \node[draw, fill=laranjacel!30] (t1) at (1.5,4) {Transcr.};
+    \node[draw, fill=verdeacido!30] (p1) at (3,4) {Proteômica};
+    \node[draw, fill=azulclaro!30] (m1) at (4.5,4) {Metabol.};
+    \node[draw, fill=yellow!30, text width=1.5cm, align=center] (int1) at (2.25,2.5) {Integração\\Completa};
+    \node[draw, fill=gray!30, text width=1.5cm, align=center] (mod1) at (2.25,1) {Modelo};
+
+    \draw[->, thick] (g1) -- (int1);
+    \draw[->, thick] (t1) -- (int1);
+    \draw[->, thick] (p1) -- (int1);
+    \draw[->, thick] (m1) -- (int1);
+    \draw[->, thick] (int1) -- (mod1);
+
+    % Intermediate fusion
+    \node[font=\small, above] at (8,5) {\textbf{Intermediate Fusion}};
+    \node[draw, fill=roxodna!30] (g2) at (6.5,4) {Genômica};
+    \node[draw, fill=laranjacel!30] (t2) at (8,4) {Transcr.};
+    \node[draw, fill=verdeacido!30] (p2) at (9.5,4) {Proteômica};
+    \node[draw, fill=yellow!30] (int2a) at (7.25,2.8) {Módulo 1};
+    \node[draw, fill=yellow!30] (int2b) at (9.25,2.8) {Módulo 2};
+    \node[draw, fill=gray!30, text width=1.5cm, align=center] (mod2) at (8.25,1) {Modelo};
+
+    \draw[->, thick] (g2) -- (int2a);
+    \draw[->, thick] (t2) -- (int2a);
+    \draw[->, thick] (p2) -- (int2b);
+    \draw[->, thick] (int2a) -- (mod2);
+    \draw[->, thick] (int2b) -- (mod2);
+
+    % Late fusion
+    \node[font=\small, above] at (13.5,5) {\textbf{Late Fusion}};
+    \node[draw, fill=roxodna!30, text width=1.2cm, align=center] (g3) at (12,4) {Genômica};
+    \node[draw, fill=laranjacel!30, text width=1.2cm, align=center] (t3) at (13.5,4) {Transcr.};
+    \node[draw, fill=verdeacido!30, text width=1.2cm, align=center] (p3) at (15,4) {Proteômica};
+    \node[draw, fill=yellow!30] (m3a) at (12,2.8) {Modelo 1};
+    \node[draw, fill=yellow!30] (m3b) at (13.5,2.8) {Modelo 2};
+    \node[draw, fill=yellow!30] (m3c) at (15,2.8) {Modelo 3};
+    \node[draw, fill=gray!30, text width=1.5cm, align=center] (final) at (13.5,1) {Consenso};
+
+    \draw[->, thick] (g3) -- (m3a);
+    \draw[->, thick] (t3) -- (m3b);
+    \draw[->, thick] (p3) -- (m3c);
+    \draw[->, thick] (m3a) -- (final);
+    \draw[->, thick] (m3b) -- (final);
+    \draw[->, thick] (m3c) -- (final);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Métodos Baseados em Correlação}
+\begin{block}{Análise de Correlação Multi-Ômica}
+\begin{equation*}
+\rho_{XY} = \frac{\text{Cov}(X,Y)}{\sigma_X \sigma_Y} = \frac{E[(X-\mu_X)(Y-\mu_Y)]}{\sigma_X \sigma_Y}
+\end{equation*}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Métodos:}
+\begin{itemize}
+    \item Correlação de Pearson (linear)
+    \item Correlação de Spearman (monotônica)
+    \item Distância de correlação
+    \item Informação mútua
+    \item Correlação parcial
+    \item Correlação canônica (CCA)
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item mRNA-proteína
+    \item Proteína-metabólito
+    \item Expressão-fluxo
+    \item Módulos co-regulados
+\end{itemize}
+
+\vspace{0.2cm}
+
+\begin{alertblock}{Cuidado!}
+Correlação $\neq$ Causalidade
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Integração Baseada em Redes}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Construção de Redes}
+\begin{enumerate}
+    \item \textbf{Nós:} biomoléculas (genes, proteínas, metabólitos)
+    \item \textbf{Arestas:} interações, correlações, regulações
+    \item \textbf{Pesos:} força da interação
+\end{enumerate}
+\end{block}
+
+\textbf{Tipos de Redes:}
+\begin{itemize}
+    \item Co-expressão
+    \item Interação proteína-proteína
+    \item Regulação gênica
+    \item Metabólica
+    \item Multi-camada (multiplex)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Multi-layer network
+    % Transcriptomics layer
+    \node[draw, circle, fill=laranjacel!50, font=\tiny] (g1) at (0,3) {mRNA1};
+    \node[draw, circle, fill=laranjacel!50, font=\tiny] (g2) at (1.5,3) {mRNA2};
+    \node[draw, circle, fill=laranjacel!50, font=\tiny] (g3) at (3,3) {mRNA3};
+
+    \draw[thick] (g1) -- (g2);
+    \draw[thick] (g2) -- (g3);
+
+    \node[left, font=\tiny] at (-0.5,3) {Transcriptômica};
+
+    % Proteomics layer
+    \node[draw, circle, fill=verdeacido!50, font=\tiny] (p1) at (0,1.5) {Prot1};
+    \node[draw, circle, fill=verdeacido!50, font=\tiny] (p2) at (1.5,1.5) {Prot2};
+    \node[draw, circle, fill=verdeacido!50, font=\tiny] (p3) at (3,1.5) {Prot3};
+
+    \draw[thick] (p1) -- (p2);
+    \draw[thick] (p2) -- (p3);
+    \draw[thick] (p1) -- (p3);
+
+    \node[left, font=\tiny] at (-0.5,1.5) {Proteômica};
+
+    % Metabolomics layer
+    \node[draw, circle, fill=azulclaro!50, font=\tiny] (m1) at (0,0) {Met1};
+    \node[draw, circle, fill=azulclaro!50, font=\tiny] (m2) at (1.5,0) {Met2};
+    \node[draw, circle, fill=azulclaro!50, font=\tiny] (m3) at (3,0) {Met3};
+
+    \draw[thick] (m1) -- (m2);
+    \draw[thick] (m2) -- (m3);
+
+    \node[left, font=\tiny] at (-0.5,0) {Metabolômica};
+
+    % Inter-layer connections
+    \draw[dashed, azulescuro] (g1) -- (p1);
+    \draw[dashed, azulescuro] (g2) -- (p2);
+    \draw[dashed, azulescuro] (g3) -- (p3);
+    \draw[dashed, azulescuro] (p1) -- (m1);
+    \draw[dashed, azulescuro] (p2) -- (m2);
+    \draw[dashed, azulescuro] (p3) -- (m3);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Análise:}
+\begin{itemize}
+    \item Centralidade
+    \item Modularidade
+    \item Comunidades
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Abordagens de Machine Learning}
+\begin{block}{Métodos Supervisionados}
+\begin{itemize}
+    \item \textbf{Random Forest:} classificação multi-ômica
+    \item \textbf{SVM:} identificação de biomarcadores
+    \item \textbf{Neural Networks:} predição de fenótipo
+    \item \textbf{Elastic Net:} seleção de features
+\end{itemize}
+\end{block}
+
+\begin{block}{Métodos Não-Supervisionados}
+\begin{itemize}
+    \item \textbf{PCA/PLS:} redução de dimensionalidade
+    \item \textbf{t-SNE/UMAP:} visualização
+    \item \textbf{Clustering:} identificação de subgrupos
+    \item \textbf{NMF:} decomposição de matrizes
+    \item \textbf{Autoencoders:} aprendizado de representações
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\exemplo{MOFA (Multi-Omics Factor Analysis)}{
+Decomposição fatorial para identificar fontes de variação compartilhadas e específicas entre camadas ômicas.
+}
+\end{frame}
+
+\begin{frame}{Desafios: Heterogeneidade de Dados}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tipos de Heterogeneidade:}
+\begin{enumerate}
+    \item \textbf{Escala:} valores absolutos vs relativos
+    \item \textbf{Distribuição:} normal, log-normal, Poisson
+    \item \textbf{Dimensionalidade:} 10$^2$ a 10$^5$ features
+    \item \textbf{Esparsidade:} muitos zeros
+    \item \textbf{Ruído:} técnico e biológico
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Soluções:}
+\begin{itemize}
+    \item Normalização apropriada
+    \item Transformações (log, Box-Cox)
+    \item Batch correction
+    \item Imputação de valores faltantes
+    \item Regularização
+    \item Métodos robustos
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Normalização Multi-Ômica}
+\begin{equation*}
+X_{norm} = \frac{X - \mu}{\sigma} \quad \text{ou} \quad X_{norm} = \frac{X - \min(X)}{\max(X) - \min(X)}
+\end{equation*}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Fluxo de Trabalho Multi-Ômico}
+\begin{center}
+\begin{tikzpicture}[node distance=1.2cm, scale=0.75, transform shape,
+    box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (raw) {Dados Brutos\\Multi-Ômicos};
+    \node[box, fill=laranjacel!30, below of=raw] (qc) {Controle de\\Qualidade};
+    \node[box, fill=verdeacido!30, below of=qc] (norm) {Normalização\\e Filtro};
+    \node[box, fill=azulclaro!30, below of=norm] (int) {Integração\\de Dados};
+    \node[box, fill=yellow!30, below of=int] (anal) {Análise\\Estatística};
+    \node[box, fill=gray!30, below of=anal] (model) {Modelagem\\de Sistemas};
+    \node[box, fill=green!30, below of=model] (val) {Validação\\Experimental};
+
+    \draw[->, thick] (raw) -- (qc);
+    \draw[->, thick] (qc) -- (norm);
+    \draw[->, thick] (norm) -- (int);
+    \draw[->, thick] (int) -- (anal);
+    \draw[->, thick] (anal) -- (model);
+    \draw[->, thick] (model) -- (val);
+
+    % Feedback loop
+    \draw[->, thick, dashed, red] (val) -| ++(2,0) |- (model);
+
+    % Annotations
+    \node[right, font=\tiny, text width=3cm] at (4,-1.2) {Remover outliers\\FastQC, MultiQC};
+    \node[right, font=\tiny, text width=3cm] at (4,-2.4) {Z-score, log\\batch correction};
+    \node[right, font=\tiny, text width=3cm] at (4,-3.6) {Correlação\\Redes, ML};
+    \node[right, font=\tiny, text width=3cm] at (4,-4.8) {Testes, FDR\\Enriquecimento};
+    \node[right, font=\tiny, text width=3cm] at (4,-6.0) {ODEs, FBA\\Simulação};
+    \node[right, font=\tiny, text width=3cm] at (4,-7.2) {qPCR, Western\\Ensaios enzimáticos};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo Python: Integração de Dados}
+\begin{lstlisting}[language=Python, caption=Integração multi-ômica com correlação, basicstyle=\ttfamily\scriptsize]
+import pandas as pd
+import numpy as np
+from scipy import stats
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Carregar dados multi-omicos
+transcriptomics = pd.read_csv('transcriptomics.csv', index_col=0)
+proteomics = pd.read_csv('proteomics.csv', index_col=0)
+metabolomics = pd.read_csv('metabolomics.csv', index_col=0)
+
+# Normalizar cada dataset (z-score)
+def normalize_zscore(df):
+    return (df - df.mean()) / df.std()
+
+trans_norm = normalize_zscore(transcriptomics)
+prot_norm = normalize_zscore(proteomics)
+metab_norm = normalize_zscore(metabolomics)
+
+# Correlacao mRNA-proteina
+correlation_matrix = pd.DataFrame(
+    index=trans_norm.index,
+    columns=prot_norm.index
+)
+
+for gene in trans_norm.index:
+    for protein in prot_norm.index:
+        r, p = stats.pearsonr(trans_norm.loc[gene],
+                              prot_norm.loc[protein])
+        if p < 0.05:  # significativo
+            correlation_matrix.loc[gene, protein] = r
+
+# Visualizar heatmap
+plt.figure(figsize=(12, 10))
+sns.heatmap(correlation_matrix.astype(float),
+            cmap='RdBu_r', center=0, vmin=-1, vmax=1)
+plt.title('Correlacao mRNA-Proteina')
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: CASO DE ESTUDO - CICLO DA TREALOSE
+% ============================================================================
+\section{Caso de Estudo: Ciclo da Trealose em Levedura}
+
+\begin{frame}{Background Biológico: Resposta ao Estresse em \textit{S. cerevisiae}}
+\begin{block}{Trealose como Protetor Celular}
+\begin{itemize}
+    \item Dissacarídeo não-redutor ($\alpha$-D-glicopiranosil-$\alpha$-D-glicopiranosídeo)
+    \item Acumula durante estresse térmico, osmótico, oxidativo
+    \item Estabiliza membranas e proteínas
+    \item Pode atingir 20\% do peso seco celular
+    \item Mobilizada quando condições melhoram
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Relevância Industrial}
+\begin{itemize}
+    \item Panificação: tolerância ao estresse
+    \item Fermentação alcoólica: robustez
+    \item Produção de biocombustíveis
+    \item Biotecnologia: engenharia de robustez
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Via de Biossíntese e Degradação da Trealose}
+\begin{center}
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\small}]
+    % Synthesis pathway
+    \node[draw, circle, fill=azulclaro!30] (g6p) at (0,3) {G6P};
+    \node[draw, circle, fill=azulclaro!30] (udpg) at (0,1.5) {UDP-Glc};
+    \node[draw, circle, fill=azulclaro!30] (t6p) at (3,1.5) {T6P};
+    \node[draw, circle, fill=laranjacel!50, text width=1.5cm, align=center] (tre) at (6,1.5) {Trealose};
+
+    % Enzymes
+    \node[draw, rectangle, fill=verdeacido!50, font=\tiny] (tps1) at (1.5,2.2) {TPS1};
+    \node[draw, rectangle, fill=verdeacido!50, font=\tiny] (tps2) at (4.5,2.2) {TPS2};
+    \node[draw, rectangle, fill=red!50, font=\tiny] (nth1) at (6,0) {NTH1};
+
+    % Reactions
+    \draw[->, ultra thick, azulescuro] (g6p) -- (udpg);
+    \draw[->, ultra thick, azulescuro] (udpg) -- (t6p) node[above, midway, font=\tiny] {+ G6P};
+    \draw[->, ultra thick, azulescuro] (t6p) -- (tre);
+    \draw[->, ultra thick, red] (tre) -- (6,0.3) node[right, midway, font=\tiny] {2 Glc};
+
+    % Enzyme labels
+    \draw[->, dashed] (tps1) -- (1.5,1.5);
+    \draw[->, dashed] (tps2) -- (4.5,1.5);
+    \draw[->, dashed] (nth1) -- (6,0.75);
+
+    % Regulation
+    \node[draw, ellipse, fill=yellow!30, font=\tiny] (stress) at (-2,1.5) {Estresse};
+    \draw[->, thick, red] (stress) -- (udpg) node[above, midway, font=\tiny] {$\uparrow$ síntese};
+
+    \node[draw, ellipse, fill=green!30, font=\tiny] (normal) at (8,1.5) {Recuperação};
+    \draw[->, thick, blue] (normal) -- (tre) node[above, midway, font=\tiny] {$\uparrow$ degradação};
+
+    % Annotations
+    \node[below, font=\tiny] at (3,0.8) {T6P: trehalose-6-fosfato};
+    \node[below, font=\tiny] at (3,0.3) {G6P: glicose-6-fosfato};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Via regulada transcricionalmente, pós-traducionalmente e alostericamente.
+}
+\end{frame}
+
+\begin{frame}{Enzimas Chave: TPS1, TPS2, NTH1}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{TPS1 (Trealose-6-P Sintase)}
+\begin{itemize}
+    \item Catalisa: UDP-Glc + G6P $\rightarrow$ T6P
+    \item Subunidade catalítica
+    \item Gene essencial
+    \item Regulação: PKA, Snf1
+\end{itemize}
+\begin{equation*}
+v_{TPS1} = \frac{V_{max}[UDP\text{-}Glc][G6P]}{K_m^{UDP} K_m^{G6P}}
+\end{equation*}
+\end{block}
+
+\begin{block}{TPS2 (Trealose-6-P Fosfatase)}
+\begin{itemize}
+    \item Catalisa: T6P $\rightarrow$ Trealose + Pi
+    \item Remove T6P (tóxico em excesso)
+    \item Essencial para crescimento
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{NTH1 (Trealase Neutra)}
+\begin{itemize}
+    \item Catalisa: Trealose $\rightarrow$ 2 Glc
+    \item Mobiliza reservas
+    \item Ativa por PKA (cAMP)
+    \item Inibida durante estresse
+\end{itemize}
+\begin{equation*}
+v_{NTH1} = \frac{V_{max}[Tre]}{K_m + [Tre]} \cdot f(PKA)
+\end{equation*}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Complexo TSC}
+TPS1, TPS2 e subunidades regulatórias (TSL1, TPS3) formam complexo de 800 kDa
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Mecanismos Regulatórios}
+\begin{center}
+\begin{tikzpicture}[scale=0.8, every node/.style={font=\small}]
+    % Transcriptional regulation
+    \node[font=\footnotesize, above] at (2,4) {\textbf{Regulação Transcricional}};
+    \node[draw, ellipse, fill=yellow!30] (stress) at (0,3) {Estresse};
+    \node[draw, rectangle, fill=roxodna!30] (msn24) at (2,3) {Msn2/4};
+    \node[draw, rectangle, fill=laranjacel!30] (tps1g) at (4,3) {\gene{TPS1}/\gene{TPS2}};
+
+    \draw[->, thick] (stress) -- (msn24);
+    \draw[->, thick] (msn24) -- (tps1g);
+
+    % Post-translational regulation
+    \node[font=\footnotesize, above] at (2,1.5) {\textbf{Regulação Pós-Traducional}};
+    \node[draw, ellipse, fill=verdeacido!30] (glucose) at (0,0.5) {Glicose};
+    \node[draw, rectangle, fill=azulclaro!30] (camp) at (2,0.5) {cAMP/PKA};
+    \node[draw, rectangle, fill=yellow!30] (nth1p) at (4,0.5) {NTH1-P};
+
+    \draw[->, thick] (glucose) -- (camp);
+    \draw[->, thick] (camp) -- (nth1p) node[above, midway, font=\tiny] {fosforilação};
+
+    % Allosteric regulation
+    \node[font=\footnotesize, above] at (9,4) {\textbf{Regulação Alostérica}};
+    \node[draw, circle, fill=azulclaro!30] (g6p2) at (7.5,3) {G6P};
+    \node[draw, circle, fill=laranjacel!50] (t6p2) at (9,3) {T6P};
+    \node[draw, rectangle, fill=verdeacido!30] (pfk) at (10.5,3) {PFK};
+
+    \draw[->, thick, red] (t6p2) -- (pfk) node[above, midway, font=\tiny] {inibição};
+    \draw[->, thick, blue] (g6p2) -- (pfk) node[above, midway, font=\tiny] {ativação};
+
+    \node[below, font=\tiny, text width=3cm, align=center] at (9,2.2) {T6P inibe glicólise quando\\há acúmulo de trealose};
+\end{tikzpicture}
+\end{center}
+
+\destaque{
+Sistema de feedback multi-nível garante homeostase de trealose e G6P.
+}
+\end{frame}
+
+\begin{frame}{Dados Experimentais: Multi-Ômicos}
+\begin{block}{Dataset Integrado (Choque Térmico 37°C)}
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Tempo (min)} & \textbf{mRNA TPS1} & \textbf{Proteína TPS1} & \textbf{[Trealose] mM} \\
+\midrule
+0 & 1.0 & 1.0 & 5 \\
+15 & 3.2 & 1.2 & 8 \\
+30 & 8.5 & 2.8 & 25 \\
+60 & 12.0 & 5.5 & 85 \\
+90 & 10.5 & 7.2 & 120 \\
+120 & 6.8 & 6.8 & 130 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{exampleblock}{Observações}
+\begin{itemize}
+    \item mRNA responde rapidamente (15 min)
+    \item Proteína segue com atraso (30-60 min)
+    \item Trealose acumula gradualmente
+    \item Saturação em 2h
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Construção do Modelo Matemático}
+\begin{block}{Sistema de EDOs para Ciclo da Trealose}
+\begin{align*}
+\frac{d[mRNA_{TPS1}]}{dt} &= k_{trans} \cdot f(stress) - \delta_{mRNA}[mRNA_{TPS1}] \\
+\frac{d[TPS1]}{dt} &= k_{transl}[mRNA_{TPS1}] - \delta_{prot}[TPS1] \\
+\frac{d[T6P]}{dt} &= v_{TPS1} - v_{TPS2} \\
+\frac{d[Tre]}{dt} &= v_{TPS2} - v_{NTH1}
+\end{align*}
+
+onde:
+\begin{itemize}
+    \item $f(stress) = \frac{stress^n}{K_d^n + stress^n}$ (função de Hill)
+    \item $v_{TPS1} = \frac{V_{max}^{TPS1}[TPS1][G6P][UDP\text{-}Glc]}{(K_m^{G6P} + [G6P])(K_m^{UDP} + [UDP\text{-}Glc])}$
+    \item $v_{NTH1} = \frac{V_{max}^{NTH1}[NTH1][Tre]}{K_m^{Tre} + [Tre]} \cdot f(PKA)$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Estimação de Parâmetros}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Métodos de Estimação:}
+\begin{enumerate}
+    \item \textbf{Mínimos Quadrados:}
+    \begin{equation*}
+    \min_{\theta} \sum_i (y_i^{obs} - y_i^{model}(\theta))^2
+    \end{equation*}
+
+    \item \textbf{Maximum Likelihood:}
+    \begin{equation*}
+    \max_{\theta} \prod_i P(y_i^{obs}|\theta)
+    \end{equation*}
+
+    \item \textbf{Bayesiano (MCMC):}
+    \begin{equation*}
+    P(\theta|y) \propto P(y|\theta)P(\theta)
+    \end{equation*}
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Restrições:}
+\begin{itemize}
+    \item $V_{max} > 0$
+    \item $K_m > 0$
+    \item $\delta > 0$
+    \item Limites biológicos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Ferramentas}
+\begin{itemize}
+    \item \texttt{scipy.optimize}
+    \item \texttt{lmfit}
+    \item \texttt{PyMC3}
+    \item COPASI
+    \item MATLAB simbiology
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Usar dados multi-ômicos para restringir espaço de parâmetros.
+}
+\end{frame}
+
+\begin{frame}{Validação do Modelo}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Critérios de Validação:}
+\begin{enumerate}
+    \item \textbf{Ajuste aos dados:} $R^2$, RMSE
+    \item \textbf{Validação cruzada:} hold-out, k-fold
+    \item \textbf{Predições independentes:} novas condições
+    \item \textbf{Análise de sensibilidade:} parâmetros críticos
+    \item \textbf{Testes experimentais:} mutantes, perturbações
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Métricas:}
+\begin{itemize}
+    \item $R^2 = 1 - \frac{SS_{res}}{SS_{tot}}$
+    \item $RMSE = \sqrt{\frac{1}{n}\sum(y_i - \hat{y}_i)^2}$
+    \item $AIC = 2k - 2\ln(L)$
+    \item $BIC = k\ln(n) - 2\ln(L)$
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Validação Experimental}
+\begin{itemize}
+    \item Testar mutantes: $\Delta$\gene{tps1}, $\Delta$\gene{nth1}
+    \item Perturbações químicas: inibidores de PKA
+    \item Diferentes condições de estresse
+    \item Comparar predições com medições
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Predições e Verificação Experimental}
+\begin{block}{Predições do Modelo}
+\begin{enumerate}
+    \item Aumento de 10x na expressão de TPS1 sob estresse leva a acúmulo 2x mais rápido de trealose
+    \item Deleção de NTH1 resulta em acúmulo de trealose mesmo após estresse
+    \item Inibição de PKA aumenta trealose basal em 3x
+    \item Pré-adaptação ao estresse acelera resposta em 40\%
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Verificação Experimental}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Condição} & \textbf{Predição} & \textbf{Experimental} \\
+\midrule
+Superexpressão TPS1 & 2.1x rápido & 1.9x rápido \\
+$\Delta$\gene{nth1} & 130 mM final & 125 mM final \\
+Inibidor PKA & 3.2x basal & 3.0x basal \\
+Pré-adaptação & 40\% $\downarrow$ tempo & 38\% $\downarrow$ tempo \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{exampleblock}
+
+\destaque{
+Concordância entre modelo e experimentos valida abordagem integrada!
+}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação Python: Modelo de Trealose}
+\begin{lstlisting}[language=Python, caption=Simulação do ciclo da trealose, basicstyle=\ttfamily\scriptsize]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def trehalose_model(y, t, params):
+    """Modelo do ciclo da trealose"""
+    mRNA_TPS1, TPS1, T6P, Tre = y
+
+    k_trans, delta_mRNA, k_transl, delta_prot = params[:4]
+    Vmax_TPS1, Km_G6P, Vmax_TPS2, Km_T6P = params[4:8]
+    Vmax_NTH1, Km_Tre, stress_level = params[8:]
+
+    # Constantes
+    G6P = 5.0  # mM (assumido constante)
+    UDP_Glc = 2.0  # mM
+
+    # Regulacao transcricional (Hill function)
+    n_hill = 4
+    Kd_stress = 0.5
+    f_stress = stress_level**n_hill / (Kd_stress**n_hill + stress_level**n_hill)
+
+    # Taxas de reacao
+    v_TPS1 = (Vmax_TPS1 * TPS1 * G6P * UDP_Glc) / ((Km_G6P + G6P) * (1.0 + UDP_Glc))
+    v_TPS2 = (Vmax_TPS2 * T6P) / (Km_T6P + T6P)
+    v_NTH1 = (Vmax_NTH1 * Tre) / (Km_Tre + Tre)
+
+    # EDOs
+    d_mRNA = k_trans * f_stress - delta_mRNA * mRNA_TPS1
+    d_TPS1 = k_transl * mRNA_TPS1 - delta_prot * TPS1
+    d_T6P = v_TPS1 - v_TPS2
+    d_Tre = v_TPS2 - v_NTH1
+
+    return [d_mRNA, d_TPS1, d_T6P, d_Tre]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação e Ajuste aos Dados}
+\begin{lstlisting}[language=Python, caption=Ajuste do modelo aos dados experimentais, basicstyle=\ttfamily\scriptsize]
+# Parametros (estimados)
+params = [
+    5.0,   # k_trans
+    0.1,   # delta_mRNA
+    2.0,   # k_transl
+    0.05,  # delta_prot
+    10.0,  # Vmax_TPS1
+    0.5,   # Km_G6P
+    15.0,  # Vmax_TPS2
+    0.2,   # Km_T6P
+    8.0,   # Vmax_NTH1
+    10.0,  # Km_Tre
+    1.0    # stress_level (heat shock)
+]
+
+# Condicoes iniciais
+y0 = [1.0, 1.0, 0.1, 5.0]  # mRNA, TPS1, T6P, Tre
+
+# Tempo de simulacao
+t = np.linspace(0, 120, 100)  # 0 a 120 min
+
+# Resolver EDOs
+sol = odeint(trehalose_model, y0, t, args=(params,))
+
+# Plotar resultados
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+axes[0,0].plot(t, sol[:,0], 'b-', label='mRNA TPS1')
+axes[0,1].plot(t, sol[:,1], 'g-', label='Proteina TPS1')
+axes[1,0].plot(t, sol[:,2], 'r-', label='T6P')
+axes[1,1].plot(t, sol[:,3], 'orange', label='Trealose')
+
+# Adicionar dados experimentais
+t_exp = [0, 15, 30, 60, 90, 120]
+tre_exp = [5, 8, 25, 85, 120, 130]
+axes[1,1].plot(t_exp, tre_exp, 'ko', label='Experimental')
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: ANÁLISE DE VIAS E REDES INTEGRADAS
+% ============================================================================
+\section{Análise de Vias e Redes Integradas}
+
+\begin{frame}{Análise de Enriquecimento de Vias (Pathway Enrichment)}
+\definicao{Análise de Enriquecimento}{
+Método estatístico para identificar se um conjunto de genes/proteínas está super-representado em vias biológicas ou processos específicos.
+}
+
+\begin{block}{Teste de Hipergeométrico}
+\begin{equation*}
+p = \frac{\binom{K}{k}\binom{N-K}{n-k}}{\binom{N}{n}}
+\end{equation*}
+onde:
+\begin{itemize}
+    \item $N$ = total de genes no genoma
+    \item $K$ = genes na via de interesse
+    \item $n$ = genes no conjunto (ex: diferencialmente expressos)
+    \item $k$ = genes no conjunto que estão na via
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Ferramentas}
+DAVID, Enrichr, g:Profiler, clusterProfiler, GSEA
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Gene Set Enrichment Analysis (GSEA)}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Vantagem sobre ORA:}
+\begin{itemize}
+    \item Usa ranking completo de genes
+    \item Não requer threshold arbitrário
+    \item Detecta mudanças coordenadas sutis
+    \item Considera magnitude das mudanças
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Procedimento:}
+\begin{enumerate}
+    \item Rankear genes (fold-change, t-statistic)
+    \item Calcular Enrichment Score (ES)
+    \item Permutar para p-valor
+    \item Corrigir para múltiplos testes (FDR)
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % GSEA plot
+    \draw[->] (0,0) -- (6,0) node[right] {Genes (ranked)};
+    \draw[->] (0,0) -- (0,3) node[above] {ES};
+
+    % Enrichment curve
+    \draw[thick, azulescuro, domain=0:6, samples=50] plot (\x, {1.5 + 0.8*sin(180*\x/3)});
+
+    % Gene set hits
+    \foreach \x in {0.5, 1.0, 1.2, 1.5, 1.8, 2.2} {
+        \draw[red, thick] (\x,0) -- (\x,0.3);
+    }
+
+    % Labels
+    \node[below, font=\tiny] at (1,0) {Alta expr.};
+    \node[below, font=\tiny] at (5,0) {Baixa expr.};
+    \node[left, font=\tiny] at (0,2.3) {ES$_{max}$};
+
+    % Enrichment peak
+    \draw[dashed] (0,2.3) -- (1.8,2.3);
+    \draw[dashed] (1.8,0) -- (1.8,2.3);
+    \node[circle, fill=red, inner sep=1pt] at (1.8,2.3) {};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+
+\textbf{Interpretação:}
+\begin{itemize}
+    \item ES positivo: via ativada
+    \item ES negativo: via reprimida
+    \item Magnitude: força do enriquecimento
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Reconstrução de Redes a partir de Multi-Ômicos}
+\begin{block}{Abordagens de Reconstrução}
+\begin{enumerate}
+    \item \textbf{Correlação:} Pearson, Spearman
+    \begin{itemize}
+        \item Simples, rápido
+        \item Não distingue correlação direta vs indireta
+    \end{itemize}
+
+    \item \textbf{Correlação Parcial:} controla co-variáveis
+    \begin{equation*}
+    \rho_{XY|Z} = \frac{\rho_{XY} - \rho_{XZ}\rho_{YZ}}{\sqrt{(1-\rho_{XZ}^2)(1-\rho_{YZ}^2)}}
+    \end{equation*}
+
+    \item \textbf{Informação Mútua:}
+    \begin{equation*}
+    I(X;Y) = \sum_x\sum_y p(x,y)\log\frac{p(x,y)}{p(x)p(y)}
+    \end{equation*}
+
+    \item \textbf{Graphical LASSO:} inferência de grafos Gaussianos
+    \item \textbf{Redes Bayesianas:} aprendem causalidade
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Detecção de Módulos e Clustering}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Métodos de Clustering:}
+\begin{itemize}
+    \item \textbf{K-means:} clusters esféricos
+    \item \textbf{Hierárquico:} dendrograma
+    \item \textbf{DBSCAN:} baseado em densidade
+    \item \textbf{Louvain:} modularidade em grafos
+    \item \textbf{Spectral:} autovalores da matriz de adjacência
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{block}{Modularidade}
+\begin{equation*}
+Q = \frac{1}{2m}\sum_{ij}\left[A_{ij} - \frac{k_i k_j}{2m}\right]\delta(c_i, c_j)
+\end{equation*}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Network with modules
+    % Module 1
+    \node[draw, circle, fill=azulclaro!50, font=\tiny] (a1) at (0,2) {G1};
+    \node[draw, circle, fill=azulclaro!50, font=\tiny] (a2) at (1,2.5) {G2};
+    \node[draw, circle, fill=azulclaro!50, font=\tiny] (a3) at (1,1.5) {G3};
+
+    \draw[thick] (a1) -- (a2);
+    \draw[thick] (a1) -- (a3);
+    \draw[thick] (a2) -- (a3);
+
+    % Module 2
+    \node[draw, circle, fill=verdeacido!50, font=\tiny] (b1) at (3,2) {G4};
+    \node[draw, circle, fill=verdeacido!50, font=\tiny] (b2) at (4,2.5) {G5};
+    \node[draw, circle, fill=verdeacido!50, font=\tiny] (b3) at (4,1.5) {G6};
+
+    \draw[thick] (b1) -- (b2);
+    \draw[thick] (b1) -- (b3);
+    \draw[thick] (b2) -- (b3);
+
+    % Module 3
+    \node[draw, circle, fill=laranjacel!50, font=\tiny] (c1) at (2,0) {G7};
+    \node[draw, circle, fill=laranjacel!50, font=\tiny] (c2) at (3,0) {G8};
+
+    \draw[thick] (c1) -- (c2);
+
+    % Inter-module edges
+    \draw[dashed, thin] (a3) -- (b1);
+    \draw[dashed, thin] (b3) -- (c1);
+
+    % Labels
+    \node[below, font=\tiny] at (0.5,3) {Módulo 1};
+    \node[below, font=\tiny] at (3.5,3) {Módulo 2};
+    \node[below, font=\tiny] at (2.5,-0.5) {Módulo 3};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Identificar processos biológicos
+    \item Co-regulação
+    \item Predição de função
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\exemplo{Módulo de Resposta ao Estresse}{
+Genes co-expressos: HSP, TPS, CTT, SSA - todos regulados por Msn2/4
+}
+\end{frame}
+
+\begin{frame}{Identificação de Reguladores e Hubs}
+\begin{block}{Métricas de Centralidade}
+\begin{itemize}
+    \item \textbf{Grau (Degree):} número de conexões
+    \begin{equation*}
+    k_i = \sum_j A_{ij}
+    \end{equation*}
+
+    \item \textbf{Betweenness:} fração de caminhos mais curtos que passam pelo nó
+    \begin{equation*}
+    C_B(i) = \sum_{s \neq i \neq t} \frac{\sigma_{st}(i)}{\sigma_{st}}
+    \end{equation*}
+
+    \item \textbf{Closeness:} proximidade média a outros nós
+    \begin{equation*}
+    C_C(i) = \frac{n-1}{\sum_j d(i,j)}
+    \end{equation*}
+
+    \item \textbf{Eigenvector:} conectado a nós importantes
+    \item \textbf{PageRank:} variante de eigenvector centralidade
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Análise Dinâmica de Redes}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Redes que Mudam no Tempo:}
+\begin{itemize}
+    \item Topologia varia com condições
+    \item Arestas aparecem/desaparecem
+    \item Pesos mudam
+    \item Módulos se reorganizam
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Métodos:}
+\begin{itemize}
+    \item Time-lagged correlation
+    \item Dynamic Bayesian Networks
+    \item Graphical Granger causality
+    \item Sliding window analysis
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Time series of networks
+    \node[font=\tiny] at (0,3) {t = 0};
+    \node[draw, circle, fill=azulclaro!50, minimum size=0.3cm] (t0a) at (0,2) {};
+    \node[draw, circle, fill=azulclaro!50, minimum size=0.3cm] (t0b) at (0.8,2) {};
+    \node[draw, circle, fill=azulclaro!50, minimum size=0.3cm] (t0c) at (0.4,1.2) {};
+    \draw[thick] (t0a) -- (t0b);
+
+    \node[font=\tiny] at (2.5,3) {t = 30 min};
+    \node[draw, circle, fill=laranjacel!50, minimum size=0.4cm] (t1a) at (2.5,2) {};
+    \node[draw, circle, fill=laranjacel!50, minimum size=0.3cm] (t1b) at (3.3,2) {};
+    \node[draw, circle, fill=laranjacel!50, minimum size=0.3cm] (t1c) at (2.9,1.2) {};
+    \draw[thick] (t1a) -- (t1b);
+    \draw[thick] (t1a) -- (t1c);
+    \draw[thick] (t1b) -- (t1c);
+
+    \node[font=\tiny] at (5,3) {t = 60 min};
+    \node[draw, circle, fill=verdeacido!50, minimum size=0.6cm] (t2a) at (5,2) {};
+    \node[draw, circle, fill=verdeacido!50, minimum size=0.5cm] (t2b) at (5.8,2) {};
+    \node[draw, circle, fill=verdeacido!50, minimum size=0.4cm] (t2c) at (5.4,1.2) {};
+    \draw[ultra thick] (t2a) -- (t2b);
+    \draw[ultra thick] (t2a) -- (t2c);
+    \draw[thick] (t2b) -- (t2c);
+
+    % Arrows showing time
+    \draw[->, thick] (1,1.5) -- (1.8,1.5);
+    \draw[->, thick] (3.5,1.5) -- (4.3,1.5);
+
+    \node[below, font=\tiny, text width=2cm, align=center] at (3,-0.2) {Resposta ao estresse térmico};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+
+\importante{
+Redes dinâmicas revelam sequência temporal de eventos regulatórios.
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo Python: Análise de Redes com NetworkX}
+\begin{lstlisting}[language=Python, caption=Construção e análise de rede multi-ômica, basicstyle=\ttfamily\scriptsize]
+import networkx as nx
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+
+# Construir rede de correlacao
+def build_correlation_network(data, threshold=0.7):
+    """Cria rede baseada em correlacoes"""
+    G = nx.Graph()
+
+    # Adicionar nos
+    for gene in data.index:
+        G.add_node(gene)
+
+    # Adicionar arestas (correlacoes significativas)
+    for i, gene1 in enumerate(data.index):
+        for gene2 in data.index[i+1:]:
+            r, p = pearsonr(data.loc[gene1], data.loc[gene2])
+            if abs(r) > threshold and p < 0.05:
+                G.add_edge(gene1, gene2, weight=abs(r))
+
+    return G
+
+# Analisar centralidade
+def analyze_network(G):
+    """Calcula metricas de centralidade"""
+    degree_cent = nx.degree_centrality(G)
+    between_cent = nx.betweenness_centrality(G)
+    close_cent = nx.closeness_centrality(G)
+
+    # Identificar hubs (top 10% degree)
+    threshold = sorted(degree_cent.values())[-len(G)//10]
+    hubs = [node for node, cent in degree_cent.items()
+            if cent >= threshold]
+
+    return degree_cent, between_cent, close_cent, hubs
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Análise de Enriquecimento com Python}
+\begin{lstlisting}[language=Python, caption=GSEA com gseapy, basicstyle=\ttfamily\scriptsize]
+import gseapy as gp
+import pandas as pd
+
+# Dados de expressao diferencial
+de_genes = pd.read_csv('diff_expr.csv')
+de_genes = de_genes.sort_values('log2FC', ascending=False)
+
+# Criar ranking
+gene_rank = de_genes.set_index('gene')['log2FC'].to_dict()
+
+# Executar GSEA pre-ranked
+gsea_results = gp.prerank(
+    rnk=gene_rank,
+    gene_sets='KEGG_2021_Human',  # banco de vias
+    processes=4,
+    permutation_num=1000,
+    outdir='gsea_output',
+    format='png',
+    seed=42
+)
+
+# Vias significativamente enriquecidas
+enriched_pathways = gsea_results.res2d[
+    gsea_results.res2d['FDR q-val'] < 0.05
+]
+
+print(f"Vias enriquecidas: {len(enriched_pathways)}")
+print(enriched_pathways[['Term', 'ES', 'NES', 'FDR q-val']].head(10))
+
+# Over-representation analysis (ORA)
+enrich_ora = gp.enrichr(
+    gene_list=de_genes[de_genes['padj'] < 0.05]['gene'].tolist(),
+    gene_sets='GO_Biological_Process_2021',
+    organism='Yeast',
+    outdir='enrichr_output'
+)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: MODELAGEM DE SISTEMAS INTEGRADOS
+% ============================================================================
+\section{Modelagem de Sistemas Integrados}
+
+\begin{frame}{Modelos de Escala Genômica com Restrições Ômicas}
+\definicao{Genome-Scale Model (GEM)}{
+Reconstrução matemática do metabolismo completo de um organismo, incluindo todas as reações conhecidas, genes e estequiometria.
+}
+
+\begin{block}{Integração de Dados de Expressão}
+\begin{itemize}
+    \item \textbf{E-Flux:} usar níveis de expressão como proxy para capacidades enzimáticas
+    \begin{equation*}
+    v_{max,i} \propto \text{expression}_i
+    \end{equation*}
+
+    \item \textbf{GIMME:} minimizar diferenças entre fluxos e expressão
+    \begin{equation*}
+    \min \sum_i |v_i - v_i^{target}| \quad \text{s.t.} \quad Sv = 0
+    \end{equation*}
+
+    \item \textbf{iMAT:} maximizar consistência com dados binários (on/off)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Constraint-Based Modeling com Transcriptômica}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Análise de Balanço de Fluxos (FBA):}
+\begin{align*}
+\max_v \quad & c^T v \\
+\text{s.t.} \quad & Sv = 0 \\
+& lb \leq v \leq ub
+\end{align*}
+
+\vspace{0.2cm}
+
+\textbf{Com dados de expressão:}
+\begin{itemize}
+    \item Ajustar $lb$ e $ub$ baseado em níveis de mRNA
+    \item Genes altamente expressos: $ub$ alto
+    \item Genes não-expressos: $v = 0$
+    \item Genes intermediários: $ub$ proporcional
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % FBA concept
+    \node[font=\tiny, above] at (2,4) {\textbf{Espaço de Soluções}};
+
+    % Feasible region
+    \fill[azulclaro!20] (0,0) -- (4,0) -- (4,3) -- (0,3) -- cycle;
+
+    % Expression constraints
+    \fill[verdeacido!40] (0.5,0.5) -- (3.5,0.5) -- (3.5,2.5) -- (0.5,2.5) -- cycle;
+
+    % Optimal solution
+    \node[circle, fill=red, inner sep=2pt, label=right:{Ótimo}] at (3,2) {};
+
+    % Axes
+    \draw[->] (0,0) -- (4.5,0) node[right, font=\tiny] {$v_1$};
+    \draw[->] (0,0) -- (0,3.5) node[above, font=\tiny] {$v_2$};
+
+    % Labels
+    \node[below, font=\tiny, text width=2cm, align=center] at (2,-0.5) {FBA padrão};
+    \node[below, font=\tiny, text width=2cm, align=center] at (2,1.5) {Com expressão};
+
+    % Arrows
+    \draw[->, thick, red] (3.8,2.5) -- (3,2);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+
+\importante{
+Dados de expressão restringem espaço de soluções, melhorando predições.
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelos Cinéticos com Proteômica/Metabolômica}
+\begin{block}{Integração Multi-Nível}
+\begin{itemize}
+    \item \textbf{Proteômica:} concentrações enzimáticas ($[E]$)
+    \item \textbf{Metabolômica:} concentrações de substratos/produtos ($[S]$, $[P]$)
+    \item \textbf{Fluxômica:} fluxos metabólicos ($v$)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{block}{Modelo Cinético Integrado}
+Para cada reação $i$:
+\begin{equation*}
+v_i = [E_i] \cdot k_{cat,i} \cdot \frac{[S_i]}{K_m^S + [S_i]} \cdot \left(1 - \frac{[P_i]}{[S_i]K_{eq,i}}\right)
+\end{equation*}
+
+Sistema de EDOs:
+\begin{equation*}
+\frac{d[S_i]}{dt} = \sum_j s_{ij}v_j
+\end{equation*}
+
+onde $s_{ij}$ é o coeficiente estequiométrico.
+\end{block}
+
+\vspace{0.2cm}
+
+\destaque{
+Dados proteômicos e metabolômicos fornecem valores absolutos para parametrização!
+}
+\end{frame}
+
+\begin{frame}{Abordagens de Modelagem Híbrida}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Combinando Diferentes Formalismos:}
+\begin{enumerate}
+    \item \textbf{FBA + ODEs:}
+    \begin{itemize}
+        \item FBA para metabolismo central
+        \item ODEs para regulação
+    \end{itemize}
+
+    \item \textbf{Estocástico + Determinístico:}
+    \begin{itemize}
+        \item Gillespie para expressão gênica
+        \item ODEs para metabolismo
+    \end{itemize}
+
+    \item \textbf{Multi-escala:}
+    \begin{itemize}
+        \item Molecular (ms)
+        \item Celular (min-h)
+        \item População (h-dias)
+    \end{itemize}
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Hybrid model structure
+    \node[draw, rectangle, fill=roxodna!30, text width=2cm, align=center, font=\tiny] at (0,3) {Regulação\\Gênica\\(ODE)};
+
+    \node[draw, rectangle, fill=laranjacel!30, text width=2cm, align=center, font=\tiny] at (0,1.5) {Tradução\\(Estocástico)};
+
+    \node[draw, rectangle, fill=verdeacido!30, text width=2cm, align=center, font=\tiny] at (0,0) {Metabolismo\\(FBA)};
+
+    % Connections
+    \draw[<->, thick] (0,2.7) -- (0,1.8);
+    \draw[<->, thick] (0,1.2) -- (0,0.3);
+
+    % Time scales
+    \node[right, font=\tiny] at (2.5,3) {Escala: min-h};
+    \node[right, font=\tiny] at (2.5,1.5) {Escala: seg-min};
+    \node[right, font=\tiny] at (2.5,0) {Escala: steady-state};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+
+\begin{exampleblock}{Vantagens}
+\begin{itemize}
+    \item Captura múltiplas escalas
+    \item Usa melhor formalismo para cada nível
+    \item Mais realista
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Validação com Dados Independentes}
+\begin{block}{Estratégias de Validação}
+\begin{enumerate}
+    \item \textbf{Hold-out:} treinar em 70\%, testar em 30\%
+    \item \textbf{Validação cruzada:} k-fold (k=5 ou 10)
+    \item \textbf{Leave-one-out:} para datasets pequenos
+    \item \textbf{Validação temporal:} treinar em tempo $t$, validar em $t+\Delta t$
+    \item \textbf{Validação experimental:} perturbações independentes
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tipos de Dados para Validação:}
+\begin{itemize}
+    \item Mutantes deletados
+    \item Superexpressões
+    \item Diferentes condições nutricionais
+    \item Resposta a drogas
+    \item Dados de literatura
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Métricas de Performance:}
+\begin{itemize}
+    \item Acurácia de predição
+    \item Correlação observado vs predito
+    \item Erro médio absoluto
+    \item Sensibilidade/especificidade
+    \item AUC-ROC
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo Python: FBA Integrado com Transcriptômica}
+\begin{lstlisting}[language=Python, caption=FBA com restrições de expressão usando COBRApy, basicstyle=\ttfamily\scriptsize]
+import cobra
+import pandas as pd
+
+# Carregar modelo genome-scale
+model = cobra.io.read_sbml_model('iMM904.xml')  # S. cerevisiae
+
+# Carregar dados de expressao (RNA-seq)
+expression_data = pd.read_csv('expression_stress.csv', index_col=0)
+expression_data = expression_data / expression_data.max()  # normalizar 0-1
+
+# Integrar dados de expressao (metodo E-Flux)
+def integrate_expression(model, expression, percentile=25):
+    """Ajusta bounds baseado em expressao"""
+    for reaction in model.reactions:
+        # Encontrar genes associados
+        genes = reaction.genes
+
+        if len(genes) > 0:
+            # Media de expressao dos genes
+            gene_expr = [expression.get(g.id, 0.5) for g in genes]
+            avg_expr = sum(gene_expr) / len(gene_expr)
+
+            # Ajustar upper bound
+            if avg_expr < percentile/100:
+                # Gene pouco expresso: bloquear reacao
+                reaction.upper_bound = 0
+                reaction.lower_bound = 0
+            else:
+                # Escalar bound pela expressao
+                original_ub = reaction.upper_bound
+                if original_ub > 0:
+                    reaction.upper_bound = original_ub * avg_expr
+
+# Aplicar restricoes de expressao
+integrate_expression(model, expression_data)
+
+# Executar FBA
+solution = model.optimize()
+print(f"Taxa de crescimento predita: {solution.objective_value:.3f}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Modelo Híbrido: Regulação + Metabolismo}
+\begin{lstlisting}[language=Python, caption=Modelo híbrido simples, basicstyle=\ttfamily\scriptsize]
+import numpy as np
+from scipy.integrate import odeint
+import cobra
+
+def hybrid_model(y, t, model, params):
+    """Modelo hibrido: ODE para regulacao + FBA para metabolismo"""
+    mRNA, protein = y
+    k_trans, k_transl, delta_mRNA, delta_prot = params
+
+    # Parte 1: Regulacao genica (ODE)
+    stress = 1.0 if t < 60 else 0.0  # estresse nos primeiros 60 min
+
+    dmRNA_dt = k_trans * stress - delta_mRNA * mRNA
+    dprotein_dt = k_transl * mRNA - delta_prot * protein
+
+    # Parte 2: Ajustar metabolismo baseado em nivel proteico
+    # Exemplo: protein = TPS1, afeta fluxo de trealose
+    for rxn in model.reactions:
+        if 'TPS1' in rxn.id:
+            # Escalar capacidade pela abundancia proteica
+            rxn.upper_bound = 10.0 * protein
+
+    # Resolver FBA
+    try:
+        solution = model.optimize()
+        growth_rate = solution.objective_value
+        trehalose_flux = solution.fluxes.get('TPS1_rxn', 0.0)
+    except:
+        growth_rate = 0.0
+        trehalose_flux = 0.0
+
+    # Feedback: trealose afeta transcricao
+    feedback = trehalose_flux / 10.0
+    dmRNA_dt += feedback
+
+    return [dmRNA_dt, dprotein_dt]
+
+# Condicoes iniciais e parametros
+y0 = [1.0, 1.0]
+params = [5.0, 2.0, 0.1, 0.05]
+t = np.linspace(0, 120, 100)
+
+# Simular
+# sol = odeint(hybrid_model, y0, t, args=(model, params))
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1: Correlação Multi-Ômica}
+\begin{block}{Questão 1: Análise de Correlação}
+Dados de transcriptômica e proteômica para 5 genes sob condição de estresse:
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Gene} & \textbf{log$_2$(mRNA)} & \textbf{log$_2$(Proteína)} \\
+\midrule
+\gene{TPS1} & 3.2 & 1.8 \\
+\gene{HSP104} & 4.5 & 2.1 \\
+\gene{CTT1} & 2.8 & 1.5 \\
+\gene{SSA1} & 3.7 & 2.0 \\
+\gene{GLK1} & 0.5 & 0.3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}
+    \item Calcule a correlação de Pearson entre mRNA e proteína
+    \item É estatisticamente significativa?
+    \item Interprete biologicamente o resultado
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2: Enriquecimento de Vias}
+\begin{block}{Questão 2: Teste de Hipergeométrico}
+Em um experimento de estresse oxidativo, 150 genes foram diferencialmente expressos de um total de 6000 genes no genoma. A via de "Resposta ao Estresse Oxidativo" contém 80 genes, e 25 deles estão no conjunto de genes diferencialmente expressos.
+\begin{enumerate}
+    \item Calcule o p-valor usando o teste hipergeométrico
+    \item A via está significativamente enriquecida ($\alpha = 0.05$)?
+    \item Se aplicarmos correção de Bonferroni para 300 vias testadas, ainda é significativa?
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 3: GSEA}
+\begin{enumerate}
+    \item Explique a diferença entre ORA e GSEA
+    \item Por que GSEA pode detectar mudanças sutis que ORA perde?
+    \item Quando você usaria cada método?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3: Construção de Modelos}
+\begin{alertblock}{Questão 4: Projeto - Modelagem Integrada}
+Construa um modelo integrado para a via de glicólise em \textit{S. cerevisiae}:
+\begin{enumerate}
+    \item Baixe dados de RNA-seq, proteômica e metabolômica do GEO
+    \item Identifique genes/proteínas/metabólitos da glicólise
+    \item Construa modelo cinético simplificado (3-5 reações chave)
+    \item Estime parâmetros usando dados experimentais
+    \item Valide o modelo com dados de mutantes
+    \item Simule resposta a mudança de glicose extracelular
+\end{enumerate}
+
+\textbf{Entregáveis:}
+\begin{itemize}
+    \item Código Python documentado
+    \item Gráficos de ajuste e validação
+    \item Análise de sensibilidade de parâmetros
+    \item Relatório interpretando resultados biologicamente
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 4: Análise de Redes}
+\begin{block}{Questão 5: Construção de Rede de Co-expressão}
+Usando dados de RNA-seq de séries temporais (0, 15, 30, 60, 120 min após estresse):
+\begin{enumerate}
+    \item Calcule matriz de correlação entre todos os pares de genes
+    \item Construa rede mantendo correlações $|r| > 0.8$ e $p < 0.01$
+    \item Identifique módulos usando algoritmo de Louvain
+    \item Calcule centralidade de grau, betweenness e closeness
+    \item Identifique top 10 hubs
+    \item Faça análise de enriquecimento GO para cada módulo
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 6: FBA com Restrições}
+\begin{enumerate}
+    \item Carregue modelo genome-scale de \textit{S. cerevisiae} (iMM904)
+    \item Integre dados de expressão usando método E-Flux
+    \item Compare taxa de crescimento predita com/sem restrições
+    \item Identifique reações essenciais sob estresse
+\end{enumerate}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{klipp} Klipp E. et al. (2016). \textit{Systems Biology: A Textbook}, 2nd ed. Wiley-VCH.
+
+\bibitem{palsson} Palsson B.O. (2015). \textit{Systems Biology: Constraint-based Reconstruction and Analysis}. Cambridge University Press.
+
+\bibitem{ideker} Ideker T., Galitski T., Hood L. (2001). A new approach to decoding life: systems biology. \textit{Ann Rev Genomics Hum Genet}, 2:343-372.
+
+\bibitem{hasin} Hasin Y. et al. (2017). Multi-omics approaches to disease. \textit{Genome Biology}, 18:83.
+
+\bibitem{subramanian} Subramanian A. et al. (2005). Gene set enrichment analysis: a knowledge-based approach. \textit{PNAS}, 102(43):15545-15550.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Reviews Multi-Ômicos}
+\begin{itemize}
+    \item Ritchie M.D. et al. (2015). Methods of integrating data to uncover genotype-phenotype interactions. \textit{Nat Rev Genet}.
+    \item Huang S. et al. (2017). More is better: recent progress in multi-omics data integration methods. \textit{Front Genet}.
+    \item Cavill R. et al. (2016). Transcriptomic and metabolomic data integration. \textit{Brief Bioinform}.
+\end{itemize}
+\end{block}
+
+\begin{block}{Bancos de Dados e Ferramentas}
+\begin{itemize}
+    \item \textbf{COBRApy:} \url{https://opencobra.github.io/cobrapy/}
+    \item \textbf{NetworkX:} \url{https://networkx.org}
+    \item \textbf{GSEApy:} \url{https://gseapy.readthedocs.io}
+    \item \textbf{Enrichr:} \url{https://maayanlab.cloud/Enrichr/}
+    \item \textbf{STRING:} \url{https://string-db.org}
+    \item \textbf{KEGG:} \url{https://www.genome.jp/kegg/}
+    \item \textbf{Reactome:} \url{https://reactome.org}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Recursos Online}
+\begin{block}{Tutoriais e Cursos}
+\begin{itemize}
+    \item \textbf{Systems Biology Course (MIT):} \url{https://ocw.mit.edu}
+    \item \textbf{Network Analysis in Systems Biology:} \url{https://www.coursera.org}
+    \item \textbf{Multi-omics Integration:} \url{https://www.ebi.ac.uk/training}
+\end{itemize}
+\end{block}
+
+\begin{block}{Pacotes Python/R}
+\begin{itemize}
+    \item \textbf{Python:} cobra, networkx, gseapy, scanpy, scipy, scikit-learn
+    \item \textbf{R:} clusterProfiler, WGCNA, mixOmics, limma, DESeq2
+\end{itemize}
+\end{block}
+
+\begin{block}{Livros Especializados}
+\begin{itemize}
+    \item Alon U. (2019). \textit{An Introduction to Systems Biology}, 2nd ed.
+    \item Voit E.O. (2017). \textit{A First Course in Systems Biology}, 2nd ed.
+    \item Covert M.W. (2014). \textit{Fundamentals of Systems Biology}.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 11: Integrated Analysis}
+
+\vspace{1cm}
+
+\textbf{Tópicos Abordados:}
+\begin{itemize}
+    \item Integração multi-ômica
+    \item Caso de estudo: ciclo da trealose
+    \item Análise de vias e redes
+    \item Modelagem de sistemas integrados
+\end{itemize}
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

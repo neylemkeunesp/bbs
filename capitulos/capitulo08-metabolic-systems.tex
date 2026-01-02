@@ -1,0 +1,1678 @@
+% ============================================================================
+% CAPÍTULO 8: SISTEMAS METABÓLICOS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 8: Sistemas Metabólicos]{Capítulo 8: Sistemas Metabólicos}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender a estrutura e dinâmica de redes metabólicas
+    \item Modelar cinéticas de reações enzimáticas
+    \item Aplicar análise de fluxo metabólico (MFA)
+    \item Utilizar análise de balanço de fluxo (FBA)
+    \item Interpretar dados metabolômicos
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Por que Estudar Metabolismo?}
+O metabolismo é fundamental para:
+\begin{itemize}
+    \item Produção de energia e biomoléculas
+    \item Engenharia metabólica e biotecnologia
+    \item Compreensão de doenças metabólicas
+    \item Design racional de terapias
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{O Papel Central do Metabolismo}
+\definicao{Metabolismo}{
+Conjunto de reações químicas interconectadas que convertem nutrientes em energia e blocos construtores para crescimento e manutenção celular.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, scale=0.9, transform shape]
+    \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] (nut) {Nutrientes};
+    \node[draw, circle, fill=azulclaro!30, text width=2cm, align=center, right=of nut] (met) {Metabolismo};
+    \node[draw, circle, fill=verdeacido!30, text width=1.5cm, align=center, above right=1cm and 1.5cm of met] (atp) {Energia\\(ATP)};
+    \node[draw, circle, fill=roxodna!30, text width=1.5cm, align=center, below right=1cm and 1.5cm of met] (bio) {Biomassa};
+
+    \draw[->, thick, azulescuro, line width=1.5pt] (nut) -- (met);
+    \draw[->, thick, azulescuro, line width=1.5pt] (met) -- (atp);
+    \draw[->, thick, azulescuro, line width=1.5pt] (met) -- (bio);
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Redes metabólicas são sistemas complexos com milhares de reações interconectadas
+}
+\end{frame}
+
+\begin{frame}{Redes Metabólicas como Sistemas Complexos}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item \textbf{Escala:} centenas a milhares de reações
+    \item \textbf{Conectividade:} altamente interconectadas
+    \item \textbf{Regulação:} múltiplos níveis de controle
+    \item \textbf{Robustez:} redundância e flexibilidade
+    \item \textbf{Otimalidade:} eficiência evolutiva
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Níveis de Análise:}
+\begin{itemize}
+    \item \textbf{Cinética:} dinâmica de reações individuais
+    \item \textbf{Estequiométrica:} balanços de massa
+    \item \textbf{Topológica:} estrutura da rede
+    \item \textbf{Regulatória:} controle de fluxo
+    \item \textbf{Evolutiva:} adaptação e otimização
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Abordagens Computacionais}
+Modelagem cinética, FBA, MFA, análise de modos elementares, metabolômica
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: CINÉTICAS DE REAÇÃO METABÓLICA
+% ============================================================================
+\section{Cinéticas de Reação Metabólica}
+
+\begin{frame}{Visão Geral das Cinéticas Enzimáticas}
+\begin{block}{Por que Modelar Cinéticas?}
+\begin{itemize}
+    \item Predizer comportamento dinâmico de vias metabólicas
+    \item Identificar passos limitantes
+    \item Avaliar estratégias de engenharia metabólica
+    \item Compreender regulação alostérica
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Tipos de Modelos:}
+\begin{itemize}
+    \item Ação de massas
+    \item Michaelis-Menten
+    \item Hill cooperativo
+    \item Convenience kinetics
+    \item GMA/S-systems
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$[S]$};
+    \draw[->] (0,0) -- (0,4) node[above] {$v$};
+
+    % Michaelis-Menten
+    \draw[thick, azulescuro, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3*\x/(1+\x)});
+    \draw[dashed, verdeacido] (0,3) -- (5,3) node[right, font=\tiny] {$V_{max}$};
+    \draw[dashed, laranjacel] (1,0) -- (1,1.5) node[right, font=\tiny] {$K_M$};
+
+    \node[below] at (2.5,-0.3) {\small Michaelis-Menten};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Cinética de Ação de Massas}
+\begin{block}{Lei de Ação de Massas}
+Para uma reação elementar $A + B \xrightarrow{k} C$:
+\begin{equation*}
+v = k[A][B]
+\end{equation*}
+\end{block}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Aplica-se a reações elementares (não-catalisadas)
+    \item Linear em cada reagente
+    \item Base para derivar outras cinéticas
+\end{itemize}
+
+\vspace{0.3cm}
+
+\exemplo{Sistema de Duas Reações}{
+\begin{align*}
+A &\xrightarrow{k_1} B \quad v_1 = k_1[A]\\
+B &\xrightarrow{k_2} C \quad v_2 = k_2[B]
+\end{align*}
+
+Sistema de EDOs:
+\begin{align*}
+\derivada{[A]}{t} &= -k_1[A]\\
+\derivada{[B]}{t} &= k_1[A] - k_2[B]\\
+\derivada{[C]}{t} &= k_2[B]
+\end{align*}
+}
+\end{frame}
+
+\begin{frame}{Cinética de Michaelis-Menten}
+\definicao{Michaelis-Menten}{
+Modelo padrão para catálise enzimática com um substrato:
+\begin{equation*}
+v = \frac{V_{max}[S]}{K_M + [S]}
+\end{equation*}
+onde $V_{max} = k_{cat}[E]_T$ e $K_M = \frac{k_{-1} + k_{cat}}{k_1}$
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Derivação:}
+\begin{equation*}
+E + S \xrightleftharpoons[k_{-1}]{k_1} ES \xrightarrow{k_{cat}} E + P
+\end{equation*}
+
+Hipótese de quasi-estado estacionário:
+\begin{equation*}
+\derivada{[ES]}{t} \approx 0
+\end{equation*}
+
+\column{0.5\textwidth}
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $K_M$: afinidade (baixo $K_M$ = alta afinidade)
+    \item $V_{max}$: capacidade catalítica máxima
+    \item $k_{cat}$: número de turnover
+    \item $k_{cat}/K_M$: eficiência catalítica
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Equação de Hill: Cooperatividade}
+\begin{block}{Cinética de Hill}
+Para enzimas com múltiplos sítios de ligação e cooperatividade:
+\begin{equation*}
+v = \frac{V_{max}[S]^n}{K_0.5^n + [S]^n}
+\end{equation*}
+onde $n$ é o coeficiente de Hill e $K_{0.5}$ é a constante de meia-saturação.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Interpretação de $n$:}
+\begin{itemize}
+    \item $n = 1$: sem cooperatividade (MM)
+    \item $n > 1$: cooperatividade positiva
+    \item $n < 1$: cooperatividade negativa
+\end{itemize}
+
+\exemplo{Hemoglobina}{
+Ligação de O$_2$ tem $n \approx 2.8$ (cooperatividade positiva forte)
+}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.65]
+    \draw[->] (0,0) -- (5,0) node[right] {$[S]$};
+    \draw[->] (0,0) -- (0,4) node[above] {$v$};
+
+    % n=1 (MM)
+    \draw[thick, azulescuro, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3*\x/(1+\x)}) node[right, font=\tiny] {$n=1$};
+
+    % n=3
+    \draw[thick, verdeacido, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3*\x^3/(1+\x^3)}) node[right, font=\tiny] {$n=3$};
+
+    % n=0.5
+    \draw[thick, laranjacel, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3*sqrt(\x)/(1+sqrt(\x))}) node[right, font=\tiny] {$n=0.5$};
+
+    \node[below] at (2.5,-0.3) {\small Comparação};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Michaelis-Menten Reversível}
+\begin{block}{Reação Bidirecional}
+Para reação reversível $S \rightleftharpoons P$:
+\destaque{
+\begin{equation*}
+v = \frac{V_f\frac{[S]}{K_{MS}} - V_r\frac{[P]}{K_{MP}}}{1 + \frac{[S]}{K_{MS}} + \frac{[P]}{K_{MP}}}
+\end{equation*}
+}
+
+onde:
+\begin{itemize}
+    \item $V_f$, $V_r$: velocidades máximas forward e reverse
+    \item $K_{MS}$, $K_{MP}$: constantes de Michaelis para S e P
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Relação com Termodinâmica}
+No equilíbrio ($v = 0$):
+\begin{equation*}
+K_{eq} = \frac{[P]_{eq}}{[S]_{eq}} = \frac{V_f K_{MP}}{V_r K_{MS}}
+\end{equation*}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Convenience Kinetics}
+\begin{block}{Forma Geral}
+Aproximação prática que incorpora inibição por produto e regulação:
+\begin{equation*}
+v = E_T \cdot k_{cat} \cdot \frac{\frac{[S]}{K_S}\left(1 - \frac{[P]}{[S]K_{eq}}\right)}{\left(1 + \frac{[S]}{K_S} + \frac{[P]}{K_P}\right)\left(1 + \sum_i \frac{[I_i]}{K_{Ii}}\right)}
+\end{equation*}
+\end{block}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Termodinamicamente consistente
+    \item Incorpora múltiplos efetores
+    \item Parametrização mais simples que modelos detalhados
+    \item Amplamente usada em modelos de larga escala
+\end{itemize}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Menos mecanística
+    \item Requer ajuste cuidadoso de parâmetros
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Generalized Mass Action (GMA) e S-Systems}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{GMA (Lei de Potência)}
+\begin{equation*}
+v_i = \alpha_i \prod_{j=1}^{n} X_j^{g_{ij}}
+\end{equation*}
+
+\textbf{Sistema GMA:}
+\begin{equation*}
+\derivada{X_i}{t} = \sum_k \alpha_k \prod_j X_j^{g_{kj}} - \sum_l \beta_l \prod_j X_j^{h_{lj}}
+\end{equation*}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{S-Systems}
+Forma especial de GMA:
+\begin{equation*}
+\derivada{X_i}{t} = \alpha_i \prod_{j=1}^{n} X_j^{g_{ij}} - \beta_i \prod_{j=1}^{n} X_j^{h_{ij}}
+\end{equation*}
+
+Separação em:
+\begin{itemize}
+    \item Termo de produção agregado
+    \item Termo de degradação agregado
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+S-systems permitem análise algébrica de estado estacionário e são base da Biochemical Systems Theory (BST)
+}
+\end{frame}
+
+\begin{frame}{Comparação de Formalismos Cinéticos}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Tipo} & \textbf{Complexidade} & \textbf{Mecanística} & \textbf{Parametrização} \\
+\midrule
+Ação de massas & Baixa & Alta & Fácil \\
+Michaelis-Menten & Média & Alta & Média \\
+Hill & Média & Média & Média \\
+Convenience & Alta & Média & Difícil \\
+GMA/S-systems & Média & Baixa & Difícil \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Escolha do Modelo}
+\begin{itemize}
+    \item \textbf{Pequenas vias detalhadas}: Michaelis-Menten, Hill
+    \item \textbf{Vias de médio porte}: Convenience kinetics
+    \item \textbf{Análise de estado estacionário}: S-systems, FBA
+    \item \textbf{Modelos de genoma completo}: FBA (sem cinética)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Cinética de Michaelis-Menten}
+\begin{lstlisting}[language=Python, caption=Modelo cinético simples]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def michaelis_menten(S, t, Vmax, Km, k_deg):
+    """
+    Modelo simples: S -> P com MM kinetics
+    S: substrato, P: produto
+    """
+    v = Vmax * S / (Km + S)
+    dSdt = -v - k_deg * S  # consumo + degradacao
+    return dSdt
+
+# Parametros
+Vmax = 10.0   # umol/min
+Km = 2.0      # mM
+k_deg = 0.1   # 1/min
+
+# Condicao inicial
+S0 = 20.0     # mM
+
+# Tempo
+t = np.linspace(0, 50, 500)
+
+# Resolver
+S = odeint(michaelis_menten, S0, t, args=(Vmax, Km, k_deg))
+
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.plot(t, S, 'b-', linewidth=2, label='[S](t)')
+plt.xlabel('Tempo (min)', fontsize=12)
+plt.ylabel('Concentracao [S] (mM)', fontsize=12)
+plt.title('Cinetica de Michaelis-Menten', fontsize=14)
+plt.legend()
+plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Via Metabólica Simples}
+\begin{lstlisting}[language=Python, caption=Via de três passos, basicstyle=\ttfamily\footnotesize]
+def metabolic_pathway(y, t, params):
+    """
+    Via metabolica: A -> B -> C -> D
+    y = [A, B, C, D]
+    """
+    A, B, C, D = y
+    Vmax1, Km1, Vmax2, Km2, Vmax3, Km3 = params
+
+    # Reacoes com MM kinetics
+    v1 = Vmax1 * A / (Km1 + A)
+    v2 = Vmax2 * B / (Km2 + B)
+    v3 = Vmax3 * C / (Km3 + C)
+
+    # EDOs
+    dAdt = -v1
+    dBdt = v1 - v2
+    dCdt = v2 - v3
+    dDdt = v3
+
+    return [dAdt, dBdt, dCdt, dDdt]
+
+# Parametros [Vmax1, Km1, Vmax2, Km2, Vmax3, Km3]
+params = [10.0, 1.0, 8.0, 1.5, 5.0, 2.0]
+
+# Condicoes iniciais [A0, B0, C0, D0]
+y0 = [50.0, 0.0, 0.0, 0.0]
+
+# Simular
+t = np.linspace(0, 20, 500)
+sol = odeint(metabolic_pathway, y0, t, args=(params,))
+
+# Plotar todas as especies
+plt.plot(t, sol[:, 0], 'b-', label='A', linewidth=2)
+plt.plot(t, sol[:, 1], 'r-', label='B', linewidth=2)
+plt.plot(t, sol[:, 2], 'g-', label='C', linewidth=2)
+plt.plot(t, sol[:, 3], 'm-', label='D', linewidth=2)
+plt.legend()
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: ANÁLISE DE FLUXO METABÓLICO (MFA)
+% ============================================================================
+\section{Análise de Fluxo Metabólico (MFA)}
+
+\begin{frame}{Análise de Fluxo Metabólico (MFA)}
+\definicao{Metabolic Flux Analysis (MFA)}{
+Técnica experimental e computacional para determinar taxas de reação (fluxos) em uma rede metabólica usando dados de medições e balanços de massa.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Princípios Fundamentais}
+\begin{itemize}
+    \item \textbf{Conservação de massa:} entrada = saída + acúmulo
+    \item \textbf{Estado pseudo-estacionário:} metabólitos intracelulares constantes
+    \item \textbf{Medições externas:} taxas de consumo/produção
+    \item \textbf{Marcação isotópica:} rastreamento de carbono-13
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Aplicações}
+Engenharia metabólica, identificação de gargalos, otimização de bioprocessos
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Representação Estequiométrica}
+\begin{block}{Matriz Estequiométrica $\mathbf{S}$}
+Representa a topologia da rede:
+\begin{itemize}
+    \item Linhas: metabólitos ($m$)
+    \item Colunas: reações ($n$)
+    \item $S_{ij}$: coeficiente estequiométrico do metabólito $i$ na reação $j$
+\end{itemize}
+\end{block}
+
+\exemplo{Rede Simples}{
+Reações:
+\begin{align*}
+v_1&: \quad A \rightarrow B\\
+v_2&: \quad B \rightarrow C\\
+v_3&: \quad B \rightarrow D
+\end{align*}
+
+Matriz estequiométrica:
+\begin{equation*}
+\mathbf{S} = \begin{bmatrix}
+-1 & 0 & 0 \\
+1 & -1 & -1 \\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\begin{matrix}
+\leftarrow A\\
+\leftarrow B\\
+\leftarrow C\\
+\leftarrow D
+\end{matrix}
+\end{equation*}
+}
+\end{frame}
+
+\begin{frame}{Balanço de Massa}
+\begin{block}{Equação de Balanço}
+Para cada metabólito intracelular:
+\destaque{
+\begin{equation*}
+\derivada{\vect{c}}{t} = \mathbf{S} \cdot \vect{v}
+\end{equation*}
+}
+
+onde:
+\begin{itemize}
+    \item $\vect{c}$: vetor de concentrações ($m \times 1$)
+    \item $\mathbf{S}$: matriz estequiométrica ($m \times n$)
+    \item $\vect{v}$: vetor de fluxos ($n \times 1$)
+\end{itemize}
+\end{block}
+
+\begin{block}{Hipótese de Estado Estacionário}
+Assumindo $\derivada{\vect{c}}{t} \approx \vect{0}$:
+\begin{equation*}
+\mathbf{S} \cdot \vect{v} = \vect{0}
+\end{equation*}
+
+Sistema de equações algébricas lineares!
+\end{block}
+\end{frame}
+
+\begin{frame}{Determinação de Fluxos}
+\begin{block}{Sistema Subdeterminado}
+Tipicamente, $n > m$ (mais fluxos que metabólitos):
+\begin{itemize}
+    \item Sistema com infinitas soluções
+    \item Espaço nulo de $\mathbf{S}$ não-trivial
+    \item Requer medições adicionais
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\textbf{Estratégias:}
+\begin{enumerate}
+    \item \textbf{Medições diretas:} taxas de consumo/produção extracelular
+    \item \textbf{Marcação isotópica:} $^{13}$C-MFA
+    \item \textbf{Restrições adicionais:} razões de fluxo, irreversibilidade
+    \item \textbf{Otimização:} minimizar função objetivo
+\end{enumerate}
+
+\importante{
+$^{13}$C-MFA usa padrões de marcação para resolver ambiguidades
+}
+\end{frame}
+
+\begin{frame}{$^{13}$C-MFA: Conceito}
+\begin{block}{Metabolic Flux Analysis com $^{13}$C}
+\begin{itemize}
+    \item Alimentar células com substrato marcado (e.g., $[1,2\text{-}^{13}$C]glicose)
+    \item Medir distribuição de marcação em metabólitos via MS ou NMR
+    \item Simular propagação de marcação pela rede
+    \item Ajustar fluxos para reproduzir padrões experimentais
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Informação Adicional:}
+\begin{itemize}
+    \item Direção de fluxos reversíveis
+    \item Fluxos em vias paralelas
+    \item Ciclos e recirculação
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7, every node/.style={font=\tiny}]
+    \node[draw, circle, fill=verdeacido!30] (glc) at (0,0) {$^{13}$C-Glc};
+    \node[draw, circle, fill=azulclaro!20] (g6p) at (2,0) {G6P};
+    \node[draw, circle, fill=azulclaro!20] (pyr) at (2,-2) {Pyr};
+    \node[draw, circle, fill=azulclaro!20] (accoa) at (4,-2) {AcCoA};
+
+    \draw[->, thick] (glc) -- (g6p);
+    \draw[->, thick] (g6p) -- (pyr);
+    \draw[->, thick] (pyr) -- (accoa);
+
+    \node[right, font=\scriptsize] at (4.5,-1) {$^{13}$C label\\tracking};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Metodologia de $^{13}$C-MFA}
+\begin{enumerate}
+    \item \textbf{Design experimental}
+    \begin{itemize}
+        \item Escolher substrato marcado apropriado
+        \item Cultivar células em estado estacionário
+        \item Medir taxas extracelulares e padrões de marcação
+    \end{itemize}
+
+    \item \textbf{Modelo de rede}
+    \begin{itemize}
+        \item Definir topologia metabólica
+        \item Mapear transições atômicas
+        \item Estabelecer equações de balanço
+    \end{itemize}
+
+    \item \textbf{Simulação de marcação}
+    \begin{itemize}
+        \item Calcular distribuição de marcação para fluxos dados
+        \item Usar modelos de isotopômeros ou cumômeros
+    \end{itemize}
+
+    \item \textbf{Estimação de fluxos}
+    \begin{itemize}
+        \item Minimizar desvio entre dados simulados e experimentais
+        \item Usar mínimos quadrados ponderados
+        \item Análise de incerteza estatística
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Exemplo de MFA: Rede Simples}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Rede:}
+\begin{align*}
+v_1&: A_{ext} \rightarrow A\\
+v_2&: A \rightarrow B\\
+v_3&: B \rightarrow C\\
+v_4&: B \rightarrow D\\
+v_5&: C \rightarrow C_{ext}\\
+v_6&: D \rightarrow D_{ext}
+\end{align*}
+
+\textbf{Balanços (steady-state):}
+\begin{align*}
+A&: v_1 - v_2 = 0\\
+B&: v_2 - v_3 - v_4 = 0\\
+C&: v_3 - v_5 = 0\\
+D&: v_4 - v_6 = 0
+\end{align*}
+
+\column{0.5\textwidth}
+\textbf{Medições:}
+\begin{itemize}
+    \item $v_1 = 10$ (uptake de A)
+    \item $v_5 = 6$ (produção de C)
+    \item $v_6 = 4$ (produção de D)
+\end{itemize}
+
+\textbf{Solução:}
+\begin{align*}
+v_1 &= 10\\
+v_2 &= 10\\
+v_3 &= 6\\
+v_4 &= 4\\
+v_5 &= 6\\
+v_6 &= 4
+\end{align*}
+
+Sistema completamente determinado!
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: MFA Básico}
+\begin{lstlisting}[language=Python, caption=Resolução de fluxos por balanço de massa]
+import numpy as np
+from scipy.linalg import lstsq
+
+# Matriz estequiometrica
+# Metabolitos: A, B, C, D (internos)
+# Reacoes: v1, v2, v3, v4, v5, v6
+S = np.array([
+    [ 1, -1,  0,  0,  0,  0],  # A
+    [ 0,  1, -1, -1,  0,  0],  # B
+    [ 0,  0,  1,  0, -1,  0],  # C
+    [ 0,  0,  0,  1,  0, -1]   # D
+])
+
+# Medicoes: v1=10, v5=6, v6=4
+# Reordenar: fluxos medidos vs nao-medidos
+# Fluxos nao-medidos: v2, v3, v4
+# S*v = 0 => S_unmeas*v_unmeas = -S_meas*v_meas
+
+S_meas = S[:, [0, 4, 5]]      # colunas v1, v5, v6
+S_unmeas = S[:, [1, 2, 3]]    # colunas v2, v3, v4
+v_meas = np.array([10, 6, 4])
+
+# Resolver S_unmeas * v_unmeas = -S_meas * v_meas
+b = -S_meas @ v_meas
+v_unmeas, residuals, rank, s = lstsq(S_unmeas, b)
+
+# Reconstruir vetor completo
+v_all = np.zeros(6)
+v_all[[0, 4, 5]] = v_meas
+v_all[[1, 2, 3]] = v_unmeas
+
+print("Fluxos calculados:")
+for i, flux in enumerate(v_all, 1):
+    print(f"v{i} = {flux:.2f}")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: ANÁLISE DE BALANÇO DE FLUXO (FBA)
+% ============================================================================
+\section{Análise de Balanço de Fluxo (FBA)}
+
+\begin{frame}{Análise de Balanço de Fluxo (FBA)}
+\definicao{Flux Balance Analysis (FBA)}{
+Método computacional baseado em otimização linear para predizer fluxos metabólicos em redes de escala genômica, sem requerer parâmetros cinéticos.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Características}
+\begin{itemize}
+    \item \textbf{Baseada em restrições:} estequiometria + limites de fluxo
+    \item \textbf{Estado estacionário:} $\mathbf{S} \cdot \vect{v} = \vect{0}$
+    \item \textbf{Função objetivo:} tipicamente maximizar biomassa
+    \item \textbf{Escala genômica:} milhares de reações
+    \item \textbf{Computacionalmente eficiente:} programação linear
+\end{itemize}
+\end{block}
+
+\importante{
+FBA permite análise de metabolismo em escala de sistemas sem conhecer todas as constantes cinéticas
+}
+\end{frame}
+
+\begin{frame}{Modelos Metabólicos de Escala Genômica (GEMs)}
+\begin{block}{Genome-scale Metabolic Models}
+\begin{itemize}
+    \item Reconstruídos a partir de anotação genômica
+    \item Integram conhecimento bioquímico e fisiológico
+    \item Incluem todas as reações conhecidas de um organismo
+    \item Validados contra dados experimentais
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Exemplos de GEMs}
+\begin{itemize}
+    \item \textbf{E. coli:} iJO1366 (2583 reações, 1805 genes)
+    \item \textbf{S. cerevisiae:} Yeast8 (4059 reações, 1150 genes)
+    \item \textbf{H. sapiens:} Recon3D (13543 reações, 3288 genes)
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.2cm}
+
+\begin{center}
+\small
+Disponíveis em: BiGG Models (\url{http://bigg.ucsd.edu})
+\end{center}
+\end{frame}
+
+\begin{frame}{Formulação Matemática de FBA}
+\begin{block}{Problema de Otimização Linear}
+\destaque{
+\begin{align*}
+\text{Maximizar:} \quad & \vect{c}^T \vect{v}\\
+\text{Sujeito a:} \quad & \mathbf{S} \cdot \vect{v} = \vect{0}\\
+& \vect{v}_{min} \leq \vect{v} \leq \vect{v}_{max}
+\end{align*}
+}
+
+onde:
+\begin{itemize}
+    \item $\vect{c}$: vetor de coeficientes da função objetivo
+    \item $\vect{v}$: vetor de fluxos (variáveis)
+    \item $\mathbf{S}$: matriz estequiométrica
+    \item $\vect{v}_{min}$, $\vect{v}_{max}$: limites de fluxo
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Função Objetivo Típica}
+Maximizar crescimento: $c_i = 1$ para reação de biomassa, $c_i = 0$ para outras
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Reação de Biomassa}
+\begin{block}{Pseudo-reação de Crescimento}
+Representa a composição biomolecular da célula:
+\begin{equation*}
+\sum_i a_i \cdot M_i \rightarrow 1 \text{ g biomassa}
+\end{equation*}
+
+onde $M_i$ são precursores (aminoácidos, nucleotídeos, lipídios, etc.)
+\end{block}
+
+\exemplo{Componentes Típicos}{
+\small
+\begin{itemize}
+    \item Proteínas: $\sim$55\%
+    \item RNA: $\sim$20\%
+    \item DNA: $\sim$3\%
+    \item Lipídios: $\sim$9\%
+    \item Carboidratos: $\sim$3\%
+    \item Pequenas moléculas, íons: $\sim$10\%
+\end{itemize}
+}
+
+\importante{
+A maximização de biomassa é apoiada por evidências evolutivas e valida bem contra dados experimentais
+}
+\end{frame}
+
+\begin{frame}{Restrições e Limites de Fluxo}
+\begin{block}{Tipos de Restrições}
+\begin{enumerate}
+    \item \textbf{Termodinâmicas:} irreversibilidade
+    \begin{itemize}
+        \item Reações irreversíveis: $v_i \geq 0$
+        \item Reações reversíveis: $v_{min} \leq v_i \leq v_{max}$
+    \end{itemize}
+
+    \item \textbf{Capacidade enzimática:} $v_i \leq v_{i,max}$
+
+    \item \textbf{Uptake de nutrientes:} taxas medidas experimentalmente
+    \begin{itemize}
+        \item Exemplo: $v_{glucose} = -10$ mmol/gDW/h
+    \end{itemize}
+
+    \item \textbf{ATP de manutenção:} consumo basal de energia
+    \begin{itemize}
+        \item Exemplo: $v_{ATPM} \geq 8.39$ mmol/gDW/h
+    \end{itemize}
+\end{enumerate}
+\end{block}
+
+\textbf{Limites padrão:}
+\begin{itemize}
+    \item Irreversíveis: $0 \leq v_i \leq 1000$
+    \item Reversíveis: $-1000 \leq v_i \leq 1000$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Análise de Variabilidade de Fluxo (FVA)}
+\definicao{Flux Variability Analysis}{
+Determina o intervalo de valores possíveis para cada fluxo enquanto mantém a função objetivo em seu valor ótimo (ou próximo).
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Formulação}
+Para cada reação $j$:
+\begin{align*}
+\text{Minimizar/Maximizar:} \quad & v_j\\
+\text{Sujeito a:} \quad & \mathbf{S} \cdot \vect{v} = \vect{0}\\
+& \vect{v}_{min} \leq \vect{v} \leq \vect{v}_{max}\\
+& \vect{c}^T \vect{v} \geq \gamma \cdot Z_{opt}
+\end{align*}
+
+onde $Z_{opt}$ é o valor objetivo ótimo e $\gamma \in [0,1]$ (tipicamente 0.9-1.0)
+\end{block}
+
+\begin{exampleblock}{Interpretação}
+\begin{itemize}
+    \item Intervalo estreito: fluxo bem determinado
+    \item Intervalo amplo: múltiplas soluções alternativas
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Predição de Essencialidade Gênica}
+\begin{block}{Análise de Gene Knockout}
+Simular deleção de gene removendo reações associadas:
+\begin{enumerate}
+    \item Definir gene-protein-reaction (GPR) associations
+    \item Remover reação(ões) do gene deletado
+    \item Resolver FBA com nova rede
+    \item Comparar crescimento: $\mu_{KO} / \mu_{WT}$
+\end{enumerate}
+\end{block}
+
+\textbf{Classificação:}
+\begin{itemize}
+    \item \textbf{Essencial:} $\mu_{KO} < \epsilon$ (crescimento nulo/mínimo)
+    \item \textbf{Não-essencial:} $\mu_{KO} \approx \mu_{WT}$
+    \item \textbf{Parcialmente essencial:} $0 < \mu_{KO} < \mu_{WT}$
+\end{itemize}
+
+\vspace{0.3cm}
+
+\importante{
+FBA prediz corretamente $\sim$85-90\% dos genes essenciais em E. coli em glicose aeróbica
+}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: FBA com COBRApy}
+\begin{lstlisting}[language=Python, caption=FBA básico com COBRApy]
+import cobra
+from cobra.io import load_model
+
+# Carregar modelo de E. coli
+model = load_model("iJO1366")
+
+print(f"Modelo: {model.id}")
+print(f"Reacoes: {len(model.reactions)}")
+print(f"Metabolitos: {len(model.metabolites)}")
+print(f"Genes: {len(model.genes)}")
+
+# Definir meio de cultura (glicose aerobica)
+model.medium = {
+    "EX_glc__D_e": 10.0,    # glicose
+    "EX_o2_e": 20.0,        # oxigenio
+}
+
+# Resolver FBA
+solution = model.optimize()
+
+print(f"\nStatus: {solution.status}")
+print(f"Taxa de crescimento: {solution.objective_value:.3f} 1/h")
+
+# Fluxos principais
+print("\nFluxos principais:")
+for rxn_id in ["EX_glc__D_e", "EX_o2_e", "EX_co2_e",
+                "EX_h2o_e", "BIOMASS_Ec_iJO1366_core_53p95M"]:
+    flux = solution.fluxes[rxn_id]
+    print(f"  {rxn_id}: {flux:.2f}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: FVA e Gene Knockout}
+\begin{lstlisting}[language=Python, caption=FVA e análise de essencialidade, basicstyle=\ttfamily\footnotesize]
+from cobra.flux_analysis import flux_variability_analysis
+from cobra.flux_analysis import single_gene_deletion
+
+# Flux Variability Analysis
+fva_result = flux_variability_analysis(
+    model,
+    fraction_of_optimum=0.9
+)
+
+# Exibir FVA para reacoes centrais
+print("FVA (90% do otimo):")
+for rxn in ["PGI", "PFK", "FBA", "PYK"]:  # glicolise
+    min_flux = fva_result.loc[rxn, "minimum"]
+    max_flux = fva_result.loc[rxn, "maximum"]
+    print(f"  {rxn}: [{min_flux:.2f}, {max_flux:.2f}]")
+
+# Analise de essencialidade genica
+deletion_results = single_gene_deletion(model)
+
+# Classificar genes
+essential = deletion_results[
+    deletion_results["growth"] < 0.01
+]
+print(f"\nGenes essenciais: {len(essential)}/{len(model.genes)}")
+print("Exemplos:")
+for gene in essential.head(5)["ids"]:
+    print(f"  {gene}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Visualização de Fluxos}
+\begin{lstlisting}[language=Python, caption=Visualizar distribuição de fluxos]
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Obter fluxos da solucao
+fluxes = solution.fluxes
+
+# Selecionar subsistema (ex: glicolise)
+glycolysis = model.groups.get_by_id("Glycolysis")
+glyc_rxns = [rxn.id for rxn in glycolysis.members]
+glyc_fluxes = fluxes[glyc_rxns]
+
+# Plotar
+fig, ax = plt.subplots(figsize=(10, 6))
+glyc_fluxes.sort_values().plot(kind='barh', ax=ax)
+ax.set_xlabel('Fluxo (mmol/gDW/h)')
+ax.set_title('Fluxos na Glicolise')
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+
+# Heatmap de fluxos em multiplas condicoes
+conditions = ["aerobic", "anaerobic", "minimal"]
+flux_matrix = pd.DataFrame()
+
+for condition in conditions:
+    # Configurar condicao e resolver
+    # ... (codigo de configuracao)
+    sol = model.optimize()
+    flux_matrix[condition] = sol.fluxes[glyc_rxns]
+
+# Heatmap
+import seaborn as sns
+plt.figure(figsize=(8, 10))
+sns.heatmap(flux_matrix, cmap='RdBu_r', center=0)
+plt.title('Fluxos em Diferentes Condicoes')
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: MODOS ELEMENTARES E VIAS EXTREMAS
+% ============================================================================
+\section{Modos Elementares e Vias Extremas}
+
+\begin{frame}{Modos Elementares de Fluxo (EFMs)}
+\definicao{Elementary Flux Modes}{
+Conjuntos mínimos de reações que podem operar em estado estacionário, representando vias metabólicas funcionalmente independentes.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Propriedades}
+\begin{itemize}
+    \item \textbf{Estado estacionário:} $\mathbf{S} \cdot \vect{v} = \vect{0}$
+    \item \textbf{Irreversibilidade:} respeitam termodinâmica
+    \item \textbf{Minimalidade:} remoção de qualquer reação quebra o estado estacionário
+    \item \textbf{Geneticamente independentes:} cada EFM é único
+\end{itemize}
+\end{block}
+
+\importante{
+EFMs representam todas as rotas metabólicas possíveis em uma rede. Qualquer distribuição de fluxo pode ser expressa como combinação linear de EFMs.
+}
+\end{frame}
+
+\begin{frame}{Vias Extremas (Extreme Pathways)}
+\definicao{Extreme Pathways}{
+Subconjunto dos EFMs que forma uma base convexa do espaço de fluxos viáveis. São os vetores geradores do cone de fluxos.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Diferenças: EFMs vs Extreme Pathways}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Característica} & \textbf{EFMs} & \textbf{ExPas} \\
+\midrule
+Reversibilidade & Não consideram & Decompõem em irreversível \\
+Número & Maior & Menor \\
+Base matemática & Vetores suporte & Geradores do cone \\
+Interpretação & Vias biológicas & Base convexa \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\textbf{Relação:}
+\begin{itemize}
+    \item Extreme pathways $\subseteq$ Elementary modes
+    \item ExPas formam base minimal, EFMs incluem combinações
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cálculo de EFMs}
+\begin{block}{Algoritmos}
+\begin{enumerate}
+    \item \textbf{Nullspace approach:} Baseado no espaço nulo de $\mathbf{S}$
+    \item \textbf{Double description method:} Construção iterativa
+    \item \textbf{Bit pattern trees:} Eficiente para redes grandes
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Desafio Computacional}
+\begin{itemize}
+    \item Número de EFMs cresce exponencialmente com tamanho da rede
+    \item Redes pequenas: milhares de EFMs
+    \item Redes médias: milhões a bilhões de EFMs
+    \item Genoma completo: computacionalmente intratável
+\end{itemize}
+
+Limitado a sub-redes ($\sim$50-100 reações)
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Interpretação Biológica de EFMs}
+\begin{exampleblock}{Aplicações}
+\begin{itemize}
+    \item \textbf{Identificação de vias:} descobrir rotas metabólicas
+    \item \textbf{Análise de robustez:} redundância funcional
+    \item \textbf{Engenharia metabólica:} alvos de modificação
+    \item \textbf{Análise estrutural:} capacidades metabólicas
+    \item \textbf{Otimalidade:} comparar estratégias metabólicas
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\exemplo{Metabolismo Central}{
+Em E. coli, $\sim$500 EFMs conectam glicose a biomassa, representando estratégias alternativas de:
+\begin{itemize}
+    \item Produção de ATP (respiração vs fermentação)
+    \item Geração de poder redutor (NADPH via PP pathway vs TCA)
+    \item Síntese de precursores biossintéticos
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{Exemplo: Rede Simples}
+\begin{columns}
+\column{0.45\textwidth}
+\textbf{Rede:}
+\begin{center}
+\begin{tikzpicture}[scale=0.8, every node/.style={font=\small}]
+    \node[draw, circle] (A) at (0,0) {A};
+    \node[draw, circle] (B) at (2,1) {B};
+    \node[draw, circle] (C) at (2,-1) {C};
+    \node[draw, circle] (D) at (4,0) {D};
+
+    \draw[->, thick] (-1,0) -- (A) node[midway, above, font=\tiny] {$v_1$};
+    \draw[->, thick] (A) -- (B) node[midway, above left, font=\tiny] {$v_2$};
+    \draw[->, thick] (A) -- (C) node[midway, below left, font=\tiny] {$v_3$};
+    \draw[->, thick] (B) -- (D) node[midway, above right, font=\tiny] {$v_4$};
+    \draw[->, thick] (C) -- (D) node[midway, below right, font=\tiny] {$v_5$};
+    \draw[->, thick] (D) -- (5,0) node[midway, above, font=\tiny] {$v_6$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Reações:}
+\begin{align*}
+v_1&: \rightarrow A\\
+v_2&: A \rightarrow B\\
+v_3&: A \rightarrow C\\
+v_4&: B \rightarrow D\\
+v_5&: C \rightarrow D\\
+v_6&: D \rightarrow
+\end{align*}
+
+\column{0.55\textwidth}
+\textbf{Matriz $\mathbf{S}$:}
+\begin{equation*}
+\begin{bmatrix}
+1 & -1 & -1 & 0 & 0 & 0\\
+0 & 1 & 0 & -1 & 0 & 0\\
+0 & 0 & 1 & 0 & -1 & 0\\
+0 & 0 & 0 & 1 & 1 & -1
+\end{bmatrix}
+\end{equation*}
+
+\textbf{Elementary Flux Modes:}
+\begin{align*}
+\text{EFM}_1&: v_1 = v_2 = v_4 = v_6 = 1, \, v_3 = v_5 = 0\\
+&\text{Via: } A \rightarrow B \rightarrow D\\
+\\
+\text{EFM}_2&: v_1 = v_3 = v_5 = v_6 = 1, \, v_2 = v_4 = 0\\
+&\text{Via: } A \rightarrow C \rightarrow D
+\end{align*}
+
+\textbf{Interpretação:}
+Duas rotas independentes de A para D
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Cálculo de EFMs (Conceitual)}
+\begin{lstlisting}[language=Python, caption=EFMs com efmtool (interface conceitual), basicstyle=\ttfamily\footnotesize]
+# Nota: efmtool e uma ferramenta Java
+# Aqui mostramos interface Python conceitual
+
+import numpy as np
+from scipy.linalg import null_space
+
+# Matriz estequiometrica
+S = np.array([
+    [ 1, -1, -1,  0,  0,  0],  # A
+    [ 0,  1,  0, -1,  0,  0],  # B
+    [ 0,  0,  1,  0, -1,  0],  # C
+    [ 0,  0,  0,  1,  1, -1]   # D
+])
+
+# Calcular espaco nulo (base de solucoes)
+null_S = null_space(S)
+print("Espaco nulo de S:")
+print(null_S)
+
+# EFMs sao combinacoes desses vetores
+# que respeitam irreversibilidade (v >= 0)
+
+# Para calculo real de EFMs, usar ferramentas:
+# - efmtool (Java): https://csb.ethz.ch/tools/efmtool
+# - CellNetAnalyzer (MATLAB)
+# - Python wrapper: efmtool-py
+
+# Exemplo de uso conceitual:
+# from efmtool import calculate_efms
+# efms = calculate_efms(S, reversibilities)
+# print(f"Numero de EFMs: {len(efms)}")
+# for i, efm in enumerate(efms):
+#     print(f"EFM {i+1}: {efm}")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: METABOLÔMICA
+% ============================================================================
+\section{Metabolômica}
+
+\begin{frame}{O que é Metabolômica?}
+\definicao{Metabolômica}{
+Estudo abrangente do conjunto completo de metabólitos (metaboloma) em uma amostra biológica em um dado momento.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Snapshot do estado metabólico
+    \item Reflete fenótipo bioquímico
+    \item Integra genoma, transcriptoma, proteoma
+    \item Sensível a perturbações ambientais
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Tipos de Metabólitos:}
+\begin{itemize}
+    \item \textbf{Primários:} essenciais (glicose, ATP)
+    \item \textbf{Secundários:} não-essenciais
+    \item \textbf{Xenobióticos:} externos (drogas)
+    \item Faixa: $\sim$100 Da a $\sim$1500 Da
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Metaboloma humano: $\sim$114,000 metabólitos conhecidos (HMDB), $\sim$2,500 endógenos detectáveis
+}
+\end{frame}
+
+\begin{frame}{Plataformas Analíticas}
+\begin{block}{LC-MS: Liquid Chromatography-Mass Spectrometry}
+\begin{itemize}
+    \item \textbf{Princípio:} separação por cromatografia + detecção por massa
+    \item \textbf{Vantagens:} alta sensibilidade, ampla cobertura
+    \item \textbf{Aplicações:} metabólitos polares e apolares
+    \item \textbf{Métodos:} HILIC, RP, tandem MS (MS/MS)
+\end{itemize}
+\end{block}
+
+\begin{block}{GC-MS: Gas Chromatography-Mass Spectrometry}
+\begin{itemize}
+    \item \textbf{Princípio:} volatilização + separação + MS
+    \item \textbf{Vantagens:} reprodutibilidade, bibliotecas extensas
+    \item \textbf{Desvantagens:} requer derivatização
+    \item \textbf{Aplicações:} metabólitos voláteis e derivatizáveis
+\end{itemize}
+\end{block}
+
+\begin{block}{NMR: Nuclear Magnetic Resonance}
+\begin{itemize}
+    \item \textbf{Princípio:} ressonância magnética nuclear
+    \item \textbf{Vantagens:} não-destrutivo, quantitativo, identificação estrutural
+    \item \textbf{Desvantagens:} menor sensibilidade
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Targeted vs Untargeted Metabolomics}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Targeted}
+\textbf{Foco:} conjunto predefinido de metabólitos
+
+\vspace{0.2cm}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Alta precisão e acurácia
+    \item Quantificação absoluta
+    \item Validação com padrões
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Cobertura limitada
+    \item Viés de hipótese
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Validação de biomarcadores
+    \item Monitoramento de vias
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Untargeted}
+\textbf{Foco:} detecção abrangente
+
+\vspace{0.2cm}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Descoberta sem viés
+    \item Ampla cobertura
+    \item Geração de hipóteses
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Desvantagens:}
+\begin{itemize}
+    \item Quantificação relativa
+    \item Desafios de identificação
+    \item Grande volume de dados
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Estudos exploratórios
+    \item Descoberta de biomarcadores
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Pipeline de Análise Metabolômica}
+\begin{enumerate}
+    \item \textbf{Preparação de amostras}
+    \begin{itemize}
+        \item Quenching metabólico (parar reações)
+        \item Extração de metabólitos
+        \item Normalização (por massa, proteína, etc.)
+    \end{itemize}
+
+    \item \textbf{Aquisição de dados}
+    \begin{itemize}
+        \item Análise por LC-MS, GC-MS ou NMR
+        \item Controles de qualidade (QC)
+    \end{itemize}
+
+    \item \textbf{Processamento de dados}
+    \begin{itemize}
+        \item Detecção de picos
+        \item Alinhamento de tempos de retenção
+        \item Normalização e correção de batch
+    \end{itemize}
+
+    \item \textbf{Identificação de metabólitos}
+    \begin{itemize}
+        \item Matching com bibliotecas (m/z, RT)
+        \item MS/MS para confirmação estrutural
+    \end{itemize}
+
+    \item \textbf{Análise estatística e interpretação biológica}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Identificação de Metabólitos}
+\begin{block}{Níveis de Confiança (MSI Standards)}
+\begin{enumerate}
+    \item \textbf{Nível 1:} Identificado - padrão autêntico + 2 propriedades ortogonais
+    \item \textbf{Nível 2:} Putativo - match com biblioteca espectral
+    \item \textbf{Nível 3:} Classe putativa - características químicas
+    \item \textbf{Nível 4:} Desconhecido - m/z sem identificação
+\end{enumerate}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Bancos de Dados}
+\begin{itemize}
+    \item \textbf{HMDB:} Human Metabolome Database (\url{hmdb.ca})
+    \item \textbf{METLIN:} biblioteca de MS/MS (\url{metlin.scripps.edu})
+    \item \textbf{KEGG Compound:} metabólitos em vias (\url{genome.jp/kegg})
+    \item \textbf{ChEBI:} Chemical Entities of Biological Interest
+    \item \textbf{PubChem:} NIH database
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Integração Multi-Omics}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, scale=0.9, transform shape]
+    \node[draw, ellipse, fill=roxodna!30] (gen) {Genômica};
+    \node[draw, ellipse, fill=laranjacel!30, right=of gen] (trans) {Transcriptômica};
+    \node[draw, ellipse, fill=verdeacido!30, below=of gen] (prot) {Proteômica};
+    \node[draw, ellipse, fill=azulclaro!30, below=of trans] (met) {Metabolômica};
+    \node[draw, rectangle, fill=yellow!30, below right=1cm and -0.5cm of prot] (feno) {Fenótipo};
+
+    \draw[->, thick] (gen) -- (trans);
+    \draw[->, thick] (trans) -- (prot);
+    \draw[->, thick] (prot) -- (met);
+    \draw[->, thick] (met) -- (feno);
+    \draw[->, thick, bend left=20] (gen) to (prot);
+    \draw[->, thick, bend right=20] (met) to node[right, font=\tiny] {feedback} (trans);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{Abordagens Integrativas:}
+\begin{itemize}
+    \item \textbf{Mapeamento em vias:} correlacionar níveis de RNA, proteína e metabólito
+    \item \textbf{Integração com GEMs:} contextualizar medições metabolômicas
+    \item \textbf{Machine learning:} predição de fenótipo multi-omics
+    \item \textbf{Network analysis:} identificar módulos regulatórios
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Análise de Dados Metabolômicos}
+\begin{lstlisting}[language=Python, caption=Processamento básico de dados, basicstyle=\ttfamily\footnotesize]
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+# Carregar dados (linhas=amostras, colunas=metabolitos)
+data = pd.read_csv("metabolomics_data.csv", index_col=0)
+metadata = pd.read_csv("sample_metadata.csv", index_col=0)
+
+print(f"Amostras: {data.shape[0]}, Metabolitos: {data.shape[1]}")
+
+# Pre-processamento
+# 1. Remover metabolitos com muitos valores faltantes
+threshold = 0.2
+data_clean = data.dropna(thresh=len(data) * (1-threshold), axis=1)
+
+# 2. Imputacao de valores faltantes (mediana)
+data_imputed = data_clean.fillna(data_clean.median())
+
+# 3. Transformacao logaritmica (dados MS sao log-normais)
+data_log = np.log2(data_imputed + 1)
+
+# 4. Normalizacao (Z-score)
+scaler = StandardScaler()
+data_scaled = pd.DataFrame(
+    scaler.fit_transform(data_log),
+    index=data_log.index,
+    columns=data_log.columns
+)
+
+print("Dados processados!")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: PCA e Visualização}
+\begin{lstlisting}[language=Python, caption=Análise de componentes principais, basicstyle=\ttfamily\footnotesize]
+# PCA
+pca = PCA(n_components=2)
+pca_result = pca.fit_transform(data_scaled)
+
+# Variancia explicada
+print(f"PC1: {pca.explained_variance_ratio_[0]*100:.1f}%")
+print(f"PC2: {pca.explained_variance_ratio_[1]*100:.1f}%")
+
+# Plot PCA score
+fig, ax = plt.subplots(figsize=(10, 8))
+groups = metadata["group"].unique()
+colors = plt.cm.Set1(range(len(groups)))
+
+for group, color in zip(groups, colors):
+    mask = metadata["group"] == group
+    ax.scatter(pca_result[mask, 0], pca_result[mask, 1],
+               c=[color], label=group, s=100, alpha=0.7)
+
+ax.set_xlabel(f'PC1 ({pca.explained_variance_ratio_[0]*100:.1f}%)')
+ax.set_ylabel(f'PC2 ({pca.explained_variance_ratio_[1]*100:.1f}%)')
+ax.set_title('PCA Score Plot')
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Identificar metabolitos importantes (loadings)
+loadings = pd.DataFrame(
+    pca.components_.T,
+    columns=['PC1', 'PC2'],
+    index=data_scaled.columns
+)
+top_metabolites = loadings['PC1'].abs().nlargest(10)
+print("Top metabolitos discriminantes:")
+print(top_metabolites)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Cinética Enzimática}
+Uma enzima tem $K_M = 5$ mM e $V_{max} = 100$ $\mu$mol/min.
+\begin{enumerate}
+    \item Calcule a velocidade quando $[S] = 10$ mM
+    \item Qual concentração de substrato dá $v = 75\% \cdot V_{max}$?
+    \item Se a concentração da enzima dobrar, como mudam $K_M$ e $V_{max}$?
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Balanço de Massa}
+Para a rede $A \rightarrow B \rightarrow C$ com $B \rightarrow D$:
+\begin{enumerate}
+    \item Escreva a matriz estequiométrica $\mathbf{S}$
+    \item Escreva as equações de balanço de massa em estado estacionário
+    \item Se $v_{A \rightarrow B} = 10$ e $v_{B \rightarrow C} = 6$, calcule $v_{B \rightarrow D}$
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: FBA}
+Dado um modelo metabólico simples:
+\begin{itemize}
+    \item Reação de biomassa requer 40 ATP
+    \item Glicose pode gerar ATP via: (a) respiração (38 ATP/glc), (b) fermentação (2 ATP/glc)
+    \item Uptake de glicose limitado a 10 mmol/gDW/h
+\end{itemize}
+
+\begin{enumerate}
+    \item Formule o problema de FBA para maximizar crescimento
+    \item Qual é o crescimento máximo se apenas respiração for permitida?
+    \item E se apenas fermentação?
+    \item Como o modelo escolheria em condições anaeróbicas?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{alertblock}{Projeto: Análise de GEM com COBRApy}
+Escolha um organismo modelo (E. coli, S. cerevisiae, etc.):
+
+\begin{enumerate}
+    \item Carregar modelo GEM usando COBRApy
+    \item Simular crescimento em meio rico vs mínimo
+    \item Realizar análise de gene knockout:
+    \begin{itemize}
+        \item Identificar genes essenciais
+        \item Predizer duplos knockouts sintéticos letais
+    \end{itemize}
+    \item Realizar FVA para identificar reações flexíveis
+    \item Simular produção de um metabólito de interesse:
+    \begin{itemize}
+        \item Adicionar reação de exportação
+        \item Maximizar produção mantendo crescimento mínimo
+        \item Identificar modificações genéticas benéficas
+    \end{itemize}
+\end{enumerate}
+
+Escrever relatório com análises e gráficos!
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais - Livros}
+\begin{thebibliography}{99}
+\bibitem{palsson} Palsson B.O. (2015). \textit{Systems Biology: Constraint-based Reconstruction and Analysis}. Cambridge University Press.
+
+\bibitem{fell} Fell D.A. (1997). \textit{Understanding the Control of Metabolism}. Portland Press.
+
+\bibitem{nielsen} Nielsen J., Jewett M.C. (2008). \textit{Metabolic Engineering}. Springer.
+
+\bibitem{voit} Voit E.O. (2013). \textit{Biochemical Systems Theory: A Review}. ISRN Biomathematics.
+
+\bibitem{stephanopoulos} Stephanopoulos G., Aristidou A.A., Nielsen J. (1998). \textit{Metabolic Engineering: Principles and Methodologies}. Academic Press.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Referências Principais - Artigos}
+\begin{thebibliography}{99}
+\bibitem{orth2010} Orth J.D., Thiele I., Palsson B.O. (2010). What is flux balance analysis? \textit{Nature Biotechnology}, 28(3):245-248.
+
+\bibitem{wiechert2001} Wiechert W. (2001). $^{13}$C Metabolic Flux Analysis. \textit{Metabolic Engineering}, 3(3):195-206.
+
+\bibitem{schuster1999} Schuster S. et al. (1999). Detection of elementary flux modes in biochemical networks. \textit{Bioinformatics}, 15(3):251-257.
+
+\bibitem{patti2012} Patti G.J., Yanes O., Siuzdak G. (2012). Metabolomics: the apogee of the omics trilogy. \textit{Nature Reviews Molecular Cell Biology}, 13:263-269.
+
+\bibitem{ebrahim2013} Ebrahim A., Lerman J.A., Palsson B.O., Hyduke D.R. (2013). COBRApy: COnstraints-Based Reconstruction and Analysis for Python. \textit{BMC Systems Biology}, 7:74.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Ferramentas e Recursos}
+\begin{block}{Software}
+\begin{itemize}
+    \item \textbf{COBRApy:} \url{https://opencobra.github.io/cobrapy}
+    \item \textbf{COPASI:} \url{http://copasi.org}
+    \item \textbf{CellNetAnalyzer:} \url{https://www2.mpi-magdeburg.mpg.de/projects/cna}
+    \item \textbf{efmtool:} \url{https://csb.ethz.ch/tools/efmtool}
+    \item \textbf{MetaboAnalyst:} \url{https://www.metaboanalyst.ca}
+\end{itemize}
+\end{block}
+
+\begin{block}{Bancos de Dados}
+\begin{itemize}
+    \item \textbf{BiGG Models:} \url{http://bigg.ucsd.edu}
+    \item \textbf{KEGG:} \url{https://www.genome.jp/kegg}
+    \item \textbf{HMDB:} \url{https://hmdb.ca}
+    \item \textbf{METLIN:} \url{https://metlin.scripps.edu}
+    \item \textbf{MetaCyc:} \url{https://metacyc.org}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Tutoriais e Reviews}
+\begin{itemize}
+    \item Bordbar A. et al. (2014). Constraint-based models predict metabolic and associated cellular functions. \textit{Nature Reviews Genetics}.
+
+    \item Antoniewicz M.R. (2015). Methods and advances in metabolic flux analysis: a mini-review. \textit{Journal of Industrial Microbiology \& Biotechnology}.
+
+    \item Lewis N.E. et al. (2012). Constraining the metabolic genotype-phenotype relationship using a phylogeny of in silico methods. \textit{Nature Reviews Microbiology}.
+
+    \item Zamboni N. et al. (2015). $^{13}$C metabolic flux analysis in complex systems. \textit{Current Opinion in Biotechnology}.
+\end{itemize}
+\end{block}
+
+\begin{block}{Cursos Online}
+\begin{itemize}
+    \item \textbf{edX:} Systems Biology (Icahn School of Medicine)
+    \item \textbf{Coursera:} Introduction to Computational Biology
+    \item \textbf{COBRApy Tutorials:} \url{https://cobrapy.readthedocs.io}
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 8: Sistemas Metabólicos}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Redes de Regulação Gênica
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}

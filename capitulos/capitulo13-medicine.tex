@@ -1,0 +1,1943 @@
+% ============================================================================
+% CAPÍTULO 13: SYSTEMS BIOLOGY IN MEDICINE
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 13: Systems Biology in Medicine]{Capítulo 13: Systems Biology in Medicine}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender medicina de sistemas e medicina personalizada
+    \item Aplicar biologia de sistemas à descoberta de fármacos
+    \item Modelar doenças complexas como sistemas integrados
+    \item Explorar farmacogenômica e estratificação de pacientes
+    \item Analisar estudos de caso clínicos com abordagens sistêmicas
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Por que Systems Medicine?}
+\begin{itemize}
+    \item Doenças complexas requerem abordagens integrativas
+    \item Medicina personalizada baseada em perfis moleculares
+    \item Descoberta de fármacos mais eficiente e segura
+    \item Previsão de respostas terapêuticas individualizadas
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Da Bancada ao Leito: Medicina de Sistemas}
+\definicao{Medicina de Sistemas}{
+Aplicação dos princípios da biologia de sistemas à medicina clínica, integrando dados multi-ômicos, redes moleculares e modelagem computacional para compreender, diagnosticar e tratar doenças.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.2cm, text centered, rounded corners, minimum height=1cm}]
+
+    \node[box, fill=roxodna!20] (omics) {Dados\\Ômicos};
+    \node[box, fill=verdeacido!20, right of=omics] (network) {Redes\\Moleculares};
+    \node[box, fill=laranjacel!20, below of=network] (model) {Modelos\\Computacionais};
+    \node[box, fill=azulclaro!40, left of=model] (clinical) {Aplicação\\Clínica};
+
+    \draw[->, thick, azulescuro] (omics) -- (network);
+    \draw[->, thick, azulescuro] (network) -- (model);
+    \draw[->, thick, azulescuro] (model) -- (clinical);
+    \draw[->, thick, azulescuro, bend left=45] (clinical) to node[above, font=\tiny] {Validação} (omics);
+
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Medicina Personalizada e de Precisão}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Medicina Tradicional}
+\begin{itemize}
+    \item Abordagem "one-size-fits-all"
+    \item Tratamento baseado em sintomas
+    \item Decisões empíricas
+    \item Resposta variável
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Medicina Personalizada}
+\begin{itemize}
+    \item Tratamento individualizado
+    \item Baseada em perfil molecular
+    \item Decisões orientadas por dados
+    \item Resposta otimizada
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.5cm}
+
+\importante{
+Medicina personalizada = tratamento certo + paciente certo + momento certo
+}
+
+\begin{exampleblock}{Pilares da Medicina de Precisão}
+\begin{itemize}
+    \item Genômica individual
+    \item Biomarcadores moleculares
+    \item Estratificação de pacientes
+    \item Farmacogenômica
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Abordagens Sistêmicas para Doenças}
+\begin{block}{Mudança de Paradigma}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Aspecto} & \textbf{Tradicional} & \textbf{Sistêmica} \\
+\midrule
+Foco & Gene/proteína única & Redes moleculares \\
+Causa & Linear & Multifatorial \\
+Terapia & Alvo único & Multi-alvo \\
+Dados & Isolados & Integrados \\
+Modelo & Reducionista & Holístico \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Aplicações Clínicas}
+\begin{itemize}
+    \item Identificação de alvos terapêuticos
+    \item Reposicionamento de fármacos
+    \item Biomarcadores diagnósticos e prognósticos
+    \item Estratificação de pacientes em ensaios clínicos
+    \item Previsão de efeitos adversos
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: DESCOBERTA E DESENVOLVIMENTO DE FÁRMACOS
+% ============================================================================
+\section{Descoberta e Desenvolvimento de Fármacos}
+
+\begin{frame}{Descoberta de Fármacos: Tradicional vs Sistêmica}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Abordagem Tradicional:}
+\begin{enumerate}
+    \item Identificar alvo único
+    \item Triagem de compostos
+    \item Otimização de lead
+    \item Testes pré-clínicos
+    \item Ensaios clínicos
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Limitações:}
+\begin{itemize}
+    \item Alta taxa de falha (>90\%)
+    \item Custo elevado (\$2.6 bilhões)
+    \item Tempo longo (10-15 anos)
+    \item Efeitos adversos inesperados
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Abordagem Sistêmica:}
+\begin{enumerate}
+    \item Análise de redes
+    \item Identificação de módulos
+    \item Alvos múltiplos/sinérgicos
+    \item Modelagem \textit{in silico}
+    \item Estratificação de pacientes
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Melhor compreensão de mecanismos
+    \item Previsão de efeitos adversos
+    \item Reposicionamento de fármacos
+    \item Medicina personalizada
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Identificação e Validação de Alvos}
+\begin{block}{Pipeline Sistêmico}
+\begin{enumerate}
+    \item \textbf{Análise de redes de doenças}
+    \begin{itemize}
+        \item Identificar genes/proteínas associados à doença
+        \item Análise de centralidade (degree, betweenness, closeness)
+        \item Identificar hubs e bottlenecks
+    \end{itemize}
+
+    \item \textbf{Módulos de doença}
+    \begin{itemize}
+        \item Detecção de comunidades
+        \item Módulos funcionalmente relacionados
+        \item Proximidade de rede
+    \end{itemize}
+
+    \item \textbf{Critérios de validação}
+    \begin{itemize}
+        \item Druggability (capacidade de ser alvo de fármaco)
+        \item Especificidade tecidual
+        \item Papel funcional validado
+        \item Sem efeitos adversos graves
+    \end{itemize}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Farmacologia de Redes (Network Pharmacology)}
+\definicao{Network Pharmacology}{
+Estudo de interações fármaco-alvo no contexto de redes biológicas, reconhecendo que fármacos afetam múltiplos alvos e vias.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Proteinas alvo
+    \node[draw, circle, fill=verdeacido!30, minimum size=0.8cm] (t1) at (0,0) {T1};
+    \node[draw, circle, fill=verdeacido!30, minimum size=0.8cm] (t2) at (2,1) {T2};
+    \node[draw, circle, fill=verdeacido!30, minimum size=0.8cm] (t3) at (2,-1) {T3};
+    \node[draw, circle, fill=azulclaro!30, minimum size=0.8cm] (t4) at (4,0.5) {T4};
+    \node[draw, circle, fill=azulclaro!30, minimum size=0.8cm] (t5) at (4,-0.5) {T5};
+
+    % Farmaco
+    \node[draw, diamond, fill=laranjacel!50, minimum size=1cm] (drug) at (-2,0) {\textbf{D}};
+
+    % Interacoes farmaco-alvo
+    \draw[->, thick, red] (drug) -- (t1);
+    \draw[->, thick, red] (drug) to[bend left=15] (t2);
+    \draw[->, thick, red] (drug) to[bend right=15] (t3);
+
+    % Rede proteina-proteina
+    \draw[thick, azulescuro] (t1) -- (t2);
+    \draw[thick, azulescuro] (t1) -- (t3);
+    \draw[thick, azulescuro] (t2) -- (t4);
+    \draw[thick, azulescuro] (t3) -- (t5);
+    \draw[thick, azulescuro] (t4) -- (t5);
+
+    % Legenda
+    \node[below, font=\tiny] at (1,-2) {Alvos primários};
+    \node[below, font=\tiny] at (4,-1.5) {Alvos secundários};
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Polifarmacologia: um fármaco, múltiplos alvos $\rightarrow$ efeitos sinérgicos
+}
+\end{frame}
+
+\begin{frame}{Fármacos Multi-Alvo}
+\begin{block}{Conceito}
+Fármacos projetados para modular múltiplos alvos simultaneamente, explorando sinergias e redundâncias em redes biológicas.
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Maior eficácia
+    \item Menor resistência
+    \item Efeitos sinérgicos
+    \item Adequado para doenças complexas
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Exemplos:}
+\begin{itemize}
+    \item Inibidores multi-quinase (câncer)
+    \item Aspirina (COX-1/COX-2)
+    \item Estatinas (HMG-CoA + pleiotrópicos)
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Desafios:}
+\begin{itemize}
+    \item Design complexo
+    \item Otimização de múltiplos alvos
+    \item Previsão de efeitos adversos
+    \item Propriedades farmacocinéticas
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Índice de Seletividade}
+\begin{equation*}
+S = \frac{IC_{50}(\text{off-target})}{IC_{50}(\text{on-target})}
+\end{equation*}
+
+$S > 100$: seletivo\\
+$S < 10$: multi-alvo
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Redes de Interação Fármaco-Alvo}
+\begin{block}{Construção de Redes DTI}
+\textbf{Dados:}
+\begin{itemize}
+    \item Estrutura química de fármacos
+    \item Estrutura 3D de proteínas alvo
+    \item Dados de afinidade (IC$_{50}$, K$_d$)
+    \item Screening em larga escala
+    \item Bases de dados: DrugBank, ChEMBL, BindingDB
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Análises:}
+\begin{itemize}
+    \item Grau de promiscuidade de fármacos
+    \item Polífarmacologia
+    \item Reposicionamento
+    \item Previsão de efeitos adversos
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Métrica de Promiscuidade}
+\begin{equation*}
+P_d = \frac{\text{\# alvos do fármaco}}{\text{\# total de fármacos}}
+\end{equation*}
+
+Fármacos com $P_d$ alto:
+\begin{itemize}
+    \item Maior chance de efeitos adversos
+    \item Potencial para reposicionamento
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Farmacocinética: Modelo ADME}
+\begin{block}{ADME}
+\begin{itemize}
+    \item \textbf{A}bsorção: entrada do fármaco no organismo
+    \item \textbf{D}istribuição: dispersão pelos tecidos
+    \item \textbf{M}etabolismo: biotransformação (fígado)
+    \item \textbf{E}xcreção: eliminação (rins, bile)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Fatores que afetam ADME:}
+\begin{itemize}
+    \item Propriedades físico-químicas
+    \item Solubilidade, permeabilidade
+    \item Ligação a proteínas plasmáticas
+    \item Metabolismo de primeira passagem
+    \item Polimorfismos genéticos (CYP450)
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Regra de Lipinski (Regra dos 5)}
+Fármaco oralmente biodisponível:
+\begin{itemize}
+    \item Peso molecular < 500 Da
+    \item LogP < 5
+    \item Doadores H-bond $\leq$ 5
+    \item Aceptores H-bond $\leq$ 10
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelagem PK/PD}
+\definicao{Farmacocinética/Farmacodinâmica}{
+\textbf{PK:} "O que o corpo faz com o fármaco" --- concentração vs tempo\\
+\textbf{PD:} "O que o fármaco faz com o corpo" --- efeito vs concentração
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Modelos Compartimentais}
+Representam o corpo como compartimentos onde o fármaco se distribui.
+
+\textbf{Tipos:}
+\begin{itemize}
+    \item Modelo de 1 compartimento (mais simples)
+    \item Modelo de 2 compartimentos (central + periférico)
+    \item Modelo de 3+ compartimentos (tecidos específicos)
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Parâmetros PK Importantes}
+\begin{itemize}
+    \item $C_{max}$: concentração máxima
+    \item $T_{max}$: tempo de concentração máxima
+    \item AUC: área sob a curva (exposição total)
+    \item $t_{1/2}$: meia-vida de eliminação
+    \item $V_d$: volume de distribuição
+    \item CL: clearance (depuração)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Modelo de Um Compartimento}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Compartimento central
+    \draw[thick, azulescuro, fill=azulclaro!20] (0,0) rectangle (3,2);
+    \node at (1.5,1) {\textbf{Compartimento}};
+    \node at (1.5,0.5) {\textbf{Central}};
+    \node at (1.5,1.7) {$V_d$, $C(t)$};
+
+    % Entrada (dose)
+    \draw[->, very thick, verdeacido] (-1.5,1) -- (-0.1,1) node[midway, above, font=\tiny] {Dose};
+
+    % Saida (eliminacao)
+    \draw[->, very thick, red] (3.1,1) -- (4.5,1) node[midway, above, font=\tiny] {$k_e$};
+
+\end{tikzpicture}
+\end{center}
+
+\column{0.5\textwidth}
+\textbf{EDO:}
+\destaque{
+\begin{equation*}
+\derivada{C}{t} = -k_e C
+\end{equation*}
+}
+
+\textbf{Solução (dose IV):}
+\begin{equation*}
+C(t) = C_0 e^{-k_e t}
+\end{equation*}
+
+\textbf{Parâmetros:}
+\begin{align*}
+t_{1/2} &= \frac{\ln 2}{k_e} = \frac{0.693}{k_e}\\
+\text{CL} &= k_e \cdot V_d\\
+\text{AUC} &= \frac{C_0}{k_e} = \frac{\text{Dose}}{CL}
+\end{align*}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelo de Dois Compartimentos}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Compartimento central
+    \draw[thick, azulescuro, fill=azulclaro!30] (0,0) rectangle (2.5,2);
+    \node at (1.25,1.3) {\textbf{Central}};
+    \node at (1.25,0.7) {$V_1$, $C_1(t)$};
+
+    % Compartimento periferico
+    \draw[thick, azulescuro, fill=verdeacido!20] (5,0) rectangle (7.5,2);
+    \node at (6.25,1.3) {\textbf{Periférico}};
+    \node at (6.25,0.7) {$V_2$, $C_2(t)$};
+
+    % Dose
+    \draw[->, very thick, verdeacido] (-1.5,1) -- (-0.1,1) node[midway, above, font=\tiny] {Dose};
+
+    % Distribuicao
+    \draw[->, thick, roxodna] (2.6,1.3) -- (4.9,1.3) node[midway, above, font=\tiny] {$k_{12}$};
+    \draw[->, thick, roxodna] (4.9,0.7) -- (2.6,0.7) node[midway, below, font=\tiny] {$k_{21}$};
+
+    % Eliminacao
+    \draw[->, very thick, red] (1.25,-0.2) -- (1.25,-1.5) node[midway, right, font=\tiny] {$k_e$};
+
+\end{tikzpicture}
+\end{center}
+
+\textbf{Sistema de EDOs:}
+\destaque{
+\begin{align*}
+\derivada{C_1}{t} &= -(k_e + k_{12})C_1 + k_{21}C_2\\
+\derivada{C_2}{t} &= k_{12}C_1 - k_{21}C_2
+\end{align*}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Simulação PK: Modelo de Um Compartimento}
+\begin{lstlisting}[language=Python, caption=Farmacocinética monocompartimental, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def one_compartment_pk(C, t, ke):
+    """Modelo PK de 1 compartimento"""
+    dCdt = -ke * C
+    return dCdt
+
+# Parametros
+ke = 0.2      # constante de eliminacao (1/h)
+C0 = 100      # concentracao inicial (mg/L)
+t_half = 0.693 / ke  # meia-vida
+
+# Tempo
+t = np.linspace(0, 24, 200)
+
+# Resolver
+C = odeint(one_compartment_pk, C0, t, args=(ke,))
+
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.plot(t, C, 'b-', linewidth=2, label='[Farmaco]')
+plt.axhline(y=C0/2, color='r', linestyle='--',
+            label=f't_1/2 = {t_half:.2f} h')
+plt.xlabel('Tempo (horas)')
+plt.ylabel('Concentracao (mg/L)')
+plt.title('Farmacocinetica: Modelo 1-Compartimento')
+plt.legend()
+plt.grid(True)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Ensaios Clínicos e Biologia de Sistemas}
+\begin{block}{Fases de Ensaios Clínicos}
+\begin{itemize}
+    \item \textbf{Fase I:} Segurança, farmacocinética (20-100 voluntários)
+    \item \textbf{Fase II:} Eficácia preliminar, dose (100-500 pacientes)
+    \item \textbf{Fase III:} Eficácia, efeitos adversos (1000-5000 pacientes)
+    \item \textbf{Fase IV:} Monitoramento pós-comercialização
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Aplicações de Biologia de Sistemas}
+\begin{itemize}
+    \item \textbf{Design de ensaios:} Estratificação de pacientes por perfil molecular
+    \item \textbf{Biomarcadores:} Identificação de marcadores de resposta/toxicidade
+    \item \textbf{Ensaios \textit{in silico}:} "Digital twins" para prever resultados
+    \item \textbf{Adaptive trials:} Ajustes baseados em dados intermediários
+    \item \textbf{Análise de subgrupos:} Identificar respondedores vs não-respondedores
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: DOENÇAS COMPLEXAS
+% ============================================================================
+\section{Doenças Complexas}
+
+\begin{frame}{Câncer como Doença Sistêmica}
+\definicao{Visão Sistêmica do Câncer}{
+Câncer não é apenas uma doença de um gene mutado, mas resulta de alterações em redes regulatórias, vias de sinalização e interações com o microambiente tumoral.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Heterogeneidade genômica
+    \item Plasticidade celular
+    \item Evolução clonal
+    \item Interações com estroma
+    \item Resposta imune
+    \item Metabolismo reprogramado
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Níveis de Complexidade:}
+\begin{itemize}
+    \item Genético: mutações driver/passenger
+    \item Epigenético: metilação, histonas
+    \item Transcriptômico: expressão gênica
+    \item Proteômico: sinalização
+    \item Metabólico: Warburg, glutaminólise
+    \item Microambiente: células imunes, CAFs
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Abordagens de alvo único falham devido à redundância e plasticidade das redes tumorais
+}
+\end{frame}
+
+\begin{frame}{Hallmarks of Cancer}
+\begin{block}{10 Características Essenciais do Câncer (Hanahan \& Weinberg)}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características Principais:}
+\begin{enumerate}
+    \item Sinais de crescimento sustentado
+    \item Evasão de supressores de crescimento
+    \item Resistência à morte celular
+    \item Imortalidade replicativa
+    \item Angiogênese induzida
+    \item Invasão e metástase
+\end{enumerate}
+
+\column{0.5\textwidth}
+\textbf{Características Emergentes:}
+\begin{enumerate}
+    \setcounter{enumi}{6}
+    \item Reprogramação metabólica
+    \item Evasão imune
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Características Facilitadoras:}
+\begin{enumerate}
+    \setcounter{enumi}{8}
+    \item Instabilidade genômica
+    \item Inflamação promotora de tumor
+\end{enumerate}
+\end{columns}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Implicações Terapêuticas}
+Cada hallmark representa um alvo terapêutico potencial
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Redes Oncogênicas e Supressoras de Tumor}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Oncogenes
+    \node[draw, circle, fill=red!30, minimum size=0.7cm] (ras) at (0,2) {RAS};
+    \node[draw, circle, fill=red!30, minimum size=0.7cm] (myc) at (2,2) {MYC};
+    \node[draw, circle, fill=red!30, minimum size=0.7cm] (pi3k) at (1,3) {PI3K};
+
+    % Supressores
+    \node[draw, circle, fill=verdeacido!30, minimum size=0.7cm] (p53) at (0,0) {p53};
+    \node[draw, circle, fill=verdeacido!30, minimum size=0.7cm] (rb) at (2,0) {RB};
+    \node[draw, circle, fill=verdeacido!30, minimum size=0.7cm] (pten) at (1,-1) {PTEN};
+
+    % Processos celulares
+    \node[draw, rectangle, fill=azulclaro!30, minimum width=1.5cm] (prolif) at (5,2) {Proliferação};
+    \node[draw, rectangle, fill=laranjacel!30, minimum width=1.5cm] (apop) at (5,0) {Apoptose};
+
+    % Conexoes oncogenes
+    \draw[->, thick, red] (ras) -- (prolif);
+    \draw[->, thick, red] (myc) -- (prolif);
+    \draw[->, thick, red] (pi3k) -- (prolif);
+    \draw[-|, thick, red] (pi3k) to[bend left=20] (apop);
+
+    % Conexoes supressores
+    \draw[-|, thick, verdeacido] (p53) -- (prolif);
+    \draw[-|, thick, verdeacido] (rb) -- (prolif);
+    \draw[->, thick, verdeacido] (p53) -- (apop);
+    \draw[->, thick, verdeacido] (pten) -- (apop);
+
+    % Regulacao cruzada
+    \draw[-|, thick, azulescuro, dashed] (pten) to[bend right=30] (pi3k);
+    \draw[-|, thick, azulescuro, dashed] (p53) to[bend left=40] (myc);
+
+    % Legenda
+    \node[below, font=\tiny, text width=3cm, align=center] at (1,-2) {
+        \textcolor{red}{Oncogenes ativam proliferação}\\
+        \textcolor{verdeacido}{Supressores inibem proliferação}
+    };
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Câncer emerge do desequilíbrio entre oncogenes ativados e supressores inativados
+}
+\end{frame}
+
+\begin{frame}{Metabolismo do Câncer: Efeito Warburg}
+\begin{columns}
+\column{0.5\textwidth}
+\definicao{Efeito Warburg}{
+Células cancerosas preferem glicólise aeróbica (menos eficiente) em vez de fosforilação oxidativa, mesmo na presença de oxigênio.
+}
+
+\vspace{0.3cm}
+
+\textbf{Vantagens para tumor:}
+\begin{itemize}
+    \item Geração rápida de ATP
+    \item Biomassa (nucleotídeos, lipídios)
+    \item Acidificação do microambiente
+    \item Evasão de apoptose mitocondrial
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{block}{Reprogramação Metabólica}
+\textbf{Vias alteradas:}
+\begin{itemize}
+    \item $\uparrow$ Captação de glicose (GLUT1)
+    \item $\uparrow$ Glicólise (HK2, PKM2)
+    \item $\uparrow$ Glutaminólise
+    \item $\uparrow$ Síntese de lipídios (FASN)
+    \item $\downarrow$ OXPHOS
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Alvos Metabólicos}
+\begin{itemize}
+    \item Inibidores de hexoquinase
+    \item Inibidores de LDH-A
+    \item Inibidores de glutaminase
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Heterogeneidade Tumoral}
+\begin{block}{Tipos de Heterogeneidade}
+\begin{itemize}
+    \item \textbf{Intratumoral:} diferentes clones no mesmo tumor
+    \item \textbf{Intertumoral:} variação entre pacientes
+    \item \textbf{Temporal:} evolução durante tratamento
+    \item \textbf{Espacial:} gradientes no microambiente
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Tumor primario
+    \draw[thick, fill=red!20] (0,0) circle (1.5);
+    \node at (0,0) {\textbf{Tumor}};
+
+    % Clones
+    \fill[red!60] (-0.5,0.3) circle (0.3);
+    \fill[red!80] (0.3,0.5) circle (0.25);
+    \fill[red!40] (0.5,-0.4) circle (0.35);
+    \fill[red!70] (-0.3,-0.5) circle (0.2);
+
+    \node[font=\tiny] at (-0.5,0.3) {C1};
+    \node[font=\tiny] at (0.3,0.5) {C2};
+    \node[font=\tiny] at (0.5,-0.4) {C3};
+    \node[font=\tiny] at (-0.3,-0.5) {C4};
+
+    % Metastases
+    \draw[->, thick] (1.3,0.8) -- (3,1.5);
+    \draw[->, thick] (1.3,-0.8) -- (3,-1.5);
+
+    \draw[thick, fill=red!60] (3.5,1.5) circle (0.5);
+    \node[font=\tiny] at (3.5,1.5) {Met 1};
+
+    \draw[thick, fill=red!40] (3.5,-1.5) circle (0.5);
+    \node[font=\tiny] at (3.5,-1.5) {Met 2};
+
+    % Legenda
+    \node[below, font=\tiny, text width=4cm] at (1.5,-2.5) {
+        Diferentes clones (C1-C4) têm perfis genômicos distintos\\
+        Metástases derivam de clones específicos
+    };
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Heterogeneidade $\rightarrow$ resistência terapêutica $\rightarrow$ necessidade de terapias combinadas
+}
+\end{frame}
+
+\begin{frame}{Doenças Cardiovasculares como Sistemas}
+\begin{block}{Redes em Doenças Cardiovasculares}
+Doenças cardiovasculares envolvem interações complexas entre:
+\begin{itemize}
+    \item Fatores genéticos (polimorfismos, mutações)
+    \item Metabolismo lipídico (colesterol, triglicerídeos)
+    \item Inflamação (citocinas, células imunes)
+    \item Função endotelial (NO, vasodilatação)
+    \item Coagulação (plaquetas, fatores de coagulação)
+    \item Pressão arterial (RAAS, SNS)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Aterosclerose:}
+\begin{itemize}
+    \item Acúmulo de LDL oxidado
+    \item Recrutamento de macrófagos
+    \item Formação de células foam
+    \item Placa aterosclerótica
+    \item Inflamação crônica
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Abordagens Sistêmicas:}
+\begin{itemize}
+    \item Identificação de módulos de risco
+    \item Biomarcadores multi-ômicos
+    \item Scores de risco poligênico
+    \item Terapias multi-alvo
+    \item Medicina preventiva personalizada
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Diabetes e Síndrome Metabólica}
+\begin{block}{Diabetes Tipo 2: Doença Sistêmica}
+\textbf{Componentes interconectados:}
+\begin{itemize}
+    \item Resistência à insulina (músculo, fígado, tecido adiposo)
+    \item Disfunção de células $\beta$ pancreáticas
+    \item Metabolismo de glicose alterado
+    \item Lipotoxicidade
+    \item Inflamação crônica de baixo grau
+    \item Estresse oxidativo
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Síndrome Metabólica:}
+\begin{enumerate}
+    \item Obesidade abdominal
+    \item Hiperglicemia
+    \item Hipertensão
+    \item Dislipidemia
+    \item Estado pró-inflamatório
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Modelagem Sistêmica}
+\begin{itemize}
+    \item Modelos de homeostase glicose-insulina
+    \item Redes de sinalização insulínica
+    \item Integração multi-órgão
+    \item Predição de progressão
+    \item Resposta a intervenções
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Doenças Neurodegenerativas}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Alzheimer}
+\textbf{Características:}
+\begin{itemize}
+    \item Placas amiloides ($\beta$-amiloide)
+    \item Emaranhados neurofibrilares (tau)
+    \item Neuroinflamação
+    \item Perda sináptica
+    \item Disfunção mitocondrial
+    \item Estresse oxidativo
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Fatores de risco:}
+\begin{itemize}
+    \item APOE4 (genético)
+    \item Idade
+    \item Fatores cardiovasculares
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Parkinson}
+\textbf{Características:}
+\begin{itemize}
+    \item Perda de neurônios dopaminérgicos
+    \item Corpos de Lewy ($\alpha$-sinucleína)
+    \item Disfunção mitocondrial
+    \item Estresse do RE
+    \item Neuroinflamação
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Genes associados:}
+\begin{itemize}
+    \item SNCA, LRRK2, PARK7
+    \item GBA, PINK1, PARKIN
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Doenças neurodegenerativas: falha em múltiplos processos celulares $\rightarrow$ cascata patológica
+}
+\end{frame}
+
+\begin{frame}{Módulos de Doença (Disease Modules)}
+\definicao{Módulo de Doença}{
+Conjunto de genes/proteínas topologicamente próximos no interactoma humano cujas perturbações estão associadas a um fenótipo patológico comum.
+}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Rede global
+    \foreach \i in {1,...,20} {
+        \pgfmathsetmacro{\x}{rand*4}
+        \pgfmathsetmacro{\y}{rand*4}
+        \node[draw, circle, fill=azulclaro!20, inner sep=1pt, minimum size=0.2cm] (n\i) at (\x,\y) {};
+    }
+
+    % Modulo de doenca 1
+    \draw[thick, red, dashed] (0.5,0.5) circle (1);
+    \node[fill=red!30, circle, inner sep=2pt] at (0.5,0.5) {};
+    \node[fill=red!30, circle, inner sep=2pt] at (0.8,1.2) {};
+    \node[fill=red!30, circle, inner sep=2pt] at (1.3,0.7) {};
+    \node[below, font=\tiny, text=red] at (0.5,-0.5) {Doença A};
+
+    % Modulo de doenca 2
+    \draw[thick, verdeacido, dashed] (3,3) circle (0.8);
+    \node[fill=verdeacido!50, circle, inner sep=2pt] at (3,3) {};
+    \node[fill=verdeacido!50, circle, inner sep=2pt] at (3.5,3.3) {};
+    \node[fill=verdeacido!50, circle, inner sep=2pt] at (2.7,3.6) {};
+    \node[above, font=\tiny, text=verdeacido] at (3,3.8) {Doença B};
+
+    % Sobreposicao (comorbidade)
+    \node[fill=yellow, circle, inner sep=2pt] at (2,2) {};
+    \node[font=\tiny] at (2,1.5) {Comorbidade};
+
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Aplicações}
+\begin{itemize}
+    \item Identificação de novos genes de doença
+    \item Compreensão de comorbidades (sobreposição de módulos)
+    \item Reposicionamento de fármacos
+    \item Classificação molecular de doenças
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Classificação de Doenças Baseada em Redes}
+\begin{block}{Abordagem Tradicional vs Sistêmica}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Critério} & \textbf{Tradicional} & \textbf{Baseada em Rede} \\
+\midrule
+Base & Sintomas clínicos & Módulos moleculares \\
+Foco & Órgão/tecido & Vias e redes \\
+Resolução & Baixa & Alta (molecular) \\
+Personalização & Limitada & Alta \\
+Preditiva & Moderada & Alta \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplos}
+\begin{itemize}
+    \item \textbf{Câncer:} Classificação por perfil de expressão e mutações (The Cancer Genome Atlas - TCGA)
+    \item \textbf{Diabetes:} Subtipos baseados em resistência à insulina vs disfunção de células $\beta$
+    \item \textbf{Doenças inflamatórias:} Endotipos baseados em perfis de citocinas
+\end{itemize}
+\end{exampleblock}
+
+\importante{
+Doenças com apresentação clínica similar podem ter mecanismos moleculares distintos $\rightarrow$ requerem tratamentos diferentes
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: MEDICINA PERSONALIZADA
+% ============================================================================
+\section{Medicina Personalizada}
+
+\begin{frame}{Farmacogenômica}
+\definicao{Farmacogenômica}{
+Estudo de como variações genéticas individuais influenciam a resposta a fármacos, incluindo eficácia e toxicidade.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Fontes de Variabilidade na Resposta a Fármacos}
+\begin{itemize}
+    \item \textbf{Farmacocinética:} variantes em genes ADME (CYP450, transportadores)
+    \item \textbf{Farmacodinâmica:} variantes em alvos terapêuticos (receptores, enzimas)
+    \item \textbf{Doença:} heterogeneidade molecular da doença
+    \item \textbf{Ambiente:} dieta, comorbidades, interações medicamentosas
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Objetivos:}
+\begin{itemize}
+    \item Maximizar eficácia
+    \item Minimizar toxicidade
+    \item Otimizar dose
+    \item Selecionar fármaco adequado
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Benefícios}
+\begin{itemize}
+    \item Medicina personalizada
+    \item Redução de eventos adversos
+    \item Economia de custos
+    \item Melhor adesão
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Polimorfismos do Citocromo P450}
+\begin{block}{Família CYP450}
+Enzimas hepáticas responsáveis pelo metabolismo de ~75\% dos fármacos
+
+\textbf{Principais isoformas:}
+\begin{itemize}
+    \item \textbf{CYP2D6:} ~25\% dos fármacos (antidepressivos, opioides, betabloqueadores)
+    \item \textbf{CYP2C9:} warfarina, NSAIDs, hipoglicemiantes
+    \item \textbf{CYP2C19:} clopidogrel, IBPs, antidepressivos
+    \item \textbf{CYP3A4/5:} ~50\% dos fármacos (estatinas, imunossupressores)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{block}{Fenótipos Metabólicos}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Fenótipo} & \textbf{Atividade} & \textbf{Implicação} \\
+\midrule
+Poor Metabolizer (PM) & Muito baixa & $\uparrow$ toxicidade, $\uparrow$ dose necessária (pró-fármacos) \\
+Intermediate (IM) & Reduzida & Monitoramento \\
+Normal (NM/EM) & Normal & Dose padrão \\
+Ultra-rapid (UM) & Aumentada & $\downarrow$ eficácia, $\uparrow$ toxicidade (pró-fármacos) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exemplo: Clopidogrel e CYP2C19}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Clopidogrel:}
+\begin{itemize}
+    \item Pró-fármaco antiagregante
+    \item Previne trombose (pós-stent)
+    \item Requer ativação por CYP2C19
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Polimorfismo CYP2C19:}
+\begin{itemize}
+    \item \textbf{*1/*1 (EM):} metabolizador normal
+    \item \textbf{*2, *3 (PM):} perda de função
+    \item \textbf{*17 (UM):} ganho de função
+\end{itemize}
+
+\vspace{0.3cm}
+
+\importante{
+PM têm $\uparrow$3x risco de eventos cardiovasculares
+}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Eixos
+    \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {Tempo};
+    \draw[->] (0,0) -- (0,4) node[above, font=\tiny] {[Metabólito ativo]};
+
+    % Curvas
+    \draw[thick, verdeacido] plot [smooth] coordinates {(0.5,0.2) (1,2.5) (2,3.5) (3,3.2) (4,2.5)};
+    \draw[thick, red] plot [smooth] coordinates {(0.5,0.1) (1,0.8) (2,1.2) (3,1.1) (4,0.9)};
+    \draw[thick, azulclaro] plot [smooth] coordinates {(0.5,0.15) (1,1.6) (2,2.3) (3,2.1) (4,1.7)};
+
+    % Legenda
+    \node[right, font=\tiny, text=verdeacido] at (4.2,3.2) {UM};
+    \node[right, font=\tiny, text=azulclaro] at (4.2,2.1) {EM};
+    \node[right, font=\tiny, text=red] at (4.2,1.1) {PM};
+
+    % Zona terapeutica
+    \draw[dashed, gray] (0,1.8) -- (5,1.8) node[right, font=\tiny] {Mín terapêutico};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{Recomendação Clínica:}
+\begin{itemize}
+    \item PM: usar prasugrel ou ticagrelor (alternativas)
+    \item EM: clopidogrel dose padrão
+    \item UM: monitorar cuidadosamente
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Descoberta de Biomarcadores}
+\begin{block}{Tipos de Biomarcadores}
+\begin{itemize}
+    \item \textbf{Diagnóstico:} detectar presença de doença
+    \item \textbf{Prognóstico:} prever evolução da doença
+    \item \textbf{Preditivo:} prever resposta a terapia
+    \item \textbf{Farmacodinâmico:} medir efeito do tratamento
+    \item \textbf{Segurança:} detectar toxicidade
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Pipeline de Descoberta}
+\begin{enumerate}
+    \item \textbf{Discovery:} análise ômica em larga escala (casos vs controles)
+    \item \textbf{Verificação:} validação em coorte independente
+    \item \textbf{Qualificação:} ensaios prospectivos
+    \item \textbf{Implementação:} testes clínicos validados
+\end{enumerate}
+\end{exampleblock}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Abordagens Sistêmicas:}
+\begin{itemize}
+    \item Assinaturas multi-gene
+    \item Perfis de proteínas/metabólitos
+    \item Integração multi-ômica
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Desafios:}
+\begin{itemize}
+    \item Reprodutibilidade
+    \item Validação independente
+    \item Padronização de ensaios
+    \item Custo-benefício
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Estratificação de Pacientes}
+\begin{block}{Conceito}
+Classificar pacientes em subgrupos com base em características moleculares, clínicas ou demográficas para tratamento personalizado.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Métodos:}
+\begin{itemize}
+    \item Clustering (K-means, hierárquico)
+    \item Análise de componentes principais (PCA)
+    \item Non-negative matrix factorization (NMF)
+    \item Machine learning supervisionado
+    \item Network-based stratification
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Dados para estratificação:}
+\begin{itemize}
+    \item Genômicos (mutações, CNVs)
+    \item Transcriptômicos (expressão gênica)
+    \item Proteômicos
+    \item Metabólicos
+    \item Clínicos
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Aplicações}
+\begin{itemize}
+    \item \textbf{Ensaios clínicos:} enriquecer para respondedores
+    \item \textbf{Diagnóstico:} classificar subtipos
+    \item \textbf{Prognóstico:} identificar alto vs baixo risco
+    \item \textbf{Terapia:} selecionar tratamento ótimo
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\importante{
+Objetivo: maximizar benefício clínico, minimizar exposição desnecessária a toxicidade
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Diagnósticos Baseados em Ômicas}
+\begin{block}{Testes Multi-Ômicos Clínicos}
+\textbf{Genômicos:}
+\begin{itemize}
+    \item Sequenciamento de painel de genes (câncer)
+    \item Whole-exome sequencing (WES)
+    \item Whole-genome sequencing (WGS)
+    \item Liquid biopsy (ctDNA)
+\end{itemize}
+
+\textbf{Transcriptômicos:}
+\begin{itemize}
+    \item Oncotype DX (câncer de mama)
+    \item MammaPrint (prognóstico de mama)
+    \item Prosigna (PAM50)
+\end{itemize}
+
+\textbf{Proteômicos/Metabólicos:}
+\begin{itemize}
+    \item Painéis de citocinas
+    \item Perfis metabólicos (diabetes, erros inatos)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Vantagens}
+Informação molecular detalhada $\rightarrow$ decisões terapêuticas precisas
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Subtipos de Câncer de Mama}
+\begin{block}{Classificação Molecular (PAM50)}
+Baseada em perfil de expressão de 50 genes:
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Subtipo} & \textbf{Marcadores} & \textbf{Prognóstico} & \textbf{Tratamento} \\
+\midrule
+Luminal A & ER+, PR+, HER2-, Ki67 baixo & Melhor & Hormonioterapia \\
+Luminal B & ER+, HER2+/-, Ki67 alto & Intermediário & Hormônio + quimio \\
+HER2+ & ER-, PR-, HER2+ & Intermediário & Trastuzumab + quimio \\
+Basal-like & ER-, PR-, HER2- (triplo neg.) & Pior & Quimioterapia \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+Mesmo órgão, histologia similar $\rightarrow$ diferentes doenças moleculares $\rightarrow$ tratamentos distintos
+}
+
+\begin{exampleblock}{Implicação Clínica}
+Teste de expressão gênica determina:
+\begin{itemize}
+    \item Necessidade de quimioterapia adjuvante
+    \item Escolha de terapia-alvo (trastuzumab para HER2+)
+    \item Prognóstico e risco de recorrência
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Seleção de Tratamento por Perfil Molecular}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Paciente
+    \node[draw, circle, fill=azulclaro!30, minimum size=1.2cm] (patient) at (0,0) {\textbf{Paciente}};
+
+    % Perfil molecular
+    \node[draw, rectangle, fill=roxodna!20, text width=2cm, align=center] (profile) at (3,0) {Perfil\\Molecular};
+
+    % Analise
+    \node[draw, rectangle, fill=verdeacido!20, text width=2cm, align=center] (analysis) at (6,0) {Análise\\Sistêmica};
+
+    % Tratamentos
+    \node[draw, rectangle, fill=laranjacel!30, text width=1.5cm, align=center] (t1) at (9,1.5) {Terapia A};
+    \node[draw, rectangle, fill=laranjacel!30, text width=1.5cm, align=center] (t2) at (9,0) {Terapia B};
+    \node[draw, rectangle, fill=laranjacel!30, text width=1.5cm, align=center] (t3) at (9,-1.5) {Terapia C};
+
+    % Conexoes
+    \draw[->, thick] (patient) -- (profile);
+    \draw[->, thick] (profile) -- (analysis);
+    \draw[->, thick] (analysis) -- (t1) node[midway, above, font=\tiny] {HER2+};
+    \draw[->, thick, red, dashed] (analysis) -- (t2);
+    \draw[->, thick, red, dashed] (analysis) -- (t3);
+
+    % Genomics, transcriptomics
+    \node[below, font=\tiny, text width=2cm, align=center] at (3,-1) {Genômica\\Transcriptômica\\Proteômica};
+
+    % Machine learning
+    \node[above, font=\tiny] at (6,0.8) {ML/Redes};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplos Clínicos}
+\begin{itemize}
+    \item \textbf{EGFR mutado:} erlotinib/gefitinib (câncer de pulmão)
+    \item \textbf{BRAF V600E:} vemurafenib (melanoma)
+    \item \textbf{ALK fusão:} crizotinib (câncer de pulmão)
+    \item \textbf{BCR-ABL:} imatinib (leucemia mieloide crônica)
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Digital Twins e Ensaios Clínicos \textit{In Silico}}
+\definicao{Digital Twin}{
+Réplica computacional personalizada de um paciente individual, baseada em dados multi-ômicos, clínicos e fisiológicos, que permite simular respostas a intervenções terapêuticas.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Componentes:}
+\begin{itemize}
+    \item Dados do paciente (genoma, transcriptoma, metaboloma, clínicos)
+    \item Modelos mecanísticos (redes, EDOs)
+    \item Parâmetros personalizados
+    \item Simulação computacional
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Predição de resposta a fármacos
+    \item Otimização de dose
+    \item Identificação de efeitos adversos
+    \item Testes de terapias combinadas
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Ensaios \textit{In Silico}}
+\begin{itemize}
+    \item Testar milhares de cenários rapidamente
+    \item Reduzir necessidade de ensaios animais
+    \item Acelerar desenvolvimento de fármacos
+    \item Stratificação pré-clínica
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Desafios}
+\begin{itemize}
+    \item Validação clínica
+    \item Complexidade dos modelos
+    \item Integração de dados
+    \item Incerteza paramétrica
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Desafios em Medicina Personalizada}
+\begin{alertblock}{Desafios Técnicos}
+\begin{itemize}
+    \item \textbf{Integração de dados:} multi-ômicos heterogêneos
+    \item \textbf{Interpretação:} variantes de significado incerto (VUS)
+    \item \textbf{Validação:} necessidade de estudos prospectivos
+    \item \textbf{Padronização:} protocolos laboratoriais e análise
+    \item \textbf{Custo:} sequenciamento e análise ainda caros
+\end{itemize}
+\end{alertblock}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Desafios Éticos e Sociais}
+\begin{itemize}
+    \item \textbf{Privacidade:} dados genômicos sensíveis
+    \item \textbf{Consentimento:} uso de dados, achados incidentais
+    \item \textbf{Equidade:} acesso desigual a tecnologias
+    \item \textbf{Discriminação:} genética por seguradoras/empregadores
+    \item \textbf{Educação:} médicos e pacientes precisam compreender resultados
+\end{itemize}
+\end{alertblock}
+
+\importante{
+Medicina personalizada requer framework regulatório, ético e de treinamento profissional adequado
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: APLICAÇÕES CLÍNICAS
+% ============================================================================
+\section{Aplicações Clínicas}
+
+\begin{frame}{Estudo de Caso: Câncer de Mama HER2+ e Trastuzumab}
+\begin{block}{Contexto Clínico}
+\begin{itemize}
+    \item 15-20\% dos cânceres de mama superexpressam HER2
+    \item HER2 (ERBB2): receptor tirosina-quinase
+    \item Superexpressão $\rightarrow$ proliferação descontrolada
+    \item Prognóstico pior (antes de terapias-alvo)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Trastuzumab (Herceptin):}
+\begin{itemize}
+    \item Anticorpo monoclonal anti-HER2
+    \item Bloqueia sinalização HER2
+    \item Induz resposta imune (ADCC)
+    \item Primeiro sucesso de medicina personalizada em oncologia
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Impacto:}
+\begin{itemize}
+    \item $\downarrow$ 50\% mortalidade
+    \item Sobrevida global melhorada
+    \item Usado em adjuvância e metastático
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Membrana
+    \draw[thick] (0,0) -- (4,0);
+
+    % HER2
+    \draw[thick, fill=roxodna!30] (1,0) rectangle (1.5,0.3);
+    \draw[thick, fill=roxodna!30] (1.2,-0.3) -- (1.2,0);
+    \draw[thick, fill=roxodna!30] (1.2,-0.3) circle (0.15);
+    \node[below, font=\tiny] at (1.2,-0.5) {HER2};
+
+    % Trastuzumab
+    \draw[thick, verdeacido, ->] (1.2,1.5) -- (1.2,0.5);
+    \node[draw, circle, fill=verdeacido!30] (tras) at (1.2,2) {mAb};
+    \node[right, font=\tiny] at (1.7,2) {Trastuzumab};
+
+    % Sinalizacao bloqueada
+    \draw[thick, red, dashed] (1.2,-0.5) -- (1.2,-1.5);
+    \node[below, font=\tiny] at (1.2,-1.7) {Bloqueio};
+    \draw[-|, thick, red] (1.2,-1) -- (2.5,-1);
+
+    % Proliferacao
+    \node[right, font=\tiny, text width=1.5cm] at (2.5,-1.2) {$\downarrow$ Proliferação};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\importante{
+Teste HER2 é mandatório em câncer de mama $\rightarrow$ decisão terapêutica
+}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Doenças Infecciosas: Abordagem Sistêmica}
+\begin{block}{Interações Hospedeiro-Patógeno}
+Visão sistêmica considera:
+\begin{itemize}
+    \item Redes moleculares do patógeno
+    \item Resposta imune do hospedeiro
+    \item Interações proteína-proteína (patógeno-hospedeiro)
+    \item Modulação de vias do hospedeiro por patógeno
+    \item Evolução e adaptação do patógeno
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Identificação de alvos terapêuticos (essenciais para patógeno)
+    \item Reposicionamento de fármacos
+    \item Previsão de virulência
+    \item Assinaturas de resposta imune
+    \item Estratégias de vacinação
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Exemplo: Tuberculose}
+\begin{itemize}
+    \item Rede metabólica de \textit{M. tuberculosis}
+    \item Identificar enzimas essenciais
+    \item Testar \textit{in silico} inibidores
+    \item Prever resistência a fármacos
+    \item Biomarcadores de progressão latente $\rightarrow$ ativa
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Resistência a Antibióticos como Problema Sistêmico}
+\begin{block}{Mecanismos de Resistência}
+\begin{itemize}
+    \item Mutações em alvos (RNA polimerase, ribossomo)
+    \item Bombas de efluxo (superexpressão)
+    \item Enzimas inativadoras ($\beta$-lactamases)
+    \item Modificação de alvos (metilação de RNA ribossomal)
+    \item Biofilmes (tolerância)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Abordagens Sistêmicas:}
+\begin{itemize}
+    \item Análise de redes de resistência
+    \item Identificar vulnerabilidades colaterais
+    \item Terapias combinadas racionais
+    \item Predição de evolução de resistência
+    \item Desenvolvimento de novos antibióticos
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{alertblock}{Estratégias}
+\begin{itemize}
+    \item \textbf{Collateral sensitivity:} resistência a A causa sensibilidade a B
+    \item \textbf{Terapias alternadas:} reduzir pressão seletiva
+    \item \textbf{Alvos não-essenciais:} virulência sem morte bacteriana
+    \item \textbf{Imunomodulação:} fortalecer resposta do hospedeiro
+\end{itemize}
+\end{alertblock}
+\end{columns}
+
+\importante{
+Resistência antimicrobiana é uma das maiores ameaças à saúde global
+}
+\end{frame}
+
+\begin{frame}{Imunoterapia e Imunologia de Sistemas}
+\begin{block}{Imunoterapia do Câncer}
+Estratégias que ativam o sistema imune para eliminar células tumorais:
+\begin{itemize}
+    \item \textbf{Checkpoint inhibitors:} anti-PD-1, anti-CTLA-4 (bloqueiam sinais inibitórios)
+    \item \textbf{CAR-T cells:} células T geneticamente modificadas
+    \item \textbf{Vacinas terapêuticas:} antígenos tumorais
+    \item \textbf{Oncolytic viruses:} vírus que infectam e lisam tumor
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Desafios:}
+\begin{itemize}
+    \item Apenas 20-40\% respondem
+    \item Efeitos adversos (autoimunidade)
+    \item Microambiente imunossupressor
+    \item Heterogeneidade tumoral
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Imunologia de Sistemas:}
+\begin{itemize}
+    \item Perfil de infiltrado imune (hot vs cold tumors)
+    \item Assinaturas de resposta
+    \item Carga mutacional tumoral (TMB)
+    \item Expressão de PD-L1
+    \item Modelagem de resposta imune
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Biomarcadores preditivos são essenciais para selecionar pacientes que se beneficiarão
+}
+\end{frame}
+
+\begin{frame}{Terapia com Células CAR-T}
+\begin{block}{Conceito}
+Células T do paciente são geneticamente modificadas para expressar receptor de antígeno quimérico (CAR) que reconhece antígeno tumoral específico.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.75]
+    % Etapa 1: coleta
+    \node[draw, circle, fill=azulclaro!30] (patient) at (0,0) {Paciente};
+    \draw[->, thick] (1,0) -- (2,0);
+    \node[draw, rectangle, fill=roxodna!20] (tcell) at (3,0) {Células T};
+
+    % Etapa 2: modificacao
+    \draw[->, thick] (4,0) -- (5,0);
+    \node[draw, rectangle, fill=verdeacido!20, text width=1.5cm, align=center] (mod) at (6.5,0) {Modificação\\Genética\\(CAR)};
+
+    % Etapa 3: expansao
+    \draw[->, thick] (8,0) -- (9,0);
+    \node[draw, rectangle, fill=laranjacel!20, text width=1.5cm, align=center] (exp) at (10.5,0) {Expansão\\\textit{ex vivo}};
+
+    % Etapa 4: reinfusao
+    \draw[->, thick] (12,0) -- (13,0);
+    \node[draw, circle, fill=azulclaro!30] (back) at (14,0) {Paciente};
+
+    % Resultado: tumor
+    \node[below=0.5cm of back, draw, rectangle, fill=red!30] (tumor) {Tumor};
+    \draw[->, thick, red] (back) -- (tumor) node[midway, right, font=\tiny] {CAR-T ataca};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Sucessos:}
+\begin{itemize}
+    \item Leucemias/linfomas B (CD19)
+    \item Taxa de remissão completa >80\%
+    \item FDA aprovado (Kymriah, Yescarta)
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Modelagem Sistêmica:}
+\begin{itemize}
+    \item Dinâmica CAR-T vs tumor
+    \item Predição de síndrome de liberação de citocinas (CRS)
+    \item Otimização de dose
+    \item Design de CARs de próxima geração
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Design de Vacinas: Abordagem Sistêmica}
+\begin{block}{Vacinologia de Sistemas}
+Uso de abordagens ômicas e modelagem para:
+\begin{itemize}
+    \item Identificar antígenos imunogênicos e protetores
+    \item Prever resposta imune a candidatos vacinais
+    \item Otimizar formulações e adjuvantes
+    \item Estratificar respondedores vs não-respondedores
+    \item Compreender correlatos de proteção
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Pipeline:}
+\begin{enumerate}
+    \item Genômica de patógeno
+    \item Predição de epítopos (MHC binding)
+    \item Análise de conservação
+    \item Teste \textit{in silico} de imunogenicidade
+    \item Validação experimental
+    \item Ensaios clínicos
+\end{enumerate}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Exemplo: Vacinas mRNA (COVID-19)}
+\begin{itemize}
+    \item Análise genômica rápida do SARS-CoV-2
+    \item Identificação da proteína Spike (S)
+    \item Design de mRNA otimizado
+    \item Predição de resposta imune
+    \item Desenvolvimento em tempo recorde (<1 ano)
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\importante{
+Biologia de sistemas acelerou desenvolvimento de vacinas COVID-19
+}
+\end{frame}
+
+\begin{frame}{COVID-19 e Resposta de Biologia de Sistemas}
+\begin{block}{Contribuições de Systems Biology na Pandemia}
+\begin{itemize}
+    \item \textbf{Genômica viral:} sequenciamento rápido, rastreamento de variantes
+    \item \textbf{Reposicionamento de fármacos:} análise de redes identificou candidatos (remdesivir, dexametasona)
+    \item \textbf{Resposta imune:} perfis de citocinas, assinaturas de gravidade (tempestade de citocinas)
+    \item \textbf{Interações proteína-proteína:} mapa de interações SARS-CoV-2-humano
+    \item \textbf{Modelagem epidemiológica:} previsão de disseminação, impacto de intervenções
+    \item \textbf{Vacinas:} design racional (mRNA, vetores virais)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Biomarcadores de Gravidade}
+\begin{itemize}
+    \item IL-6, D-dímero, ferritina $\uparrow$ em casos graves
+    \item Linfopenia, neutrofilia
+    \item Perfis transcriptômicos distinguem progressão
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo: Estratificação de Pacientes com Clustering}
+\begin{lstlisting}[language=Python, caption=Análise de clusters em dados clínicos, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+# Dados simulados: pacientes x features (omicas + clinicas)
+np.random.seed(42)
+n_patients = 100
+data = np.random.randn(n_patients, 10)  # 10 features
+
+# Normalizar
+scaler = StandardScaler()
+data_scaled = scaler.fit_transform(data)
+
+# Clustering K-means
+kmeans = KMeans(n_clusters=3, random_state=42)
+clusters = kmeans.fit_predict(data_scaled)
+
+# PCA para visualizacao
+pca = PCA(n_components=2)
+data_pca = pca.transform(data_scaled)
+
+# Plotar
+plt.figure(figsize=(8, 6))
+scatter = plt.scatter(data_pca[:, 0], data_pca[:, 1],
+                       c=clusters, cmap='viridis', s=50)
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.title('Estratificacao de Pacientes (K-means)')
+plt.colorbar(scatter, label='Cluster')
+plt.legend(['Subgrupo 1', 'Subgrupo 2', 'Subgrupo 3'])
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1: Farmacocinética}
+\begin{block}{Questão 1: Modelo PK}
+Um paciente recebe dose IV bolus de 500 mg de um fármaco. O volume de distribuição é $V_d = 50$ L e a meia-vida é $t_{1/2} = 4$ h.
+
+\begin{enumerate}
+    \item Calcule a constante de eliminação $k_e$
+    \item Calcule o clearance (CL)
+    \item Qual será a concentração após 8 horas?
+    \item Calcule a AUC (área sob a curva)
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Modelo de Dois Compartimentos}
+Implemente um modelo farmacocinético de dois compartimentos em Python e simule a concentração ao longo de 24 horas. Use os seguintes parâmetros:
+\begin{itemize}
+    \item $k_e = 0.15$ h$^{-1}$, $k_{12} = 0.3$ h$^{-1}$, $k_{21} = 0.2$ h$^{-1}$
+    \item Dose = 1000 mg IV, $C_1(0) = 20$ mg/L, $C_2(0) = 0$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2: Redes de Doenças}
+\begin{block}{Questão 3: Análise de Rede DTI}
+Dado o seguinte grafo bipartido de interações fármaco-alvo:
+\begin{itemize}
+    \item Fármaco A: alvos T1, T2, T3
+    \item Fármaco B: alvos T2, T4
+    \item Fármaco C: alvos T3, T4, T5
+\end{itemize}
+
+\begin{enumerate}
+    \item Construa a matriz de adjacência
+    \item Calcule o grau de promiscuidade de cada fármaco
+    \item Identifique alvos compartilhados (potencial para efeitos adversos similares)
+    \item Sugira reposicionamento de fármacos baseado em sobreposição de alvos
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 4: Módulos de Doença}
+Use algoritmo de Louvain ou Girvan-Newman para detectar módulos em uma rede de interações proteína-proteína associada a doença cardiovascular. Interprete os módulos funcionalmente.
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3: Medicina Personalizada}
+\begin{block}{Questão 5: Farmacogenômica}
+Um paciente é metabolizador pobre (PM) de CYP2D6 e recebe codeína (pró-fármaco convertido em morfina por CYP2D6).
+
+\begin{enumerate}
+    \item Preveja o efeito no manejo da dor
+    \item Qual ajuste de dose ou medicação alternativa você recomendaria?
+    \item Como você explicaria ao paciente a importância do teste farmacogenômico?
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 6: Estratificação de Pacientes}
+Implemente clustering K-means em um dataset de expressão gênica de câncer de mama (use dataset público como TCGA ou simulado). Identifique subgrupos moleculares e compare com subtipos clínicos conhecidos (Luminal A/B, HER2+, Basal).
+\end{block}
+\end{frame}
+
+\begin{frame}{Projeto Prático: Análise de Dados Clínicos Ômicos}
+\begin{alertblock}{Projeto Integrador}
+\textbf{Objetivo:} Analisar dados multi-ômicos de pacientes com câncer para identificar biomarcadores e estratificar pacientes.
+
+\textbf{Etapas:}
+\begin{enumerate}
+    \item \textbf{Dados:} Baixar dados de expressão gênica e clínicos (TCGA, GEO, cBioPortal)
+    \item \textbf{Pré-processamento:} Normalização, controle de qualidade, filtro de variância
+    \item \textbf{Análise exploratória:} PCA, heatmaps, clustering hierárquico
+    \item \textbf{Clustering:} K-means ou NMF para identificar subgrupos
+    \item \textbf{Biomarcadores:} Análise diferencial (DESeq2, limma) entre subgrupos
+    \item \textbf{Sobrevida:} Curvas de Kaplan-Meier, teste log-rank
+    \item \textbf{Validação:} Dataset independente
+    \item \textbf{Interpretação biológica:} Enriquecimento funcional (GO, KEGG)
+\end{enumerate}
+
+\textbf{Entregável:} Relatório com código Python/R, figuras e interpretação clínica
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{barabasi2011} Barabási A.L., Gulbahce N., Loscalzo J. (2011). \textit{Network medicine: a network-based approach to human disease}. Nature Reviews Genetics 12:56-68.
+
+\bibitem{auffray2009} Auffray C., Chen Z., Hood L. (2009). \textit{Systems medicine: the future of medical genomics and healthcare}. Genome Medicine 1:2.
+
+\bibitem{schadt2009} Schadt E.E. (2009). \textit{Molecular networks as sensors and drivers of common human diseases}. Nature 461:218-223.
+
+\bibitem{zhou2014} Zhou X., Menche J., Barabási A.L., Sharma A. (2014). \textit{Human symptoms-disease network}. Nature Communications 5:4212.
+
+\bibitem{hanahan2011} Hanahan D., Weinberg R.A. (2011). \textit{Hallmarks of cancer: the next generation}. Cell 144:646-674.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Referências: Network Medicine e Farmacologia}
+\begin{thebibliography}{99}
+\bibitem{hopkins2008} Hopkins A.L. (2008). \textit{Network pharmacology: the next paradigm in drug discovery}. Nature Chemical Biology 4:682-690.
+
+\bibitem{zhao2012} Zhao S., Iyengar R. (2012). \textit{Systems pharmacology: network analysis to identify multiscale mechanisms of drug action}. Annual Review of Pharmacology and Toxicology 52:505-521.
+
+\bibitem{csermely2013} Csermely P., Korcsmáros T., Kiss H.J., et al. (2013). \textit{Structure and dynamics of molecular networks: a novel paradigm of drug discovery}. Pharmacology \& Therapeutics 138:333-408.
+
+\bibitem{menche2015} Menche J., Sharma A., Kitsak M., et al. (2015). \textit{Disease networks: uncovering disease-disease relationships through the incomplete interactome}. Science 347:1257601.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Referências: Medicina Personalizada e Ômicas}
+\begin{thebibliography}{99}
+\bibitem{ashley2016} Ashley E.A. (2016). \textit{Towards precision medicine}. Nature Reviews Genetics 17:507-522.
+
+\bibitem{roden2015} Roden D.M., McLeod H.L., Relling M.V., et al. (2019). \textit{Pharmacogenomics}. The Lancet 394:521-532.
+
+\bibitem{chen2012} Chen R., Snyder M. (2013). \textit{Promise of personalized omics to precision medicine}. Wiley Interdisciplinary Reviews: Systems Biology and Medicine 5:73-82.
+
+\bibitem{brunet2004} Brunet J.P., et al. (2004). \textit{Metagenes and molecular pattern discovery using matrix factorization}. PNAS 101:4164-4169.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Bases de Dados e Recursos}
+\begin{block}{Bases de Dados Clínicas e Farmacogenômicas}
+\begin{itemize}
+    \item \textbf{DrugBank:} \url{https://go.drugbank.com} --- fármacos, alvos, PK/PD
+    \item \textbf{TCGA:} \url{https://portal.gdc.cancer.gov} --- dados multi-ômicos de câncer
+    \item \textbf{UK Biobank:} \url{https://www.ukbiobank.ac.uk} --- dados de saúde populacional
+    \item \textbf{ClinVar:} \url{https://www.ncbi.nlm.nih.gov/clinvar} --- variantes clínicas
+    \item \textbf{PharmGKB:} \url{https://www.pharmgkb.org} --- farmacogenômica
+\end{itemize}
+\end{block}
+
+\begin{block}{Ferramentas de Análise}
+\begin{itemize}
+    \item \textbf{cBioPortal:} \url{https://www.cbioportal.org} --- análise de dados de câncer
+    \item \textbf{STRING:} \url{https://string-db.org} --- interações proteína-proteína
+    \item \textbf{Cytoscape:} \url{https://cytoscape.org} --- visualização de redes
+    \item \textbf{GSEA:} \url{https://www.gsea-msigdb.org} --- enriquecimento funcional
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Livros e Reviews}
+\begin{itemize}
+    \item Loscalzo J., Barabási A.L., Silverman E.K. (2017). \textit{Network Medicine: Complex Systems in Human Disease and Therapeutics}. Harvard University Press.
+    \item Zhu H., Xia M. (2016). \textit{Advances in Systems Biology}. Springer.
+    \item Wolkenhauer O. (2013). \textit{Systems Medicine}. Springer.
+\end{itemize}
+\end{block}
+
+\begin{block}{Artigos de Revisão Importantes}
+\begin{itemize}
+    \item Hood L., Friend S.H. (2011). \textit{Predictive, personalized, preventive, participatory (P4) cancer medicine}. Nature Reviews Clinical Oncology 8:184-187.
+    \item Ideker T., Krogan N.J. (2012). \textit{Differential network biology}. Molecular Systems Biology 8:565.
+    \item Califano A., Alvarez M.J. (2017). \textit{The recurrent architecture of tumour initiation, progression and drug sensitivity}. Nature Reviews Cancer 17:116-130.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 13: Systems Biology in Medicine}
+
+\vspace{1cm}
+
+\textbf{Tópicos Abordados:}\\
+Descoberta de fármacos $\cdot$ Doenças complexas\\
+Medicina personalizada $\cdot$ Aplicações clínicas
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+
+\vspace{0.5cm}
+
+\textit{A medicina do futuro é sistêmica, preditiva, personalizada e participativa}
+\end{center}
+\end{frame}
+
+\end{document}

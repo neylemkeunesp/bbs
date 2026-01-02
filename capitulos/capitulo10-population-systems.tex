@@ -1,0 +1,1465 @@
+% ============================================================================
+% CAPÍTULO 10: SISTEMAS POPULACIONAIS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+% ============================================================================
+% INFORMAÇÕES DO DOCUMENTO
+% ============================================================================
+\title[Cap. 10: Sistemas Populacionais]{Capítulo 10: Sistemas Populacionais}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Seu Nome}
+\institute{Sua Instituição}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{Visão Geral do Capítulo}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Compreender modelos de dinâmica populacional
+    \item Analisar interações entre espécies
+    \item Estudar modelos epidemiológicos
+    \item Explorar dinâmica espacial de populações
+    \item Implementar simulações em Python
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Por que Estudar Sistemas Populacionais?}
+\begin{itemize}
+    \item Conservação de espécies ameaçadas
+    \item Controle de epidemias
+    \item Gestão de recursos naturais
+    \item Compreensão de ecossistemas
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Dinâmica Populacional}
+\definicao{Sistema Populacional}{
+Conjunto de indivíduos da mesma espécie (ou espécies interagentes) cuja densidade varia no tempo e espaço devido a processos de nascimento, morte, migração e interações.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Níveis de Organização:}
+\begin{itemize}
+    \item \textbf{Espécie única:} crescimento, regulação
+    \item \textbf{Interações:} predação, competição, mutualismo
+    \item \textbf{Espacial:} metapopulações, difusão
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Ecologia teórica
+    \item Epidemiologia
+    \item Biologia evolutiva
+    \item Gestão ambiental
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Processos Fundamentais}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, scale=0.9, transform shape]
+    \node[draw, circle, fill=azulclaro!30, minimum size=2cm] (pop) {População\\$N(t)$};
+
+    \node[above=1.5cm of pop, fill=verdeacido!30, rounded corners] (nasc) {Nascimentos: $b N$};
+    \node[below=1.5cm of pop, fill=red!30, rounded corners] (morte) {Mortes: $d N$};
+    \node[left=2cm of pop, fill=laranjacel!30, rounded corners] (imig) {Imigração: $I$};
+    \node[right=2cm of pop, fill=roxodna!30, rounded corners] (emig) {Emigração: $E$};
+
+    \draw[->, thick, verdeacido, line width=2pt] (nasc) -- (pop);
+    \draw[->, thick, red, line width=2pt] (pop) -- (morte);
+    \draw[->, thick, laranjacel, line width=2pt] (imig) -- (pop);
+    \draw[->, thick, roxodna, line width=2pt] (pop) -- (emig);
+\end{tikzpicture}
+\end{center}
+
+\destaque{
+\begin{equation*}
+\derivada{N}{t} = \underbrace{bN}_{\text{nascimento}} - \underbrace{dN}_{\text{morte}} + \underbrace{I}_{\text{imigração}} - \underbrace{E}_{\text{emigração}}
+\end{equation*}
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: MODELOS DE CRESCIMENTO POPULACIONAL
+% ============================================================================
+\section{Modelos de Crescimento Populacional}
+
+\begin{frame}{Crescimento Exponencial (Malthusiano)}
+\begin{block}{Modelo Mais Simples}
+População cresce proporcionalmente ao seu tamanho:
+\begin{equation*}
+\derivada{N}{t} = rN
+\end{equation*}
+onde $r = b - d$ é a taxa intrínseca de crescimento per capita.
+\end{block}
+
+\textbf{Solução analítica:}
+\destaque{
+\begin{equation*}
+N(t) = N_0 e^{rt}
+\end{equation*}
+}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Crescimento ilimitado ($r > 0$)
+    \item Decaimento exponencial ($r < 0$)
+    \item Tempo de duplicação: $t_d = \frac{\ln 2}{r}$
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,4) node[above] {$N$};
+    \draw[thick, azulescuro, domain=0:4.5, smooth, samples=100]
+        plot (\x, {0.5*exp(0.6*\x)});
+    \node[azulescuro] at (3.5,3.5) {$r > 0$};
+    \draw[thick, red, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3*exp(-0.4*\x)});
+    \node[red] at (3,0.5) {$r < 0$};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Crescimento Logístico (Verhulst)}
+\begin{block}{Modelo com Capacidade de Suporte}
+Incorpora limitação de recursos através da capacidade de suporte $K$:
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right)
+\end{equation*}
+\end{block}
+
+\textbf{Solução analítica:}
+\begin{equation*}
+N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)} = \frac{K}{1 + \left(\frac{K-N_0}{N_0}\right)e^{-rt}}
+\end{equation*}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Propriedades:}
+\begin{itemize}
+    \item Forma sigmoidal (curva S)
+    \item $N \to K$ quando $t \to \infty$
+    \item Ponto de inflexão em $N = K/2$
+    \item Taxa máxima em $N = K/2$
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,4) node[above] {$N$};
+    \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
+        plot (\x, {3/(1+9*exp(-1.5*\x))});
+    \draw[dashed, verdeacido, thick] (0,3) -- (5,3) node[right, font=\small] {$K$};
+    \draw[dashed, red] (0,1.5) -- (5,1.5) node[right, font=\tiny] {$K/2$};
+    \fill[red] (1.5,1.5) circle (2pt);
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Crescimento Logístico}
+\begin{lstlisting}[language=Python, caption=Modelo logístico em Python]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def logistic(N, t, r, K):
+    """Modelo de crescimento logistico"""
+    return r * N * (1 - N/K)
+
+# Parametros
+r = 0.8    # taxa de crescimento
+K = 1000   # capacidade de suporte
+N0 = 50    # populacao inicial
+
+# Tempo
+t = np.linspace(0, 20, 500)
+
+# Resolver EDO
+N = odeint(logistic, N0, t, args=(r, K))
+
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.plot(t, N, 'b-', linewidth=2, label='N(t)')
+plt.axhline(y=K, color='r', linestyle='--',
+            linewidth=2, label=f'K = {K}')
+plt.xlabel('Tempo')
+plt.ylabel('Populacao')
+plt.title('Crescimento Logistico')
+plt.legend()
+plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Efeito Allee}
+\begin{block}{Crescimento com Densidade Crítica}
+Em algumas populações, baixas densidades reduzem a taxa de crescimento (dificuldade de encontrar parceiros, defesa contra predadores):
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right)\left(\frac{N}{A} - 1\right)
+\end{equation*}
+onde $A$ é a densidade crítica (limiar de Allee).
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Características:}
+\begin{itemize}
+    \item Três equilíbrios: $N^* = 0, A, K$
+    \item $N = 0$ estável, $N = A$ instável
+    \item $N = K$ estável
+    \item Risco de extinção se $N < A$
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$N$};
+    \draw[->] (0,-2) -- (0,2) node[above] {$\frac{dN}{dt}$};
+    \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
+        plot (\x, {0.8*\x*(4.5-\x)*(\x-1.2)/5});
+    \draw[dashed] (1.2,-2) -- (1.2,2);
+    \draw[dashed] (4.5,-2) -- (4.5,2);
+    \node[below, font=\tiny] at (1.2,0) {$A$};
+    \node[below, font=\tiny] at (4.5,0) {$K$};
+    \fill[red] (0,0) circle (2pt);
+    \fill[white, draw=black] (1.2,0) circle (2pt);
+    \fill[red] (4.5,0) circle (2pt);
+\end{tikzpicture}
+\end{center}
+\textbf{Estável:} \textcolor{red}{$\bullet$} \quad
+\textbf{Instável:} $\circ$
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelos em Tempo Discreto}
+\definicao{Equações de Diferença}{
+Modelos onde o tempo avança em passos discretos: $N_{t+1} = f(N_t)$
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Modelo de Ricker}
+\begin{equation*}
+N_{t+1} = N_t e^{r(1 - N_t/K)}
+\end{equation*}
+\end{block}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Pode exibir caos
+    \item Usado para peixes com gerações discretas
+    \item Comportamento complexo para $r$ alto
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{block}{Modelo de Beverton-Holt}
+\begin{equation*}
+N_{t+1} = \frac{R N_t}{1 + (R-1)N_t/K}
+\end{equation*}
+\end{block}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Sempre estável
+    \item $R$ = taxa de reprodução líquida
+    \item Converge monotonicamente para $K$
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Modelo de Ricker}
+\begin{lstlisting}[language=Python, caption=Dinâmica discreta com Ricker]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def ricker(N, r, K):
+    """Modelo de Ricker"""
+    return N * np.exp(r * (1 - N/K))
+
+# Parametros
+r_values = [1.5, 2.0, 2.7]  # diferentes taxas de crescimento
+K = 100
+N0 = 10
+t_max = 50
+
+# Simular
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+
+for i, r in enumerate(r_values):
+    N = np.zeros(t_max)
+    N[0] = N0
+
+    for t in range(t_max - 1):
+        N[t+1] = ricker(N[t], r, K)
+
+    axes[i].plot(N, 'b.-', markersize=4)
+    axes[i].axhline(y=K, color='r', linestyle='--',
+                     label=f'K = {K}')
+    axes[i].set_xlabel('Geracao t')
+    axes[i].set_ylabel('N(t)')
+    axes[i].set_title(f'r = {r}')
+    axes[i].legend()
+    axes[i].grid(True, alpha=0.3)
+
+plt.tight_layout()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Diagrama de Linha de Fase}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Análise Gráfica:}
+\begin{itemize}
+    \item Plotar $N_{t+1}$ vs $N_t$
+    \item Linha de identidade: $N_{t+1} = N_t$
+    \item Equilíbrios: intersecções
+    \item Estabilidade: inclinação
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Critério de Estabilidade:}
+\begin{equation*}
+\left|\derivada{f}{N}\Bigg|_{N^*}\right| < 1
+\end{equation*}
+
+Se $> 1$: instável (oscilações ou caos)
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (5,0) node[right] {$N_t$};
+    \draw[->] (0,0) -- (0,5) node[above] {$N_{t+1}$};
+
+    % Linha identidade
+    \draw[dashed, gray] (0,0) -- (5,5);
+
+    % Funcao de Ricker
+    \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
+        plot (\x, {\x*exp(1.8*(1-\x/3.5))});
+
+    % Equilibrio
+    \fill[red] (3.5,3.5) circle (2pt);
+
+    % Cobweb
+    \draw[verdeacido, thick] (0.5,0.5) -- (0.5,1.2) -- (1.2,1.2) -- (1.2,2.3) -- (2.3,2.3) -- (2.3,3.2) -- (3.2,3.2) -- (3.2,3.5);
+
+    \node[below] at (3.5,-0.2) {$K$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Análise Cobweb:} trajetória iterativa
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: INTERAÇÕES ENTRE ESPÉCIES
+% ============================================================================
+\section{Interações entre Espécies}
+
+\begin{frame}{Tipos de Interações}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Interação} & \textbf{Espécie 1} & \textbf{Espécie 2} & \textbf{Exemplo} \\
+\midrule
+Competição & $-$ & $-$ & Leões vs Hienas \\
+Predação & $+$ & $-$ & Lobo vs Coelho \\
+Mutualismo & $+$ & $+$ & Abelha vs Flor \\
+Comensalismo & $+$ & $0$ & Rêmora vs Tubarão \\
+Amensalismo & $-$ & $0$ & Árvore vs Plântula \\
+Parasitismo & $+$ & $-$ & Carrapato vs Cão \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Notação}
+\begin{itemize}
+    \item $(+)$ = efeito benéfico na taxa de crescimento
+    \item $(-)$ = efeito prejudicial na taxa de crescimento
+    \item $(0)$ = sem efeito
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Modelo Lotka-Volterra Predador-Presa}
+\begin{block}{Sistema de Equações}
+\begin{align*}
+\derivada{V}{t} &= \alpha V - \beta V P \quad \text{(Presas)}\\
+\derivada{P}{t} &= \delta \beta V P - \gamma P \quad \text{(Predadores)}
+\end{align*}
+
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $V$ = densidade de presas
+    \item $P$ = densidade de predadores
+    \item $\alpha$ = taxa de crescimento das presas
+    \item $\beta$ = taxa de predação
+    \item $\delta$ = eficiência de conversão (biomassa presa $\to$ predador)
+    \item $\gamma$ = taxa de morte dos predadores
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Interpretação Biológica}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Equação das Presas:}
+\begin{equation*}
+\derivada{V}{t} = \underbrace{\alpha V}_{\substack{\text{crescimento}\\\text{exponencial}}} - \underbrace{\beta V P}_{\substack{\text{perda por}\\\text{predação}}}
+\end{equation*}
+
+\begin{itemize}
+    \item Sem predadores: $\derivada{V}{t} = \alpha V$
+    \item Taxa de encontro: lei de ação das massas ($VP$)
+    \item Predação reduz crescimento
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Equação dos Predadores:}
+\begin{equation*}
+\derivada{P}{t} = \underbrace{\delta \beta V P}_{\substack{\text{crescimento por}\\\text{consumo}}} - \underbrace{\gamma P}_{\substack{\text{morte}\\\text{natural}}}
+\end{equation*}
+
+\begin{itemize}
+    \item Sem presas: $\derivada{P}{t} = -\gamma P$
+    \item Crescimento proporcional ao consumo
+    \item Morte independente de densidade
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\importante{
+Este sistema exibe oscilações periódicas permanentes!
+}
+\end{frame}
+
+\begin{frame}{Análise de Equilíbrio}
+\begin{block}{Pontos de Equilíbrio}
+Resolver $\derivada{V}{t} = 0$ e $\derivada{P}{t} = 0$:
+
+\begin{enumerate}
+    \item \textbf{Extinção total:} $(V^*, P^*) = (0, 0)$
+    \item \textbf{Coexistência:}
+    \begin{equation*}
+    V^* = \frac{\gamma}{\delta\beta}, \quad P^* = \frac{\alpha}{\beta}
+    \end{equation*}
+\end{enumerate}
+\end{block}
+
+\textbf{Isoclinas nulas:}
+\begin{itemize}
+    \item \textbf{Presas:} $\derivada{V}{t} = 0 \Rightarrow V = 0$ ou $P = \alpha/\beta$
+    \item \textbf{Predadores:} $\derivada{P}{t} = 0 \Rightarrow P = 0$ ou $V = \gamma/(\delta\beta)$
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (5,0) node[right] {$V$};
+    \draw[->] (0,0) -- (0,4) node[above] {$P$};
+
+    % Isoclinas
+    \draw[thick, blue] (2,0) -- (2,4) node[above, font=\small] {$\frac{dP}{dt}=0$};
+    \draw[thick, red] (0,2.5) -- (5,2.5) node[right, font=\small] {$\frac{dV}{dt}=0$};
+
+    % Equilibrio
+    \fill[verdeacido] (2,2.5) circle (3pt) node[above right] {$(V^*, P^*)$};
+
+    % Trajetoria
+    \draw[verdeacido, thick, ->, domain=0:360, smooth, samples=100]
+        plot ({2 + 1.2*cos(\x)}, {2.5 + 0.8*sin(\x)});
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Lotka-Volterra}
+\begin{lstlisting}[language=Python, caption=Sistema predador-presa]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def lotka_volterra(y, t, alpha, beta, delta, gamma):
+    """Sistema Lotka-Volterra predador-presa"""
+    V, P = y
+    dVdt = alpha*V - beta*V*P
+    dPdt = delta*beta*V*P - gamma*P
+    return [dVdt, dPdt]
+
+# Parametros
+alpha = 1.0    # crescimento presas
+beta = 0.1     # taxa de predacao
+delta = 0.75   # eficiencia conversao
+gamma = 1.5    # morte predadores
+
+# Condicoes iniciais
+y0 = [40, 9]   # [V0, P0]
+t = np.linspace(0, 50, 1000)
+
+# Resolver
+sol = odeint(lotka_volterra, y0, t,
+             args=(alpha, beta, delta, gamma))
+
+# Plotar series temporais
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.plot(t, sol[:, 0], 'b-', linewidth=2, label='Presas (V)')
+plt.plot(t, sol[:, 1], 'r-', linewidth=2, label='Predadores (P)')
+plt.xlabel('Tempo')
+plt.ylabel('Densidade')
+plt.legend()
+plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Retrato de Fase}
+\begin{columns}
+\column{0.45\textwidth}
+\begin{lstlisting}[language=Python, caption=Plano de fase, basicstyle=\ttfamily\tiny]
+# Retrato de fase
+plt.subplot(1, 2, 2)
+plt.plot(sol[:, 0], sol[:, 1],
+         'g-', linewidth=2)
+plt.plot(sol[0, 0], sol[0, 1],
+         'go', markersize=10,
+         label='Inicio')
+
+# Equilibrio
+V_eq = gamma/(delta*beta)
+P_eq = alpha/beta
+plt.plot(V_eq, P_eq, 'r*',
+         markersize=15,
+         label='Equilibrio')
+
+# Isoclinas
+V_range = np.linspace(0, 60, 100)
+plt.axhline(y=P_eq, color='r',
+            linestyle='--',
+            alpha=0.5,
+            label='dV/dt=0')
+plt.axvline(x=V_eq, color='b',
+            linestyle='--',
+            alpha=0.5,
+            label='dP/dt=0')
+
+plt.xlabel('Presas (V)')
+plt.ylabel('Predadores (P)')
+plt.legend(fontsize=8)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+\end{lstlisting}
+
+\column{0.55\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    \draw[->] (0,0) -- (6,0) node[right] {Presas ($V$)};
+    \draw[->] (0,0) -- (0,5) node[above] {Predadores ($P$)};
+
+    % Isoclinas
+    \draw[dashed, red, thick] (0,2.5) -- (6,2.5);
+    \draw[dashed, blue, thick] (3,0) -- (3,5);
+
+    % Trajetorias
+    \draw[verdeacido, very thick, ->, domain=0:350, smooth, samples=100]
+        plot ({3 + 2*cos(\x)}, {2.5 + 1.5*sin(\x)});
+    \draw[verdeacido, thick, ->, domain=0:350, smooth, samples=100]
+        plot ({3 + 1*cos(\x)}, {2.5 + 0.75*sin(\x)});
+
+    % Equilibrio
+    \fill[red] (3,2.5) circle (3pt) node[above right, font=\small] {$(V^*, P^*)$};
+
+    % Campo vetorial (simplificado)
+    \foreach \x in {1,2,4,5} {
+        \foreach \y in {1,2,3,4} {
+            \draw[->, gray, thin] (\x,\y) -- +({0.15*(\x - 0.1*\x*\y)}, {0.15*(0.05*\x*\y - \y)});
+        }
+    }
+\end{tikzpicture}
+\end{center}
+
+\textbf{Observações:}
+\begin{itemize}
+    \item Órbitas fechadas (ciclos)
+    \item Período depende de CI
+    \item Centro neutro (não atrator)
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Competição: Lotka-Volterra}
+\begin{block}{Sistema de Competição}
+Duas espécies competindo pelos mesmos recursos:
+\begin{align*}
+\derivada{N_1}{t} &= r_1 N_1\left(1 - \frac{N_1 + \alpha_{12}N_2}{K_1}\right)\\
+\derivada{N_2}{t} &= r_2 N_2\left(1 - \frac{N_2 + \alpha_{21}N_1}{K_2}\right)
+\end{align*}
+
+\textbf{Coeficientes de competição:}
+\begin{itemize}
+    \item $\alpha_{12}$ = efeito da espécie 2 sobre a espécie 1
+    \item $\alpha_{21}$ = efeito da espécie 1 sobre a espécie 2
+\end{itemize}
+\end{block}
+
+\textbf{Interpretação:} $\alpha_{12}N_2$ converte indivíduos da espécie 2 em "equivalentes" da espécie 1 em termos de uso de recursos.
+\end{frame}
+
+\begin{frame}{Exclusão Competitiva}
+\begin{block}{Quatro Cenários Possíveis}
+\begin{enumerate}
+    \item \textbf{Espécie 1 vence:} $K_1 > \alpha_{12}K_2$ e $K_2 < \alpha_{21}K_1$
+    \item \textbf{Espécie 2 vence:} $K_2 > \alpha_{21}K_1$ e $K_1 < \alpha_{12}K_2$
+    \item \textbf{Coexistência estável:} $K_1 > \alpha_{12}K_2$ e $K_2 > \alpha_{21}K_1$
+    \item \textbf{Exclusão dependente de CI:} $K_1 < \alpha_{12}K_2$ e $K_2 < \alpha_{21}K_1$
+\end{enumerate}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Coexistencia
+    \begin{scope}
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$N_1$};
+        \draw[->] (0,0) -- (0,3) node[above, font=\tiny] {$N_2$};
+        \draw[thick, blue] (2.5,0) -- (0,2);
+        \draw[thick, red] (2,0) -- (0,2.5);
+        \fill[verdeacido] (1.2,1.2) circle (2pt);
+        \node[below, font=\tiny] at (1.5,-0.3) {Coexistência};
+    \end{scope}
+
+    % Sp 1 vence
+    \begin{scope}[xshift=4cm]
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$N_1$};
+        \draw[->] (0,0) -- (0,3) node[above, font=\tiny] {$N_2$};
+        \draw[thick, blue] (2.5,0) -- (0,1.5);
+        \draw[thick, red] (1.5,0) -- (0,2.5);
+        \fill[verdeacido] (2.5,0) circle (2pt);
+        \node[below, font=\tiny] at (1.5,-0.3) {Sp. 1 vence};
+    \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\importante{
+Princípio da Exclusão Competitiva (Gause): duas espécies não podem coexistir no mesmo nicho ecológico.
+}
+\end{frame}
+
+\begin{frame}{Mutualismo}
+\begin{block}{Modelo de Mutualismo}
+Interação benéfica mútua (polinizadores-plantas, micorrizas-raízes):
+\begin{align*}
+\derivada{N_1}{t} &= r_1 N_1\left(1 - \frac{N_1}{K_1 + \alpha_{12}N_2}\right)\\
+\derivada{N_2}{t} &= r_2 N_2\left(1 - \frac{N_2}{K_2 + \alpha_{21}N_1}\right)
+\end{align*}
+\end{block}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Coeficientes $\alpha_{ij} > 0$ aumentam capacidade de suporte
+    \item Mutualismo facultativo: espécies podem sobreviver sozinhas
+    \item Mutualismo obrigatório: requer ambas espécies
+\end{itemize}
+
+\exemplo{Abelhas e Flores}{
+Abelhas aumentam reprodução das plantas (polinização)\\
+Flores fornecem néctar/pólen para abelhas\\
+Coevolução: dependência mútua crescente
+}
+\end{frame}
+
+\begin{frame}{Modelo Nicholson-Bailey}
+\begin{block}{Hospedeiro-Parasitóide em Tempo Discreto}
+\begin{align*}
+H_{t+1} &= \lambda H_t e^{-aP_t}\\
+P_{t+1} &= c H_t (1 - e^{-aP_t})
+\end{align*}
+
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $H_t$ = densidade de hospedeiros na geração $t$
+    \item $P_t$ = densidade de parasitóides
+    \item $\lambda$ = taxa de reprodução do hospedeiro
+    \item $a$ = taxa de ataque do parasitóide
+    \item $c$ = número de parasitóides emergindo por hospedeiro
+\end{itemize}
+\end{block}
+
+\textbf{Distribuição de Poisson:} $e^{-aP_t}$ é a probabilidade de um hospedeiro escapar do parasitismo.
+
+\begin{exampleblock}{Aplicação}
+Controle biológico de pragas agrícolas
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: MODELOS EPIDEMIOLÓGICOS
+% ============================================================================
+\section{Modelos Epidemiológicos}
+
+\begin{frame}{Epidemiologia Matemática}
+\definicao{Modelo Epidemiológico}{
+Modelo matemático que descreve a transmissão e propagação de doenças infecciosas em uma população.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Compartimentos:}
+\begin{itemize}
+    \item \textbf{S:} Susceptíveis
+    \item \textbf{E:} Expostos (incubação)
+    \item \textbf{I:} Infectados (infecciosos)
+    \item \textbf{R:} Recuperados (imunes)
+    \item \textbf{D:} Mortos
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Aplicações:}
+\begin{itemize}
+    \item Previsão de epidemias
+    \item Avaliação de intervenções
+    \item Políticas de vacinação
+    \item Alocação de recursos
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Exemplos Históricos}
+COVID-19, Influenza, Ebola, HIV/AIDS, Malária, Dengue
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Modelo SIR}
+\begin{block}{Sistema SIR Clássico}
+\begin{align*}
+\derivada{S}{t} &= -\beta \frac{SI}{N}\\
+\derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I\\
+\derivada{R}{t} &= \gamma I
+\end{align*}
+
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $\beta$ = taxa de transmissão (contatos infectantes por unidade de tempo)
+    \item $\gamma$ = taxa de recuperação ($1/\gamma$ = período infeccioso)
+    \item $N = S + I + R$ = população total (constante)
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, minimum width=1.5cm, minimum height=1cm, rounded corners}]
+
+    \node[box, fill=verdeacido!20] (S) {$S$};
+    \node[box, fill=red!20, right of=S] (I) {$I$};
+    \node[box, fill=azulescuro!20, right of=I] (R) {$R$};
+
+    \draw[->, thick, line width=2pt] (S) -- node[above] {$\beta SI/N$} (I);
+    \draw[->, thick, line width=2pt] (I) -- node[above] {$\gamma I$} (R);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Número Básico de Reprodução}
+\definicao{$R_0$ (R-naught)}{
+Número médio de infecções secundárias causadas por um indivíduo infectado introduzido em uma população completamente susceptível.
+}
+
+\destaque{
+\begin{equation*}
+R_0 = \frac{\beta}{\gamma} = \beta \times \frac{1}{\gamma} = \text{(taxa de contato)} \times \text{(duração da infecção)}
+\end{equation*}
+}
+
+\begin{block}{Interpretação Epidemiológica}
+\begin{itemize}
+    \item $R_0 < 1$: epidemia se extingue (cada infectado infecta $< 1$ pessoa)
+    \item $R_0 = 1$: limiar epidêmico (endemia estável)
+    \item $R_0 > 1$: epidemia se propaga
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Valores Típicos de $R_0$}
+\begin{itemize}
+    \item Sarampo: 12-18 (altamente contagioso)
+    \item COVID-19 (original): 2-3
+    \item Influenza sazonal: 1-2
+    \item Ebola: 1.5-2.5
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Limiar de Vacinação}
+\begin{block}{Fração Crítica de Vacinação}
+Para eliminar a doença, é necessário vacinar uma fração $f$ da população:
+\begin{equation*}
+f > 1 - \frac{1}{R_0}
+\end{equation*}
+\end{block}
+
+\textbf{Derivação:} Vacinação reduz susceptíveis efetivos. Para controle, precisamos $R_0^{eff} = R_0(1-f) < 1$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    \draw[->] (0,0) -- (7,0) node[right] {$R_0$};
+    \draw[->] (0,0) -- (0,4) node[above] {$f$ (\%)};
+
+    \draw[thick, azulescuro, domain=1:6.5, smooth, samples=100]
+        plot (\x, {3*(1 - 1/\x)});
+
+    \draw[dashed] (1,0) -- (1,4);
+    \node[below] at (1,0) {1};
+
+    \foreach \x/\label in {2/50\%, 3/67\%, 4/75\%, 5/80\%} {
+        \fill[red] (\x, {3*(1-1/\x)}) circle (2pt);
+        \node[right, font=\tiny] at (\x, {3*(1-1/\x)}) {\label};
+    }
+
+    \node[fill=yellow!30, rounded corners, font=\small] at (4,0.8) {Zona de controle};
+\end{tikzpicture}
+\end{center}
+
+\exemplo{Sarampo ($R_0 \approx 15$)}{
+$f > 1 - 1/15 = 0.93$ (93\% de cobertura vacinal necessária)
+}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Modelo SIR}
+\begin{lstlisting}[language=Python, caption=Simulação de epidemia SIR]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def sir_model(y, t, beta, gamma, N):
+    """Modelo SIR"""
+    S, I, R = y
+    dSdt = -beta * S * I / N
+    dIdt = beta * S * I / N - gamma * I
+    dRdt = gamma * I
+    return [dSdt, dIdt, dRdt]
+
+# Parametros
+N = 10000        # populacao total
+beta = 0.5       # taxa de transmissao (1/dia)
+gamma = 0.1      # taxa de recuperacao (1/dia)
+R0 = beta/gamma  # R0 = 5
+
+# Condicoes iniciais
+I0 = 10
+S0 = N - I0
+R0_initial = 0
+y0 = [S0, I0, R0_initial]
+
+# Tempo
+t = np.linspace(0, 200, 1000)
+
+# Resolver
+sol = odeint(sir_model, y0, t, args=(beta, gamma, N))
+S, I, R = sol.T
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Análise da Epidemia}
+\begin{lstlisting}[language=Python, caption=Análise de resultados]
+# Plotar
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(t, S, 'b-', linewidth=2, label='Suscetiveis (S)')
+plt.plot(t, I, 'r-', linewidth=2, label='Infectados (I)')
+plt.plot(t, R, 'g-', linewidth=2, label='Recuperados (R)')
+plt.xlabel('Tempo (dias)')
+plt.ylabel('Numero de individuos')
+plt.title(f'Dinamica SIR ($R_0$ = {R0:.1f})')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+# Encontrar pico da epidemia
+peak_idx = np.argmax(I)
+peak_time = t[peak_idx]
+peak_infected = I[peak_idx]
+
+print(f"Pico de infectados: {peak_infected:.0f} individuos")
+print(f"Tempo do pico: {peak_time:.1f} dias")
+print(f"Taxa de ataque final: {R[-1]/N*100:.1f}%")
+
+# Limiar epidemico
+S_threshold = N / R0
+print(f"Limiar de suscetiveis: {S_threshold:.0f}")
+
+plt.subplot(1, 2, 2)
+plt.plot(S, I, 'purple', linewidth=2)
+plt.axvline(x=S_threshold, color='red', linestyle='--',
+            label=f'S = N/R0 = {S_threshold:.0f}')
+plt.xlabel('Suscetiveis (S)')
+plt.ylabel('Infectados (I)')
+plt.title('Retrato de Fase')
+plt.legend()
+plt.grid(True, alpha=0.3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Modelo SIS}
+\begin{block}{SIS: Sem Imunidade Permanente}
+Indivíduos recuperados voltam a ser susceptíveis (ex: resfriado comum, gonorreia):
+\begin{align*}
+\derivada{S}{t} &= -\beta \frac{SI}{N} + \gamma I\\
+\derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I
+\end{align*}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[node distance=3cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, minimum width=1.5cm, minimum height=1cm, rounded corners}]
+
+    \node[box, fill=verdeacido!20] (S) {$S$};
+    \node[box, fill=red!20, right of=S] (I) {$I$};
+
+    \draw[->, thick, line width=2pt, bend left=20] (S) to node[above] {$\beta SI/N$} (I);
+    \draw[->, thick, line width=2pt, bend left=20] (I) to node[below] {$\gamma I$} (S);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Equilíbrio endêmico:} Se $R_0 > 1$,
+\begin{equation*}
+I^* = N\left(1 - \frac{1}{R_0}\right), \quad S^* = \frac{N}{R_0}
+\end{equation*}
+
+\importante{
+Doença persiste permanentemente na população (endemia)!
+}
+\end{frame}
+
+\begin{frame}{Modelo SEIR}
+\begin{block}{SEIR: Com Período de Incubação}
+Adiciona compartimento de Expostos (infectados mas não infecciosos):
+\begin{align*}
+\derivada{S}{t} &= -\beta \frac{SI}{N}\\
+\derivada{E}{t} &= \beta \frac{SI}{N} - \sigma E\\
+\derivada{I}{t} &= \sigma E - \gamma I\\
+\derivada{R}{t} &= \gamma I
+\end{align*}
+
+onde $\sigma$ = taxa de progressão ($1/\sigma$ = período de incubação).
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, minimum width=1.2cm, minimum height=0.8cm, rounded corners, font=\small}]
+
+    \node[box, fill=verdeacido!20] (S) {$S$};
+    \node[box, fill=yellow!30, right of=S] (E) {$E$};
+    \node[box, fill=red!20, right of=E] (I) {$I$};
+    \node[box, fill=azulescuro!20, right of=I] (R) {$R$};
+
+    \draw[->, thick] (S) -- node[above, font=\tiny] {$\beta SI/N$} (E);
+    \draw[->, thick] (E) -- node[above, font=\tiny] {$\sigma E$} (I);
+    \draw[->, thick] (I) -- node[above, font=\tiny] {$\gamma I$} (R);
+\end{tikzpicture}
+\end{center}
+
+\textbf{$R_0$ modificado:}
+\begin{equation*}
+R_0 = \frac{\beta}{\gamma} \quad \text{(permanece o mesmo)}
+\end{equation*}
+
+mas a dinâmica temporal é alterada (pico mais tardio).
+\end{frame}
+
+\begin{frame}{Extensões do Modelo SIR}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Demografia:}
+\begin{itemize}
+    \item Nascimentos: $\mu N$
+    \item Mortes naturais: $\mu S, \mu I, \mu R$
+    \item Mortalidade pela doença: $\alpha I$
+\end{itemize}
+
+\textbf{Estrutura etária:}
+\begin{itemize}
+    \item Diferentes $\beta$ por faixa etária
+    \item Matrizes de contato
+    \item Vacinação por idade
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Intervenções:}
+\begin{itemize}
+    \item Vacinação: $\nu S$
+    \item Quarentena: redução de $\beta$
+    \item Tratamento: aumento de $\gamma$
+    \item Distanciamento social
+\end{itemize}
+
+\textbf{Espaço:}
+\begin{itemize}
+    \item Modelos metapopulacionais
+    \item Difusão espacial
+    \item Redes de contato
+\end{itemize}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Modelagem de COVID-19}
+Combinou SEIR + demografia + estrutura etária + intervenções não-farmacêuticas + vacinação
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: DINÂMICA ESPACIAL
+% ============================================================================
+\section{Dinâmica Espacial}
+
+\begin{frame}{Metapopulações}
+\definicao{Metapopulação}{
+Conjunto de populações locais conectadas por dispersão, onde cada população local pode sofrer extinção e recolonização.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Modelo de Levins:}
+\begin{equation*}
+\derivada{p}{t} = cp(1-p) - ep
+\end{equation*}
+
+\begin{itemize}
+    \item $p$ = fração de patches ocupados
+    \item $c$ = taxa de colonização
+    \item $e$ = taxa de extinção local
+\end{itemize}
+
+\textbf{Equilíbrio:}
+\begin{equation*}
+p^* = 1 - \frac{e}{c}
+\end{equation*}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % Patches
+    \foreach \x/\y/\occupied in {0/0/1, 2/0/0, 1/1.5/1, 3/1.5/1, 0.5/3/0, 2.5/3/1} {
+        \ifnum\occupied=1
+            \fill[verdeacido!50] (\x,\y) circle (0.4);
+        \else
+            \draw[thick, gray] (\x,\y) circle (0.4);
+        \fi
+    }
+
+    % Dispersao (setas)
+    \draw[->, thick, azulescuro] (0.3,0.3) -- (0.8,1.2);
+    \draw[->, thick, azulescuro] (1.2,1.8) -- (2.2,1.8);
+    \draw[->, thick, azulescuro] (3,2) -- (2.6,2.7);
+
+    \node[below, font=\small] at (1.5,-0.5) {Ocupados: verde};
+    \node[below, font=\small] at (1.5,-1) {Vazios: cinza};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Condição de persistência:}
+\begin{equation*}
+c > e
+\end{equation*}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Equações de Reação-Difusão}
+\begin{block}{Difusão Espacial}
+Combina crescimento local com dispersão espacial:
+\begin{equation*}
+\parcial{N}{t} = \underbrace{f(N)}_{\text{reação}} + \underbrace{D\nabla^2 N}_{\text{difusão}}
+\end{equation*}
+
+Em 1D:
+\begin{equation*}
+\parcial{N}{t} = f(N) + D\frac{\partial^2 N}{\partial x^2}
+\end{equation*}
+\end{block}
+
+\textbf{Parâmetros:}
+\begin{itemize}
+    \item $D$ = coeficiente de difusão (taxa de dispersão)
+    \item $f(N)$ = dinâmica local (ex: logística)
+    \item $\nabla^2$ = operador Laplaciano
+\end{itemize}
+
+\exemplo{Equação de Fisher-KPP}{
+\begin{equation*}
+\parcial{N}{t} = rN\left(1 - \frac{N}{K}\right) + D\frac{\partial^2 N}{\partial x^2}
+\end{equation*}
+Modelo de invasão espacial de uma espécie
+}
+\end{frame}
+
+\begin{frame}{Ondas Viajantes}
+\begin{block}{Solução de Onda Viajante}
+Perturbação que se propaga no espaço mantendo sua forma:
+\begin{equation*}
+N(x,t) = N(z), \quad z = x - ct
+\end{equation*}
+onde $c$ é a velocidade da onda.
+\end{block}
+
+\textbf{Velocidade mínima (Fisher-KPP):}
+\begin{equation*}
+c_{min} = 2\sqrt{rD}
+\end{equation*}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (8,0) node[right] {$x$};
+    \draw[->] (0,0) -- (0,3) node[above] {$N$};
+
+    % Onda em t1
+    \draw[thick, blue, domain=0:7, smooth, samples=100]
+        plot (\x, {2.5/(1+exp(-2*(\x-2)))});
+    \node[blue] at (1,2.5) {$t_1$};
+
+    % Onda em t2
+    \draw[thick, red, domain=0:7, smooth, samples=100]
+        plot (\x, {2.5/(1+exp(-2*(\x-4)))});
+    \node[red] at (3,2.5) {$t_2$};
+
+    % Velocidade
+    \draw[<->, thick, verdeacido] (2,0.3) -- (4,0.3) node[midway, below] {$c \Delta t$};
+
+    \draw[dashed] (0,2.5) -- (8,2.5) node[right, font=\tiny] {$K$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Aplicações:} Invasões biológicas, frentes de epidemias, propagação de genes
+\end{frame}
+
+\begin{frame}{Padrões de Turing}
+\begin{block}{Instabilidade de Difusão}
+Sistema de duas espécies com difusão diferencial pode gerar padrões espaciais espontâneos:
+\begin{align*}
+\parcial{u}{t} &= f(u,v) + D_u \nabla^2 u\\
+\parcial{v}{t} &= g(u,v) + D_v \nabla^2 v
+\end{align*}
+
+\textbf{Condição para padrões:} $D_v \gg D_u$ (inibidor difunde mais rápido que ativador)
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Mecanismo:}
+\begin{itemize}
+    \item Ativador de curto alcance
+    \item Inibidor de longo alcance
+    \item Desestabilização por difusão
+\end{itemize}
+
+\textbf{Exemplos biológicos:}
+\begin{itemize}
+    \item Padrões de pelagem animal
+    \item Distribuição de estômatos em folhas
+    \item Arranjo de penas em aves
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+    % Simulacao simplificada de padroes
+    \foreach \x in {0,1,...,6} {
+        \foreach \y in {0,1,...,4} {
+            \pgfmathsetmacro{\val}{sin(60*\x + 45)*sin(60*\y + 30)}
+            \ifnum\val>0
+                \fill[azulescuro, opacity=\val] (\x*0.6, \y*0.6) circle (0.25);
+            \else
+                \fill[laranjacel, opacity={-\val}] (\x*0.6, \y*0.6) circle (0.25);
+            \fi
+        }
+    }
+    \node[below, font=\small] at (2,-0.5) {Padrão de manchas};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+
+\importante{
+Alan Turing (1952): "The Chemical Basis of Morphogenesis"
+}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação: Difusão 1D}
+\begin{lstlisting}[language=Python, caption=Equação de Fisher-KPP em 1D, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def fisher_kpp_1d(N, t, r, K, D, dx):
+    """Equacao de Fisher-KPP em 1D"""
+    # Termo de reacao (logistico)
+    reaction = r * N * (1 - N/K)
+
+    # Termo de difusao (diferenca finita central)
+    diffusion = np.zeros_like(N)
+    diffusion[1:-1] = D * (N[2:] - 2*N[1:-1] + N[:-2]) / dx**2
+
+    # Condicoes de contorno (sem fluxo)
+    diffusion[0] = diffusion[-1] = 0
+
+    return reaction + diffusion
+
+# Parametros
+L = 50          # tamanho do dominio
+nx = 200        # pontos espaciais
+x = np.linspace(0, L, nx)
+dx = x[1] - x[0]
+
+r = 0.5         # taxa de crescimento
+K = 1.0         # capacidade de suporte
+D = 0.1         # coeficiente de difusao
+
+# Condicao inicial (pulso localizado)
+N0 = np.zeros(nx)
+N0[nx//4:nx//4+10] = K
+
+# Simular usando metodo de Euler
+t_max = 100
+dt = 0.01
+steps = int(t_max / dt)
+
+N = N0.copy()
+for step in range(steps):
+    N += dt * fisher_kpp_1d(N, step*dt, r, K, D, dx)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Metapopulações e Redes}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Modelo em Rede:}
+\begin{equation*}
+\derivada{N_i}{t} = f(N_i) + \sum_{j=1}^{n} m_{ij}(N_j - N_i)
+\end{equation*}
+
+\begin{itemize}
+    \item $N_i$ = população no patch $i$
+    \item $m_{ij}$ = taxa de migração de $i$ para $j$
+    \item $f(N_i)$ = dinâmica local
+\end{itemize}
+
+\textbf{Sincronização:}
+\begin{itemize}
+    \item Alta conectividade $\to$ sincronismo
+    \item Baixa conectividade $\to$ assincronia
+    \item Importante para estabilidade
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9,
+    patch/.style={circle, draw, fill=azulclaro!30, minimum size=0.8cm, font=\small}]
+
+    \node[patch] (1) at (0,2) {$N_1$};
+    \node[patch] (2) at (2,2) {$N_2$};
+    \node[patch] (3) at (1,0) {$N_3$};
+    \node[patch] (4) at (3,0) {$N_4$};
+    \node[patch] (5) at (4,2) {$N_5$};
+
+    \draw[<->, thick] (1) -- (2);
+    \draw[<->, thick] (2) -- (3);
+    \draw[<->, thick] (3) -- (4);
+    \draw[<->, thick] (2) -- (4);
+    \draw[<->, thick] (2) -- (5);
+    \draw[<->, thick] (4) -- (5);
+
+    \node[below, font=\small] at (2,-1) {Rede de patches};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Topologias:}
+\begin{itemize}
+    \item Regular (grade)
+    \item Aleatória
+    \item Escala-livre
+    \item Mundo-pequeno
+\end{itemize}
+\end{columns}
+
+\begin{exampleblock}{Aplicação}
+Conservação: corredores ecológicos conectando fragmentos de habitat
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: EXERCÍCIOS
+% ============================================================================
+\section{Exercícios}
+
+\begin{frame}{Exercícios - Parte 1}
+\begin{block}{Questão 1: Crescimento Populacional}
+Uma população segue o modelo logístico com $r = 0.6$ dia$^{-1}$ e $K = 5000$.
+\begin{enumerate}
+    \item Se $N(0) = 500$, calcule $N(10)$
+    \item Em que tempo a população atinge 90\% de $K$?
+    \item Qual a taxa máxima de crescimento ($dN/dt$)? Em que densidade?
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 2: Efeito Allee}
+Considere o modelo com efeito Allee: $\frac{dN}{dt} = rN(1 - N/K)(N/A - 1)$, com $r = 0.5$, $K = 1000$, $A = 100$.
+\begin{enumerate}
+    \item Encontre os pontos de equilíbrio
+    \item Analise a estabilidade de cada equilíbrio
+    \item Simule em Python para $N(0) = 50$ e $N(0) = 150$
+    \item Qual a implicação para conservação?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 2}
+\begin{block}{Questão 3: Modelo de Ricker}
+Implemente o modelo de Ricker: $N_{t+1} = N_t e^{r(1-N_t/K)}$
+\begin{enumerate}
+    \item Simule para $r = 1.5, 2.0, 2.5, 3.0$ com $K = 100$
+    \item Crie diagramas de bifurcação variando $r$ de 0 a 3
+    \item Identifique regiões de estabilidade e caos
+    \item Compare com o modelo de Beverton-Holt
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 4: Lotka-Volterra}
+Para o sistema predador-presa com $\alpha = 1.0$, $\beta = 0.1$, $\delta = 0.75$, $\gamma = 1.5$:
+\begin{enumerate}
+    \item Calcule o ponto de equilíbrio não-trivial
+    \item Calcule a matriz Jacobiana no equilíbrio
+    \item Determine os autovalores. O equilíbrio é estável?
+    \item Simule e plote séries temporais e retrato de fase
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exercícios - Parte 3}
+\begin{block}{Questão 5: Modelo SIR}
+Uma doença tem $\beta = 0.4$ dia$^{-1}$ e $\gamma = 0.1$ dia$^{-1}$ em uma população de $N = 10000$.
+\begin{enumerate}
+    \item Calcule $R_0$
+    \item Se inicialmente $I(0) = 20$, simule 200 dias
+    \item Qual o pico de infectados? Quando ocorre?
+    \item Qual a taxa de ataque final (proporção que adoece)?
+    \item Que fração deve ser vacinada para prevenir epidemia?
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Projeto: Competição e Coexistência}
+Implemente o modelo de competição Lotka-Volterra:
+\begin{itemize}
+    \item Simule os 4 cenários (sp1 vence, sp2 vence, coexistência, bistabilidade)
+    \item Crie retratos de fase com isoclinas
+    \item Adicione estocasticidade demográfica
+    \item Explore efeitos de flutuações ambientais
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: REFERÊNCIAS
+% ============================================================================
+\section{Referências}
+
+\begin{frame}{Referências Principais}
+\begin{thebibliography}{99}
+\bibitem{murray} Murray J.D. (2002). \textit{Mathematical Biology I: An Introduction}, 3rd ed. Springer.
+
+\bibitem{edelstein} Edelstein-Keshet L. (2005). \textit{Mathematical Models in Biology}. SIAM.
+
+\bibitem{otto} Otto S.P., Day T. (2007). \textit{A Biologist's Guide to Mathematical Modeling in Ecology and Evolution}. Princeton University Press.
+
+\bibitem{keeling} Keeling M.J., Rohani P. (2008). \textit{Modeling Infectious Diseases in Humans and Animals}. Princeton University Press.
+
+\bibitem{anderson} Anderson R.M., May R.M. (1991). \textit{Infectious Diseases of Humans: Dynamics and Control}. Oxford University Press.
+\end{thebibliography}
+\end{frame}
+
+\begin{frame}{Leitura Complementar}
+\begin{block}{Ecologia Teórica}
+\begin{itemize}
+    \item Case T.J. (2000). \textit{An Illustrated Guide to Theoretical Ecology}
+    \item Kot M. (2001). \textit{Elements of Mathematical Ecology}
+    \item Tilman D. (1982). \textit{Resource Competition and Community Structure}
+\end{itemize}
+\end{block}
+
+\begin{block}{Epidemiologia}
+\begin{itemize}
+    \item Diekmann O., Heesterbeek H. (2000). \textit{Mathematical Epidemiology of Infectious Diseases}
+    \item Brauer F., Castillo-Chavez C. (2012). \textit{Mathematical Models in Population Biology and Epidemiology}
+\end{itemize}
+\end{block}
+
+\begin{block}{Recursos Computacionais}
+\begin{itemize}
+    \item \textbf{EpiModel:} \url{https://epimodel.org} (R package para epidemiologia)
+    \item \textbf{PyDSTool:} \url{https://pydstool.github.io} (Python para sistemas dinâmicos)
+    \item \textbf{COPASI:} \url{http://copasi.org} (simulação de modelos)
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL
+% ============================================================================
+\begin{frame}
+\begin{center}
+{\Huge Obrigado!}
+
+\vspace{1cm}
+
+{\Large Capítulo 10: Sistemas Populacionais}
+
+\vspace{1cm}
+
+\textbf{Próximo Capítulo:}\\
+Tópicos Avançados em Biologia de Sistemas
+
+\vspace{1cm}
+
+\textit{Dúvidas? Perguntas?}
+\end{center}
+\end{frame}
+
+\end{document}
