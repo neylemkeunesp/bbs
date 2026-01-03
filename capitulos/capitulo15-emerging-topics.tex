@@ -10,8 +10,8 @@
 % ============================================================================
 \title[Cap. 15: Emerging Topics]{Capítulo 15: Emerging Topics}
 \subtitle{Bioinformática para Biologia de Sistemas}
-\author{Seu Nome}
-\institute{Sua Instituição}
+\author{Ney Lemke}
+\institute{DBF-Unesp}
 \date{\today}
 
 \begin{document}
@@ -550,7 +550,7 @@ scRNA-seq perde informação espacial. Novas tecnologias preservam contexto espa
 \importante{
 Combina melhor dos dois mundos: expressão gênica detalhada + localização espacial!
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Comunicação Célula-Célula}
 \begin{block}{Inferindo Interações}
@@ -570,7 +570,7 @@ Análise de pares ligante-receptor para identificar comunicação entre tipos ce
     \draw[->, thick, roxodna, line width=2pt] (3.25,-0.3) -- node[below, font=\small] {PD-L1} (0.75,-0.3);
     \node[left, font=\tiny] at (-0.75,-0.3) {PD-1};
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \vspace{0.3cm}
 
@@ -594,7 +594,7 @@ Análise de pares ligante-receptor para identificar comunicação entre tipos ce
 \begin{frame}{15.3 IA em Biologia de Sistemas}
 \begin{block}{A Revolução da IA}
 Machine learning e deep learning estão transformando a biologia de sistemas, permitindo análise de dados massivos e descoberta de padrões complexos.
-\end{block>
+\end{block}
 
 \begin{columns}
 \column{0.5\textwidth}
@@ -634,26 +634,26 @@ IA não substitui modelagem mecanística, mas complementa: híbrido é o futuro!
     \node[below] at (0,0.5) {Input};
 
     % Hidden layer 1
-    \foreach \y in {0.5,...,4.5} {
-        \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (h1\y) at (2,\y) {};
+    \foreach \y [count=\n] in {0.5,1.5,2.5,3.5,4.5} {
+        \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (h1\n) at (2,\y) {};
     }
     \node[below] at (2,0) {Hidden 1};
 
     % Hidden layer 2
-    \foreach \y in {0.5,...,4.5} {
-        \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (h2\y) at (4,\y) {};
+    \foreach \y [count=\n] in {0.5,1.5,2.5,3.5,4.5} {
+        \node[draw, circle, fill=laranjacel!30, minimum size=0.5cm] (h2\n) at (4,\y) {};
     }
     \node[below] at (4,0) {Hidden 2};
 
     % Output layer
-    \foreach \y in {1.5,3.5} {
-        \node[draw, circle, fill=verdeacido!30, minimum size=0.6cm] (o\y) at (6,\y) {};
+    \foreach \y [count=\n] in {1.5,3.5} {
+        \node[draw, circle, fill=verdeacido!30, minimum size=0.6cm] (o\n) at (6,\y) {};
     }
     \node[below] at (6,0) {Output};
 
     % Connections (simplified)
     \foreach \i in {1,...,4} {
-        \foreach \h in {0.5,1.5,2.5,3.5,4.5} {
+        \foreach \h in {1,...,5} {
             \draw[->, thin, gray] (i\i) -- (h1\h);
         }
     }
@@ -749,7 +749,7 @@ Redes neurais que operam diretamente em grafos, aprendendo representações de n
     \node[below] at (7.75,-2) {Embeddings};
 \end{tikzpicture}
 \end{center}
-\end{columns>
+\end{columns}
 
 \vspace{0.3cm}
 
@@ -818,7 +818,7 @@ AlphaFold é um dos maiores sucessos de IA em biologia!
     \item \textbf{GAN:} Generative Adversarial Network
     \item \textbf{Diffusion:} Diffusion models
     \item \textbf{RL:} Reinforcement learning
-\end{itemize>
+\end{itemize}
 
 \vspace{0.3cm}
 
@@ -916,16 +916,24 @@ Doenças complexas (câncer, diabetes, Alzheimer) não resultam de defeito em ge
 
     % Disease network
     \begin{scope}[xshift=5cm]
-        \foreach \i in {1,...,8} {
-            \pgfmathsetmacro{\angle}{360/8 * \i}
-            \pgfmathsetmacro{\col}{(\i == 2 || \i == 3) ? "red" : "azulclaro"}
-            \node[draw, circle, fill=\col!30, minimum size=0.5cm] (d\i) at (\angle:1.5) {};
-        }
-        \foreach \i in {1,...,8} {
-            \pgfmathsetmacro{\j}{mod(\i, 8) + 1}
-            \pgfmathsetmacro{\col}{(\i == 2 || \i == 3) ? "red" : "black"}
-            \draw[thick, \col] (d\i) -- (d\j);
-        }
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (d1) at (45:1.5) {};
+        \node[draw, circle, fill=red!30, minimum size=0.5cm] (d2) at (90:1.5) {};
+        \node[draw, circle, fill=red!30, minimum size=0.5cm] (d3) at (135:1.5) {};
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (d4) at (180:1.5) {};
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (d5) at (225:1.5) {};
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (d6) at (270:1.5) {};
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (d7) at (315:1.5) {};
+        \node[draw, circle, fill=azulclaro!30, minimum size=0.5cm] (d8) at (360:1.5) {};
+
+        \draw[thick, black] (d1) -- (d2);
+        \draw[thick, red] (d2) -- (d3);
+        \draw[thick, red] (d3) -- (d4);
+        \draw[thick, black] (d4) -- (d5);
+        \draw[thick, black] (d5) -- (d6);
+        \draw[thick, black] (d6) -- (d7);
+        \draw[thick, black] (d7) -- (d8);
+        \draw[thick, black] (d8) -- (d1);
+
         \node[below] at (0,-2.5) {Doença};
     \end{scope}
 \end{tikzpicture}
@@ -1051,7 +1059,7 @@ COVID-19 demonstrou necessidade de biologia de sistemas para resposta rápida!
 \vspace{0.3cm}
 
 \textbf{Lição:} integração de dados heterogêneos + modelos + infraestrutura computacional
-\end{frame>
+\end{frame}
 
 \begin{frame}{Medicina de Precisão: Futuro}
 \begin{columns}
@@ -1098,7 +1106,7 @@ COVID-19 demonstrou necessidade de biologia de sistemas para resposta rápida!
 \end{tikzpicture}
 \end{center}
 \end{columns}
-\end{frame>
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 6: DIREÇÕES FUTURAS
@@ -1120,7 +1128,7 @@ A área está em rápida evolução. Várias tecnologias e abordagens prometem r
     \item Organoides e organs-on-chip
     \item Edição genômica (CRISPR)
     \item Biologia sintética
-\end{itemize>
+\end{itemize}
 
 \column{0.5\textwidth}
 \textbf{Computação:}
@@ -1157,7 +1165,7 @@ A área está em rápida evolução. Várias tecnologias e abordagens prometem r
     % Feedback
     \draw[->, thick, red, bend right=45] (7,2.5) to node[right, font=\tiny] {Dados} (4,0.5);
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \textbf{Vantagens:}
 \begin{itemize}
@@ -1222,7 +1230,7 @@ Réplica computacional dinâmica de um paciente individual, integrando dados mul
     % Wearables
     \node[font=\tiny] at (0,-1.5) {Wearables, EHR,\\omics, microbioma};
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \textbf{Aplicações:}
 \begin{itemize}
@@ -1298,7 +1306,7 @@ O hospedeiro não pode ser estudado isoladamente: microbioma e ambiente são par
 Organismo + microbioma = unidade evolutiva e funcional
 \end{exampleblock}
 \end{columns}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Ciência Aberta e Compartilhamento de Dados}
 \begin{block}{Movimento Open Science}
@@ -1392,7 +1400,7 @@ Escolha um tópico emergente (célula única, IA, envelhecimento) e:
     \item Aplique pelo menos uma técnica computacional
     \item Gere visualizações e interprete resultados
     \item Discuta limitações e direções futuras
-\end{enumerate>
+\end{enumerate}
 \end{alertblock}
 \end{frame}
 
@@ -1424,7 +1432,7 @@ Escolha um tópico emergente (célula única, IA, envelhecimento) e:
     \item Digital twins in healthcare (Nature Medicine, 2023)
     \item Longevity and healthspan interventions (Cell, 2023)
 \end{itemize}
-\end{block>
+\end{block}
 
 \begin{block}{Recursos Online}
 \begin{itemize}

@@ -7,14 +7,15 @@
 
 % Pacotes adicionais
 \usepackage{chemfig}
+\usetikzlibrary{decorations.pathmorphing}
 
 % ============================================================================
 % INFORMAÇÕES DO DOCUMENTO
 % ============================================================================
 \title[Cap. 12: Heart Physiology]{Capítulo 12: Physiological Systems - Heart}
 \subtitle{Bioinformática para Biologia de Sistemas}
-\author{Seu Nome}
-\institute{Sua Instituição}
+\author{Ney Lemke}
+\institute{DBF-Unesp}
 \date{\today}
 
 \begin{document}
@@ -238,7 +239,7 @@ O coração é um dos sistemas fisiológicos mais bem modelados matematicamente,
 \importante{
 Duração típica: $\sim$0.8 s a 75 bpm (diástole $\sim$0.5 s, sístole $\sim$0.3 s)
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Sistema de Condução Elétrica}
 \begin{columns}
@@ -289,9 +290,9 @@ Duração típica: $\sim$0.8 s a 75 bpm (diástole $\sim$0.5 s, sístole $\sim$0
     \draw[->, thick, azulclaro] (0,-0.5) -- (0.8,-1.5);
 
     % Purkinje fibers
-    \draw[thick, roxodna, decoration={coil, amplitude=1pt}, decorate]
+    \draw[thick, roxodna, decorate, decoration={snake, amplitude=1pt, segment length=3mm}]
         (-0.8,-1.5) -- (-1.2,-1.8);
-    \draw[thick, roxodna, decoration={coil, amplitude=1pt}, decorate]
+    \draw[thick, roxodna, decorate, decoration={snake, amplitude=1pt, segment length=3mm}]
         (0.8,-1.5) -- (1.2,-1.8);
     \node[below, font=\tiny] at (0,-2) {Fibras Purkinje};
 \end{tikzpicture}
@@ -303,7 +304,7 @@ Duração típica: $\sim$0.8 s a 75 bpm (diástole $\sim$0.5 s, sístole $\sim$0
 \destaque{
 Velocidade de condução: Purkinje (4 m/s) $>$ His (1-1.5 m/s) $>$ AV (0.05 m/s)
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Eletrocardiograma (ECG)}
 \begin{columns}
@@ -360,7 +361,7 @@ Velocidade de condução: Purkinje (4 m/s) $>$ His (1-1.5 m/s) $>$ AV (0.05 m/s)
     \draw[<->, red] (1.3,-1.5) -- node[below, font=\tiny] {Intervalo PR} (2.5,-1.5);
     \draw[<->, verdeacido] (2.5,-2) -- node[below, font=\tiny] {Intervalo QT} (6,-2);
 \end{tikzpicture}
-\end{center>
+\end{center}
 \end{columns}
 \end{frame}
 
@@ -573,7 +574,7 @@ $V_m \approx -85$ a $-90$ mV\\
 \destaque{
 $V_m$ em repouso dominado por permeabilidade ao K$^+$ via I$_{K1}$
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Mecanismo do Platô (Fase 2)}
 \begin{columns}
@@ -633,7 +634,7 @@ $I_{Ca,L} \approx I_{Kr} + I_{Ks}$
     \end{scope}
 \end{tikzpicture}
 \end{center}
-\end{columns>
+\end{columns}
 
 \vspace{0.3cm}
 
@@ -686,14 +687,14 @@ Intervalo após um potencial de ação durante o qual a célula não pode ser re
     \node[font=\tiny, rotate=90] at (3.3,1.5) {Relativo};
 
     % Attempted stimuli
-    \draw[->, red, thick] (2,-0.3) -- (2,0.3) node[above, font=\tiny] {\xmark};
-    \draw[->, verdeacido, thick] (4,-0.3) -- (4,0.3) node[above, font=\tiny] {\checkmark};
+    \draw[->, red, thick] (2,-0.3) -- (2,0.3) node[above, font=\tiny] {$\times$};
+    \draw[->, verdeacido, thick] (4,-0.3) -- (4,0.3) node[above, font=\tiny] {$\checkmark$};
 
     % Second AP (reduced)
     \draw[thick, azulescuro, dashed] (4.5,0) -- (4.8,2) -- (5,1.7) -- (6,0);
 \end{tikzpicture}
-\end{center>
-\end{columns>
+\end{center}
+\end{columns}
 
 \vspace{0.3cm}
 
@@ -729,7 +730,7 @@ g_{ion} = \bar{g}_{ion} \cdot m^p \cdot h^q
 \frac{dm}{dt} = \alpha_m(V)(1-m) - \beta_m(V)m = \frac{m_\infty(V) - m}{\tau_m(V)}
 \end{equation*}
 \end{exampleblock}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Corrente de Sódio: I$_{Na}$}
 \begin{block}{Modelo de I$_{Na}$}
@@ -768,7 +769,7 @@ h_\infty &= \frac{1}{1 + e^{(V+65)/7}}
 \importante{
 Bloqueio de I$_{Na}$ (classe I antiarrítmicos) reduz velocidade de condução
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Correntes de Potássio e Cálcio}
 \begin{columns}
@@ -817,7 +818,7 @@ I_{Ks} = g_{Ks} x_s^2 (V - E_K)
     \item Importante em frequências altas
 \end{itemize}
 \end{columns}
-\end{frame>
+\end{frame}
 
 \begin{frame}[fragile]{Simulação: Potencial de Ação Simples}
 \begin{lstlisting}[language=Python, caption=Modelo simplificado de PA cardíaco, basicstyle=\ttfamily\footnotesize]
@@ -861,7 +862,7 @@ def simple_cardiac_ap(t, V, gates):
 
     return dVdt, [dmdt, dhdt, dddt, dfdt, dxdt]
 \end{lstlisting}
-\end{frame>
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 4: MODELOS DE CARDIOMIÓCITOS
@@ -899,7 +900,7 @@ def simple_cardiac_ap(t, V, gates):
 \importante{
 Modelos mais recentes: $>$15 correntes, $>$40 variáveis de estado
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Modelo de Noble (1962)}
 \exemplo{Primeiro Modelo Cardíaco}{
@@ -944,7 +945,7 @@ C_m \frac{dV}{dt} = -I_{Na} - I_K - I_{leak} - I_{an}
 \end{itemize}
 \end{alertblock}
 \end{columns}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Modelo de Luo-Rudy (LR1, 1991)}
 \begin{block}{Avanços do LR1}
@@ -967,7 +968,7 @@ C_m \frac{dV}{dt} = -I_{Na} - I_K - I_{leak} - I_{an}
     \item I$_{K}$, I$_{K1}$
     \item I$_{Kp}$
     \item I$_{b}$ (background)
-\end{itemize>
+\end{itemize}
 
 \textbf{Bombas e Trocadores:}
 \begin{itemize}
@@ -1000,9 +1001,9 @@ C_m \frac{dV}{dt} = -I_{Na} - I_K - I_{leak} - I_{an}
     \draw[->, thick, verdeacido] (2,0.5) -- node[below, font=\tiny] {Uptake} (2,0.2);
     \draw[->, thick, azulclaro] (2,2.5) -- node[above, font=\tiny] {Release} (2,2.8);
 \end{tikzpicture}
-\end{center>
-\end{columns>
-\end{frame>
+\end{center}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Modelo ten Tusscher (2004)}
 \begin{block}{Modelo Ventricular Humano Detalhado}
@@ -1043,15 +1044,15 @@ Desenvolvido a partir de dados experimentais humanos
 
 \begin{exampleblock}{Heterogeneidade}
 A diferença entre tipos celulares cria gradiente de repolarização que gera a onda T do ECG
-\end{exampleblock>
-\end{columns>
+\end{exampleblock}
+\end{columns}
 
 \vspace{0.3cm}
 
 \importante{
 Modelo amplamente usado: $>$500 citações, base para estudos de arritmias
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Comparação: Modelos Atriais vs Ventriculares}
 \begin{center}
@@ -1068,7 +1069,7 @@ APD adaptação & Rápida & Lenta \\
 Velocidade condução & 0.5-1 m/s & 0.3-0.5 m/s \\
 \bottomrule
 \end{tabular}
-\end{center>
+\end{center}
 
 \vspace{0.3cm}
 
@@ -1085,8 +1086,8 @@ Velocidade condução & 0.5-1 m/s & 0.3-0.5 m/s \\
 \begin{alertblock}{Diferenças Importantes}
 Modelos atriais essenciais para estudar fibrilação atrial, a arritmia cardíaca mais comum
 \end{alertblock}
-\end{columns>
-\end{frame>
+\end{columns}
+\end{frame}
 
 \begin{frame}{Complexidade Computacional}
 \begin{block}{Trade-off: Realismo vs Custo}
@@ -1117,13 +1118,13 @@ Modelos atriais essenciais para estudar fibrilação atrial, a arritmia cardíac
     \node[circle, fill=azulclaro, minimum size=0.3cm] at (6.5,3.4) {};
     \node[below, font=\tiny] at (6.5,2.9) {O'Hara-Rudy};
 \end{tikzpicture}
-\end{center>
-\end{block>
+\end{center}
+\end{block}
 
 \importante{
 Para simulações de tecido 3D: modelos simplificados (FitzHugh-Nagumo, Aliev-Panfilov)
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}[fragile]{Implementação: Modelo Simplificado}
 \begin{lstlisting}[language=Python, caption=Modelo cardíaco simplificado, basicstyle=\ttfamily\footnotesize]
@@ -1167,7 +1168,7 @@ I_stim = lambda t: 50 if 5 < t < 6 else 0
 
 sol = odeint(cardiac_model, y0, t, args=(I_stim,))
 \end{lstlisting}
-\end{frame>
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 5: ACOPLAMENTO EXCITAÇÃO-CONTRAÇÃO
@@ -1194,8 +1195,8 @@ Processo pelo qual o potencial de ação elétrico desencadeia a contração mec
     \item Recaptação de Ca$^{2+}$ pelo SR (SERCA)
     \item Relaxamento
 \end{enumerate}
-\end{block>
-\end{frame>
+\end{block}
+\end{frame}
 
 \begin{frame}{CICR: Liberação de Ca$^{2+}$ Induzida por Ca$^{2+}$}
 \begin{columns}
@@ -1249,15 +1250,15 @@ Processo pelo qual o potencial de ação elétrico desencadeia a contração mec
         \draw[->, red, thick] (\x,-2.3) -- (\x,-2.8);
     }
 \end{tikzpicture}
-\end{center>
-\end{columns>
+\end{center}
+\end{columns}
 
 \vspace{0.3cm}
 
 \importante{
 Falha do CICR: causa principal de insuficiência cardíaca sistólica
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Dinâmica de Ca$^{2+}$ no Retículo Sarcoplasmático}
 \begin{block}{Compartimentos de Ca$^{2+}$}
@@ -1266,7 +1267,7 @@ Falha do CICR: causa principal de insuficiência cardíaca sistólica
     \item \textbf{SR:} [Ca$^{2+}$]$_{SR}$ $\sim$1 mM (reservatório)
     \item \textbf{Subsarcolemmal:} [Ca$^{2+}$]$_{ss}$ (microdomínio)
 \end{itemize}
-\end{block>
+\end{block}
 
 \vspace{0.3cm}
 
@@ -1296,14 +1297,14 @@ Falha do CICR: causa principal de insuficiência cardíaca sistólica
 \begin{equation*}
 \frac{d[Ca^{2+}]_{SR}}{dt} = J_{up} - J_{rel} - J_{leak}
 \end{equation*}
-\end{columns>
+\end{columns}
 
 \vspace{0.3cm}
 
 \begin{exampleblock}{Buffers}
 Ca$^{2+}$ é tamponado por troponina C, calmodulina, calsequestrin (SR)
-\end{exampleblock>
-\end{frame>
+\end{exampleblock}
+\end{frame}
 
 \begin{frame}{Geração de Força: Cross-Bridge Cycling}
 \begin{columns}
@@ -1357,7 +1358,7 @@ F = F_{max} \cdot f([Ca^{2+}]_i) \cdot g(L)
     \draw[<->, thick] (0,-0.5) -- (5,-0.5);
     \node[below, font=\tiny] at (2.5,-0.5) {Encurtamento};
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \vspace{0.3cm}
 
@@ -1366,8 +1367,8 @@ F = F_{max} \cdot f([Ca^{2+}]_i) \cdot g(L)
 f([Ca^{2+}]) = \frac{[Ca^{2+}]_i^n}{K_d^n + [Ca^{2+}]_i^n}
 \end{equation*}
 Hill coefficient $n \approx 4-6$
-\end{columns>
-\end{frame>
+\end{columns}
+\end{frame}
 
 \begin{frame}{Relação Comprimento-Tensão (Frank-Starling)}
 \definicao{Lei de Frank-Starling}{
@@ -1393,7 +1394,7 @@ A força de contração do coração é proporcional ao comprimento inicial das 
     \item Ajuste do débito cardíaco
     \item Compensação de alterações de pré-carga
     \item Equilíbrio entre ventrículos
-\end{itemize>
+\end{itemize}
 
 \column{0.5\textwidth}
 \begin{center}
@@ -1422,15 +1423,15 @@ A força de contração do coração é proporcional ao comprimento inicial das 
     \node[font=\tiny] at (2.4,3.5) {Ótimo};
     \node[font=\tiny] at (3.7,1) {Superestirado};
 \end{tikzpicture}
-\end{center>
-\end{columns>
+\end{center}
+\end{columns}
 
 \vspace{0.3cm}
 
 \importante{
 Comprimento ótimo do sarcômero: 2.0-2.2 $\mu$m (máxima sobreposição)
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}[fragile]{Modelo de Contração}
 \begin{lstlisting}[language=Python, caption=Modelo simplificado de contração, basicstyle=\ttfamily\footnotesize]
@@ -1480,8 +1481,8 @@ plt.xlabel('[Ca2+]i (uM)')
 plt.ylabel('Forca (kPa)')
 plt.legend()
 plt.grid(True)
-\end{lstlisting>
-\end{frame>
+\end{lstlisting}
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 6: PROPAGAÇÃO E ARRITMIAS
@@ -1501,7 +1502,7 @@ onde:
     \item $\tau$: constante de tempo
     \item $V$: potencial transmembrana
 \end{itemize}
-\end{block>
+\end{block}
 
 \vspace{0.3cm}
 
@@ -1516,7 +1517,7 @@ onde:
     \item $D$: coeficiente de difusão
     \item $\nabla^2$: operador laplaciano
     \item $I_{ion}$: correntes iônicas
-\end{itemize>
+\end{itemize}
 
 \column{0.5\textwidth}
 \textbf{Velocidade de Condução:}
@@ -1533,9 +1534,9 @@ onde:
     \item Geometria do tecido
     \item Refratariedade
     \item Isquemia, fibrose
-\end{itemize>
-\end{columns>
-\end{frame>
+\end{itemize}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Mecanismos de Arritmias}
 \begin{block}{Classificação}
@@ -1556,16 +1557,16 @@ onde:
     \begin{itemize}
         \item Circuito anatômico
         \item Circuito funcional (spiral waves)
-    \end{itemize>
+    \end{itemize}
 \end{enumerate}
-\end{block>
+\end{block}
 
 \vspace{0.3cm}
 
 \importante{
 Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
 }
-\end{frame>
+\end{frame}
 
 \begin{frame}{Reentrada e Ondas Espirais}
 \begin{columns}
@@ -1591,7 +1592,7 @@ Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
 \begin{equation*}
 \text{Perímetro do circuito} > \lambda
 \end{equation*}
-\end{alertblock>
+\end{alertblock}
 
 \column{0.5\textwidth}
 \begin{center}
@@ -1620,7 +1621,7 @@ Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
         (0,1.5) arc (90:180:1.5) -- (-0.5,0) arc (180:90:0.5) -- cycle;
     \node[font=\tiny] at (-1.2,0.8) {Excitável};
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \textbf{Ondas Espirais:}
 \begin{itemize}
@@ -1628,9 +1629,9 @@ Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
     \item Frequência alta
     \item Sustentadas
     \item Fibrilação
-\end{itemize>
-\end{columns>
-\end{frame>
+\end{itemize}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Fibrilação Atrial (FA)}
 \begin{block}{Epidemiologia e Impacto}
@@ -1641,7 +1642,7 @@ Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
     \item Risco de AVC aumentado 5x
     \item Insuficiência cardíaca
 \end{itemize}
-\end{block>
+\end{block}
 
 \vspace{0.3cm}
 
@@ -1665,7 +1666,7 @@ Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
     \item APD encurtado
     \item ERP reduzido
     \item "AF begets AF"
-\end{itemize>
+\end{itemize}
 
 \column{0.5\textwidth}
 \textbf{Tratamento:}
@@ -1682,7 +1683,7 @@ Reentrada é o mecanismo mais comum de taquiarritmias sustentadas (FA, FV, TV)
 
     \item \textbf{Anticoagulação:}\\
     Prevenção de AVC
-\end{itemize>
+\end{itemize}
 
 \vspace{0.3cm}
 
@@ -1692,10 +1693,10 @@ Modelos computacionais de FA ajudam a:
     \item Identificar alvos de ablação
     \item Prever resposta a drogas
     \item Personalizar tratamento
-\end{itemize>
-\end{exampleblock>
-\end{columns>
-\end{frame>
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Fibrilação Ventricular (FV)}
 \begin{block}{Emergência Médica}
@@ -1705,7 +1706,7 @@ Modelos computacionais de FA ajudam a:
     \item Fatal em minutos sem tratamento
     \item Desfibrilação: único tratamento efetivo
 \end{itemize}
-\end{block>
+\end{block}
 
 \vspace{0.3cm}
 
@@ -1718,7 +1719,7 @@ Modelos computacionais de FA ajudam a:
     \item Dispersão de refratariedade
     \item Isquemia aguda
     \item Cicatriz pós-infarto
-\end{itemize>
+\end{itemize}
 
 \vspace{0.3cm}
 
@@ -1729,7 +1730,7 @@ Modelos computacionais de FA ajudam a:
     \item Canalopatias (Brugada, QTL)
     \item Drogas pró-arrítmicas
     \item Distúrbios eletrolíticos
-\end{itemize>
+\end{itemize}
 
 \column{0.5\textwidth}
 \begin{center}
@@ -1757,9 +1758,9 @@ Modelos computacionais de FA ajudam a:
             plot (\x, {0.2*sin(40*\x r) + 0.1*rand});
 
         \node[below, font=\tiny] at (1.75,-0.7) {ECG em FV};
-    \end{scope>
+    \end{scope}
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \vspace{0.3cm}
 
@@ -1769,14 +1770,14 @@ Modelos computacionais de FA ajudam a:
     \item Despolarização global
     \item Reset do sistema
     \item Permite retomada do ritmo sinusal
-\end{itemize>
-\end{columns>
-\end{frame>
+\end{itemize}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Síndrome do QT Longo (LQTS)}
 \begin{block}{Definição}
 Prolongamento do intervalo QT no ECG ($>$440 ms em homens, $>$460 ms em mulheres), associado a risco aumentado de torsades de pointes e morte súbita.
-\end{block>
+\end{block}
 
 \vspace{0.3cm}
 
@@ -1793,7 +1794,7 @@ LQT2 & KCNH2 & I$_{Kr}$ $\downarrow$ \\
 LQT3 & SCN5A & I$_{Na}$ $\uparrow$ \\
 \bottomrule
 \end{tabular}
-\end{center>
+\end{center}
 
 \vspace{0.3cm}
 
@@ -1802,7 +1803,7 @@ LQT3 & SCN5A & I$_{Na}$ $\uparrow$ \\
     \item Drogas (antiarrítmicos, antibióticos)
     \item Distúrbios eletrolíticos (hipocalemia)
     \item Bradicardia
-\end{itemize>
+\end{itemize}
 
 \column{0.5\textwidth}
 \textbf{Mecanismo:}
@@ -1811,7 +1812,7 @@ LQT3 & SCN5A & I$_{Na}$ $\uparrow$ \\
     \item Dispersão de repolarização
     \item Early afterdepolarizations (EADs)
     \item Torsades de pointes
-\end{itemize>
+\end{itemize}
 
 \vspace{0.3cm}
 
@@ -1831,18 +1832,18 @@ LQT3 & SCN5A & I$_{Na}$ $\uparrow$ \\
         \node[left, font=\tiny] at (0,1.2) {LQTS};
         \draw[<->, azulclaro] (0.7,-0.5) -- (4.5,-0.5);
         \node[below, font=\tiny] at (2.6,-0.5) {QT prolongado};
-    \end{scope>
+    \end{scope}
 \end{tikzpicture}
-\end{center>
+\end{center}
 
 \textbf{Tratamento:}
 \begin{itemize}
     \item Beta-bloqueadores
     \item Evitar drogas que prolongam QT
     \item CDI (cardiodesfibrilador implantável)
-\end{itemize>
-\end{columns>
-\end{frame>
+\end{itemize}
+\end{columns}
+\end{frame}
 
 \begin{frame}{Efeitos de Drogas nos Canais Iônicos}
 \begin{block}{Classes de Antiarrítmicos (Classificação de Vaughan Williams)}
@@ -1857,8 +1858,8 @@ III & I$_K$ & $\uparrow$ APD, ERP & Amiodarona, sotalol \\
 IV & I$_{Ca,L}$ & $\downarrow$ nó AV & Verapamil, diltiazem \\
 \bottomrule
 \end{tabular}
-\end{center>
-\end{block>
+\end{center}
+\end{block}
 
 \vspace{0.3cm}
 
@@ -1871,7 +1872,7 @@ IV & I$_{Ca,L}$ & $\downarrow$ nó AV & Verapamil, diltiazem \\
     \item Controle de frequência
     \item Melhora sintomática
 \end{itemize}
-\end{exampleblock>
+\end{exampleblock}
 
 \column{0.5\textwidth}
 \begin{alertblock}{Efeitos Adversos}
@@ -1882,15 +1883,15 @@ IV & I$_{Ca,L}$ & $\downarrow$ nó AV & Verapamil, diltiazem \\
     \item Prolongamento QT
     \item Insuficiência cardíaca
 \end{itemize}
-\end{alertblock>
-\end{columns>
+\end{alertblock}
+\end{columns}
 
 \vspace{0.3cm}
 
 \importante{
 Modelos computacionais são usados para prever efeitos cardiotóxicos de novas drogas (teste in silico)
 }
-\end{frame>
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 7: EXERCÍCIOS
@@ -1910,17 +1911,17 @@ Um PA ventricular tem as seguintes características:
     \item Se a frequência cardíaca é 75 bpm, qual a porcentagem do ciclo em que a célula está refratária?
     \item Como uma droga que bloqueia I$_{Kr}$ afetaria o APD?
 \end{enumerate}
-\end{block>
+\end{block}
 
 \begin{block}{Questão 2: Concentrações Iônicas}
 Calcule o potencial de equilíbrio para Ca$^{2+}$ a 37°C, dados:
 \begin{itemize}
     \item [Ca$^{2+}$]$_o$ = 2 mM
     \item [Ca$^{2+}$]$_i$ = 0.1 $\mu$M
-\end{itemize>
+\end{itemize}
 Use a equação de Nernst: $E = \frac{RT}{zF}\ln\frac{[X]_o}{[X]_i} = \frac{58}{z}\log_{10}\frac{[X]_o}{[X]_i}$ mV a 37°C
-\end{block>
-\end{frame>
+\end{block}
+\end{frame}
 
 \begin{frame}{Exercícios - Parte 2}
 \begin{block}{Questão 3: Condutância de Canais}
@@ -1929,10 +1930,10 @@ Uma célula cardíaca tem g$_{Na}$ = 23 mS/cm$^2$. Durante o upstroke do PA:
     \item V$_m$ = 0 mV
     \item E$_{Na}$ = +50 mV
     \item Ativação: m$^3$h = 0.9 $\times$ 0.6 = 0.54
-\end{itemize>
+\end{itemize}
 
 Calcule a corrente I$_{Na}$ (em $\mu$A/cm$^2$).
-\end{block>
+\end{block}
 
 \begin{block}{Questão 4: Acoplamento EC}
 \begin{enumerate}
@@ -1940,7 +1941,7 @@ Calcule a corrente I$_{Na}$ (em $\mu$A/cm$^2$).
     \item Explique como uma redução de 50\% em I$_{Ca,L}$ afetaria a contração
     \item Por que bloqueadores de canal de Ca$^{2+}$ são efetivos no tratamento de hipertensão?
 \end{enumerate}
-\end{block>
+\end{block}
 
 \begin{block}{Questão 5: Comprimento de Onda de Reentrada}
 Se a velocidade de condução é $\theta$ = 0.5 m/s e o ERP = 250 ms:
@@ -1948,8 +1949,8 @@ Se a velocidade de condução é $\theta$ = 0.5 m/s e o ERP = 250 ms:
     \item Calcule o comprimento de onda $\lambda$
     \item Qual o perímetro mínimo de circuito para sustentar reentrada?
 \end{enumerate}
-\end{block>
-\end{frame>
+\end{block}
+\end{frame}
 
 \begin{frame}{Exercícios - Parte 3}
 \begin{alertblock}{Questão 6: Projeto Computacional}
@@ -1966,7 +1967,7 @@ Implemente um modelo simplificado de cardiomiócito ventricular:
     \end{itemize}
     \item Para cada manipulação, calcule APD$_{90}$ e compare com controle
 \end{enumerate}
-\end{alertblock>
+\end{alertblock}
 
 \begin{block}{Questão 7: Análise Clínica}
 Um paciente apresenta:
@@ -1982,7 +1983,7 @@ Um paciente apresenta:
     \item Quais opções terapêuticas você consideraria?
 \end{enumerate}
 \end{block}
-\end{frame>
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 8: REFERÊNCIAS
@@ -2003,7 +2004,7 @@ Um paciente apresenta:
 
 \bibitem{oruru} O'Hara T., Virág L., Varró A., Rudy Y. (2011). Simulation of the undiseased human cardiac ventricular action potential. \textit{PLoS Comput Biol}.
 \end{thebibliography}
-\end{frame>
+\end{frame}
 
 \begin{frame}{Leitura Complementar}
 \begin{block}{Livros}
@@ -2013,7 +2014,7 @@ Um paciente apresenta:
     \item Zipes D.P., Jalife J. (2013). \textit{Cardiac Electrophysiology: From Cell to Bedside}, 6th ed.
     \item Klabunde R. (2011). \textit{Cardiovascular Physiology Concepts}, 2nd ed.
 \end{itemize}
-\end{block>
+\end{block}
 
 \begin{block}{Recursos Online}
 \begin{itemize}
@@ -2022,9 +2023,9 @@ Um paciente apresenta:
     \item \textbf{OpenCARP:} \url{https://opencarp.org}
     \item \textbf{PhysioNet:} \url{https://physionet.org} (dados de ECG)
     \item \textbf{LivingHeart Project:} \url{https://www.3ds.com/simulia}
-\end{itemize>
-\end{block>
-\end{frame>
+\end{itemize}
+\end{block}
+\end{frame}
 
 % ============================================================================
 % SLIDE FINAL

@@ -5,13 +5,16 @@
 
 \input{../template/beamer-template.tex}
 
+% Bibliotecas adicionais
+\usetikzlibrary{decorations.pathmorphing}
+
 % ============================================================================
 % INFORMAÇÕES DO DOCUMENTO
 % ============================================================================
 \title[Cap. 7: Protein Systems]{Capítulo 7: Protein Systems}
 \subtitle{Bioinformática para Biologia de Sistemas}
-\author{Seu Nome}
-\institute{Sua Instituição}
+\author{Ney Lemke}
+\institute{DBF-Unesp}
 \date{\today}
 
 \begin{document}
@@ -148,7 +151,7 @@ Proteínas são o elo entre genótipo (DNA) e fenótipo (função)
 
     % Secondary
     \begin{scope}[xshift=3cm]
-        \draw[thick, azulescuro, decorate, decoration={coil, aspect=0.5, segment length=3mm, amplitude=2mm}] (0,0) -- (2,0);
+        \draw[thick, azulescuro, decorate, decoration={snake, segment length=3mm, amplitude=2mm}] (0,0) -- (2,0);
         \node[below, font=\tiny] at (1,-0.5) {2ª};
     \end{scope}
 
@@ -311,9 +314,9 @@ Padrões estruturais recorrentes:
     % Motif example
     \begin{scope}[yshift=-3cm]
         % Helix-turn-helix
-        \draw[thick, verdeacido, decorate, decoration={coil, aspect=0.5, segment length=2mm, amplitude=1.5mm}] (0,0) -- (1.5,0);
+        \draw[thick, verdeacido, decorate, decoration={snake, segment length=2mm, amplitude=1.5mm}] (0,0) -- (1.5,0);
         \draw[thick, azulescuro] (1.5,0) to [out=45, in=180] (2,0.5);
-        \draw[thick, laranjacel, decorate, decoration={coil, aspect=0.5, segment length=2mm, amplitude=1.5mm}] (2,0.5) -- (3.5,0.5);
+        \draw[thick, laranjacel, decorate, decoration={snake, segment length=2mm, amplitude=1.5mm}] (2,0.5) -- (3.5,0.5);
         \node[below, font=\tiny] at (1.75,-0.5) {Motivo Hélice-Volta-Hélice};
     \end{scope}
 \end{tikzpicture}
@@ -1983,7 +1986,7 @@ for idx, row in df.iterrows():
 df['p_value'] = p_val
 df['-log10(p)'] = -np.log10(df['p_value'])
 \end{lstlisting}
-\end{frame>
+\end{frame}
 
 \begin{frame}[fragile]{Visualização: Volcano Plot}
 \begin{lstlisting}[language=Python, caption=Volcano plot proteômico, basicstyle=\ttfamily\footnotesize]
@@ -2021,7 +2024,7 @@ plt.title('Volcano Plot: Proteinas Diferencialmente Expressas')
 plt.legend()
 plt.grid(True, alpha=0.3)
 \end{lstlisting}
-\end{frame>
+\end{frame}
 
 % ============================================================================
 % SEÇÃO 7: EXERCÍCIOS
