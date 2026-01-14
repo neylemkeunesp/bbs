@@ -4,6 +4,7 @@
 % ============================================================================
 
 \input{../template/beamer-template.tex}
+\usetikzlibrary{shadows}
 
 % ============================================================================
 % INFORMAÇÕES DO DOCUMENTO
@@ -13,6 +14,8 @@
 \author{Ney Lemke}
 \institute{DBF-Unesp}
 \date{\today}
+\definecolor{verdeescuro}{RGB}{0,100,0}
+\definecolor{azulclaro}{RGB}{100,100,255}
 
 \begin{document}
 
@@ -126,20 +129,10 @@ Um sistema biológico é uma rede complexa de componentes biologicamente relevan
 \end{frame}
 
 \begin{frame}{Dogma Central da Biologia Molecular}
-\begin{center}
-\begin{tikzpicture}[node distance=3cm, auto,
-    box/.style={rectangle, draw, fill=azulclaro!20, text width=2cm, text centered, rounded corners, minimum height=1cm}]
-
-    \node[box, fill=roxodna!20] (dna) {DNA};
-    \node[box, fill=laranjacel!20, right of=dna] (rna) {RNA};
-    \node[box, fill=verdeacido!20, right of=rna] (prot) {Proteína};
-
-    \draw[->, thick, azulescuro] (dna) -- node[above] {Transcrição} (rna);
-    \draw[->, thick, azulescuro] (rna) -- node[above] {Tradução} (prot);
-    \draw[->, thick, azulescuro] (dna) to [out=135,in=45,looseness=8] node[above] {Replicação} (dna);
-
-\end{tikzpicture}
-\end{center}
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.9]{images/central_dogma_infographic.png}
+\end{figure}
 
 \importante{
 O fluxo de informação genética é unidirecional: DNA $\rightarrow$ RNA $\rightarrow$ Proteína
@@ -191,7 +184,9 @@ $\text{G} \equiv \text{C} \quad \text{(3 ligações H)}$
 \end{columns}
 \end{frame}
 
-\begin{frame}{Composição Química do DNA}
+
+
+\begin{frame}{Composição Química do DNA: Nucleotídeos}
 \definicao{Nucleotídeo}{
 Unidade básica do DNA composta por três componentes:
 \begin{enumerate}
@@ -200,15 +195,17 @@ Unidade básica do DNA composta por três componentes:
     \item Grupo fosfato
 \end{enumerate}
 }
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Composição Química do DNA: Estrutura}
 \begin{block}{Estrutura Química}
 \begin{equation*}
 \text{Nucleotídeo} = \underbrace{\text{Base}}_{\text{Purinas/Pirimidinas}} + \underbrace{\text{Desoxirribose}}_{\text{Açúcar}} + \underbrace{\text{PO}_4^{3-}}_{\text{Fosfato}}
 \end{equation*}
 \end{block}
+\end{frame}
 
+\begin{frame}{Composição Química do DNA: Bases Nitrogenadas}
 \begin{exampleblock}{Purinas vs Pirimidinas}
 \begin{itemize}
     \item \textbf{Purinas:} Adenina (A), Guanina (G) --- dois anéis
@@ -223,7 +220,7 @@ Unidade básica do DNA composta por três componentes:
     \item \textbf{Diâmetro:} $\sim$2 nm
     \item \textbf{Comprimento por volta:} 3.4 nm
     \item \textbf{Pares de bases por volta:} 10 pb
-    \item \textbf{Ângulo de rotação:} 36° por pb
+    \item \textbf{Ângulo de rotação:} 36$^{\circ}$ por pb
 \end{itemize}
 \end{block}
 
@@ -375,7 +372,9 @@ Arranjo espacial resultante do pareamento de bases complementares dentro da mesm
 \begin{exampleblock}{Algoritmo de Nussinov}
 Algoritmo de programação dinâmica para predizer estrutura secundária de RNA:
 \end{exampleblock}
+\end{frame}
 
+\begin{frame}[fragile]{Predição de Estrutura Secundária do RNA: Pseudocódigo}
 \begin{lstlisting}[language=Python, caption=Pseudocódigo para Nussinov, basicstyle=\ttfamily\footnotesize]
 def nussinov(sequence):
     n = len(sequence)
@@ -384,7 +383,7 @@ def nussinov(sequence):
     for length in range(2, n + 1):
         for i in range(n - length + 1):
             j = i + length - 1
-            # Caso 1: i e j não pareiam
+            # Caso 1: i e j nao pareiam
             dp[i][j] = dp[i+1][j]
 
             # Caso 2: i e j pareiam
@@ -412,25 +411,16 @@ def nussinov(sequence):
 \end{enumerate}
 \end{block}
 
-\vspace{0.3cm}
+\end{frame}
+
+\begin{frame}{1.4 Estrutura de Proteínas: Visualização}
 
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    \node[draw, rectangle, fill=azulclaro!20, text width=2cm, align=center] at (0,0) {Primária\\(1D)};
-    \node[draw, rectangle, fill=azulclaro!40, text width=2cm, align=center] at (3,0) {Secundária\\(2D)};
-    \node[draw, rectangle, fill=azulclaro!60, text width=2cm, align=center] at (6,0) {Terciária\\(3D)};
-    \node[draw, rectangle, fill=azulclaro!80, text width=2cm, align=center] at (9,0) {Quaternária\\(Complexo)};
-
-    \draw[->, thick] (1,0) -- (2,0);
-    \draw[->, thick] (4,0) -- (5,0);
-    \draw[->, thick] (7,0) -- (8,0);
-\end{tikzpicture}
+    \includegraphics[width=0.4\textwidth]{images/protein_structure_infographic.png}
 \end{center}
 \end{frame}
 
 \begin{frame}{Aminoácidos: Blocos Construtores das Proteínas}
-\begin{columns}
-\column{0.5\textwidth}
 \begin{block}{Estrutura Geral}
 \begin{center}
 \chemfig{H_2N-C(-[2]H)(-[6]R)-C(=[1]O)-[7]OH}
@@ -443,6 +433,10 @@ def nussinov(sequence):
 \end{itemize}
 \end{block}
 
+\end{frame}
+
+\begin{frame}{Aminoácidos: Classificação}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{exampleblock}{Classificação dos Aminoácidos}
 \begin{itemize}
@@ -488,10 +482,27 @@ Reação de condensação entre dois aminoácidos:
 \end{itemize}
 \end{alertblock}
 
-\begin{exampleblock}{Diagrama de Ramachandran}
-Representa regiões permitidas dos ângulos $\phi$ e $\psi$
-\end{exampleblock}
+
 \end{columns}
+\end{frame}
+
+\begin{frame}{Diagrama de Ramachandran}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{itemize}
+    \item Gráfico de dispersão dos ângulos torcionais $\phi$ vs $\psi$
+    \item Identifica regiões estereoquimicamente permitidas
+    \item \textcolor{verdeescuro}{\textbf{Alpha-helix:}} região inferior esquerda
+    \item \textcolor{azulclaro}{\textbf{Beta-sheet:}} região superior esquerda
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+    \includegraphics[width=\textwidth]{images/ramachandran_infographic.png}
+\end{center}
+\end{columns}
+
+
 \end{frame}
 
 \begin{frame}{Estrutura Secundária}
@@ -507,12 +518,16 @@ Representa regiões permitidas dos ângulos $\phi$ e $\psi$
 
 \textbf{Parâmetros:}
 \begin{itemize}
-    \item $\phi = -60°$
-    \item $\psi = -45°$
+    \item $\phi = -60^{\circ}$
+    \item $\psi = -45^{\circ}$
     \item Passo: 5.4 Å
 \end{itemize}
 \end{block}
+\end{columns}
+\end{frame}
 
+\begin{frame}{Estrutura Secundária: Folhas $\beta$}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Folha $\beta$}
 \begin{itemize}
@@ -570,6 +585,9 @@ Principal repositório de estruturas 3D de proteínas
     \item Técnicas: Cristalografia de raios-X, NMR, Cryo-EM
 \end{itemize}
 \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Acessando PDB com BioPython}
 
 \begin{exampleblock}{Acessando PDB com BioPython}
 \begin{lstlisting}[language=Python]
@@ -603,18 +621,18 @@ Conjunto de reações químicas que ocorrem nas células para manter a vida, div
 \vspace{0.3cm}
 
 \begin{center}
-\begin{tikzpicture}[node distance=2cm]
-    \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] (cat) {Catabolismo};
-    \node[draw, circle, fill=verdeacido!30, text width=2cm, align=center, right=3cm of cat] (ana) {Anabolismo};
-
-    \draw[->, thick, bend left=30] (cat) to node[above] {ATP, NADH} (ana);
-    \draw[->, thick, bend left=30] (ana) to node[below] {ADP, NAD$^+$} (cat);
-
-    \node[above=0.3cm of cat, font=\small] {Moléculas\\complexas};
-    \node[below=0.3cm of cat, font=\small] {Moléculas\\simples};
-    \node[above=0.3cm of ana, font=\small] {Moléculas\\simples};
-    \node[below=0.3cm of ana, font=\small] {Moléculas\\complexas};
-\end{tikzpicture}
+% \begin{tikzpicture}[node distance=2cm]
+%     \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] (cat) {Catabolismo};
+%     \node[draw, circle, fill=verdeacido!30, text width=2cm, align=center, right=3cm of cat] (ana) {Anabolismo};
+% 
+%     \draw[->, thick, bend left=30] (cat) to node[above] {ATP, NADH} (ana);
+%     \draw[->, thick, bend left=30] (ana) to node[below] {ADP, NAD$^+$} (cat);
+% 
+%     \node[above=0.3cm of cat, font=\small] {Moléculas\\complexas};
+%     \node[below=0.3cm of cat, font=\small] {Moléculas\\simples};
+%     \node[above=0.3cm of ana, font=\small] {Moléculas\\simples};
+%     \node[below=0.3cm of ana, font=\small] {Moléculas\\complexas};
+% \end{tikzpicture}
 \end{center}
 \end{frame}
 
@@ -701,7 +719,9 @@ Balanço líquido: 2 ATP, 2 NADH produzidos por molécula de glicose
 Proteína que catalisa (acelera) reações bioquímicas específicas sem ser consumida no processo.
 }
 
-\vspace{0.3cm}
+\end{frame}
+
+\begin{frame}{Cinética de Michaelis-Menten}
 
 \begin{block}{Cinética de Michaelis-Menten}
 \begin{equation*}
@@ -738,6 +758,11 @@ Km = 5      # mM
 # Concentracoes de substrato
 S = np.linspace(0, 50, 100)
 v = michaelis_menten(S, Vmax, Km)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualização da Cinética}
+\begin{lstlisting}[language=Python, caption=Plotando resultados, basicstyle=\ttfamily\footnotesize]
 
 # Plotar
 plt.plot(S, v, 'b-', linewidth=2)
@@ -857,7 +882,7 @@ Mitocôndrias e cloroplastos originaram-se de bactérias simbiontes
 &\text{Glicólise: } 2 \text{ ATP}\\
 &\text{Krebs: } 2 \text{ ATP}\\
 &\text{Fosf. Ox: } 34 \text{ ATP}\\
-&\hline
+&\rule{2.5cm}{0.4pt}\\
 &\textbf{Total: } 38 \text{ ATP}
 \end{split}
 \end{equation*}
@@ -944,22 +969,57 @@ $E_{K^+} = 58 \log_{10}(5/140) \approx -85$ mV
 
 \begin{frame}{Visão Integrada dos Sistemas Biológicos}
 \begin{center}
-\begin{tikzpicture}[node distance=1.5cm, scale=0.9, transform shape]
-    \node[draw, circle, fill=roxodna!30] (dna) {DNA};
-    \node[draw, circle, fill=laranjacel!30, right=of dna] (rna) {RNA};
-    \node[draw, circle, fill=verdeacido!30, right=of rna] (prot) {Proteína};
-    \node[draw, circle, fill=azulclaro!30, below=of prot] (met) {Metabólito};
-    \node[draw, circle, fill=yellow!30, below=of rna] (cel) {Célula};
+\begin{tikzpicture}[
+    node distance=2.2cm,
+    scale=0.5,
+    transform shape,
+    >=latex,
+    every node/.style={align=center},
+    concept/.style={
+        circle,
+        circular drop shadow,
+        draw=white,
+        line width=1.5pt,
+        minimum size=2.4cm,
+        font=\bfseries\sffamily,
+        text=white,
+        inner sep=2pt
+    },
+    arrow_label/.style={
+        font=\footnotesize\bfseries\sffamily,
+        color=gray!40!black,
+        auto
+    }
+]
+    % Nodes with gradients for pseudo-3D effect
+    \node[concept, top color=roxodna!90, bottom color=roxodna!50] (dna) {DNA};
+    \node[concept, top color=laranjacel!90, bottom color=laranjacel!50, right=of dna] (rna) {RNA};
+    \node[concept, top color=verdeacido!90, bottom color=verdeacido!50, right=of rna] (prot) {Proteína};
+    \node[concept, top color=azulclaro!90, bottom color=azulclaro!50, below=of prot] (met) {Metabólito};
+    % Célula: yellow needs dark text for contrast
+    \node[concept, top color=yellow!90, bottom color=yellow!50, text=black!80] (cel) [below=of rna] {Célula};
 
-    \draw[->, thick] (dna) -- (rna);
-    \draw[->, thick] (rna) -- (prot);
-    \draw[->, thick] (prot) -- (met);
-    \draw[->, thick] (met) -- (cel);
-    \draw[->, thick, bend right=45] (prot) to node[left, font=\tiny] {regulação} (dna);
-    \draw[->, thick, bend left=20] (met) to node[above right, font=\tiny] {feedback} (prot);
-    \draw[->, thick] (cel) -- ($(cel) + (0,-1)$) node[below, font=\small] {Fenótipo};
+    % Main flow connections
+    \draw[->, line width=2.5pt, color=gray!30] (dna) -- (rna);
+    \draw[->, line width=2.5pt, color=gray!30] (rna) -- (prot);
+    \draw[->, line width=2.5pt, color=gray!30] (prot) -- (met);
+    \draw[->, line width=2.5pt, color=gray!30] (met) -- (cel);
+
+    % Feedback arrows with distinct styling
+    \draw[->, line width=1.5pt, color=roxodna!80!black, dashed] (prot) to[bend right=55]
+         node[arrow_label, above, sloped] {Regulação} (dna);
+
+    \draw[->, line width=1.5pt, color=azulclaro!80!black, dashed] (met) to[bend left=45]
+         node[arrow_label, below right] {Feedback} (prot);
+
+    % Phenotype output
+    \draw[->, line width=3pt, color=black!70] (cel) -- ++(-3,-2)
+         node[below, font=\bfseries\large\sffamily] {Fenótipo};
 \end{tikzpicture}
 \end{center}
+\end{frame}
+
+\begin{frame}{Sistemas Biológicos: Uma Rede Interconectada}
 
 \importante{
 Os sistemas biológicos são redes altamente interconectadas onde:
@@ -975,19 +1035,7 @@ Os sistemas biológicos são redes altamente interconectadas onde:
 \begin{frame}{Da Molécula ao Organismo}
 \begin{block}{Hierarquia de Organização Biológica}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    \foreach \i/\name in {0/Átomo, 1/Molécula, 2/Macromolécula, 3/Organela, 4/Célula, 5/Tecido, 6/Órgão, 7/Organismo} {
-        \node[draw, rectangle, fill=azulclaro!20, minimum width=2.5cm] at (0,-\i*0.8) {\name};
-    }
-
-    \foreach \i in {0,...,6} {
-        \draw[->, thick] (-1.3,-\i*0.8-0.3) -- (-1.3,-\i*0.8-0.5);
-    }
-
-    \node[right, font=\small] at (1.5,-3.2) {Emergência};
-    \node[right, font=\small] at (1.5,-3.5) {de};
-    \node[right, font=\small] at (1.5,-3.8) {propriedades};
-\end{tikzpicture}
+    \includegraphics[width=\textwidth]{images/biological_hierarchy_infographic_landscape.png}
 \end{center}
 \end{block}
 \end{frame}
