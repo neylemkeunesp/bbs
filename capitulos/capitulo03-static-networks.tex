@@ -35,21 +35,18 @@
 % ============================================================================
 \section{Introdução}
 
-\begin{frame}{Visão Geral do Capítulo}
+\begin{frame}[shrink=10]{Visão Geral do Capítulo (1/2)}
 \begin{block}{Objetivos de Aprendizagem}
 \begin{itemize}
     \item Compreender os fundamentos de teoria dos grafos
     \item Analisar propriedades topológicas de redes biológicas
     \item Explorar modelos de redes small-world e scale-free
-    \item Estudar tipos de redes biológicas e suas características
-    \item Aplicar análise de controle metabólico (MCA)
 \end{itemize}
 \end{block}
+\end{frame}
 
-\vspace{0.5cm}
-
+\begin{frame}[shrink=10]{Visão Geral do Capítulo (2/2)}
 \begin{exampleblock}{Por que Estudar Redes Biológicas?}
-Redes são essenciais para:
 \begin{itemize}
     \item Entender organização e função de sistemas biológicos
     \item Identificar alvos terapêuticos e biomarcadores
@@ -59,7 +56,7 @@ Redes são essenciais para:
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{O que são Redes Biológicas?}
+\begin{frame}[shrink=10]{O que são Redes Biológicas?}
 \definicao{Rede Biológica}{
 Uma rede biológica é uma representação matemática de interações entre componentes biológicos (genes, proteínas, metabólitos) como um grafo, onde nós representam entidades e arestas representam relações.
 }
@@ -143,7 +140,7 @@ Uma rede biológica é uma representação matemática de interações entre com
 % ============================================================================
 \section{Fundamentos de Teoria dos Grafos}
 
-\begin{frame}{Conceitos Básicos de Grafos}
+\begin{frame}[shrink=5]{Conceitos Básicos de Grafos}
 \definicao{Grafo}{
 Um grafo $G = (V, E)$ é composto por:
 \begin{itemize}
@@ -187,7 +184,7 @@ Arestas com direção: $(u, v) \neq (v, u)$
 \end{columns}
 \end{frame}
 
-\begin{frame}{Representação de Grafos: Matriz de Adjacência}
+\begin{frame}[shrink=5]{Representação de Grafos: Matriz de Adjacência}
 \definicao{Matriz de Adjacência}{
 Matriz $A$ de dimensão $n \times n$ onde $n = |V|$:
 \begin{equation*}
@@ -261,7 +258,7 @@ B_{ie} = \begin{cases}
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Grau de um Vértice}
+\begin{frame}[shrink=10]{Grau de um Vértice}
 \definicao{Grau (Degree)}{
 O grau de um vértice é o número de arestas conectadas a ele.
 \begin{itemize}
@@ -307,7 +304,7 @@ O grau médio da rede é:
 \end{columns}
 \end{frame}
 
-\begin{frame}{Caminhos e Ciclos}
+\begin{frame}[shrink=10]{Caminhos e Ciclos}
 \begin{columns}
 \column{0.5\textwidth}
 \definicao{Caminho}{
@@ -356,7 +353,7 @@ Caminho fechado: $v_1 = v_k$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Componentes Conectados}
+\begin{frame}[shrink=15]{Componentes Conectados}
 \definicao{Componente Conectado}{
 Subconjunto máximo de vértices tal que existe um caminho entre qualquer par de vértices.
 }
@@ -392,7 +389,7 @@ O maior componente conectado é chamado de \textbf{componente gigante}. Em redes
 }
 \end{frame}
 
-\begin{frame}{Diâmetro e Comprimento Médio de Caminho}
+\begin{frame}[shrink=15]{Diâmetro e Comprimento Médio de Caminho}
 \definicao{Distância entre Vértices}{
 $d(u, v)$ = comprimento do menor caminho entre $u$ e $v$ (geodésica)
 }
@@ -430,7 +427,7 @@ Na maioria das redes sociais e biológicas, $L \approx 6$
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Criando e Analisando Grafos com NetworkX}
+\begin{frame}[fragile, shrink=5]{Criando e Analisando Grafos com NetworkX (1/2)}
 \begin{lstlisting}[language=Python, caption=Exemplo básico com NetworkX, basicstyle=\ttfamily\footnotesize]
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -445,8 +442,11 @@ G.add_edges_from([(1,2), (1,3), (2,3), (3,4), (4,5)])
 # Propriedades basicas
 print(f"Numero de nos: {G.number_of_nodes()}")
 print(f"Numero de arestas: {G.number_of_edges()}")
-print(f"Grau medio: {sum(dict(G.degree()).values())/G.number_of_nodes()}")
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile, shrink=5]{Criando e Analisando Grafos com NetworkX (2/2)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 # Calcular distancias
 print(f"Diametro: {nx.diameter(G)}")
 print(f"Caminho medio: {nx.average_shortest_path_length(G)}")
@@ -458,7 +458,7 @@ plt.show()
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Matriz de Adjacência}
+\begin{frame}[fragile, shrink=10]{Análise de Matriz de Adjacência (1/2)}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import networkx as nx
@@ -475,9 +475,12 @@ print(A)
 # Calcular graus a partir da matriz
 degrees = np.sum(A, axis=1)
 print(f"\nGraus dos vertices: {degrees.T}")
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile, shrink=10]{Análise de Matriz de Adjacência (2/2)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 # Matriz de adjacencia elevada ao quadrado
-# A^2[i,j] = numero de caminhos de comprimento 2 de i para j
 A2 = np.linalg.matrix_power(A, 2)
 print("\nMatriz A^2 (caminhos de comprimento 2):")
 print(A2)
@@ -494,7 +497,7 @@ print(f"\nCentralidade de autovetor: {principal_eigenvector}")
 % ============================================================================
 \section{Propriedades Topológicas de Redes}
 
-\begin{frame}{Distribuição de Graus}
+\begin{frame}[shrink=10]{Distribuição de Graus}
 \definicao{Distribuição de Graus}{
 $P(k)$ = fração de nós na rede com grau $k$
 }
@@ -531,93 +534,65 @@ A maioria das redes biológicas segue distribuição scale-free!
 }
 \end{frame}
 
-\begin{frame}{Visualizando Distribuições de Grau}
+\begin{frame}[shrink=15]{Visualizando Distribuições de Grau}
 \begin{columns}
 \column{0.5\textwidth}
-\textbf{Rede Aleatória (Poisson)}
+\textbf{Rede Aleatória}
 \begin{center}
-\begin{tikzpicture}[scale=0.7]
+\begin{tikzpicture}[scale=0.5]
     \draw[->] (0,0) -- (4,0) node[right] {$k$};
     \draw[->] (0,0) -- (0,3) node[above] {$P(k)$};
-
-    % Distribuicao Poisson
     \draw[thick, azulescuro, smooth] plot coordinates {
         (0.5,0.1) (1,1) (1.5,2.5) (2,2.8) (2.5,2) (3,0.8) (3.5,0.2)
     };
-
     \draw[dashed] (2,0) -- (2,2.8);
-    \node[below] at (2,0) {$\langle k \rangle$};
 \end{tikzpicture}
 \end{center}
-Maioria dos nós com grau similar
 
 \column{0.5\textwidth}
-\textbf{Rede Scale-Free (Power-law)}
+\textbf{Rede Scale-Free}
 \begin{center}
-\begin{tikzpicture}[scale=0.7]
+\begin{tikzpicture}[scale=0.5]
     \draw[->] (0,0) -- (4,0) node[right] {$k$};
     \draw[->] (0,0) -- (0,3) node[above] {$P(k)$};
-
-    % Distribuicao Power-law
-    \draw[thick, verdeacido, domain=0.3:3.5, smooth]
-        plot (\x, {3/\x});
-
-    \node[right] at (1.5,1.5) {$k^{-\gamma}$};
+    \draw[thick, verdeacido, domain=0.3:3.5, smooth] plot (\x, {3/\x});
 \end{tikzpicture}
 \end{center}
-Poucos hubs com alto grau
 \end{columns}
 
-\vspace{0.3cm}
-
 \begin{exampleblock}{Identificando Power-Law}
-Gráfico log-log: se $P(k) \sim k^{-\gamma}$, então $\log P(k) = -\gamma \log k + c$ (linha reta)
+Gráfico log-log: $\log P(k) = -\gamma \log k + c$ (linha reta)
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Coeficiente de Agrupamento (Clustering)}
-\definicao{Coeficiente de Agrupamento Local}{
-Mede a fração de pares de vizinhos de um nó que também são conectados:
-\begin{equation*}
-C_i = \frac{2E_i}{k_i(k_i - 1)}
-\end{equation*}
-onde $E_i$ = número de arestas entre vizinhos de $i$
+\begin{frame}[shrink=10]{Coeficiente de Agrupamento (Clustering)}
+\definicao{Clustering Local}{
+$C_i = 2E_i / k_i(k_i - 1)$
 }
-
-\vspace{0.3cm}
 
 \begin{columns}
 \column{0.5\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=0.5]
     \node[circle, draw, fill=laranjacel!50] (A) at (1,1.5) {A};
     \node[circle, draw, fill=azulclaro!30] (B) at (0,0) {B};
     \node[circle, draw, fill=azulclaro!30] (C) at (2,0) {C};
     \node[circle, draw, fill=azulclaro!30] (D) at (1,3) {D};
-
-    \draw[thick] (A) -- (B);
-    \draw[thick] (A) -- (C);
-    \draw[thick] (A) -- (D);
-    \draw[thick, verdeacido, line width=1.5pt] (B) -- (C);
-
-    \node[below] at (1,-0.5) {$C_A = \frac{1}{3}$};
+    \draw[thick] (A) -- (B); \draw[thick] (A) -- (C); \draw[thick] (A) -- (D);
+    \draw[thick, verdeacido] (B) -- (C);
+    \node[below] at (1,-0.5) {$C_A = 1/3$};
 \end{tikzpicture}
 \end{center}
 
 \column{0.5\textwidth}
-\definicao{Coeficiente Global}{
-\begin{equation*}
-C = \frac{1}{n} \sum_{i=1}^{n} C_i
-\end{equation*}
+\definicao{Global}{
+$C = \frac{1}{n} \sum C_i$
 }
-
-\importante{
-Alto clustering indica estrutura modular e presença de comunidades!
-}
+\importante{Indica modularidade!}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Redes Small-World (Watts-Strogatz)}
+\begin{frame}[shrink=15]{Redes Small-World (Watts-Strogatz)}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Características:}
@@ -663,7 +638,7 @@ Redes small-world permitem comunicação eficiente com conexões locais e alguns
 }
 \end{frame}
 
-\begin{frame}{Redes Scale-Free (Barabási-Albert)}
+\begin{frame}[shrink=15]{Redes Scale-Free (Barabási-Albert)}
 \begin{block}{Modelo de Ligação Preferencial (Preferential Attachment)}
 \begin{enumerate}
     \item Começar com pequeno número de nós $m_0$
@@ -699,7 +674,7 @@ Redes small-world permitem comunicação eficiente com conexões locais e alguns
 \end{columns}
 \end{frame}
 
-\begin{frame}{Motivos de Rede (Network Motifs)}
+\begin{frame}[shrink=15]{Motivos de Rede (Network Motifs)}
 \definicao{Motivo de Rede}{
 Padrões de interconexão recorrentes que aparecem significativamente mais frequentes que em redes aleatórias.
 }
@@ -746,7 +721,7 @@ Padrões de interconexão recorrentes que aparecem significativamente mais frequ
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Nós Hub e Vulnerabilidade}
+\begin{frame}[shrink=15]{Nós Hub e Vulnerabilidade}
 \begin{columns}
 \column{0.5\textwidth}
 \definicao{Hub}{
@@ -790,7 +765,7 @@ Redes scale-free são robustas a falhas aleatórias mas vulneráveis a ataques d
 }
 \end{frame}
 
-\begin{frame}[fragile]{Calculando Propriedades de Rede com NetworkX}
+\begin{frame}[fragile, shrink=10]{Calculando Propriedades de Rede com NetworkX}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import networkx as nx
 import numpy as np
@@ -798,16 +773,14 @@ import numpy as np
 # Criar rede scale-free (Barabasi-Albert)
 G = nx.barabasi_albert_graph(n=100, m=2)
 
-# Distribuicao de graus
+# Analise
 degrees = [G.degree(n) for n in G.nodes()]
 print(f"Grau medio: {np.mean(degrees):.2f}")
-print(f"Grau maximo: {max(degrees)}")
 
-# Coeficiente de agrupamento
+# Clustering e Caminho Medio
 C_global = nx.average_clustering(G)
 print(f"Clustering global: {C_global:.3f}")
 
-# Caminho medio
 if nx.is_connected(G):
     L = nx.average_shortest_path_length(G)
     print(f"Caminho medio: {L:.3f}")
@@ -815,15 +788,13 @@ if nx.is_connected(G):
 # Identificar hubs (nos com grau > 2*media)
 threshold = 2 * np.mean(degrees)
 hubs = [n for n in G.nodes() if G.degree(n) > threshold]
-print(f"Numero de hubs: {len(hubs)}")
-print(f"Hubs: {hubs}")
+print(f"Hubs encontrados: {len(hubs)}")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Gerando Diferentes Modelos de Rede}
+\begin{frame}[fragile, shrink=10]{Gerando Diferentes Modelos de Rede (1/2)}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import networkx as nx
-import matplotlib.pyplot as plt
 
 # 1. Rede Aleatoria (Erdos-Renyi)
 G_random = nx.erdos_renyi_graph(n=50, p=0.1)
@@ -833,7 +804,11 @@ G_sw = nx.watts_strogatz_graph(n=50, k=4, p=0.3)
 
 # 3. Rede Scale-Free (Barabasi-Albert)
 G_sf = nx.barabasi_albert_graph(n=50, m=2)
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile, shrink=10]{Gerando Diferentes Modelos de Rede (2/2)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 # Comparar propriedades
 models = [G_random, G_sw, G_sf]
 names = ['Random', 'Small-World', 'Scale-Free']
@@ -843,10 +818,7 @@ for G, name in zip(models, names):
     L = nx.average_shortest_path_length(G) if nx.is_connected(G) else float('inf')
     degrees = [d for n, d in G.degree()]
 
-    print(f"\n{name}:")
-    print(f"  Clustering: {C:.3f}")
-    print(f"  Path length: {L:.3f}")
-    print(f"  Mean degree: {sum(degrees)/len(degrees):.2f}")
+    print(f"\n{name}: Clustering: {C:.3f}, Path: {L:.3f}")
 \end{lstlisting}
 \end{frame}
 
@@ -910,7 +882,7 @@ for G, name in zip(models, names):
 \end{columns}
 \end{frame}
 
-\begin{frame}{Redes Metabólicas}
+\begin{frame}[shrink=10]{Redes Metabólicas}
 \begin{block}{Duas Representações Principais}
 \begin{enumerate}
     \item \textbf{Rede de metabólitos:} nós = metabólitos, arestas = reações
@@ -918,10 +890,8 @@ for G, name in zip(models, names):
 \end{enumerate}
 \end{block}
 
-\vspace{0.3cm}
-
 \begin{center}
-\begin{tikzpicture}[scale=0.9,
+\begin{tikzpicture}[scale=0.8,
     metabolite/.style={circle, draw, fill=verdeacido!30, minimum size=0.8cm},
     reaction/.style={rectangle, draw, fill=laranjacel!30, minimum size=0.6cm}]
 
@@ -943,134 +913,103 @@ for G, name in zip(models, names):
     \draw[->, thick] (E2) -- (C);
     \draw[->, thick] (B) -- (E3);
     \draw[->, thick] (E3) -- (D);
-
-    \node[below] at (2,-2.5) {Via Metabólica};
 \end{tikzpicture}
 \end{center}
-
-\importante{
-Redes metabólicas são altamente conservadas entre espécies!
-}
 \end{frame}
 
-\begin{frame}{Redes Regulatórias Gênicas (GRN)}
+\begin{frame}[shrink=10]{Redes Regulatórias Gênicas (GRN)}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Componentes:}
 \begin{itemize}
-    \item Genes alvos
-    \item Fatores de transcrição (TF)
-    \item Elementos regulatórios (promotores)
-    \item Interações de ativação/repressão
+    \item Genes alvos, TFs, Elementos (promotores)
 \end{itemize}
-
-\vspace{0.3cm}
 
 \textbf{Propriedades:}
 \begin{itemize}
-    \item Direcionadas
-    \item Hierárquicas
-    \item Motivos regulatórios
-    \item Feed-forward loops
-    \item Auto-regulação
+    \item Direcionadas, Hierárquicas
+    \item Motivos regulatórios, FFLs
 \end{itemize}
 
 \column{0.5\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8,
+\begin{tikzpicture}[scale=0.6,
     gene/.style={rectangle, draw, fill=azulclaro!30, rounded corners},
     tf/.style={ellipse, draw, fill=roxodna!30}]
-
     \node[tf] (TF1) at (0,2) {TF1};
     \node[tf] (TF2) at (2,2) {TF2};
-    \node[gene] (G1) at (0,0) {Gene A};
-    \node[gene] (G2) at (2,0) {Gene B};
-    \node[gene] (G3) at (1,-1.5) {Gene C};
-
-    \draw[->, thick, verdeacido] (TF1) -- (G1) node[midway, left, font=\tiny] {+};
-    \draw[->, thick, red] (TF1) -- (G2) node[midway, left, font=\tiny] {-};
-    \draw[->, thick, verdeacido] (TF2) -- (G2) node[midway, right, font=\tiny] {+};
-    \draw[->, thick, verdeacido] (G1) -- (G3) node[midway, left, font=\tiny] {+};
-    \draw[->, thick, verdeacido] (G2) -- (G3) node[midway, right, font=\tiny] {+};
-
-    \node[below] at (1,-2.5) {+ ativação, - repressão};
+    \node[gene] (G1) at (0,0) {G-A};
+    \node[gene] (G2) at (2,0) {G-B};
+    \draw[->, thick, verdeacido] (TF1) -- (G1) node[midway, left] {+};
+    \draw[->, thick, red] (TF1) -- (G2) node[midway, left] {-};
+    \draw[->, thick, verdeacido] (TF2) -- (G2) node[midway, right] {+};
 \end{tikzpicture}
 \end{center}
 \end{columns}
-
-\begin{exampleblock}{Exemplo: Circuito Repressilator}
-Três repressores em anel: A reprime B, B reprime C, C reprime A → oscilações
-\end{exampleblock}
 \end{frame}
 
-\begin{frame}{Redes de Sinalização Celular}
+\begin{frame}[shrink=10]{Redes de Sinalização Celular (1/2)}
 \begin{block}{Características}
 \begin{itemize}
     \item Transmissão de sinais extracelulares para resposta intracelular
-    \item Cascatas de fosforilação (quinases)
-    \item Amplificação de sinal
-    \item Cross-talk entre vias
-    \item Direcionadas e dinâmicas
+    \item Cascatas de fosforilação (quinases) e amplificação
+    \item Cross-talk entre vias, direcionadas e dinâmicas
 \end{itemize}
 \end{block}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}[shrink=10]{Redes de Sinalização Celular (2/2)}
 \begin{center}
-\begin{tikzpicture}[scale=0.8,
-    node distance=1cm,
+\begin{tikzpicture}[scale=0.6, node distance=1cm,
     protein/.style={rectangle, draw, fill=azulclaro!30, rounded corners, minimum width=1.5cm}]
-
     \node[protein] (R) at (0,3) {Receptor};
     \node[protein, below=of R] (K1) {Quinase 1};
     \node[protein, below=of K1] (K2) {Quinase 2};
-    \node[protein, below=of K2] (K3) {Quinase 3};
-    \node[protein, below=of K3] (TF) {TF};
-
+    \node[protein, below=of K2] (TF) {TF};
     \node[left=0.5cm of R, fill=laranjacel!50, circle] (L) {Ligante};
-
     \draw[->, thick] (L) -- (R);
-    \draw[->, thick] (R) -- (K1) node[midway, right, font=\tiny] {ativação};
+    \draw[->, thick] (R) -- (K1);
     \draw[->, thick] (K1) -- (K2) node[midway, right, font=\tiny] {P};
-    \draw[->, thick] (K2) -- (K3) node[midway, right, font=\tiny] {P};
-    \draw[->, thick] (K3) -- (TF) node[midway, right, font=\tiny] {P};
-
-    \node[below=0.5cm of TF] {$\Downarrow$};
-    \node[below=1cm of TF, align=center] {Núcleo\\Transcrição};
+    \draw[->, thick] (K2) -- (TF) node[midway, right, font=\tiny] {P};
+    \node[below=0.5cm of TF] {$\Downarrow$ Núcleo};
 \end{tikzpicture}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bases de Dados de Redes Biológicas}
+\begin{frame}[shrink=10]{Bases de Dados: PPI e Metabolismo}
 \begin{columns}
 \column{0.5\textwidth}
-\begin{block}{Redes de Interação Proteica}
+\begin{block}{Redes PPI}
 \begin{itemize}
-    \item \textbf{STRING:} \url{https://string-db.org}
-    \item \textbf{BioGRID:} \url{https://thebiogrid.org}
-    \item \textbf{IntAct:} \url{https://www.ebi.ac.uk/intact}
-    \item \textbf{HPRD:} Human Protein Reference Database
+    \item \textbf{STRING:} string-db.org
+    \item \textbf{BioGRID:} thebiogrid.org
+    \item \textbf{IntAct:} ebi.ac.uk/intact
 \end{itemize}
 \end{block}
 
+\column{0.5\textwidth}
 \begin{block}{Redes Metabólicas}
 \begin{itemize}
-    \item \textbf{KEGG:} \url{https://www.genome.jp/kegg}
-    \item \textbf{Reactome:} \url{https://reactome.org}
-    \item \textbf{BioCyc:} \url{https://biocyc.org}
-    \item \textbf{MetaCyc:} vias metabólicas
+    \item \textbf{KEGG:} genome.jp/kegg
+    \item \textbf{Reactome:} reactome.org
+    \item \textbf{BioCyc:} biocyc.org
 \end{itemize}
 \end{block}
+\end{columns}
+\end{frame}
 
+\begin{frame}[shrink=10]{Bases de Dados: Regulação e Sinalização}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Redes Regulatórias}
 \begin{itemize}
     \item \textbf{RegulonDB:} E. coli
-    \item \textbf{TRANSFAC:} fatores de transcrição
-    \item \textbf{ENCODE:} elementos regulatórios
+    \item \textbf{TRANSFAC:} TFs
+    \item \textbf{ENCODE:} Elementos
 \end{itemize}
 \end{block}
 
+\column{0.5\textwidth}
 \begin{block}{Redes de Sinalização}
 \begin{itemize}
     \item \textbf{KEGG Pathway}
@@ -1087,38 +1026,32 @@ Integração de múltiplas bases de dados permite análise multi-ômica!
 }
 \end{frame}
 
-\begin{frame}[fragile]{Acessando Bases de Dados com Python}
+\begin{frame}[fragile, shrink=10]{Acessando Bases de Dados com Python (1/2)}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
-# Exemplo: Baixar rede PPI do STRING
 import requests
 import networkx as nx
 
-# Parametros
-species = '9606'  # Homo sapiens
-gene = 'TP53'
-score_threshold = 700  # confianca minima
-
-# Requisicao API
-url = f'https://string-db.org/api/json/network?identifiers={gene}&species={species}&required_score={score_threshold}'
+# Exemplo: Rede PPI do STRING
+species, gene, thresh = '9606', 'TP53', 700
+url = f'https://string-db.org/api/json/network?identifiers={gene}&species={species}&required_score={thresh}'
 response = requests.get(url)
 data = response.json()
-
-# Construir grafo
-G = nx.Graph()
-for interaction in data:
-    node1 = interaction['preferredName_A']
-    node2 = interaction['preferredName_B']
-    score = interaction['score']
-    G.add_edge(node1, node2, weight=score)
-
-print(f"Rede de {gene}:")
-print(f"  Nos: {G.number_of_nodes()}")
-print(f"  Arestas: {G.number_of_edges()}")
-print(f"  Parceiros: {list(G.neighbors(gene))}")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Exemplo: Rede de Interação de TP53}
+\begin{frame}[fragile, shrink=10]{Acessando Bases de Dados com Python (2/2)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
+# Construir grafo
+G = nx.Graph()
+for interaction in data:
+    n1, n2 = interaction['preferredName_A'], interaction['preferredName_B']
+    G.add_edge(n1, n2, weight=interaction['score'])
+
+print(f"Rede {gene}: {G.number_of_nodes()} nos, {G.number_of_edges()} arestas")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[shrink=10]{Exemplo: Rede de Interação de TP53}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Gene TP53 (p53):}
@@ -1179,7 +1112,7 @@ Perda de TP53 desconecta múltiplas vias críticas!
 % ============================================================================
 \section{Análise de Controle Metabólico}
 
-\begin{frame}{Introdução à Análise de Controle Metabólico (MCA)}
+\begin{frame}[shrink=10]{Introdução à Análise de Controle Metabólico (MCA)}
 \definicao{MCA (Metabolic Control Analysis)}{
 Teoria quantitativa que analisa como mudanças em parâmetros individuais (atividade enzimática, concentrações) afetam propriedades sistêmicas (fluxos, concentrações).
 }
@@ -1202,7 +1135,7 @@ Henrik Kacser, Jim Burns (1973) e Reinhart Heinrich, Tom Rapoport (1974)
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Coeficientes de Controle}
+\begin{frame}[shrink=15]{Coeficientes de Controle}
 \definicao{Coeficiente de Controle de Fluxo}{
 Mede como mudança na atividade da enzima $i$ afeta o fluxo $J$:
 \begin{equation*}
@@ -1225,7 +1158,7 @@ Coeficientes de controle são propriedades sistêmicas, não locais!
 }
 \end{frame}
 
-\begin{frame}{Coeficientes de Elasticidade}
+\begin{frame}[shrink=15]{Coeficientes de Elasticidade}
 \definicao{Elasticidade}{
 Propriedade local que mede sensibilidade da taxa de reação $v_i$ a mudanças em metabólito $S$:
 \begin{equation*}
@@ -1253,24 +1186,8 @@ v = \frac{V_{max}S}{K_M + S} \quad \Rightarrow \quad \varepsilon_S^v = \frac{K_M
 \end{block}
 \end{frame}
 
-\begin{frame}{Teoremas de Soma}
-\importante{
-Os coeficientes de controle obedecem restrições matemáticas fundamentais!
-}
-
-\vspace{0.3cm}
-
-\begin{block}{Teorema da Soma para Controle de Fluxo}
-Para uma via em estado estacionário:
-\begin{equation*}
-\sum_{i=1}^{n} C_i^J = 1
-\end{equation*}
-O controle total do fluxo é distribuído entre todas as enzimas.
-\end{block}
-
-\vspace{0.3cm}
-
-\begin{block}{Teorema da Soma para Controle de Concentração}
+\begin{frame}[shrink=10]{Teoremas de Soma: Concentração}
+\begin{block}{Controle de Concentração}
 Para metabólito intermediário $S$:
 \begin{equation*}
 \sum_{i=1}^{n} C_i^S = 0
@@ -1283,7 +1200,7 @@ Não há uma única enzima limitante! O controle é distribuído.
 }
 \end{frame}
 
-\begin{frame}{Teorema da Conectividade}
+\begin{frame}[shrink=10]{Teorema da Conectividade}
 \begin{block}{Relaciona Controle e Elasticidade}
 Para metabólito intermediário $S$:
 \begin{equation*}
@@ -1307,7 +1224,7 @@ C_1^J \varepsilon_S^{v_1} + C_2^J \varepsilon_S^{v_2} = 0
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Exemplo: Via Linear Simples}
+\begin{frame}[shrink=10]{Exemplo: Via Linear Simples}
 \begin{center}
 \begin{tikzpicture}[scale=1.2,
     node distance=2cm,
@@ -1343,7 +1260,7 @@ C_2^J \varepsilon_{S_2}^{v_2} + C_3^J \varepsilon_{S_2}^{v_3} &= 0 \quad \text{(
 \end{block}
 \end{frame}
 
-\begin{frame}{Cálculo de Coeficientes de Controle}
+\begin{frame}[shrink=15]{Cálculo de Coeficientes de Controle}
 \textbf{Para via linear:} $X_0 \xrightarrow{v_1} S_1 \xrightarrow{v_2} S_2 \xrightarrow{v_3} X_1$
 
 \vspace{0.3cm}
@@ -1368,49 +1285,30 @@ Cada enzima contribui $\sim 33\%$ para controle do fluxo.
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Exemplo Numérico: Cálculo de MCA}
+\begin{frame}[shrink=10]{Exemplo Numérico: MCA (1/2)}
 \textbf{Via:} $A \xrightarrow{E_1} B \xrightarrow{E_2} C$
-
-\vspace{0.3cm}
-
-\textbf{Cinética:}
 \begin{align*}
 v_1 &= \frac{10 \cdot A}{5 + A}, \quad A = 10 \text{ mM (fixo)}\\
 v_2 &= \frac{8 \cdot B}{4 + B}
 \end{align*}
 
-\textbf{Estado estacionário:} $v_1 = v_2 = J$
-
-\vspace{0.3cm}
-
-\begin{block}{Passo 1: Encontrar $B$ no estado estacionário}
-\begin{equation*}
-\frac{10 \times 10}{5 + 10} = \frac{8 \times B}{4 + B} \quad \Rightarrow \quad B \approx 5.7 \text{ mM}
-\end{equation*}
-Fluxo: $J = 6.67$ mM/min
-\end{block}
-
-\begin{block}{Passo 2: Calcular elasticidades}
-\begin{align*}
-\varepsilon_B^{v_1} &= 0 \quad \text{($v_1$ independe de $B$)}\\
-\varepsilon_B^{v_2} &= \frac{K_M}{K_M + B} = \frac{4}{4 + 5.7} = 0.41
-\end{align*}
+\begin{block}{Passo 1: Estado estacionário ($v_1 = v_2 = J$)}
+$100/15 = 8B/(4+B) \Rightarrow B \approx 5.7$ mM, $J = 6.67$ mM/min
 \end{block}
 \end{frame}
 
-\begin{frame}{Continuação: Exemplo Numérico}
-\begin{block}{Passo 3: Aplicar teoremas}
-Conectividade para $B$:
-\begin{equation*}
-C_1^J \times 0 + C_2^J \times 0.41 = 0 \quad \Rightarrow \quad C_2^J = 0
-\end{equation*}
-
-Teorema da soma:
-\begin{equation*}
-C_1^J + C_2^J = 1 \quad \Rightarrow \quad C_1^J = 1
-\end{equation*}
+\begin{frame}[shrink=10]{Exemplo Numérico: MCA (2/2)}
+\begin{block}{Passo 2: Elasticidades}
+$\varepsilon_B^{v_1} = 0, \quad \varepsilon_B^{v_2} = \frac{4}{4 + 5.7} = 0.41$
 \end{block}
 
+\begin{block}{Passo 3: Coeficientes de Controle}
+Conectividade: $C_2^J \times 0.41 = 0 \Rightarrow C_2^J = 0$\\
+Soma: $C_1^J + C_2^J = 1 \Rightarrow C_1^J = 1$
+\end{block}
+\end{frame}
+
+\begin{frame}[shrink=10]{Exemplo Numérico: Interpretação}
 \vspace{0.3cm}
 
 \importante{
@@ -1428,68 +1326,40 @@ C_1^J + C_2^J = 1 \quad \Rightarrow \quad C_1^J = 1
 }
 \end{frame}
 
-\begin{frame}[fragile]{Simulando MCA com Python}
+\begin{frame}[fragile, shrink=10]{Simulando MCA com Python}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.optimize import fsolve
 
-# Definir as taxas de reacao
-def v1(A, Vmax1=10, Km1=5):
-    return Vmax1 * A / (Km1 + A)
+# Taxas
+def v1(A, Vmax1=10, Km1=5): return Vmax1 * A / (Km1 + A)
+def v2(B, Vmax2=8, Km2=4): return Vmax2 * B / (Km2 + B)
 
-def v2(B, Vmax2=8, Km2=4):
-    return Vmax2 * B / (Km2 + B)
-
-# Encontrar estado estacionario (v1 = v2)
+# Estado estacionario (v1 = v2)
 A_fixed = 10
-def steady_state(B):
-    return v1(A_fixed) - v2(B)
-
-B_ss = fsolve(steady_state, 5)[0]
+B_ss = fsolve(lambda B: v1(A_fixed) - v2(B), 5)[0]
 J_ss = v2(B_ss)
 
-print(f"Estado estacionario: B = {B_ss:.2f} mM")
-print(f"Fluxo J = {J_ss:.2f} mM/min")
-
-# Calcular elasticidade
-Km2 = 4
-epsilon_B_v2 = Km2 / (Km2 + B_ss)
-print(f"Elasticidade e_B^v2 = {epsilon_B_v2:.3f}")
+print(f"B_ss = {B_ss:.2f}, Fluxo J = {J_ss:.2f}")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Calculando Coeficientes de Controle Numericamente}
-\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
-# Metodo de perturbacao numerica
-def calculate_flux_control_coefficient(enzyme_idx, delta=0.01):
-    """Calcula C_i^J por perturbacao numerica"""
-    # Estado base
-    if enzyme_idx == 1:
-        Vmax1_base = 10
-        B_ss_base = fsolve(lambda B: v1(A_fixed, Vmax1_base) - v2(B), 5)[0]
-        J_base = v2(B_ss_base)
+\begin{frame}[fragile, shrink=10]{Cálculo de Coeficientes de Controle (Python)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\scriptsize]
+def calc_C(idx, delta=0.01):
+    def get_J(v1_v, v2_v):
+        B = fsolve(lambda B: v1_v(A_fixed) - v2_v(B), 5)[0]
+        return v2_v(B)
+    
+    if idx == 1:
+        Jb = get_J(lambda a: v1(a, 10), v2)
+        Jp = get_J(lambda a: v1(a, 10*(1+delta)), v2)
+    else:
+        Jb = get_J(v1, lambda b: v2(b, 8))
+        Jp = get_J(v1, lambda b: v2(b, 8*(1+delta)))
+    return ((Jp - Jb) / Jb) / delta
 
-        # Perturbar E1
-        Vmax1_pert = Vmax1_base * (1 + delta)
-        B_ss_pert = fsolve(lambda B: v1(A_fixed, Vmax1_pert) - v2(B), 5)[0]
-        J_pert = v2(B_ss_pert)
-
-    elif enzyme_idx == 2:
-        Vmax2_base = 8
-        B_ss_base = fsolve(lambda B: v1(A_fixed) - v2(B, Vmax2_base), 5)[0]
-        J_base = v2(B_ss_base, Vmax2_base)
-
-        # Perturbar E2
-        Vmax2_pert = Vmax2_base * (1 + delta)
-        B_ss_pert = fsolve(lambda B: v1(A_fixed) - v2(B, Vmax2_pert), 5)[0]
-        J_pert = v2(B_ss_pert, Vmax2_pert)
-
-    # Coeficiente de controle
-    C = ((J_pert - J_base) / J_base) / delta
-    return C
-
-print(f"C1^J = {calculate_flux_control_coefficient(1):.3f}")
-print(f"C2^J = {calculate_flux_control_coefficient(2):.3f}")
+print(f"C1^J = {calc_C(1):.3f}, C2^J = {calc_C(2):.3f}")
 \end{lstlisting}
 \end{frame}
 
@@ -1498,7 +1368,7 @@ print(f"C2^J = {calculate_flux_control_coefficient(2):.3f}")
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}{Exercícios - Parte 1: Teoria dos Grafos}
+\begin{frame}[shrink=15]{Exercícios - Parte 1: Teoria dos Grafos}
 \begin{block}{Questão 1: Matriz de Adjacência}
 Dada a matriz de adjacência abaixo, desenhe o grafo correspondente e calcule:
 \begin{equation*}
@@ -1510,103 +1380,50 @@ A = \begin{bmatrix}
 \end{bmatrix}
 \end{equation*}
 \begin{enumerate}
-    \item O grau de cada vértice
-    \item O grau médio da rede
-    \item O número de triângulos (ciclos de comprimento 3)
+    \item O grau de cada vértice, o grau médio e o número de triângulos.
 \end{enumerate}
 \end{block}
 
 \begin{block}{Questão 2: Caminho e Diâmetro}
-Para o grafo acima, determine:
-\begin{enumerate}
-    \item A distância entre os vértices 1 e 4
-    \item O diâmetro da rede
-    \item O comprimento médio de caminho
-\end{enumerate}
+Determine a distância entre 1 e 4, o diâmetro e o comprimento médio.
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 2: Propriedades de Rede}
+\begin{frame}[shrink=15]{Exercícios - Parte 2: Propriedades de Rede}
 \begin{block}{Questão 3: Coeficiente de Agrupamento}
-Para um nó com grau $k=4$ que tem 3 arestas entre seus vizinhos, calcule o coeficiente de agrupamento local $C_i$.
+Para um nó com grau $k=4$ que tem 3 arestas entre vizinhos, calcule $C_i$.
 \end{block}
 
 \begin{block}{Questão 4: Distribuição de Graus}
-Uma rede tem 100 nós com a seguinte distribuição de graus:
-\begin{itemize}
-    \item 60 nós com grau 2
-    \item 30 nós com grau 3
-    \item 8 nós com grau 5
-    \item 2 nós com grau 10
-\end{itemize}
-Calcule:
-\begin{enumerate}
-    \item O grau médio $\langle k \rangle$
-    \item O número total de arestas
-    \item Esta rede é mais compatível com modelo aleatório ou scale-free? Justifique.
-\end{enumerate}
+Uma rede de 100 nós tem 60 com grau 2, 30 com grau 3, 8 com grau 5, 2 com grau 10.
+Calcule $\langle k \rangle$ e justifique se é aleatória ou scale-free.
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 3: NetworkX}
+\begin{frame}[shrink=15]{Exercícios - Parte 3: NetworkX}
 \begin{block}{Questão 5: Implementação}
-Escreva código Python usando NetworkX para:
-\begin{enumerate}
-    \item Gerar uma rede Barabási-Albert com $n=50$ nós e $m=2$
-    \item Calcular e plotar a distribuição de graus
-    \item Identificar os top 3 hubs (maior grau)
-    \item Calcular o coeficiente de agrupamento global
-    \item Comparar com rede aleatória Erdős-Rényi de mesmo tamanho
-\end{enumerate}
+Gere uma rede BA com $n=50$, $m=2$. Calcule a distribuição de graus, identifique hubs e compare com rede ER de mesmo tamanho.
 \end{block}
 
 \begin{alertblock}{Questão 6: Robustez}
-Simule a remoção de nós (aleatória vs. direcionada aos hubs) em uma rede scale-free. Analise como o tamanho do componente gigante varia. Qual estratégia fragmenta mais rapidamente a rede?
+Simule a remoção de nós (aleatória vs. hubs) em rede scale-free. Qual estratégia fragmenta mais rápido?
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 4: MCA}
+\begin{frame}[shrink=15]{Exercícios - Parte 4: MCA}
 \begin{block}{Questão 7: Elasticidade}
-Para a reação com cinética de Michaelis-Menten:
-\begin{equation*}
-v = \frac{100 \cdot S}{10 + S}
-\end{equation*}
-Calcule a elasticidade $\varepsilon_S^v$ quando:
-\begin{enumerate}
-    \item $[S] = 5$ mM
-    \item $[S] = 10$ mM (= $K_M$)
-    \item $[S] = 50$ mM
-\end{enumerate}
+Para $v = 100S / (10 + S)$, calcule $\varepsilon_S^v$ para $S=5, 10, 50$.
 \end{block}
 
 \begin{block}{Questão 8: Teorema da Soma}
-Em uma via com 5 enzimas, os coeficientes de controle de fluxo são:
-$C_1^J = 0.4$, $C_2^J = 0.3$, $C_3^J = 0.2$, $C_4^J = 0.05$
-
-Qual deve ser $C_5^J$? Esta via tem uma enzima claramente limitante?
+Em via com 5 enzimas: $C_1^J = 0.4$, $C_2^J = 0.3$, $C_3^J = 0.2$, $C_4^J = 0.05$. Qual é $C_5^J$?
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 5: Aplicação}
+\begin{frame}[shrink=20]{Exercícios - Parte 5: Aplicação}
 \begin{alertblock}{Projeto Prático}
-Escolha uma via metabólica (ex: glicólise, ciclo de Krebs) e:
-\begin{enumerate}
-    \item Construa o grafo da via com NetworkX
-    \item Analise propriedades topológicas (grau, clustering, centralidade)
-    \item Identifique possíveis enzimas regulatórias baseado em análise de rede
-    \item Pesquise na literatura dados de MCA para esta via
-    \item Compare previsões topológicas com resultados experimentais de MCA
-\end{enumerate}
+Escolha uma via metabólica e construa o grafo no NetworkX. Compare previsões topológicas com dados de MCA da literatura.
 \end{alertblock}
-
-\begin{exampleblock}{Questão 9: Bases de Dados}
-Use a API do STRING para baixar a rede PPI de um gene de interesse. Analise:
-\begin{itemize}
-    \item Quantos parceiros diretos?
-    \item O gene é um hub?
-    \item Quais são as funções GO enriquecidas nos vizinhos?
-\end{itemize}
-\end{exampleblock}
 \end{frame}
 
 % ============================================================================
@@ -1628,7 +1445,7 @@ Use a API do STRING para baixar a rede PPI de um gene de interesse. Analise:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}{Leitura Complementar}
+\begin{frame}[shrink=5]{Leitura Complementar}
 \begin{block}{Livros}
 \begin{itemize}
     \item Newman M.E.J. (2018). \textit{Networks}, 2nd ed. Oxford University Press.

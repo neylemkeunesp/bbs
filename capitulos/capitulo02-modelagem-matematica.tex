@@ -135,7 +135,7 @@ O processo é iterativo: modelos são refinados com base em novos dados experime
 \end{block}
 \end{frame}
 
-\begin{frame}{Modelos Contínuos vs Discretos}
+\begin{frame}[shrink=10]{Modelos Contínuos vs Discretos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Modelos Contínuos}
@@ -178,7 +178,7 @@ X(t+1) = X(t) + \text{prod} - \text{deg}
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Modelos Empíricos vs Mecanísticos}
+\begin{frame}[shrink=10]{Modelos Empíricos vs Mecanísticos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Empíricos}
@@ -290,8 +290,8 @@ N(t) = N_0 e^{-\lambda t}
 onde $N_0 = N(0)$ é a condição inicial e $\lambda$ é a constante de decaimento.
 \end{frame}
 
-\begin{frame}[fragile]{Implementação: Decaimento Radioativo}
-\begin{lstlisting}[language=Python, caption=Solução numérica do decaimento]
+\begin{frame}[fragile, shrink=5]{Implementação: Decaimento Radioativo (1/2)}
+\begin{lstlisting}[language=Python, caption=Definição e parâmetros]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -305,7 +305,11 @@ def decay(N, t, lam):
 lambda_val = 0.5  # constante de decaimento
 N0 = 100          # quantidade inicial
 t = np.linspace(0, 10, 100)
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile, shrink=5]{Implementação: Decaimento Radioativo (2/2)}
+\begin{lstlisting}[language=Python, caption=Solução e Visualização]
 # Resolver numericamente
 N_num = odeint(decay, N0, t, args=(lambda_val,))
 
@@ -326,7 +330,7 @@ plt.legend()
 % ============================================================================
 \section{Equações Diferenciais em Biologia}
 
-\begin{frame}{Equações Diferenciais Ordinárias (EDOs)}
+\begin{frame}[shrink=5]{Equações Diferenciais Ordinárias (EDOs)}
 \definicao{EDO}{
 Equação que relaciona uma função com suas derivadas em relação a uma variável independente (geralmente o tempo).
 }
@@ -348,7 +352,7 @@ onde:
 \end{block}
 \end{frame}
 
-\begin{frame}{Classificação de EDOs}
+\begin{frame}[shrink=5]{Classificação de EDOs}
 \begin{block}{Por Ordem}
 \begin{itemize}
     \item \textbf{Primeira ordem:} $\derivada{x}{t} = f(x,t)$
@@ -400,7 +404,7 @@ $t_{2} = \frac{\ln 2}{r}$
 \end{columns}
 \end{frame}
 
-\begin{frame}{Exemplo: Crescimento Logístico}
+\begin{frame}[shrink=10]{Exemplo: Crescimento Logístico}
 \begin{block}{Modelo de Verhulst}
 Populacao com capacidade de suporte limitada $K$:
 \begin{equation*}
@@ -436,8 +440,8 @@ N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Implementação: Crescimento Logístico}
-\begin{lstlisting}[language=Python, caption=Modelo logístico]
+\begin{frame}[fragile, shrink=5]{Implementação: Crescimento Logístico (1/2)}
+\begin{lstlisting}[language=Python, caption=Definição e Resolução]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -456,7 +460,11 @@ t = np.linspace(0, 20, 200)
 
 # Resolver
 N = odeint(logistic, N0, t, args=(r, K))
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile, shrink=5]{Implementação: Crescimento Logístico (2/2)}
+\begin{lstlisting}[language=Python, caption=Visualização]
 # Plotar
 plt.figure(figsize=(10, 6))
 plt.plot(t, N, 'b-', linewidth=2, label='N(t)')
@@ -474,7 +482,7 @@ plt.grid(True)
 % ============================================================================
 \section{Sistemas de EDOs}
 
-\begin{frame}{Sistemas Acoplados}
+\begin{frame}[shrink=15]{Sistemas Acoplados}
 \begin{block}{Sistema Geral}
 Quando múltiplas variáveis interagem:
 \begin{align*}
@@ -493,7 +501,7 @@ Quando múltiplas variáveis interagem:
 }
 \end{frame}
 
-\begin{frame}{Exemplo: Modelo Predador-Presa (Lotka-Volterra)}
+\begin{frame}[shrink=10]{Exemplo: Modelo Predador-Presa (Lotka-Volterra)}
 \begin{block}{Sistema}
 \begin{align*}
 \derivada{V}{t} &= \alpha V - \beta V P \quad \text{(Presas)}\\
@@ -512,7 +520,7 @@ onde:
 \end{block}
 \end{frame}
 
-\begin{frame}{Interpretação do Modelo Predador-Presa}
+\begin{frame}[shrink=10]{Interpretação do Modelo Predador-Presa}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Equação das Presas:}
@@ -546,8 +554,8 @@ Este sistema exibe oscilações periódicas características!
 }
 \end{frame}
 
-\begin{frame}[fragile]{Implementação: Lotka-Volterra}
-\begin{lstlisting}[language=Python, caption=Sistema predador-presa]
+\begin{frame}[fragile, shrink=5]{Implementação: Lotka-Volterra (1/2)}
+\begin{lstlisting}[language=Python, caption=Sistema Lotka-Volterra]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -560,15 +568,13 @@ def lotka_volterra(y, t, alpha, beta, delta, gamma):
     return [dVdt, dPdt]
 
 # Parametros
-alpha = 1.0
-beta = 0.1
-delta = 0.75
-gamma = 1.5
+alpha, beta, delta, gamma = 1.0, 0.1, 0.75, 1.5
+y0, t = [10, 5], np.linspace(0, 50, 1000)
+\end{lstlisting}
+\end{frame}
 
-# Condicoes iniciais
-y0 = [10, 5]  # [V0, P0]
-t = np.linspace(0, 50, 1000)
-
+\begin{frame}[fragile, shrink=5]{Implementação: Lotka-Volterra (2/2)}
+\begin{lstlisting}[language=Python, caption=Resolução e Plotting]
 # Resolver
 sol = odeint(lotka_volterra, y0, t,
              args=(alpha, beta, delta, gamma))
@@ -576,10 +582,13 @@ sol = odeint(lotka_volterra, y0, t,
 # Plotar series temporais
 plt.plot(t, sol[:, 0], 'b-', label='Presas')
 plt.plot(t, sol[:, 1], 'r-', label='Predadores')
+plt.xlabel('Tempo')
+plt.ylabel('Populacao')
+plt.legend()
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Retrato de Fase}
+\begin{frame}[fragile, shrink=15]{Retrato de Fase}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{lstlisting}[language=Python, caption=Plano de fase, basicstyle=\ttfamily\tiny]
@@ -640,7 +649,7 @@ plt.quiver(V_grid, P_grid,
 % ============================================================================
 \section{Analise de Equilíbrio}
 
-\begin{frame}{Pontos de Equilíbrio (Steady States)}
+\begin{frame}[shrink=5]{Pontos de Equilíbrio (Steady States)}
 \definicao{Ponto de Equilíbrio}{
 Estado no qual o sistema não muda com o tempo:
 \begin{equation*}
@@ -741,21 +750,30 @@ A populacao converge para a capacidade de suporte $K$
 }
 \end{frame}
 
-\begin{frame}[fragile]{Analise de Estabilidade Computacional}
-\begin{lstlisting}[language=Python, caption=Analise de autovalores]
+\begin{frame}[fragile, shrink=10]{Analise de Estabilidade Computacional}
+\begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e Autovalores, basicstyle=\ttfamily\tiny]
 import numpy as np
 from scipy.linalg import eig
 
-def jacobian_lotka_volterra(y, alpha, beta,
-                              delta, gamma):
-    """Calcula Jacobiano do sistema LV"""
+def jacobian_lotka_volterra(y, alpha, beta, delta, gamma):
     V, P = y
-    J = np.array([
+    return np.array([
         [alpha - beta*P, -beta*V],
         [delta*beta*P, delta*beta*V - gamma]
     ])
-    return J
 
+# Ponto de equilibrio e Jacobiano
+V_eq, P_eq = gamma / (delta * beta), alpha / beta
+J = jacobian_lotka_volterra([V_eq, P_eq], alpha, beta, delta, gamma)
+
+# Autovalores
+eigenvalues, _ = eig(J)
+print(f"Autovalores: {eigenvalues}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Analise de Estabilidade Computacional}
+\begin{lstlisting}[language=Python, caption=Analise de autovalores]
 # Ponto de equilibrio
 V_eq = gamma / (delta * beta)
 P_eq = alpha / beta
@@ -797,7 +815,7 @@ print(f"Partes reais: {eigenvalues.real}")
 \end{block}
 \end{frame}
 
-\begin{frame}{Método de Euler}
+\begin{frame}[shrink=10]{Método de Euler}
 \begin{block}{Ideia Básica}
 Aproximar derivada por diferença finita:
 \begin{equation*}
@@ -823,36 +841,25 @@ Erro local: $O(h^2)$, Erro global: $O(h)$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]{Implementação do Método de Euler}
+\begin{frame}[fragile, shrink=10]{Implementação do Método de Euler}
 \begin{lstlisting}[language=Python, caption=Euler forward]
 def euler(f, x0, t):
-    """
-    Metodo de Euler para resolver EDOs
-    f: funcao dx/dt = f(x, t)
-    x0: condicao inicial
-    t: array de tempos
-    """
     n = len(t)
     x = np.zeros((n, len(x0)))
     x[0] = x0
-
     for i in range(n-1):
         h = t[i+1] - t[i]
         x[i+1] = x[i] + h * np.array(f(x[i], t[i]))
-
     return x
 
-# Exemplo: crescimento exponencial
-def exp_growth(x, t, r=0.5):
-    return r * x
-
+# Exemplo
+def exp_growth(x, t, r=0.5): return r * x
 t = np.linspace(0, 10, 100)
-x0 = [1.0]
-x_euler = euler(lambda x,t: exp_growth(x,t), x0, t)
+x_euler = euler(lambda x,t: exp_growth(x,t), [1.0], t)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Método de Runge-Kutta de 4ª Ordem (RK4)}
+\begin{frame}[shrink=10]{Método de Runge-Kutta de 4ª Ordem (RK4)}
 \begin{block}{Ideia}
 Usar múltiplas avaliações da derivada para melhor aproximação
 \end{block}
@@ -872,30 +879,22 @@ Erro local: $O(h^5)$, Erro global: $O(h^4)$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]{Implementação do RK4}
-\begin{lstlisting}[language=Python, caption=Runge-Kutta 4]
+\begin{frame}[fragile, shrink=10]{Implementação do RK4}
+\begin{lstlisting}[language=Python, caption=Runge-Kutta 4, basicstyle=\ttfamily\tiny]
 def rk4(f, x0, t):
-    """Metodo Runge-Kutta de 4a ordem"""
-    n = len(t)
-    x = np.zeros((n, len(x0)))
+    n, x = len(t), np.zeros((len(t), len(x0)))
     x[0] = x0
-
     for i in range(n-1):
         h = t[i+1] - t[i]
         k1 = np.array(f(x[i], t[i]))
         k2 = np.array(f(x[i] + h*k1/2, t[i] + h/2))
         k3 = np.array(f(x[i] + h*k2/2, t[i] + h/2))
         k4 = np.array(f(x[i] + h*k3, t[i] + h))
-
         x[i+1] = x[i] + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
-
     return x
 
 # Usar
-x_rk4 = rk4(lambda x,t: exp_growth(x,t), x0, t)
-
-# Comparar com solucao analitica
-x_exact = x0[0] * np.exp(0.5 * t)
+x_rk4 = rk4(lambda x,t: exp_growth(x,t), [1.0], t)
 \end{lstlisting}
 \end{frame}
 
@@ -904,7 +903,7 @@ x_exact = x0[0] * np.exp(0.5 * t)
 % ============================================================================
 \section{Analise de Sensibilidade}
 
-\begin{frame}{Analise de Sensibilidade}
+\begin{frame}[shrink=10]{Analise de Sensibilidade}
 \definicao{Sensibilidade}{
 Medida de como a saída de um modelo varia em resposta a mudanças nos parâmetros de entrada.
 }
@@ -929,7 +928,7 @@ Sensibilidade relativa normalizada
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Tipos de Analise de Sensibilidade}
+\begin{frame}[shrink=5]{Tipos de Analise de Sensibilidade}
 \begin{block}{Local}
 \begin{itemize}
     \item Variação em torno de um ponto nominal
@@ -952,38 +951,20 @@ Global: abrangente mas custosa
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[fragile]{Analise de Sensibilidade Local}
-\begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas]
-def sensitivity_local(model, params, param_names,
-                       perturbation=0.01):
-    """
-    Analise de sensibilidade local
-    """
+\begin{frame}[fragile, shrink=15]{Analise de Sensibilidade Local}
+\begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas, basicstyle=\ttfamily\tiny]
+def sensitivity_local(model, params, param_names, perturbation=0.01):
     baseline = model(params)
     sensitivities = {}
-
     for i, name in enumerate(param_names):
-        # Perturbar parametro
         params_pert = params.copy()
         params_pert[i] *= (1 + perturbation)
-
-        # Calcular saida perturbada
         output_pert = model(params_pert)
-
-        # Sensibilidade relativa
-        S = (output_pert - baseline) / baseline / perturbation
-        sensitivities[name] = S
-
+        sensitivities[name] = (output_pert - baseline) / baseline / perturbation
     return sensitivities
 
 # Exemplo
-def logistic_final(params):
-    r, K, N0 = params
-    # Retorna valor final
-    return K
-
-sens = sensitivity_local(logistic_final, [0.5, 100, 10],
-                          ['r', 'K', 'N0'])
+sens = sensitivity_local(lambda p: p[1], [0.5, 100, 10], ['r', 'K', 'N0'])
 \end{lstlisting}
 \end{frame}
 
@@ -992,7 +973,7 @@ sens = sensitivity_local(logistic_final, [0.5, 100, 10],
 % ============================================================================
 \section{Ajuste de Modelos a Dados}
 
-\begin{frame}{Estimação de Parâmetros}
+\begin{frame}[shrink=10]{Estimação de Parâmetros}
 \begin{block}{Problema}
 Dados: $(t_1, y_1), (t_2, y_2), \ldots, (t_n, y_n)$\\
 Modelo: $\hat{y}(t; \vect{p})$\\
@@ -1019,38 +1000,25 @@ Objetivo: $\min_{\vect{p}} \text{SSE}(\vect{p})$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]{Ajuste de Curvas com scipy}
-\begin{lstlisting}[language=Python, caption=Estimação de parâmetros]
+\begin{frame}[fragile, shrink=15]{Ajuste de Curvas com scipy}
+\begin{lstlisting}[language=Python, caption=Estimação de parâmetros, basicstyle=\ttfamily\tiny]
 from scipy.optimize import curve_fit
 
-# Dados experimentais (com ruido)
+# Dados experimentais
 t_data = np.linspace(0, 10, 20)
-r_true, K_true = 0.5, 100
-N_true = K_true / (1 + (K_true/10 - 1)*np.exp(-r_true*t_data))
-N_data = N_true + np.random.normal(0, 5, len(t_data))
+N_data = 100/(1+9*np.exp(-0.5*t_data)) + np.random.normal(0, 2, 20)
 
-# Modelo logistico
-def logistic_model(t, r, K):
-    N0 = 10
-    return K / (1 + (K/N0 - 1)*np.exp(-r*t))
-
-# Ajustar
-params_init = [1.0, 50]  # chute inicial
-params_opt, params_cov = curve_fit(logistic_model,
-                                     t_data, N_data,
-                                     p0=params_init)
-
-print(f"r estimado: {params_opt[0]:.3f}")
-print(f"K estimado: {params_opt[1]:.3f}")
+# Modelo e Ajuste
+def logistic_model(t, r, K): return K / (1 + (K/10 - 1)*np.exp(-r*t))
+p_opt, _ = curve_fit(logistic_model, t_data, N_data, p0=[1.0, 50])
 
 # Plotar
 plt.plot(t_data, N_data, 'o', label='Dados')
-plt.plot(t_data, logistic_model(t_data, *params_opt),
-         '-', label='Ajuste')
+plt.plot(t_data, logistic_model(t_data, *p_opt), '-', label='Ajuste')
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Validação de Modelos}
+\begin{frame}[shrink=5]{Validação de Modelos}
 \begin{block}{Métricas de Qualidade do Ajuste}
 \begin{itemize}
     \item \textbf{SSE:} Soma dos erros quadrados
@@ -1078,7 +1046,7 @@ R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}
 % ============================================================================
 \section{Estudo de Caso}
 
-\begin{frame}{Estudo de Caso: Dinâmica de Infecção Viral}
+\begin{frame}[shrink=10]{Estudo de Caso: Dinâmica de Infecção Viral}
 \begin{block}{Sistema}
 Modelo SIR (Susceptible-Infected-Recovered):
 \begin{align*}
@@ -1086,7 +1054,17 @@ Modelo SIR (Susceptible-Infected-Recovered):
 \derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I\\
 \derivada{R}{t} &= \gamma I
 \end{align*}
+\end{block}
 
+\begin{block}{Número Básico de Reprodução ($R_0$)}
+\begin{equation*}
+R_0 = \frac{\beta}{\gamma}
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}{Estudo de Caso: Dinâmica de Infecção Viral (cont.)}
+\begin{block}{Parâmetros do Modelo SIR}
 onde:
 \begin{itemize}
     \item $S$ = susceptíveis
@@ -1099,7 +1077,7 @@ onde:
 \end{block}
 \end{frame}
 
-\begin{frame}{Numero Básico de Reprodução}
+\begin{frame}[shrink=10]{Numero Básico de Reprodução}
 \definicao{$R_0$ (R-naught)}{
 Numero médio de infecções secundárias causadas por um indivíduo infectado em uma populacao totalmente susceptível.
 }
@@ -1125,58 +1103,45 @@ $R_0$ estimado entre 2-6, dependendo da variante e medidas de controle
 }
 \end{frame}
 
-\begin{frame}[fragile]{Implementação do Modelo SIR}
-\begin{lstlisting}[language=Python, caption=Modelo SIR completo]
+\begin{frame}[fragile, shrink=5]{Implementação do Modelo SIR (1/2)}
+\begin{lstlisting}[language=Python, caption=Definição e Parâmetros]
 def sir_model(y, t, beta, gamma):
-    """Modelo SIR"""
     S, I, R = y
     N = S + I + R
-    dSdt = -beta * S * I / N
-    dIdt = beta * S * I / N - gamma * I
-    dRdt = gamma * I
-    return [dSdt, dIdt, dRdt]
+    return [-beta * S * I / N, beta * S * I / N - gamma * I, gamma * I]
 
-# Parametros
-beta = 0.5   # taxa de transmissao (1/dia)
-gamma = 0.1  # taxa de recuperacao (1/dia)
-R0 = beta / gamma  # R0 = 5
-
-# Condicoes iniciais
-N = 1000
-I0 = 10
-S0 = N - I0
-R0_pop = 0
-y0 = [S0, I0, R0_pop]
-
-# Simular
-t = np.linspace(0, 200, 1000)
-sol = odeint(sir_model, y0, t, args=(beta, gamma))
+# Parametros e Condições
+beta, gamma = 0.5, 0.1
+R0 = beta / gamma
+N, I0 = 1000, 10
+y0 = [N - I0, I0, 0]
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Analise e Visualização}
-\begin{lstlisting}[language=Python, caption=Analise do modelo SIR]
+\begin{frame}[fragile, shrink=5]{Implementação do Modelo SIR (2/2)}
+\begin{lstlisting}[language=Python, caption=Simulação]
+# Simular
+t = np.linspace(0, 200, 1000)
+sol = odeint(sir_model, y0, t, args=(beta, gamma))
+
+# Resultado
+print(f"Populacao total: {N}")
+print(f"R0: {R0}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile, shrink=10]{Analise e Visualização}
+\begin{lstlisting}[language=Python, caption=Analise do modelo SIR, basicstyle=\ttfamily\tiny]
 S, I, R = sol.T
-
-# Plotar dinamica
 plt.figure(figsize=(10, 6))
-plt.plot(t, S, 'b-', label='Susceptiveis', linewidth=2)
-plt.plot(t, I, 'r-', label='Infectados', linewidth=2)
-plt.plot(t, R, 'g-', label='Recuperados', linewidth=2)
-plt.xlabel('Tempo (dias)')
-plt.ylabel('Numero de individuos')
-plt.title(f'Modelo SIR ($R_0$ = {R0:.1f})')
-plt.legend()
-plt.grid(True)
+plt.plot(t, S, 'b-', label='Suscept.'), plt.plot(t, I, 'r-', label='Infect.')
+plt.plot(t, R, 'g-', label='Recuper.')
+plt.xlabel('Tempo'), plt.ylabel('Individuos'), plt.legend(), plt.grid(True)
 
-# Encontrar pico de infeccao
+# Estatisticas
 peak_idx = np.argmax(I)
-peak_time = t[peak_idx]
-peak_infected = I[peak_idx]
-
-print(f"Pico de infeccao: {peak_infected:.0f} individuos")
-print(f"Tempo do pico: {peak_time:.1f} dias")
-print(f"Ataque final: {R[-1]/N*100:.1f}% da populacao")
+print(f"Pico: {I[peak_idx]:.0f} em {t[peak_idx]:.1f} dias")
+print(f"Ataque final: {R[-1]/N*100:.1f}%")
 \end{lstlisting}
 \end{frame}
 
@@ -1185,7 +1150,7 @@ print(f"Ataque final: {R[-1]/N*100:.1f}% da populacao")
 % ============================================================================
 \section{Boas Práticas em Modelagem}
 
-\begin{frame}{Princípios de Modelagem}
+\begin{frame}[shrink=15]{Princípios de Modelagem}
 \begin{block}{1. Simplicidade vs Realismo}
 \begin{itemize}
     \item Comece simples, adicione complexidade gradualmente
@@ -1280,21 +1245,20 @@ Considere um modelo de crescimento com colheita constante:
 \begin{equation*}
 \derivada{N}{t} = rN\left(1 - \frac{N}{K}\right) - H
 \end{equation*}
-
 \begin{enumerate}
     \item Encontre os pontos de equilíbrio
     \item Analise a estabilidade para $H < rK/4$ e $H > rK/4$
-    \item Interprete biologicamente
 \end{enumerate}
 \end{block}
+\end{frame}
 
+\begin{frame}{Exercícios - Parte 2}
 \begin{block}{Questão 2: Método Numérico}
 Implemente o método de Euler para resolver:
 \begin{equation*}
 \derivada{y}{t} = -y + \sin(t), \quad y(0) = 1
 \end{equation*}
-
-Compare com a solução analítica para diferentes tamanhos de passo.
+Compare com a solução analítica para diferentes passos.
 \end{block}
 \end{frame}
 
@@ -1315,22 +1279,16 @@ Considere o sistema de competição:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 3}
-\begin{alertblock}{Projeto: Modelo SIR com Vacinação}
-Estenda o modelo SIR para incluir vacinação:
+\begin{frame}[shrink=10]{Projeto: Modelo SIR com Vacinação}
+\begin{alertblock}{Extensão do Modelo}
+Inclua vacinação no modelo SIR:
 \begin{align*}
-\derivada{S}{t} &= -\beta \frac{SI}{N} - \nu S\\
-\derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I\\
-\derivada{R}{t} &= \gamma I + \nu S
+\derivada{S}{t} &= -\beta \frac{SI}{N} - \nu S, \quad \derivada{I}{t} = \beta \frac{SI}{N} - \gamma I, \quad \derivada{R}{t} = \gamma I + \nu S
 \end{align*}
-
-onde $\nu$ é a taxa de vacinação.
-
 \begin{enumerate}
-    \item Implemente o modelo
-    \item Calcule o novo $R_0$ efetivo
-    \item Determine a taxa de vacinação necessária para controlar a epidemia ($R_0^{eff} < 1$)
-    \item Simule cenários com diferentes estratégias de vacinação
+    \item Implemente o modelo e calcule o $R_0$ efetivo
+    \item Determine $\nu$ necessária para controle ($R_0^{eff} < 1$)
+    \item Simule diferentes estratégias de vacinação
 \end{enumerate}
 \end{alertblock}
 \end{frame}
@@ -1354,7 +1312,7 @@ onde $\nu$ é a taxa de vacinação.
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}{Leitura Complementar}
+\begin{frame}[shrink=10]{Leitura Complementar}
 \begin{block}{Livros Avançados}
 \begin{itemize}
     \item Ellner S.P., Guckenheimer J. (2011). \textit{Dynamic Models in Biology}
