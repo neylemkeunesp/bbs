@@ -174,3 +174,11 @@ env/
 # Temporary directories
 temp/
 tmp/
+
+# Classroom API
+credentials.json
+token.json
+*.html
+*.pdf
+*Zone.Identifier*
+beamer_guard_report.txt
