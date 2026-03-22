@@ -14,6 +14,7 @@
 \institute{DBF-Unesp}
 \date{\today}
 
+\usetikzlibrary{decorations.pathmorphing, positioning}
 \begin{document}
 
 % ============================================================================
@@ -35,7 +36,7 @@
 % ============================================================================
 \section{Introdução}
 
-\begin{frame}{2.1 Introdução à Modelagem Matemática}
+\begin{frame}[shrink=5]{2.1 Introdução à Modelagem Matemática}
 \begin{block}{Objetivos de Aprendizagem}
 \begin{itemize}
     \item Compreender o que são modelos matemáticos
@@ -54,7 +55,7 @@ Representação abstrata de um sistema real usando linguagem matemática, que pe
 
 \begin{frame}{Por que Modelar Sistemas Biológicos?}
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Vantagens da Modelagem:}
 \begin{itemize}
     \item Previsão de comportamento
@@ -64,7 +65,7 @@ Representação abstrata de um sistema real usando linguagem matemática, que pe
     \item Design racional de sistemas
 \end{itemize}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Aplicações:}
 \begin{itemize}
     \item Dinâmica de populações
@@ -85,18 +86,40 @@ Representação abstrata de um sistema real usando linguagem matemática, que pe
 
 \begin{frame}{O Ciclo da Modelagem}
 \begin{center}
-\begin{tikzpicture}[node distance=2.5cm, auto,
-    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.2cm, text centered, rounded corners, minimum height=1cm}]
+\begin{tikzpicture}[
+    auto,
+    excalidraw/.style={
+        decorate,
+        decoration={random steps, segment length=3pt, amplitude=0.5pt},
+        thick,
+        font=\fontfamily{pzc}\selectfont\large
+    },
+    box/.style={
+        rectangle, 
+        draw=azulescuro, 
+        excalidraw,
+        fill=azulclaro!5, 
+        text width=2.4cm, 
+        text centered, 
+        minimum height=1.2cm
+    },
+    arrow/.style={
+        ->, 
+        thick, 
+        azulescuro, 
+        excalidraw
+    }
+]
 
     \node[box] (bio) {Sistema Biológico};
-    \node[box, right of=bio] (modelo) {Modelo Matemático};
-    \node[box, below of=modelo] (analise) {Analise\\Computacional};
-    \node[box, left of=analise] (pred) {Previsões\\Hipóteses};
+    \node[box, right=2cm of bio] (modelo) {Modelo Matemático};
+    \node[box, below=1.5cm of modelo] (analise) {Analise Computacional};
+    \node[box, left=2cm of analise] (pred) {Previsões\\Hipóteses};
 
-    \draw[->, thick, azulescuro] (bio) -- node[above, font=\tiny] {Abstração} (modelo);
-    \draw[->, thick, azulescuro] (modelo) -- node[right, font=\tiny] {Simulação} (analise);
-    \draw[->, thick, azulescuro] (analise) -- node[below, font=\tiny] {Interpretação} (pred);
-    \draw[->, thick, azulescuro] (pred) -- node[left, font=\tiny] {Validação} (bio);
+    \draw[arrow] (bio) -- node[above, font=\footnotesize] {Abstração} (modelo);
+    \draw[arrow] (modelo) -- node[right, font=\footnotesize] {Simulação} (analise);
+    \draw[arrow] (analise) -- node[below, font=\footnotesize] {Interpretação} (pred);
+    \draw[arrow] (pred) -- node[left, font=\footnotesize] {Validação} (bio);
 
 \end{tikzpicture}
 \end{center}
@@ -137,7 +160,7 @@ O processo é iterativo: modelos são refinados com base em novos dados experime
 
 \begin{frame}[shrink=10]{Modelos Contínuos vs Discretos}
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{Modelos Contínuos}
 \begin{itemize}
     \item Variáveis contínuas
@@ -152,7 +175,7 @@ O processo é iterativo: modelos são refinados com base em novos dados experime
 \end{equation*}
 \end{block}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{Modelos Discretos}
 \begin{itemize}
     \item Contagem de moléculas
@@ -168,7 +191,7 @@ X(t+1) = X(t) + \text{prod} - \text{deg}
 \end{block}
 \end{columns}
 
-\vspace{0.3cm}
+% \vspace{0.3cm}
 
 \begin{exampleblock}{Quando usar cada tipo?}
 \begin{itemize}
@@ -178,9 +201,10 @@ X(t+1) = X(t) + \text{prod} - \text{deg}
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=10]{Modelos Empíricos vs Mecanísticos}
+\begin{frame}[shrink=20]{Modelos Empíricos vs Mecanísticos}
+\small
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{Empíricos}
 \textbf{Baseados em dados}
 
@@ -206,7 +230,7 @@ X(t+1) = X(t) + \text{prod} - \text{deg}
 \end{itemize}
 \end{block}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{Mecanísticos}
 \textbf{Baseados em mecanismos}
 
@@ -290,8 +314,8 @@ N(t) = N_0 e^{-\lambda t}
 onde $N_0 = N(0)$ é a condição inicial e $\lambda$ é a constante de decaimento.
 \end{frame}
 
-\begin{frame}[fragile, shrink=5]{Implementação: Decaimento Radioativo (1/2)}
-\begin{lstlisting}[language=Python, caption=Definição e parâmetros]
+\begin{frame}[fragile, allowframebreaks]{Implementação: Decaimento Radioativo}
+\begin{lstlisting}[language=Python, caption=Solução numérica do decaimento, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -352,7 +376,7 @@ onde:
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=5]{Classificação de EDOs}
+\begin{frame}[shrink]{Classificação de EDOs}
 \begin{block}{Por Ordem}
 \begin{itemize}
     \item \textbf{Primeira ordem:} $\derivada{x}{t} = f(x,t)$
@@ -376,7 +400,7 @@ onde:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exemplo: Crescimento Exponencial}
+\begin{frame}[shrink=10]{Exemplo: Crescimento Exponencial}
 \begin{block}{Modelo Simples de Crescimento}
 Uma populacao cresce proporcionalmente ao seu tamanho:
 \begin{equation*}
@@ -392,19 +416,19 @@ N(t) = N_0 e^{rt}
 \end{equation*}
 
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Se $r > 0$:} crescimento\\
 \textbf{Se $r < 0$:} decaimento\\
 \textbf{Se $r = 0$:} estacionário
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{exampleblock}{Tempo de Duplicação}
 $t_{2} = \frac{\ln 2}{r}$
 \end{exampleblock}
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=10]{Exemplo: Crescimento Logístico}
+\begin{frame}[shrink=15]{Exemplo: Crescimento Logístico}
 \begin{block}{Modelo de Verhulst}
 Populacao com capacidade de suporte limitada $K$:
 \begin{equation*}
@@ -417,8 +441,9 @@ Populacao com capacidade de suporte limitada $K$:
 N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
 \end{equation*}
 
+\small
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Comportamento:}
 \begin{itemize}
     \item $N \to K$ quando $t \to \infty$
@@ -426,7 +451,7 @@ N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
     \item Ponto de inflexão em $N = K/2$
 \end{itemize}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
     \draw[->] (0,0) -- (5,0) node[right] {$t$};
@@ -440,8 +465,8 @@ N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile, shrink=5]{Implementação: Crescimento Logístico (1/2)}
-\begin{lstlisting}[language=Python, caption=Definição e Resolução]
+\begin{frame}[fragile, allowframebreaks]{Implementação: Crescimento Logístico}
+\begin{lstlisting}[language=Python, caption=Modelo logístico, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -501,8 +526,9 @@ Quando múltiplas variáveis interagem:
 }
 \end{frame}
 
-\begin{frame}[shrink=10]{Exemplo: Modelo Predador-Presa (Lotka-Volterra)}
+\begin{frame}[shrink=15]{Exemplo: Modelo Predador-Presa (Lotka-Volterra)}
 \begin{block}{Sistema}
+\small
 \begin{align*}
 \derivada{V}{t} &= \alpha V - \beta V P \quad \text{(Presas)}\\
 \derivada{P}{t} &= \delta \beta V P - \gamma P \quad \text{(Predadores)}
@@ -522,7 +548,7 @@ onde:
 
 \begin{frame}[shrink=10]{Interpretação do Modelo Predador-Presa}
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Equação das Presas:}
 \begin{equation*}
 \derivada{V}{t} = \underbrace{\alpha V}_{\text{crescimento}} - \underbrace{\beta V P}_{\text{predação}}
@@ -534,7 +560,7 @@ onde:
     \item Taxa de predação $\propto$ encontros ($VP$)
 \end{itemize}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Equação dos Predadores:}
 \begin{equation*}
 \derivada{P}{t} = \underbrace{\delta \beta V P}_{\text{crescimento}} - \underbrace{\gamma P}_{\text{morte}}
@@ -554,8 +580,8 @@ Este sistema exibe oscilações periódicas características!
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=5]{Implementação: Lotka-Volterra (1/2)}
-\begin{lstlisting}[language=Python, caption=Sistema Lotka-Volterra]
+\begin{frame}[fragile, allowframebreaks]{Implementação: Lotka-Volterra}
+\begin{lstlisting}[language=Python, caption=Sistema predador-presa, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
@@ -588,9 +614,9 @@ plt.legend()
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile, shrink=15]{Retrato de Fase}
+\begin{frame}[fragile, shrink=10]{Retrato de Fase}
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{lstlisting}[language=Python, caption=Plano de fase, basicstyle=\ttfamily\tiny]
 # Retrato de fase
 plt.figure()
@@ -616,7 +642,7 @@ plt.quiver(V_grid, P_grid,
            dV, dP, alpha=0.5)
 \end{lstlisting}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
     \draw[->] (0,0) -- (4,0) node[right] {$V$};
@@ -750,8 +776,13 @@ A populacao converge para a capacidade de suporte $K$
 }
 \end{frame}
 
+<<<<<<< HEAD
 \begin{frame}[fragile, shrink=10]{Analise de Estabilidade Computacional}
 \begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e Autovalores, basicstyle=\ttfamily\tiny]
+=======
+\begin{frame}[fragile, allowframebreaks]{Analise de Estabilidade Computacional}
+\begin{lstlisting}[language=Python, caption=Analise de autovalores, basicstyle=\ttfamily\footnotesize]
+>>>>>>> e775cf3 (docs: fix overflows and add computational examples to chapter 02)
 import numpy as np
 from scipy.linalg import eig
 
@@ -815,7 +846,7 @@ print(f"Partes reais: {eigenvalues.real}")
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=10]{Método de Euler}
+\begin{frame}[allowframebreaks]{Método de Euler}
 \begin{block}{Ideia Básica}
 Aproximar derivada por diferença finita:
 \begin{equation*}
@@ -841,8 +872,8 @@ Erro local: $O(h^2)$, Erro global: $O(h)$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile, shrink=10]{Implementação do Método de Euler}
-\begin{lstlisting}[language=Python, caption=Euler forward]
+\begin{frame}[fragile, allowframebreaks]{Implementação do Método de Euler}
+\begin{lstlisting}[language=Python, caption=Euler forward, basicstyle=\ttfamily\footnotesize]
 def euler(f, x0, t):
     n = len(t)
     x = np.zeros((n, len(x0)))
@@ -859,7 +890,7 @@ x_euler = euler(lambda x,t: exp_growth(x,t), [1.0], t)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[shrink=10]{Método de Runge-Kutta de 4ª Ordem (RK4)}
+\begin{frame}[allowframebreaks]{Método de Runge-Kutta de 4ª Ordem (RK4)}
 \begin{block}{Ideia}
 Usar múltiplas avaliações da derivada para melhor aproximação
 \end{block}
@@ -879,8 +910,8 @@ Erro local: $O(h^5)$, Erro global: $O(h^4)$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile, shrink=10]{Implementação do RK4}
-\begin{lstlisting}[language=Python, caption=Runge-Kutta 4, basicstyle=\ttfamily\tiny]
+\begin{frame}[fragile, allowframebreaks]{Implementação do RK4}
+\begin{lstlisting}[language=Python, caption=Runge-Kutta 4, basicstyle=\ttfamily\footnotesize]
 def rk4(f, x0, t):
     n, x = len(t), np.zeros((len(t), len(x0)))
     x[0] = x0
@@ -903,7 +934,7 @@ x_rk4 = rk4(lambda x,t: exp_growth(x,t), [1.0], t)
 % ============================================================================
 \section{Analise de Sensibilidade}
 
-\begin{frame}[shrink=10]{Analise de Sensibilidade}
+\begin{frame}[allowframebreaks]{Analise de Sensibilidade}
 \definicao{Sensibilidade}{
 Medida de como a saída de um modelo varia em resposta a mudanças nos parâmetros de entrada.
 }
@@ -928,7 +959,7 @@ Sensibilidade relativa normalizada
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=5]{Tipos de Analise de Sensibilidade}
+\begin{frame}[allowframebreaks]{Tipos de Analise de Sensibilidade}
 \begin{block}{Local}
 \begin{itemize}
     \item Variação em torno de um ponto nominal
@@ -951,9 +982,13 @@ Global: abrangente mas custosa
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[fragile, shrink=15]{Analise de Sensibilidade Local}
-\begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas, basicstyle=\ttfamily\tiny]
-def sensitivity_local(model, params, param_names, perturbation=0.01):
+\begin{frame}[fragile, allowframebreaks]{Analise de Sensibilidade Local}
+\begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas, basicstyle=\ttfamily\footnotesize]
+def sensitivity_local(model, params, param_names,
+                       perturbation=0.01):
+    """
+    Analise de sensibilidade local
+    """
     baseline = model(params)
     sensitivities = {}
     for i, name in enumerate(param_names):
@@ -973,7 +1008,7 @@ sens = sensitivity_local(lambda p: p[1], [0.5, 100, 10], ['r', 'K', 'N0'])
 % ============================================================================
 \section{Ajuste de Modelos a Dados}
 
-\begin{frame}[shrink=10]{Estimação de Parâmetros}
+\begin{frame}[allowframebreaks]{Estimação de Parâmetros}
 \begin{block}{Problema}
 Dados: $(t_1, y_1), (t_2, y_2), \ldots, (t_n, y_n)$\\
 Modelo: $\hat{y}(t; \vect{p})$\\
@@ -1000,8 +1035,8 @@ Objetivo: $\min_{\vect{p}} \text{SSE}(\vect{p})$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile, shrink=15]{Ajuste de Curvas com scipy}
-\begin{lstlisting}[language=Python, caption=Estimação de parâmetros, basicstyle=\ttfamily\tiny]
+\begin{frame}[fragile, allowframebreaks]{Ajuste de Curvas com scipy}
+\begin{lstlisting}[language=Python, caption=Estimação de parâmetros, basicstyle=\ttfamily\footnotesize]
 from scipy.optimize import curve_fit
 
 # Dados experimentais
@@ -1018,7 +1053,7 @@ plt.plot(t_data, logistic_model(t_data, *p_opt), '-', label='Ajuste')
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[shrink=5]{Validação de Modelos}
+\begin{frame}[allowframebreaks]{Validação de Modelos}
 \begin{block}{Métricas de Qualidade do Ajuste}
 \begin{itemize}
     \item \textbf{SSE:} Soma dos erros quadrados
@@ -1046,7 +1081,7 @@ R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}
 % ============================================================================
 \section{Estudo de Caso}
 
-\begin{frame}[shrink=10]{Estudo de Caso: Dinâmica de Infecção Viral}
+\begin{frame}[shrink=15]{Estudo de Caso: Dinâmica de Infecção Viral}
 \begin{block}{Sistema}
 Modelo SIR (Susceptible-Infected-Recovered):
 \begin{align*}
@@ -1077,7 +1112,7 @@ onde:
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=10]{Numero Básico de Reprodução}
+\begin{frame}[allowframebreaks]{Numero Básico de Reprodução}
 \definicao{$R_0$ (R-naught)}{
 Numero médio de infecções secundárias causadas por um indivíduo infectado em uma populacao totalmente susceptível.
 }
@@ -1103,8 +1138,8 @@ $R_0$ estimado entre 2-6, dependendo da variante e medidas de controle
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=5]{Implementação do Modelo SIR (1/2)}
-\begin{lstlisting}[language=Python, caption=Definição e Parâmetros]
+\begin{frame}[fragile, allowframebreaks]{Implementação do Modelo SIR}
+\begin{lstlisting}[language=Python, caption=Modelo SIR completo, basicstyle=\ttfamily\footnotesize]
 def sir_model(y, t, beta, gamma):
     S, I, R = y
     N = S + I + R
@@ -1118,20 +1153,8 @@ y0 = [N - I0, I0, 0]
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile, shrink=5]{Implementação do Modelo SIR (2/2)}
-\begin{lstlisting}[language=Python, caption=Simulação]
-# Simular
-t = np.linspace(0, 200, 1000)
-sol = odeint(sir_model, y0, t, args=(beta, gamma))
-
-# Resultado
-print(f"Populacao total: {N}")
-print(f"R0: {R0}")
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile, shrink=10]{Analise e Visualização}
-\begin{lstlisting}[language=Python, caption=Analise do modelo SIR, basicstyle=\ttfamily\tiny]
+\begin{frame}[fragile, allowframebreaks]{Analise e Visualização}
+\begin{lstlisting}[language=Python, caption=Analise do modelo SIR, basicstyle=\ttfamily\footnotesize]
 S, I, R = sol.T
 plt.figure(figsize=(10, 6))
 plt.plot(t, S, 'b-', label='Suscept.'), plt.plot(t, I, 'r-', label='Infect.')
@@ -1176,7 +1199,7 @@ print(f"Ataque final: {R[-1]/N*100:.1f}%")
 \end{block}
 \end{frame}
 
-\begin{frame}{Armadilhas Comuns}
+\begin{frame}[shrink]{Armadilhas Comuns}
 \begin{alertblock}{Erros Frequentes}
 \begin{enumerate}
     \item \textbf{Overfitting:} modelo complexo demais para os dados
@@ -1195,7 +1218,7 @@ print(f"Ataque final: {R[-1]/N*100:.1f}%")
 
 \begin{frame}{Ferramentas Computacionais}
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{Python}
 \begin{itemize}
     \item NumPy, SciPy
@@ -1214,7 +1237,7 @@ print(f"Ataque final: {R[-1]/N*100:.1f}%")
 \end{itemize}
 \end{block}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{MATLAB}
 \begin{itemize}
     \item ode45, ode15s
@@ -1239,7 +1262,7 @@ print(f"Ataque final: {R[-1]/N*100:.1f}%")
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}{Exercícios - Parte 1}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 1}
 \begin{block}{Questão 1: Modelo de Crescimento}
 Considere um modelo de crescimento com colheita constante:
 \begin{equation*}
@@ -1279,9 +1302,9 @@ Considere o sistema de competição:
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=10]{Projeto: Modelo SIR com Vacinação}
-\begin{alertblock}{Extensão do Modelo}
-Inclua vacinação no modelo SIR:
+\begin{frame}[shrink=20]{Exercícios - Parte 3}
+\begin{alertblock}{Projeto: Modelo SIR com Vacinação}
+Estenda o modelo SIR para incluir vacinação:
 \begin{align*}
 \derivada{S}{t} &= -\beta \frac{SI}{N} - \nu S, \quad \derivada{I}{t} = \beta \frac{SI}{N} - \gamma I, \quad \derivada{R}{t} = \gamma I + \nu S
 \end{align*}
@@ -1312,7 +1335,7 @@ Inclua vacinação no modelo SIR:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}[shrink=10]{Leitura Complementar}
+\begin{frame}[allowframebreaks]{Leitura Complementar}
 \begin{block}{Livros Avançados}
 \begin{itemize}
     \item Ellner S.P., Guckenheimer J. (2011). \textit{Dynamic Models in Biology}
