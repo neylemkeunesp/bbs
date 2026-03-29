@@ -1,0 +1,26 @@
+# Builds for linux/amd64
+FROM warpdotdev/dev-base:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-lc"]
+
+# Install TeX Live components and helpers for Beamer slide builds
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      latexmk \
+      texlive-latex-recommended \
+      texlive-latex-extra \
+      texlive-fonts-recommended \
+      texlive-pictures \
+      texlive-science \
+      texlive-lang-portuguese \
+      ghostscript \
+      make \
+      git \
+      ca-certificates && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Python is included in base; keep project deps out of the image
+WORKDIR /workspace
+
+CMD bash -lc 'latexmk -v; pdflatex --version; python --version; echo Ready'

@@ -776,13 +776,8 @@ A populacao converge para a capacidade de suporte $K$
 }
 \end{frame}
 
-<<<<<<< HEAD
-\begin{frame}[fragile, shrink=10]{Analise de Estabilidade Computacional}
-\begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e Autovalores, basicstyle=\ttfamily\tiny]
-=======
 \begin{frame}[fragile, allowframebreaks]{Analise de Estabilidade Computacional}
-\begin{lstlisting}[language=Python, caption=Analise de autovalores, basicstyle=\ttfamily\footnotesize]
->>>>>>> e775cf3 (docs: fix overflows and add computational examples to chapter 02)
+\begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e autovalores, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.linalg import eig
 
@@ -1145,7 +1140,7 @@ def sir_model(y, t, beta, gamma):
     N = S + I + R
     return [-beta * S * I / N, beta * S * I / N - gamma * I, gamma * I]
 
-# Parametros e Condições
+# Parametros e condicoes iniciais
 beta, gamma = 0.5, 0.1
 R0 = beta / gamma
 N, I0 = 1000, 10
@@ -1169,7 +1164,230 @@ print(f"Ataque final: {R[-1]/N*100:.1f}%")
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 11: BOAS PRÁTICAS
+% SEÇÃO 11: MODELOS ESTOCÁSTICOS E REPTATION
+% ============================================================================
+\section{Modelos Estocásticos: Reptation do DNA}
+
+\begin{frame}[shrink=10]{Por que Modelos Estocásticos?}
+\begin{block}{Limitações dos Modelos Determinísticos}
+\begin{itemize}
+    \item Assumem grande número de moléculas e variáveis contínuas
+    \item Ignoram flutuações térmicas e variabilidade molecular
+    \item Inadequados quando $N \lesssim 100$ moléculas ou eventos raros
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{block}{Quando usar modelos estocásticos?}
+\begin{itemize}
+    \item Movimentos de moléculas individuais
+    \item Sistemas com ruído térmico relevante (escala nanométrica)
+    \item Polímeros em confinamento (gel, cromatina, poros)
+    \item Expressão gênica com poucos fatores de transcrição
+\end{itemize}
+\end{block}
+
+\importante{
+Flutuações não são "ruído a eliminar" — frequentemente carregam informação biológica.
+}
+\end{frame}
+
+\begin{frame}{Movimento de Polímeros: O Modelo de Reptation}
+\definicao{Reptation}{
+Mecanismo de movimento de um polímero longo (como o DNA) confinado em uma rede ou gel, proposto por P.G.\ de Gennes (1971). O polímero se move como uma cobra dentro de um tubo virtual formado pelos obstáculos ao seu redor.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.55\textwidth}
+\textbf{Ideia central:}
+\begin{itemize}
+    \item O DNA não pode atravessar os obstáculos da rede
+    \item Cria um ``tubo'' ao longo de seu contorno
+    \item Move-se pela criação/destruição de alças nas extremidades
+    \item Movimento resultante: difusão ao longo do próprio eixo
+\end{itemize}
+
+\column{0.4\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Obstáculos
+    \foreach \x/\y in {0.5/0.5, 1.5/1.5, 2.5/0.8, 3.5/1.8, 0.8/2.5, 2.0/2.8, 3.2/0.3, 1.2/3.2, 3.8/2.5} {
+        \fill[gray!50] (\x, \y) circle (3pt);
+    }
+    % Tubo / DNA
+    \draw[thick, azulescuro, rounded corners=4pt]
+        (0,1.0) .. controls (0.5,0.9) and (1.0,1.3) ..
+        (1.5,1.1) .. controls (2.0,0.9) and (2.5,1.5) ..
+        (3.0,1.4) .. controls (3.5,1.3) and (3.8,1.8) .. (4.0,1.6);
+    % Setas de movimento
+    \draw[->, thick, verdeacido] (3.8,1.7) -- (4.3,1.55);
+    \draw[->, thick, red]        (0.2,1.05) -- (-0.3,1.1);
+    \node[font=\tiny, azulescuro] at (2.0, 0.3) {DNA};
+    \node[font=\tiny, gray]       at (3.5, 3.0) {gel};
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Formulação Estocástica do Reptation (1/2)}
+\begin{block}{Modelo de Caminhada Aleatória no Tubo}
+O DNA é representado por $N$ segmentos de comprimento $b$. A cada passo de tempo $\Delta t$, cada extremidade:
+\begin{itemize}
+    \item Com prob.\ $\frac{1}{2}$: \textbf{avança} — adiciona um segmento à frente
+    \item Com prob.\ $\frac{1}{2}$: \textbf{recua} — remove um segmento da frente
+\end{itemize}
+\end{block}
+
+\vspace{0.4cm}
+
+\textbf{Coeficiente de difusão curvilinear:}
+\destaque{
+\begin{equation*}
+D_c = \frac{b^2}{2\,\tau}
+\end{equation*}
+}
+\end{frame}
+
+\begin{frame}{Formulação Estocástica do Reptation (2/2)}
+\textbf{Coeficiente de difusão efetivo (3D):}
+\begin{equation*}
+D \propto \frac{D_c}{N^2} \sim \frac{1}{N^2}
+\end{equation*}
+
+\vspace{0.4cm}
+
+\begin{exampleblock}{Predição chave}
+O tempo de renovação do tubo escala como $\tau_{\rm rep} \sim N^3$ — verificado experimentalmente por eletroforese em gel.
+\end{exampleblock}
+
+\vspace{0.4cm}
+
+\importante{
+Quanto mais longo o DNA, mais lento o movimento — base da separação por tamanho em gel.
+}
+\end{frame}
+
+\begin{frame}[shrink=15]{Reptation em Campo Elétrico (Eletroforese)}
+\begin{block}{Biased Reptation (Duke, 1989)}
+Na presença de campo elétrico $\mathbf{E}$, a probabilidade de avanço/recuo nas extremidades se torna assimétrica:
+\begin{align*}
+p_+ &= \frac{1}{2}\left(1 + \frac{qEb}{k_BT}\right) \quad \text{(avança)}\\
+p_- &= \frac{1}{2}\left(1 - \frac{qEb}{k_BT}\right) \quad \text{(recua)}
+\end{align*}
+\end{block}
+
+\textbf{Mobilidade eletroforética:}
+\begin{equation*}
+\mu = \frac{v}{E} \propto \frac{1}{N}
+\end{equation*}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{itemize}
+    \item Fragmentos menores: maior mobilidade
+    \item Base da separação por gel eletroforese
+    \item Válido para DNA \textbf{longo} (regime de reptation)
+\end{itemize}
+\column{0.45\textwidth}
+\begin{alertblock}{Limite do modelo}
+Para campos altos ($qEb \gg k_BT$): DNA se alinha com o campo e a separação por tamanho se perde.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Implementação: Simulação de Reptation}
+\begin{lstlisting}[language=Python, caption=Simulação estocástica de reptation, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def simular_reptation(N, n_steps, E=0.0, kBT=1.0, q=1.0, b=1.0):
+    """
+    Simula reptation de DNA em campo eletrico E.
+    N       : numero de segmentos
+    n_steps : passos de Monte Carlo
+    E       : campo eletrico (0 = difusao pura)
+    """
+    # Posicao do centro de massa ao longo do tubo
+    pos_cm = np.zeros(n_steps)
+    pos = 0.0  # deslocamento acumulado
+
+    # Probabilidade de avanco
+    p_mais = 0.5 * (1.0 + q * E * b / kBT)
+    p_mais = np.clip(p_mais, 0.0, 1.0)
+
+    for t in range(1, n_steps):
+        # Sortear qual extremidade se move (frente ou tras)
+        r = np.random.rand()
+        if r < p_mais:
+            pos += b / N   # deslocamento do CM: b/N por passo
+        else:
+            pos -= b / N
+        pos_cm[t] = pos
+
+    return pos_cm
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile, shrink=5]{Implementação: Análise e Visualização}
+\begin{lstlisting}[language=Python, caption=Comparacao entre tamanhos de DNA, basicstyle=\ttfamily\footnotesize]
+n_steps = 50000
+tamanhos = [50, 100, 200]   # numero de segmentos
+E = 0.1                      # campo eletrico fraco
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+for N in tamanhos:
+    traj = simular_reptation(N, n_steps, E=E)
+    t = np.arange(n_steps)
+
+    # Trajetoria
+    axes[0].plot(t, traj, label=f'N={N}', alpha=0.7)
+
+    # MSD (mean squared displacement)
+    msd = np.cumsum((traj - traj[0])**2) / np.arange(1, n_steps+1)
+    axes[1].loglog(t[1:], msd[1:], label=f'N={N}')
+
+axes[0].set(xlabel='Passos', ylabel='Posicao CM', title='Trajetorias')
+axes[1].set(xlabel='Passos', ylabel='MSD', title='MSD (escala log-log)')
+for ax in axes:
+    ax.legend(); ax.grid(True)
+plt.tight_layout()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[shrink=5]{Predições e Verificação Experimental}
+\begin{block}{Escalonamentos do Modelo de Reptation}
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Grandeza} & \textbf{Predição} & \textbf{Verificação} \\
+\hline
+Difusividade & $D \sim N^{-2}$ & Eletroforese em campo nulo \\
+Mobilidade & $\mu \sim N^{-1}$ & Gel de agarose, campo baixo \\
+Tempo de renovação & $\tau \sim N^3$ & Birrefringência transitória \\
+MSD curvilinear & $\langle s^2 \rangle \sim t$ & FCS, tracking de moléculas \\
+\hline
+\end{tabular}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+
+\begin{exampleblock}{Aplicações Biotecnológicas}
+\begin{itemize}
+    \item \textbf{Eletroforese em gel de agarose:} separação de fragmentos de DNA por tamanho
+    \item \textbf{Sequenciamento de DNA:} entender mobilidade de fragmentos
+    \item \textbf{Eletroforese em campo pulsado (PFGE):} separação de cromossomos inteiros
+    \item \textbf{Nanoporos:} translocação de DNA — extensão do modelo de reptation
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 12: BOAS PRÁTICAS
 % ============================================================================
 \section{Boas Práticas em Modelagem}
 
@@ -1258,7 +1476,7 @@ print(f"Ataque final: {R[-1]/N*100:.1f}%")
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 12: EXERCÍCIOS
+% SEÇÃO 13: EXERCÍCIOS
 % ============================================================================
 \section{Exercícios}
 
@@ -1317,7 +1535,7 @@ Estenda o modelo SIR para incluir vacinação:
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 13: REFERÊNCIAS
+% SEÇÃO 14: REFERÊNCIAS
 % ============================================================================
 \section{Referências}
 
