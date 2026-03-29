@@ -182,7 +182,151 @@ Comece sempre no ambiente mais simples. Só migre para HPC/cloud quando o proble
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 2: TERMINAL E LINHA DE COMANDO
+% SEÇÃO 2: SISTEMAS OPERACIONAIS E SOFTWARE LIVRE
+% ============================================================================
+\section{Sistemas Operacionais e Software Livre}
+
+\begin{frame}[shrink=10]{O que é um Sistema Operacional?}
+\definicao{Sistema Operacional (SO)}{
+Camada de software que gerencia o hardware do computador e fornece serviços para os programas. É o intermediário entre você, seus programas e o processador, a memória e o disco.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{O que o SO faz:}
+\begin{itemize}
+    \item Gerencia processos (quem usa a CPU)
+    \item Controla memória RAM
+    \item Organiza o sistema de arquivos
+    \item Gerencia dispositivos (teclado, rede, GPU)
+    \item Fornece interface ao usuário (gráfica ou terminal)
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Analogia}
+O SO é como o sistema nervoso autônomo do computador: você não precisa pensar em como o coração bate (CPU executa instruções) — ele cuida disso enquanto você foca no que importa.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=10]{Windows, Linux e macOS: as três famílias}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& \textbf{Windows} & \textbf{Linux} & \textbf{macOS} \\
+\midrule
+Criador         & Microsoft   & Comunidade (Linus Torvalds) & Apple \\
+Custo           & Pago        & Gratuito        & Incluso no Mac \\
+Código-fonte    & Fechado     & Aberto          & Parcialmente aberto \\
+Uso em servidores & Raro     & Dominante (90\%+) & Raro \\
+Uso em desktops & Dominante  & Crescente       & $\sim$15\% \\
+Terminal padrão & PowerShell  & bash/zsh        & zsh \\
+Instalação de pacotes & .exe  & apt/yum/conda  & brew/conda \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\importante{
+Servidores, clusters e nuvem rodam \textbf{Linux}. Saber o básico de Linux é indispensável para bioinformática.
+}
+\end{frame}
+
+\begin{frame}[shrink=10]{Linux: distribuições mais usadas em ciência}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{O que é uma distribuição Linux?}
+O Linux é apenas o \textbf{kernel} (núcleo). Uma distribuição empacota o kernel com ferramentas, gerenciador de pacotes e interface gráfica. Existem centenas — cada uma com foco diferente.
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Mais usadas em bioinformática}
+\begin{itemize}
+    \item \textbf{Ubuntu} — mais fácil para iniciantes
+    \item \textbf{Debian} — estável, base do Ubuntu
+    \item \textbf{CentOS / Rocky Linux} — padrão em clusters HPC
+    \item \textbf{Fedora} — atualizado, bom para workstations
+\end{itemize}
+\end{exampleblock}
+
+\column{0.48\textwidth}
+\begin{block}{Windows com Linux: WSL}
+O \textbf{Windows Subsystem for Linux (WSL)} permite rodar Ubuntu dentro do Windows sem dual-boot — boa opção para quem precisa de Windows mas quer usar ferramentas Linux.
+\end{block}
+
+\vspace{0.2cm}
+\begin{alertblock}{Dica prática}
+Se você usa Windows, instale o WSL2 + Ubuntu. Se usa Mac, o terminal já é Unix-compatível — você está a um passo do ambiente científico.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=10]{Software Livre vs. Software Proprietário}
+\definicao{Software Livre (Free/Open Source Software — FOSS)}{
+Software cujo código-fonte é público, podendo ser estudado, modificado e redistribuído por qualquer pessoa, respeitando a licença. ``Free'' significa \textbf{liberdade}, não necessariamente gratuito.
+}
+
+\vspace{0.2cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Software Livre em biologia}
+\begin{itemize}
+    \item Python, R, Julia — linguagens
+    \item Linux, Ubuntu — sistemas operacionais
+    \item BLAST, BWA, GATK — ferramentas bioinformáticas
+    \item Bioconductor, BioPython — bibliotecas
+    \item Galaxy, Snakemake — plataformas de análise
+\end{itemize}
+\end{exampleblock}
+
+\column{0.48\textwidth}
+\begin{alertblock}{Software Proprietário em biologia}
+\begin{itemize}
+    \item Microsoft Office, Windows
+    \item MATLAB (licença cara)
+    \item CLC Genomics Workbench
+    \item Geneious (análise de sequências)
+    \item GraphPad Prism (estatística)
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=5]{Por que Software Livre importa para a ciência?}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Vantagens científicas do FOSS}
+\begin{itemize}
+    \item \textbf{Reprodutibilidade}: qualquer pesquisador pode inspecionar o código
+    \item \textbf{Auditabilidade}: algoritmos podem ser verificados e corrigidos
+    \item \textbf{Sem vendor lock-in}: você não perde seus dados se a empresa fechar
+    \item \textbf{Custo zero}: acessível a pesquisadores de qualquer país
+    \item \textbf{Colaboração global}: comunidades como Bioconductor têm milhares de contribuidores
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Tipos de licença comuns}
+\begin{itemize}
+    \item \textbf{MIT / BSD} — use como quiser, inclusive em software proprietário
+    \item \textbf{GPL} — derivados também devem ser livres (``copyleft'')
+    \item \textbf{Apache 2.0} — permissiva, com proteção de patentes
+    \item \textbf{CC BY} — para dados e artigos (Creative Commons)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\exemplo{Impacto real}{
+O Linux, Python, R e toda a pilha de bioinformática moderna são software livre. A ciência aberta depende de ferramentas abertas.
+}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: TERMINAL E LINHA DE COMANDO
 % ============================================================================
 \section{Terminal e linha de comando}
 
@@ -924,23 +1068,26 @@ Publique sua imagem no Docker Hub e inclua o DOI no artigo para garantia de repr
 \begin{frame}[fragile]{O que é um pipeline bioinformático?}
 \begin{block}{Pipeline típico de RNA-seq}
 \begin{center}
-\begin{tikzpicture}[node distance=1.3cm, every node/.style={font=\footnotesize}]
-    \node[draw, fill=azulescuro!20, rounded corners, minimum width=1.8cm] (fastq) {FASTQ bruto};
-    \node[draw, fill=azulclaro!20, rounded corners, minimum width=1.8cm, right=of fastq] (qc) {FastQC};
-    \node[draw, fill=verdeacido!20, rounded corners, minimum width=1.8cm, right=of qc] (trim) {Trimmomatic};
-    \node[draw, fill=laranjacel!20, rounded corners, minimum width=1.8cm, right=of trim] (align) {STAR / HISAT2};
-    \node[draw, fill=roxodna!20, rounded corners, minimum width=1.8cm, right=of align] (count) {featureCounts};
-    \node[draw, fill=azulescuro!20, rounded corners, minimum width=1.8cm, below=of count] (deseq) {DESeq2};
-    \node[draw, fill=verdeacido!20, rounded corners, minimum width=1.8cm, left=of deseq] (enrich) {Enriquecimento};
-    \node[draw, fill=laranjacel!20, rounded corners, minimum width=1.8cm, left=of enrich] (viz) {Visualização};
+\begin{tikzpicture}[node distance=0.5cm and 0.6cm, every node/.style={font=\tiny},
+    box/.style={draw, rounded corners, minimum width=1.6cm, minimum height=0.55cm, text centered}]
+    % Linha 1
+    \node[box, fill=azulescuro!20] (fastq)  {FASTQ bruto};
+    \node[box, fill=azulclaro!20,  right=of fastq]  (qc)    {FastQC};
+    \node[box, fill=verdeacido!20, right=of qc]     (trim)  {Trimmomatic};
+    \node[box, fill=laranjacel!20, right=of trim]   (align) {STAR/HISAT2};
+    % Linha 2 (abaixo de align, seguindo para a esquerda)
+    \node[box, fill=roxodna!20,    below=of align]  (count) {featureCounts};
+    \node[box, fill=azulescuro!20, left=of count]   (deseq) {DESeq2};
+    \node[box, fill=verdeacido!20, left=of deseq]   (enrich){Enriquecimento};
+    \node[box, fill=laranjacel!20, left=of enrich]  (viz)   {Visualização};
 
     \draw[->, thick] (fastq) -- (qc);
-    \draw[->, thick] (qc) -- (trim);
-    \draw[->, thick] (trim) -- (align);
+    \draw[->, thick] (qc)    -- (trim);
+    \draw[->, thick] (trim)  -- (align);
     \draw[->, thick] (align) -- (count);
     \draw[->, thick] (count) -- (deseq);
     \draw[->, thick] (deseq) -- (enrich);
-    \draw[->, thick] (enrich) -- (viz);
+    \draw[->, thick] (enrich)-- (viz);
 \end{tikzpicture}
 \end{center}
 \end{block}
