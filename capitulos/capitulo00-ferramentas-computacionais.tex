@@ -1,0 +1,1218 @@
+% ============================================================================
+% CAPÍTULO 0: FERRAMENTAS COMPUTACIONAIS PARA BIOLOGIA DE SISTEMAS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+\title[Cap. 0: Ferramentas Computacionais]{Capítulo 0: Ferramentas Computacionais para Biologia de Sistemas}
+\subtitle{Bioinformática para Biologia de Sistemas}
+\author{Ney Lemke}
+\institute{DBF-Unesp}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: HARDWARE E ARQUITETURAS
+% ============================================================================
+\section{Hardware: o que há dentro do computador}
+
+\begin{frame}{Por que um biólogo precisa entender computadores?}
+\begin{block}{Objetivos de Aprendizagem}
+\begin{itemize}
+    \item Entender os componentes fundamentais de um computador
+    \item Conhecer as arquiteturas disponíveis hoje para ciência
+    \item Saber escolher a ferramenta certa para cada problema
+    \item Dominar o fluxo de trabalho científico reprodutível
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\importante{
+Você não precisa ser programador para fazer ciência computacional — mas precisa entender o \textbf{vocabulário} e as \textbf{ferramentas} do ambiente digital.
+}
+\end{frame}
+
+\begin{frame}[shrink=15]{Os componentes fundamentais}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{CPU — Unidade Central de Processamento}
+\begin{itemize}
+    \item O ``cérebro'' do computador
+    \item Executa instruções sequencialmente
+    \item 4–64 núcleos em desktops modernos
+    \item Ótima para tarefas complexas e variadas
+\end{itemize}
+\end{block}
+\vspace{0.2cm}
+\begin{block}{RAM — Memória de Acesso Aleatório}
+\begin{itemize}
+    \item Área de trabalho temporária
+    \item Dados desaparecem ao desligar
+    \item 8–256 GB em estações de trabalho
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Armazenamento (SSD/HDD)}
+\begin{itemize}
+    \item Dados persistentes
+    \item SSD: rápido (GB/s), caro
+    \item HDD: lento, barato, grande capacidade
+\end{itemize}
+\end{block}
+\vspace{0.2cm}
+\begin{exampleblock}{Analogia Biológica}
+CPU = ribossomo\\
+RAM = citoplasma (área de trabalho)\\
+SSD = DNA (memória permanente)
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=5]{GPU: processamento paralelo massivo}
+\definicao{GPU — Graphics Processing Unit}{
+Processador com milhares de núcleos simples, originalmente criado para gráficos, hoje essencial para Machine Learning, simulações moleculares e análise de imagens biomédicas.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{CPU vs GPU:}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{CPU} & \textbf{GPU} \\
+\midrule
+Núcleos & 4--64 & 3\,000--16\,000 \\
+Velocidade/núcleo & Alta & Baixa \\
+Paralelismo & Baixo & Altíssimo \\
+Memória & GBs RAM & GBs VRAM \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Uso em Biologia}
+\begin{itemize}
+    \item AlphaFold2 (dobramento de proteínas)
+    \item Redes neurais para imagens de microscopia
+    \item Dinâmica molecular (GROMACS, NAMD)
+    \item Sequenciamento por deep learning
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Arquiteturas de computação disponíveis hoje}
+\begin{columns}
+\column{0.48\textwidth}
+\begin{block}{Laptop / Desktop}
+\begin{itemize}
+    \item Uso pessoal, análises pequenas
+    \item Python, R, Jupyter local
+    \item Limitado por RAM e CPU
+\end{itemize}
+\end{block}
+\vspace{0.2cm}
+\begin{block}{Workstation}
+\begin{itemize}
+    \item 32--512 GB RAM, GPU dedicada
+    \item Análises de tamanho médio
+    \item Compartilhado no laboratório
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Cluster / HPC}
+\begin{itemize}
+    \item Centenas a milhares de CPUs
+    \item Jobs enviados via fila (SLURM)
+    \item Usado para simulações longas
+\end{itemize}
+\end{block}
+\vspace{0.2cm}
+\begin{block}{Cloud (AWS, GCP, Azure)}
+\begin{itemize}
+    \item Escala sob demanda
+    \item Paga pelo uso (por hora)
+    \item GPUs disponíveis instantaneamente
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Qual arquitetura usar?}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Tarefa} & \textbf{Arquitetura recomendada} & \textbf{Exemplo} \\
+\midrule
+Aprender Python/R & Laptop / Google Colab & Análise exploratória \\
+Análise de RNA-seq & Workstation ou cluster & DESeq2, edgeR \\
+Dobramento de proteína & GPU (Colab Pro / HPC) & AlphaFold2 \\
+Genômica populacional & HPC (cluster) & GATK, VCF pipeline \\
+Simulação de rede & Workstation & NetworkX, igraph \\
+Deploy de modelo ML & Cloud (AWS/GCP) & API de predição \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\importante{
+Comece sempre no ambiente mais simples. Só migre para HPC/cloud quando o problema \textbf{realmente} exigir.
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: TERMINAL E LINHA DE COMANDO
+% ============================================================================
+\section{Terminal e linha de comando}
+
+\begin{frame}[fragile]{O terminal: por que não fugir dele}
+\definicao{Terminal / Shell}{
+Interface de texto para interagir com o sistema operacional. No Linux/Mac é o \texttt{bash} ou \texttt{zsh}; no Windows é o PowerShell ou WSL (Windows Subsystem for Linux).
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Por que usar o terminal?}
+\begin{itemize}
+    \item Automatiza tarefas repetitivas
+    \item Necessário para usar clusters e Docker
+    \item Permite trabalhar em servidores remotos
+    \item Reprodutibilidade: comandos são registráveis
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Analogia}
+O terminal é como o pipetador automático da computação: a primeira vez parece complicado, mas depois de aprender, você nunca mais quer fazer na mão.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile, shrink=20]{Comandos essenciais do terminal}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=bash, caption=Navegação e arquivos, basicstyle=\ttfamily\footnotesize]
+# Ver onde estou
+pwd
+
+# Listar arquivos
+ls -lh
+
+# Entrar em uma pasta
+cd minha-analise/
+
+# Criar pasta
+mkdir resultados
+
+# Copiar arquivo
+cp dados.csv resultados/
+
+# Mover/renomear
+mv draft.py analise.py
+
+# Ver conteudo de arquivo
+cat sequencias.fasta | head -20
+\end{lstlisting}
+
+\column{0.48\textwidth}
+\begin{lstlisting}[language=bash, caption=Busca e processos, basicstyle=\ttfamily\footnotesize]
+# Buscar texto em arquivo
+grep "ATGC" sequencias.fasta
+
+# Contar linhas
+wc -l dados.csv
+
+# Ver processos rodando
+top
+
+# Rodar script Python
+python3 analise.py
+
+# Ver historico de comandos
+history | grep python
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{Conexão remota com SSH}
+\definicao{SSH — Secure Shell}{
+Protocolo para acessar computadores remotos (clusters, servidores) com segurança, como se você estivesse na frente do terminal deles.
+}
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\footnotesize]
+# Conectar a um servidor remoto
+ssh usuario@cluster.unesp.br
+
+# Copiar arquivos para o servidor
+scp meu_script.py usuario@cluster.unesp.br:~/analises/
+
+# Copiar resultados de volta
+scp usuario@cluster.unesp.br:~/resultados/output.csv .
+
+# Transferencia de pastas inteiras
+scp -r pasta_local/ usuario@servidor:~/destino/
+\end{lstlisting}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Dica prática}
+Configure chaves SSH (\texttt{ssh-keygen}) para não precisar digitar senha toda vez.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: LINGUAGENS DE PROGRAMAÇÃO
+% ============================================================================
+\section{Linguagens de programação}
+
+\begin{frame}[shrink=15]{O que é uma linguagem de programação?}
+\definicao{Linguagem de Programação}{
+Um conjunto de regras e vocabulário que permite dar instruções precisas a um computador. É uma tradução entre a lógica humana e as operações binárias da máquina.
+}
+
+\vspace{0.3cm}
+
+\begin{block}{Como funciona?}
+\begin{enumerate}
+    \item Você escreve código em texto legível (ex: Python)
+    \item Um \textbf{interpretador} ou \textbf{compilador} traduz para linguagem de máquina
+    \item O processador executa as instruções
+\end{enumerate}
+\end{block}
+
+\vspace{0.2cm}
+\exemplo{Analogia}{
+Uma linguagem de programação é como um protocolo de laboratório: você descreve cada passo com precisão e o ``assistente'' (computador) executa exatamente o que foi escrito — sem improviso.
+}
+\end{frame}
+
+\begin{frame}[fragile, shrink=20]{Python: a linguagem do cientista moderno}
+\begin{columns}
+\column{0.52\textwidth}
+\textbf{Por que Python?}
+\begin{itemize}
+    \item Sintaxe próxima ao inglês — fácil de aprender
+    \item Maior ecossistema científico do mundo
+    \item Comunidade enorme com tutoriais em tudo
+    \item Gratuito e open-source
+    \item Integra com R, C++, Java
+\end{itemize}
+
+\vspace{0.2cm}
+\textbf{Bibliotecas essenciais para biologia:}
+\begin{itemize}
+    \item \texttt{numpy}, \texttt{pandas} — dados tabulares
+    \item \texttt{matplotlib}, \texttt{seaborn} — visualização
+    \item \texttt{scipy} — estatística e matemática
+    \item \texttt{biopython} — sequências biológicas
+    \item \texttt{scanpy} — single-cell RNA-seq
+\end{itemize}
+
+\column{0.46\textwidth}
+\begin{lstlisting}[language=Python, caption=Exemplo simples, basicstyle=\ttfamily\footnotesize]
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Ler dados de expressao genica
+dados = pd.read_csv("expressao.csv")
+
+# Ver as primeiras linhas
+print(dados.head())
+
+# Histograma de expressao
+dados["gene_A"].hist(bins=30)
+plt.xlabel("Expressao (TPM)")
+plt.ylabel("Frequencia")
+plt.show()
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{R: o poder da estatística}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Quando usar R?}
+\begin{itemize}
+    \item Análises estatísticas avançadas
+    \item Bioconductor: maior coleção de ferramentas bioinformáticas
+    \item Publicações que exigem R (DESeq2, edgeR, limma)
+    \item Visualizações publicação-ready com \texttt{ggplot2}
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{block}{Pacotes Bioconductor essenciais}
+\begin{itemize}
+    \item \texttt{DESeq2} — RNA-seq diferencial
+    \item \texttt{edgeR} — contagens de RNA
+    \item \texttt{limma} — microarray e RNA-seq
+    \item \texttt{clusterProfiler} — enriquecimento
+    \item \texttt{Seurat} — single-cell
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{lstlisting}[language=R, style=Rstyle, caption=R básico, basicstyle=\ttfamily\footnotesize]
+# Instalar pacote
+install.packages("ggplot2")
+library(ggplot2)
+
+# Ler dados
+dados <- read.csv("expressao.csv")
+
+# Grafico de dispersao
+ggplot(dados,
+  aes(x=condicao_A,
+      y=condicao_B)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(method="lm") +
+  theme_minimal()
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=5]{Python vs R: quando usar cada um?}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Tarefa} & \textbf{Python} & \textbf{R} \\
+\midrule
+Machine learning / deep learning & \checkmark\checkmark & $\circ$ \\
+RNA-seq diferencial & $\circ$ & \checkmark\checkmark \\
+Visualização para publicação & \checkmark & \checkmark\checkmark \\
+Automação e pipelines & \checkmark\checkmark & $\circ$ \\
+Análise de redes & \checkmark\checkmark & \checkmark \\
+Estatística clássica & \checkmark & \checkmark\checkmark \\
+Single-cell (scRNA-seq) & \checkmark\checkmark & \checkmark\checkmark \\
+Bioinformática geral & \checkmark\checkmark & \checkmark\checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\importante{
+\checkmark\checkmark = excelente \quad \checkmark = bom \quad $\circ$ = possível, mas não ideal\\
+\textbf{Na prática: aprenda Python primeiro, adicione R conforme a necessidade.}
+}
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{Outras linguagens relevantes}
+\begin{columns}
+\column{0.48\textwidth}
+\begin{block}{Julia}
+\begin{itemize}
+    \item Velocidade de C, sintaxe de Python
+    \item Crescendo em modelagem matemática
+    \item \texttt{BioJulia} para bioinformática
+    \item Ideal para simulações numéricas pesadas
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{block}{Bash / Shell Script}
+\begin{itemize}
+    \item Automatizar pipelines no terminal
+    \item Processar arquivos FASTQ, VCF em lote
+    \item Indispensável para HPC
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{SQL}
+\begin{itemize}
+    \item Consultar bancos de dados biológicos
+    \item Usado no backend do UCSC, Ensembl
+    \item \texttt{SELECT * FROM genes WHERE organism='Homo sapiens'}
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{block}{C / C++}
+\begin{itemize}
+    \item Núcleo de ferramentas como BWA, GATK
+    \item Não precisa aprender — mas ajuda a entender
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 4: JUPYTER E GOOGLE COLAB
+% ============================================================================
+\section{Jupyter e Google Colab}
+
+\begin{frame}[fragile, shrink=15]{Jupyter Notebook: ciência interativa}
+\definicao{Jupyter Notebook}{
+Ambiente de computação interativa que combina código, texto, equações e visualizações em um único documento. O padrão moderno para ciência de dados reprodutível.
+}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Vantagens:}
+\begin{itemize}
+    \item Executa código célula por célula
+    \item Visualizações embutidas nos resultados
+    \item Mistura código com documentação
+    \item Exporta para PDF, HTML, slides
+    \item Base do Google Colab
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Instalação}
+\begin{lstlisting}[language=bash, numbers=none, basicstyle=\ttfamily\small]
+pip install jupyterlab
+jupyter lab
+\end{lstlisting}
+\end{exampleblock}
+
+\vspace{0.2cm}
+\begin{alertblock}{Limitação importante}
+Notebooks fora de ordem de execução podem dar resultados errados. Sempre rode \textbf{Kernel $\to$ Restart \& Run All} antes de compartilhar.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=15]{Google Colab: o laboratório na nuvem}
+\begin{block}{O que é o Google Colab?}
+Jupyter Notebook hospedado pelo Google, gratuito, sem instalação, com acesso a GPUs e TPUs. Ideal para começar sem configurar nada.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Versão gratuita:}
+\begin{itemize}
+    \item GPU T4 por até 12h/sessão
+    \item 12 GB RAM
+    \item 15 GB Google Drive integrado
+    \item Colaboração em tempo real
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Como acessar:}
+\begin{enumerate}
+    \item Acesse \texttt{colab.research.google.com}
+    \item Faça login com conta Google
+    \item Crie um novo notebook
+    \item Habilite GPU: Runtime $\to$ Change runtime type
+\end{enumerate}
+\end{columns}
+
+\vspace{0.2cm}
+\exemplo{Dica}{
+Para rodar AlphaFold2, ESMFold e ferramentas de deep learning em biologia, o Colab Pro (\$\,9,99/mês) com GPU A100 é a opção mais acessível para pesquisadores.
+}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 5: AMBIENTES VIRTUAIS
+% ============================================================================
+\section{Ambientes virtuais e gerenciamento de pacotes}
+
+\begin{frame}[fragile, shrink=5]{O problema das dependências}
+\begin{alertblock}{Cena comum em laboratório}
+``O script funcionava no meu computador, mas no servidor ele dá erro na importação do \texttt{pandas}...''
+\end{alertblock}
+
+\vspace{0.3cm}
+
+\begin{block}{Por que isso acontece?}
+\begin{itemize}
+    \item Diferentes versões de pacotes podem ser incompatíveis
+    \item Projeto A precisa de \texttt{numpy 1.24}, projeto B precisa de \texttt{numpy 2.0}
+    \item Instalar tudo globalmente causa conflitos
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+
+\definicao{Ambiente Virtual}{
+Um diretório isolado com sua própria instalação do Python e pacotes. Cada projeto tem o seu ambiente, evitando conflitos.
+}
+\end{frame}
+
+\begin{frame}[fragile, shrink=25]{Conda: o gerenciador de ambientes do cientista}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=bash, caption=Criando e usando ambientes, basicstyle=\ttfamily\footnotesize]
+# Criar ambiente com Python 3.12
+conda create -n meu-projeto \
+    python=3.12
+
+# Ativar ambiente
+conda activate meu-projeto
+
+# Instalar pacotes
+conda install numpy pandas \
+    matplotlib scipy biopython
+
+# Listar ambientes
+conda env list
+
+# Exportar para reproducao
+conda env export > environment.yml
+
+# Recriar em outra maquina
+conda env create -f environment.yml
+\end{lstlisting}
+
+\column{0.48\textwidth}
+\begin{block}{Por que Conda?}
+\begin{itemize}
+    \item Gerencia Python \textbf{e} dependências não-Python (C libraries, CUDA)
+    \item Canal \texttt{bioconda}: 8\,000+ ferramentas bioinformáticas prontas
+    \item Instalação simples: \texttt{miniforge} (recomendado)
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Instalar BWA via bioconda}
+\begin{lstlisting}[language=bash, numbers=none, basicstyle=\ttfamily\small]
+conda install -c bioconda bwa
+\end{lstlisting}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{pip e venv: a alternativa leve}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=bash, caption=Usando venv + pip, basicstyle=\ttfamily\footnotesize]
+# Criar ambiente virtual
+python3 -m venv .venv
+
+# Ativar (Linux/Mac)
+source .venv/bin/activate
+
+# Ativar (Windows)
+.venv\Scripts\activate
+
+# Instalar pacotes
+pip install numpy pandas scipy
+
+# Salvar dependencias
+pip freeze > requirements.txt
+
+# Instalar em outro lugar
+pip install -r requirements.txt
+\end{lstlisting}
+
+\column{0.48\textwidth}
+\begin{block}{Quando usar venv + pip?}
+\begin{itemize}
+    \item Projetos puramente Python
+    \item Ambientes mais leves que conda
+    \item Integração com PyPI (200k+ pacotes)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{conda} & \textbf{venv} \\
+\midrule
+Leve & -- & \checkmark \\
+Bioconda & \checkmark & -- \\
+Não-Python libs & \checkmark & -- \\
+Universalidade & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 6: GITHUB
+% ============================================================================
+\section{GitHub: controle de versão e colaboração}
+
+\begin{frame}[fragile]{O que é controle de versão?}
+\begin{columns}
+\column{0.52\textwidth}
+\begin{alertblock}{Sem controle de versão}
+\begin{itemize}
+    \item \texttt{analise\_final.py}
+    \item \texttt{analise\_final\_v2.py}
+    \item \texttt{analise\_final\_corrigida.py}
+    \item \texttt{analise\_USAR\_ESSE.py}
+    \item \texttt{analise\_USAR\_ESSE\_2.py}
+\end{itemize}
+\end{alertblock}
+
+\column{0.46\textwidth}
+\begin{exampleblock}{Com Git}
+\begin{itemize}
+    \item Um único arquivo: \texttt{analise.py}
+    \item Histórico completo de todas as versões
+    \item Quem mudou o quê e quando
+    \item Voltar a qualquer versão anterior
+    \item Colaboração sem conflito
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+\definicao{Git}{
+Sistema de controle de versão distribuído, criado por Linus Torvalds (2005). Registra cada mudança em arquivos ao longo do tempo, como um ``histórico infinito de Ctrl+Z''.
+}
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{Comandos Git essenciais}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=bash, caption=Fluxo básico do Git, basicstyle=\ttfamily\footnotesize]
+# Iniciar repositorio
+git init
+
+# Ver estado atual
+git status
+
+# Adicionar arquivo ao stage
+git add analise.py
+
+# Salvar versao (commit)
+git commit -m "Adiciona analise de expressao"
+
+# Ver historico
+git log --oneline
+
+# Voltar a versao anterior
+git checkout abc1234
+\end{lstlisting}
+
+\column{0.48\textwidth}
+\begin{lstlisting}[language=bash, caption=Colaboracao com GitHub, basicstyle=\ttfamily\footnotesize]
+# Clonar repositorio existente
+git clone https://github.com/
+    usuario/projeto.git
+
+# Enviar para GitHub
+git push origin main
+
+# Baixar atualizacoes
+git pull
+
+# Criar ramo separado
+git checkout -b nova-analise
+
+# Unir ramo ao principal
+git merge nova-analise
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=15]{GitHub: muito além do armazenamento de código}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{O que o GitHub oferece?}
+\begin{itemize}
+    \item Hospedagem gratuita de repositórios
+    \item \textbf{Issues}: rastreamento de bugs e tarefas
+    \item \textbf{Pull Requests}: revisão de código em equipe
+    \item \textbf{Actions}: automação de testes e pipelines
+    \item \textbf{Pages}: publicação de sites e relatórios
+    \item \textbf{Releases}: versões publicadas de software
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Boas práticas para cientistas}
+\begin{itemize}
+    \item Um repositório por projeto/artigo
+    \item \texttt{README.md} com instruções claras
+    \item \texttt{requirements.txt} ou \texttt{environment.yml}
+    \item Dados no repositório ou link para Zenodo/Figshare
+    \item DOI para o repositório via Zenodo
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.2cm}
+\importante{
+Periódicos como \textit{Nature Methods} e \textit{PLOS Computational Biology} exigem ou recomendam fortemente código disponível publicamente no GitHub.
+}
+\end{frame}
+
+\begin{frame}{GitHub na prática: fluxo de um projeto científico}
+\begin{center}
+\begin{tikzpicture}[node distance=1.8cm, every node/.style={font=\small}]
+    \node[draw, rounded corners, fill=azulescuro!20, minimum width=2.8cm, minimum height=0.8cm] (init) {Criar repositório};
+    \node[draw, rounded corners, fill=azulclaro!20, minimum width=2.8cm, minimum height=0.8cm, right=of init] (clone) {Clonar local};
+    \node[draw, rounded corners, fill=verdeacido!20, minimum width=2.8cm, minimum height=0.8cm, right=of clone] (work) {Trabalhar e commitar};
+    \node[draw, rounded corners, fill=laranjacel!20, minimum width=2.8cm, minimum height=0.8cm, below=of work] (push) {Push para GitHub};
+    \node[draw, rounded corners, fill=roxodna!20, minimum width=2.8cm, minimum height=0.8cm, left=of push] (collab) {Colaborador faz Pull Request};
+    \node[draw, rounded corners, fill=azulescuro!20, minimum width=2.8cm, minimum height=0.8cm, left=of collab] (review) {Review e merge};
+
+    \draw[->, thick] (init) -- (clone);
+    \draw[->, thick] (clone) -- (work);
+    \draw[->, thick] (work) -- (push);
+    \draw[->, thick] (push) -- (collab);
+    \draw[->, thick] (collab) -- (review);
+    \draw[->, thick, dashed] (review.north) to[bend left=30] (work.south);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Para publicação científica}
+Ao submeter o artigo: crie uma \textbf{Release} no GitHub e registre no Zenodo para obter um DOI permanente e citável.
+\end{exampleblock}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 7: DOCKER
+% ============================================================================
+\section{Docker: reprodutibilidade e ambientes portáteis}
+
+\begin{frame}[shrink=20]{O problema da reprodutibilidade}
+\begin{alertblock}{``Works on my machine'' — o pesadelo da ciência computacional}
+Você publica o código, o revisor tenta rodar, e nada funciona. Versão diferente do Python, biblioteca atualizada que quebrou a API, dependência que não existe mais.
+\end{alertblock}
+
+\vspace{0.3cm}
+
+\begin{block}{A solução: empacotar tudo junto}
+Docker permite criar uma \textbf{imagem} que contém:
+\begin{itemize}
+    \item O sistema operacional base (Ubuntu, Alpine)
+    \item Python/R com versões exatas
+    \item Todos os pacotes e dependências
+    \item O código e os dados (ou links para eles)
+    \item As configurações do ambiente
+\end{itemize}
+\end{block}
+
+\vspace{0.1cm}
+\importante{
+Se funciona no seu container, funciona em \textbf{qualquer} computador que tenha Docker instalado.
+}
+\end{frame}
+
+\begin{frame}[fragile, shrink=25]{Docker: conceitos fundamentais}
+\begin{columns}
+\column{0.5\textwidth}
+\definicao{Imagem Docker}{
+``Fotografia'' de um ambiente completo. Imutável, compartilhável, versionável. Análoga ao snapshot de uma máquina virtual, mas muito mais leve.
+}
+
+\vspace{0.2cm}
+\definicao{Container}{
+Uma instância em execução de uma imagem. Isolado do sistema hospedeiro, mas compartilha o kernel do sistema operacional.
+}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Analogia biológica}
+\textbf{Imagem} = receita de um meio de cultura\\
+\textbf{Container} = placa com o meio preparado
+
+Você pode preparar mil placas idênticas a partir da mesma receita, em qualquer laboratório do mundo.
+\end{exampleblock}
+\end{columns}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{Máquina Virtual} & \textbf{Docker} \\
+\midrule
+Tamanho típico & 5--50 GB & 100 MB -- 2 GB \\
+Tempo de start & Minutos & Segundos \\
+Overhead de CPU & Alto & Mínimo \\
+Isolamento & Total & Parcial \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile, shrink=25]{Dockerfile: descrevendo seu ambiente}
+\begin{lstlisting}[language=bash, caption=Exemplo de Dockerfile para análise bioinformática, basicstyle=\ttfamily\footnotesize]
+# Imagem base com Python 3.12
+FROM python:3.12-slim
+
+# Metadados
+LABEL description="Analise de RNA-seq - Artigo XYZ 2025"
+
+# Instalar dependencias do sistema
+RUN apt-get update && apt-get install -y \
+    build-essential curl && rm -rf /var/lib/apt/lists/*
+
+# Copiar e instalar dependencias Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar codigo
+COPY scripts/ /app/scripts/
+
+# Diretorio de trabalho
+WORKDIR /app
+
+# Comando padrao
+CMD ["python", "scripts/analise_principal.py"]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile, shrink=20]{Usando Docker na prática}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=bash, caption=Comandos Docker essenciais, basicstyle=\ttfamily\footnotesize]
+# Construir imagem
+docker build -t minha-analise .
+
+# Rodar container
+docker run minha-analise
+
+# Rodar com pasta local montada
+docker run -v $(pwd)/dados:/app/dados \
+    minha-analise
+
+# Ver containers ativos
+docker ps
+
+# Parar container
+docker stop CONTAINER_ID
+
+# Baixar imagem do Docker Hub
+docker pull jupyter/scipy-notebook
+\end{lstlisting}
+
+\column{0.48\textwidth}
+\begin{block}{Docker Hub: imagens prontas}
+\begin{itemize}
+    \item \texttt{jupyter/scipy-notebook} — Jupyter completo
+    \item \texttt{rocker/tidyverse} — R + tidyverse
+    \item \texttt{biocontainers/bwa} — BWA aligner
+    \item \texttt{broadinstitute/gatk} — GATK oficial
+    \item \texttt{nfcore/rnaseq} — pipeline completo
+\end{itemize}
+\end{block}
+
+\vspace{0.2cm}
+\begin{exampleblock}{Para publicação}
+Publique sua imagem no Docker Hub e inclua o DOI no artigo para garantia de reprodutibilidade permanente.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 8: WORKFLOWS
+% ============================================================================
+\section{Workflows: automatizando pipelines}
+
+\begin{frame}[fragile]{O que é um pipeline bioinformático?}
+\begin{block}{Pipeline típico de RNA-seq}
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, every node/.style={font=\footnotesize}]
+    \node[draw, fill=azulescuro!20, rounded corners, minimum width=1.8cm] (fastq) {FASTQ bruto};
+    \node[draw, fill=azulclaro!20, rounded corners, minimum width=1.8cm, right=of fastq] (qc) {FastQC};
+    \node[draw, fill=verdeacido!20, rounded corners, minimum width=1.8cm, right=of qc] (trim) {Trimmomatic};
+    \node[draw, fill=laranjacel!20, rounded corners, minimum width=1.8cm, right=of trim] (align) {STAR / HISAT2};
+    \node[draw, fill=roxodna!20, rounded corners, minimum width=1.8cm, right=of align] (count) {featureCounts};
+    \node[draw, fill=azulescuro!20, rounded corners, minimum width=1.8cm, below=of count] (deseq) {DESeq2};
+    \node[draw, fill=verdeacido!20, rounded corners, minimum width=1.8cm, left=of deseq] (enrich) {Enriquecimento};
+    \node[draw, fill=laranjacel!20, rounded corners, minimum width=1.8cm, left=of enrich] (viz) {Visualização};
+
+    \draw[->, thick] (fastq) -- (qc);
+    \draw[->, thick] (qc) -- (trim);
+    \draw[->, thick] (trim) -- (align);
+    \draw[->, thick] (align) -- (count);
+    \draw[->, thick] (count) -- (deseq);
+    \draw[->, thick] (deseq) -- (enrich);
+    \draw[->, thick] (enrich) -- (viz);
+\end{tikzpicture}
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+\importante{
+Rodar cada etapa manualmente é lento, propenso a erros e impossível de reproduzir. Gerenciadores de workflow automatizam e documentam cada passo.
+}
+\end{frame}
+
+\begin{frame}[fragile, shrink=20]{Snakemake: workflows em Python}
+\definicao{Snakemake}{
+Gerenciador de workflows baseado em Python. Define \textbf{regras} que descrevem como gerar arquivos de saída a partir de entradas, e automaticamente determina a ordem de execução.
+}
+
+\begin{lstlisting}[language=Python, caption=Snakefile simplificado, basicstyle=\ttfamily\footnotesize]
+# Snakefile
+rule alinhamento:
+    input:
+        reads = "dados/{amostra}.fastq.gz",
+        genoma = "genoma/GRCh38.fa"
+    output:
+        bam = "resultados/{amostra}.bam"
+    threads: 8
+    shell:
+        "STAR --runThreadN {threads} "
+        "--genomeDir genoma/ "
+        "--readFilesIn {input.reads} "
+        "--outSAMtype BAM SortedByCoordinate "
+        "--outFileNamePrefix resultados/{wildcards.amostra}"
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Nextflow e nf-core: pipelines prontos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Nextflow}
+\begin{itemize}
+    \item Linguagem própria (Groovy-based)
+    \item Executa em HPC, cloud, Docker, Singularity
+    \item Paralelismo automático e escalável
+    \item Muito usado em genômica de larga escala
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{nf-core: pipelines prontos}
+Coleção de \textbf{pipelines validados} e mantidos pela comunidade:
+\begin{itemize}
+    \item \texttt{nf-core/rnaseq} — RNA-seq completo
+    \item \texttt{nf-core/chipseq} — ChIP-seq
+    \item \texttt{nf-core/sarek} — variantes somáticas
+    \item \texttt{nf-core/scrnaseq} — single-cell
+\end{itemize}
+\begin{lstlisting}[language=bash, numbers=none, basicstyle=\ttfamily\tiny]
+nextflow run nf-core/rnaseq \
+  -profile docker \
+  --input samplesheet.csv \
+  --genome GRCh38
+\end{lstlisting}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 9: IA COMO COPILOTO
+% ============================================================================
+\section{IA como copiloto de programação}
+
+\begin{frame}[shrink=5]{LLMs: o novo assistente do cientista}
+\begin{block}{O que mudou nos últimos anos}
+Modelos de linguagem (ChatGPT, Claude, Gemini) são capazes de escrever, explicar, debugar e adaptar código científico com alta qualidade.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{O que você pode pedir:}
+\begin{itemize}
+    \item ``Explique o que este código faz''
+    \item ``Converta esse script R para Python''
+    \item ``Por que estou recebendo este erro?''
+    \item ``Escreva um script para analisar este CSV''
+    \item ``Otimize esta função para dados grandes''
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Ferramentas recomendadas}
+\begin{itemize}
+    \item \textbf{Claude Code} (Anthropic) — no terminal
+    \item \textbf{GitHub Copilot} — no editor de código
+    \item \textbf{ChatGPT / Claude.ai} — interface web
+    \item \textbf{Gemini no Colab} — integrado ao notebook
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Como usar IA de forma eficaz e responsável}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Boas práticas}
+\begin{itemize}
+    \item \textbf{Contexto é tudo}: descreva seus dados, o formato dos arquivos e o objetivo
+    \item \textbf{Itere}: peça ajustes em vez de começar do zero
+    \item \textbf{Valide sempre}: teste o código antes de usar em análise real
+    \item \textbf{Entenda o que gerou}: não publique código que não compreende
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{alertblock}{Cuidados importantes}
+\begin{itemize}
+    \item IA pode gerar código \textbf{plausível mas errado}
+    \item Não envie dados sensíveis (pacientes, sequências proprietárias) para IAs externas
+    \item Verifique estatísticas — modelos erram em detalhes sutis
+    \item Cite ferramentas de IA usadas, quando exigido pelo periódico
+\end{itemize}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 10: BOAS PRÁTICAS
+% ============================================================================
+\section{Boas práticas: reprodutibilidade e ciência aberta}
+
+\begin{frame}{A crise de reprodutibilidade na biologia}
+\begin{alertblock}{Dado preocupante}
+Um estudo de 2016 na \textit{Nature} mostrou que mais de \textbf{70\% dos pesquisadores} não conseguiram reproduzir experimentos de outros laboratórios, e \textbf{50\%} não conseguiram reproduzir os próprios resultados.
+\end{alertblock}
+
+\vspace{0.2cm}
+
+\begin{block}{Causas comuns em estudos computacionais}
+\begin{itemize}
+    \item Código não disponível ou incompleto
+    \item Versões de software não documentadas
+    \item Dados pré-processados sem descrever as etapas
+    \item Parâmetros ajustados ``a mão'' sem registro
+    \item Resultados que dependem de semente aleatória não fixada
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{O stack da reprodutibilidade}
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\small}]
+    \node[draw, fill=azulescuro!30, minimum width=8cm, minimum height=0.7cm, rounded corners] at (0, 3.5) {\textbf{Publicação + DOI} (Zenodo, Figshare)};
+    \node[draw, fill=azulclaro!30, minimum width=8cm, minimum height=0.7cm, rounded corners] at (0, 2.6) {\textbf{Repositório Git} (GitHub) — código versionado};
+    \node[draw, fill=verdeacido!30, minimum width=8cm, minimum height=0.7cm, rounded corners] at (0, 1.7) {\textbf{Docker} — ambiente fixo e portátil};
+    \node[draw, fill=laranjacel!30, minimum width=8cm, minimum height=0.7cm, rounded corners] at (0, 0.8) {\textbf{Conda / venv} — dependências documentadas};
+    \node[draw, fill=roxodna!20, minimum width=8cm, minimum height=0.7cm, rounded corners] at (0, 0.0) {\textbf{Jupyter Notebook} — análise documentada passo a passo};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.2cm}
+\importante{
+Reprodutibilidade não é perfeccionismo — é \textbf{ciência funcionando}. Qualquer pessoa deve conseguir chegar ao mesmo resultado com os mesmos dados.
+}
+\end{frame}
+
+\begin{frame}[fragile]{Checklist para um projeto computacional reprodutível}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{exampleblock}{Estrutura do projeto}
+\begin{lstlisting}[numbers=none, basicstyle=\ttfamily\tiny, language=bash]
+projeto/
+  README.md         # instrucoes
+  environment.yml   # conda env
+  Dockerfile        # container
+  dados/
+    brutos/         # originais
+    processados/    # derivados
+  scripts/
+    01_preprocessar.py
+    02_analisar.py
+    03_visualizar.py
+  resultados/
+  notebooks/
+\end{lstlisting}
+\end{exampleblock}
+
+\column{0.48\textwidth}
+\begin{block}{Ao finalizar o projeto}
+\begin{itemize}
+    \item[$\square$] \texttt{README.md} com instruções de execução
+    \item[$\square$] Ambiente exportado (\texttt{environment.yml})
+    \item[$\square$] Imagem Docker publicada
+    \item[$\square$] Repositório GitHub público
+    \item[$\square$] Dados em repositório aberto (Zenodo, OSF)
+    \item[$\square$] DOI gerado para o código
+    \item[$\square$] Sementes aleatórias fixadas no código
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% SLIDE FINAL: ROTEIRO DE APRENDIZAGEM
+% ============================================================================
+\section{Por onde começar?}
+
+\begin{frame}[shrink=15]{Roteiro de aprendizagem para biólogos}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Mês 1: Fundamentos}
+\begin{enumerate}
+    \item Google Colab + Python básico
+    \item \texttt{pandas} para tabelas de dados
+    \item \texttt{matplotlib} para gráficos
+    \item Comandos básicos do terminal
+\end{enumerate}
+\end{block}
+\vspace{0.2cm}
+\begin{block}{Mês 2--3: Reprodutibilidade}
+\begin{enumerate}
+    \item Git e GitHub (repositório próprio)
+    \item Conda: criar e exportar ambientes
+    \item Jupyter Lab local
+\end{enumerate}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Mês 4--6: Avançar}
+\begin{enumerate}
+    \item Docker: criar seu primeiro container
+    \item Snakemake para automatizar análises
+    \item Aplicar ao seu problema de pesquisa
+\end{enumerate}
+\end{block}
+\vspace{0.2cm}
+\begin{exampleblock}{Recursos gratuitos}
+\begin{itemize}
+    \item \textbf{Software Carpentry} — carpentries.org
+    \item \textbf{Rosalind} — rosalind.info (bioinformática)
+    \item \textbf{Bioconductor workflows} — bioconductor.org
+    \item \textbf{The Turing Way} — livro de ciência reprodutível
+\end{itemize}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=15]{Resumo: o ecossistema computacional do biólogo moderno}
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\footnotesize}, node distance=1.2cm]
+    % Centro
+    \node[draw, circle, fill=azulescuro, text=white, minimum size=1.4cm] (centro) {Seu projeto};
+
+    % Orbita 1
+    \node[draw, rounded corners, fill=azulclaro!30, above=of centro] (python) {Python / R};
+    \node[draw, rounded corners, fill=verdeacido!30, right=of centro] (github) {GitHub};
+    \node[draw, rounded corners, fill=laranjacel!30, below=of centro] (docker) {Docker};
+    \node[draw, rounded corners, fill=roxodna!30, left=of centro] (conda) {Conda};
+
+    % Orbita 2
+    \node[draw, rounded corners, fill=azulclaro!15, above right=of python] (colab) {Colab/Jupyter};
+    \node[draw, rounded corners, fill=verdeacido!15, below right=of github] (snakemake) {Snakemake};
+    \node[draw, rounded corners, fill=laranjacel!15, below left=of docker] (zenodo) {Zenodo/DOI};
+    \node[draw, rounded corners, fill=roxodna!15, above left=of conda] (hpc) {HPC / Cloud};
+
+    \draw[-] (centro) -- (python);
+    \draw[-] (centro) -- (github);
+    \draw[-] (centro) -- (docker);
+    \draw[-] (centro) -- (conda);
+    \draw[-] (python) -- (colab);
+    \draw[-] (github) -- (snakemake);
+    \draw[-] (docker) -- (zenodo);
+    \draw[-] (conda) -- (hpc);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\end{document}
