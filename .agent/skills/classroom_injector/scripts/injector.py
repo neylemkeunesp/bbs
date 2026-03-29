@@ -1,16 +1,19 @@
 import os
 import sys
 import argparse
+import mimetypes
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
 
 SCOPES = [
     'https://www.googleapis.com/auth/classroom.courses.readonly',
     'https://www.googleapis.com/auth/classroom.courseworkmaterials',
-    'https://www.googleapis.com/auth/classroom.coursework.students'
+    'https://www.googleapis.com/auth/classroom.coursework.students',
+    'https://www.googleapis.com/auth/drive.file'
 ]
 
 def authenticate(credentials_path="credentials.json", token_path="token.json"):
@@ -44,10 +47,38 @@ def authenticate(credentials_path="credentials.json", token_path="token.json"):
             
     return creds
 
-def get_service():
+def get_services():
     creds = authenticate(credentials_path=os.path.join(os.path.dirname(__file__), '..', 'credentials.json'),
                          token_path=os.path.join(os.path.dirname(__file__), '..', 'token.json'))
-    return build('classroom', 'v1', credentials=creds)
+    classroom = build('classroom', 'v1', credentials=creds)
+    drive = build('drive', 'v3', credentials=creds)
+    return classroom, drive
+
+def get_service():
+    classroom, _ = get_services()
+    return classroom
+
+def upload_to_drive(drive_service, filepath, title):
+    mime_type, _ = mimetypes.guess_type(filepath)
+    if not mime_type:
+        mime_type = 'application/octet-stream'
+    file_metadata = {'name': title}
+    media = MediaFileUpload(filepath, mimetype=mime_type, resumable=True)
+    uploaded = drive_service.files().create(body=file_metadata, media_body=media, fields='id,name').execute()
+    drive_service.permissions().create(fileId=uploaded['id'], body={'type': 'anyone', 'role': 'reader'}).execute()
+    return uploaded['id']
+
+def post_material_with_drive_file(service, course_id, title, drive_file_id):
+    try:
+        material = {
+            'title': title,
+            'state': 'PUBLISHED',
+            'materials': [{'driveFile': {'driveFile': {'id': drive_file_id}, 'shareMode': 'VIEW'}}]
+        }
+        res = service.courses().courseWorkMaterials().create(courseId=course_id, body=material).execute()
+        print(f"[Sucesso] Material com arquivo anexado! ID: {res.get('id')}")
+    except HttpError as error:
+        print(f"Erro ao injetar material com arquivo: {error}", file=sys.stderr)
 
 def list_courses(service):
     try:
@@ -101,10 +132,10 @@ def main():
     subparsers.add_parser("list-courses", help="Lista os cursos/salas do Classroom")
 
     # Comando para Material
-    p_mat = subparsers.add_parser("post-material", help="Injeta material no Classrom com base em um arquivo Markdown")
+    p_mat = subparsers.add_parser("post-material", help="Injeta material no Classrom com base em um arquivo Markdown ou PDF")
     p_mat.add_argument("--course-id", required=True, help="O ID da sala (Course-ID)")
     p_mat.add_argument("--title", required=True, help="Título do Material")
-    p_mat.add_argument("--file", required=True, help="Caminho do arquivo .md a ser lido")
+    p_mat.add_argument("--file", required=True, help="Caminho do arquivo .md ou .pdf a ser postado")
 
     # Comando para Atividade
     p_ativ = subparsers.add_parser("post-atividade", help="Injeta atividade (Assignment) com base em arquivo Markdown")
@@ -118,16 +149,22 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    service = get_service()
+    classroom, drive = get_services()
 
     if args.command == "list-courses":
-        list_courses(service)
+        list_courses(classroom)
     elif args.command == "post-material":
-        content = read_markdown(args.file)
-        post_material(service, args.course_id, args.title, content)
+        if args.file.lower().endswith('.pdf') or not args.file.lower().endswith('.md'):
+            print(f"Fazendo upload do arquivo para o Google Drive: {args.file}")
+            drive_file_id = upload_to_drive(drive, args.file, args.title)
+            print(f"Upload concluído. Drive file ID: {drive_file_id}")
+            post_material_with_drive_file(classroom, args.course_id, args.title, drive_file_id)
+        else:
+            content = read_markdown(args.file)
+            post_material(classroom, args.course_id, args.title, content)
     elif args.command == "post-atividade":
         content = read_markdown(args.file)
-        post_assignment(service, args.course_id, args.title, content)
+        post_assignment(classroom, args.course_id, args.title, content)
 
 if __name__ == "__main__":
     main()
