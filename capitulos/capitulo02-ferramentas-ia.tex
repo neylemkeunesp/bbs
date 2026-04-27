@@ -1,0 +1,212 @@
+% ============================================================================
+% CAPÍTULO 3: FERRAMENTAS MODERNAS DE DESENVOLVIMENTO E IA
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{../template/beamer-template.tex}
+
+\title[Cap. 3: IDEs e IA]{Capítulo 3: Ferramentas Modernas de Desenvolvimento e IA}
+\subtitle{O Fim do "Terminal Assustador" e a Revolução dos Copilotos}
+\author{Ney Lemke}
+\institute{DBF-Unesp}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% INTRODUÇÃO
+% ============================================================================
+\section{Introdução}
+
+\begin{frame}{O fim do ``Terminal Assustador''}
+\begin{itemize}
+    \item Para não-programadores, aprender sintaxe é muitas vezes a barreira mais frustrante.
+    \item O paradigma antigo: "Decorar comandos e lutar contra erros de sintaxe".
+    \item \textbf{O novo paradigma:} Ferramentas e Inteligência Artificial integradas ao ambiente de trabalho.
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{block}{O Piloto e o Copiloto}
+A máquina (Copiloto) lida com a \textbf{sintaxe, automação e sugestões}. Você, o pesquisador (Piloto), foca na \textbf{lógica biológica e interpretação científica dos dados}.
+\end{block}
+\end{frame}
+
+% ============================================================================
+% AMBIENTE DE DESENVOLVIMENTO
+% ============================================================================
+\section{O Ambiente de Desenvolvimento (IDE)}
+
+\begin{frame}{Ambiente de Desenvolvimento Integrado (IDE)}
+\begin{columns}
+\column{0.55\textwidth}
+\textbf{O que é uma IDE?} \\
+Um software que centraliza todas as ferramentas que um programador precisa:
+\begin{itemize}
+    \item Editor de texto com realce de sintaxe
+    \item Terminal embutido
+    \item Gerenciador de arquivos
+    \item Depurador (Debugger)
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Visual Studio Code (VS Code)}
+\begin{itemize}
+    \item O padrão da indústria hoje.
+    \item Altamente customizável via extensões (Python, R, Jupyter).
+\end{itemize}
+
+\column{0.4\textwidth}
+\begin{exampleblock}{Dica Prática}
+Nunca use o "Bloco de Notas". Uma IDE ajuda a capturar erros antes mesmo de você rodar o código.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Cursor e Forks Modernos}
+\begin{itemize}
+    \item \textbf{Cursor} é um \textit{fork} (uma modificação direta) do VS Code.
+    \item Diferença: Ele foi construído com a \textbf{Inteligência Artificial no seu núcleo}.
+    \item Você não apenas digita código, você "conversa" com o seu projeto.
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{block}{Por que usar o Cursor ou similares?}
+Eles entendem não apenas o arquivo aberto, mas a base de dados inteira. Você pode perguntar: \textit{"Onde está o script que gera os gráficos de PCA?"}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% REVOLUÇÃO DA IA
+% ============================================================================
+\section{A Revolução da IA no Código}
+
+\begin{frame}{Modelos de Linguagem para Código}
+\begin{columns}
+\column{0.6\textwidth}
+O que mudou nos últimos anos? O treinamento massivo de \textbf{LLMs (Large Language Models)} em bilhões de linhas de código público (GitHub, StackOverflow).
+
+\vspace{0.3cm}
+\textbf{Modelos líderes no desenvolvimento:}
+\begin{itemize}
+    \item \textbf{Claude 3.5 Sonnet} (Anthropic) - Atual estado da arte para codificação.
+    \item \textbf{GPT-4o} (OpenAI) - Excelente lógica analítica.
+    \item \textbf{Codex} - O modelo que originou as ferramentas de autocompletar.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{center}
+A programação natural se tornou uma linguagem de compilação. O inglês/português agora também gera software.
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Níveis de Assistência: Autocompletar vs Agentes}
+\textbf{Nível 1: Autocompletar (Ex: GitHub Copilot)}
+\begin{itemize}
+    \item Você começa a digitar e ele prevê o restante da linha ou da função.
+    \item \textit{Pró:} Muito rápido, economiza tempo de digitação repetitiva.
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Nível 2: Chat Integrado}
+\begin{itemize}
+    \item Uma janela lateral onde você cola um erro e pede para explicar.
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{Nível 3: Agentes Autônomos (Ex: Antigravity, Claude Code)}
+\begin{itemize}
+    \item Ferramentas que lêem arquivos, tomam decisões, rodam testes e modificam o código sozinhas a partir de uma requisição ("Arrume esse bug de memória").
+\end{itemize}
+\end{frame}
+
+% ============================================================================
+% CASOS DE USO EM BIOINFORMÁTICA
+% ============================================================================
+\section{Casos de Uso na Bioinformática}
+
+\begin{frame}[fragile]{Caso 1: Explicando Código Legado}
+É comum herdar scripts sem documentação do laboratório.
+
+\vspace{0.2cm}
+\textbf{Sua requisição para a IA:}
+\begin{quote}
+"O que este script R faz exatamente? Ele normaliza os dados de RNA-seq usando qual método?"
+\end{quote}
+
+\vspace{0.2cm}
+A IA pode destrinchar o script e adicionar comentários em português antes mesmo de você rodar.
+\end{frame}
+
+\begin{frame}[fragile]{Caso 2: Escrevendo Scripts Rápidos}
+\textbf{Sua requisição para a IA:}
+\begin{quote}
+"Escreva um script em Python usando Biopython que leia `sequencias.fasta` e salve em `filtrados.fasta` apenas as sequências com mais de 500 pares de base."
+\end{quote}
+
+\vspace{0.2cm}
+\begin{lstlisting}[language=Python, caption=Código gerado pela IA, basicstyle=\ttfamily\footnotesize]
+from Bio import SeqIO
+
+records = []
+for record in SeqIO.parse("sequencias.fasta", "fasta"):
+    if len(record.seq) > 500:
+        records.append(record)
+
+SeqIO.write(records, "filtrados.fasta", "fasta")
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% BOAS PRÁTICAS E PERIGOS
+% ============================================================================
+\section{Boas Práticas e Perigos}
+
+\begin{frame}{Nem tudo são flores: Os Perigos da IA}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{alertblock}{Alucinações}
+A IA tem a "necessidade" de responder. Se ela não sabe, pode \textbf{inventar} um pacote de R ou um teste estatístico que simplesmente não existe.
+\end{alertblock}
+
+\vspace{0.2cm}
+\begin{block}{Privacidade de Dados}
+Nunca cole sequências de genomas humanos não-anonimizados ou dados clínicos sensíveis de pacientes em prompts de IAs públicas.
+\end{block}
+
+\column{0.45\textwidth}
+\begin{exampleblock}{O Conhecimento Fundacional}
+Por que aprender o básico de lógica de programação?
+\\ \vspace{0.2cm}
+\textbf{Para auditar a IA.} Se você não sabe o que o código faz em essência, você não saberá identificar quando o resultado estiver cientificamente incorreto.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+% ============================================================================
+% CONCLUSÃO
+% ============================================================================
+\begin{frame}{Resumo}
+\begin{itemize}
+    \item IDEs como VS Code ou Cursor são indispensáveis para pesquisadores modernos.
+    \item A Inteligência Artificial acelerou drasticamente a curva de aprendizado para biólogos computacionais.
+    \item Utilize assistentes de código e agentes para ganhar velocidade e quebrar bloqueios lógicos.
+    \item \textbf{Mas lembre-se:} A responsabilidade pelo rigor metodológico e biológico da pesquisa sempre será sua. A máquina escreve, mas quem assina o paper é você.
+\end{itemize}
+\end{frame}
+
+\end{document}
