@@ -1,0 +1,938 @@
+% ============================================================================
+% CAPÍTULO XX: MÉTODOS DE OTIMIZAÇÃO EM BIOLOGIA DE SISTEMAS
+% Bioinformática para Biologia de Sistemas
+% ============================================================================
+
+\input{/home/lemke/bbs/template/beamer-template.tex}
+
+\title[Cap. 02: Métodos de Otimização]{Capítulo 02: Métodos de Otimização em Biologia de Sistemas}
+\subtitle{Levenberg-Marquardt, Evolução Diferencial e Algoritmos Genéticos}
+\author{Ney Lemke}
+\institute{DBF-Unesp}
+\date{\today}
+
+\begin{document}
+
+% ============================================================================
+% SLIDE DE TÍTULO
+% ============================================================================
+\begin{frame}
+\titlepage
+\end{frame}
+
+% ============================================================================
+% SUMÁRIO
+% ============================================================================
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% ============================================================================
+% INTRODUÇÃO
+% ============================================================================
+\section{Introdução à Otimização}
+
+\begin{frame}{O que é otimização?}
+\begin{block}{Definição}
+Otimização é o processo de encontrar a melhor solução possível para um problema, dado um conjunto de restrições e uma função objetivo que mede a qualidade de cada solução.
+\end{block}
+
+\vspace{0.4cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Elementos fundamentais:}
+\begin{itemize}
+    \item \textbf{Função objetivo}: mede a qualidade ($f(x)$)
+    \item \textbf{Variáveis de decisão}: parâmetros a otimizar
+    \item \textbf{Restrições}: limites e condições
+    \item \textbf{Espaço de busca}: região válida de soluções
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{exampleblock}{Analogia Biológica}
+A otimização em biologia de sistemas é como a seleção natural: encontrar a ``melhor'' configuração de parâmetros que maximiza a aptidão do sistema biológico.
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Classificação dos métodos de otimização (1/2)}
+\begin{block}{Métodos Determinísticos}
+\begin{itemize}
+    \item Gradiente descendente
+    \item Newton, Quasi-Newton
+    \item Levenberg-Marquardt
+    \item Programação linear/não-linear
+\end{itemize}
+\textbf{Características:}
+\begin{itemize}
+    \item Resultados reprodutíveis
+    \item Rápidos para funções suaves
+    \item Sensíveis a mínimos locais
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Classificação dos métodos de otimização (2/2)}
+\begin{block}{Métodos Estocásticos}
+\begin{itemize}
+    \item Algoritmos Genéticos
+    \item Evolução Diferencial
+    \item Recozimento Simulado
+    \item Enxame de Partículas
+\end{itemize}
+\textbf{Características:}
+\begin{itemize}
+    \item Exploram espaço globalmente
+    \item Menos sensíveis a mínimos locais
+    \item Mais lentos, mais robustos
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Desafios em Biologia de Sistemas}
+\begin{alertblock}{Contexto Real}
+Geralmente trabalhamos com funções objetivo:
+\begin{itemize}
+    \item Não-lineares e multimodais
+    \item Com ruído experimental
+    \item Parâmetros correlacionados
+\end{itemize}
+\destaque{Frequentemente precisamos de métodos híbridos ou estocásticos.}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Aplicações em Biologia de Sistemas (1/2)}
+\begin{block}{Ajuste de parâmetros em modelos}
+\begin{itemize}
+    \item Cinética enzimática (Michaelis-Menten)
+    \item Redes regulatórias gênicas
+    \item Vias de sinalização
+    \item Modelos metabólicos (fluxos)
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Problemas típicos}
+\begin{itemize}
+    \item Muitos parâmetros (10-1000+)
+    \item Dados experimentais com ruído
+    \item Múltiplos mínimos locais
+    \item Avaliações de função custosas
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Aplicações em Biologia de Sistemas (2/2)}
+\begin{block}{Exemplo: Estimação de $K_m$ e $V_{max}$}
+Minimizar a soma dos quadrados dos resíduos entre os dados experimentais e o modelo de Michaelis-Menten:
+$$S(\theta) = \sum_{i=1}^{n}(y_i - f(x_i, \theta))^2$$
+onde $f(x, \theta) = \frac{V_{max} \cdot x}{K_m + x}$
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 1: LEVENBERG-MARQUARDT
+% ============================================================================
+\section{Levenberg-Marquardt}
+
+\begin{frame}[shrink=12]{Levenberg-Marquardt: Fundamentos}
+\begin{block}{História}
+Desenvolvido por Kenneth Levenberg (1944) e Donald Marquardt (1963), é o método padrão para ajuste de mínimos quadrados não-lineares.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{block}{Ideia Central}
+Combina duas estratégias:
+\begin{enumerate}
+    \item \textbf{Método de Gauss-Newton}: eficiente quando próximo da solução
+    \item \textbf{Gradiente Descendente}: confiável quando longe da solução
+\end{enumerate}
+Um parâmetro $\lambda$ controla a interpolação entre os dois métodos.
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Quando usar?}
+\begin{itemize}
+    \item Ajuste de modelos a dados experimentais
+    \item Minimização de soma de quadrados de resíduos
+    \item Problemas de regressão não-linear
+    \item Calibração de parâmetros em sistemas biológicos
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Formulação Matemática (1/2)}
+\begin{block}{Atualização de parâmetros}
+$$\mathbf{p}_{k+1} = \mathbf{p}_k + (\mathbf{J}^T\mathbf{J} + \lambda \mathbf{I})^{-1} \mathbf{J}^T \mathbf{r}$$
+\end{block}
+
+\begin{itemize}
+    \item $\mathbf{p}$: vetor de parâmetros
+    \item $\mathbf{J}$: matriz Jacobiana
+    \item $\mathbf{r}$: vetor de resíduos
+    \item $\lambda$: parâmetro de amortecimento
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Formulação Matemática (2/2)}
+\begin{block}{Adaptação de $\lambda$}
+\begin{itemize}
+    \item $\lambda$ alto $\to$ gradiente descendente
+    \item $\lambda$ baixo $\to$ Gauss-Newton
+\end{itemize}
+\end{block}
+
+\destaque{
+Se o erro diminui: $\lambda \leftarrow \lambda / \nu$ \\
+Se o erro aumenta: $\lambda \leftarrow \lambda \cdot \nu$ \\
+Geralmente $\nu = 10$
+}
+\end{frame}
+
+\begin{frame}{Algoritmo Levenberg-Marquardt}
+\begin{block}{Passos do algoritmo}
+\begin{enumerate}
+    \item Inicializar $\mathbf{p}_0$ e $\lambda > 0$
+    \item Calcular resíduos $\mathbf{r}(\mathbf{p}_k)$
+    \item Calcular Jacobiana $\mathbf{J}(\mathbf{p}_k)$
+    \item Resolver sistema: $(\mathbf{J}^T\mathbf{J} + \lambda \mathbf{I}) \Delta = \mathbf{J}^T \mathbf{r}$
+    \item Propor $\mathbf{p}_{novo} = \mathbf{p}_k + \Delta$
+    \item Calcular $S(\mathbf{p}_{novo})$
+    \item Se $S(\mathbf{p}_{novo}) < S(\mathbf{p}_k)$:
+    \begin{itemize}
+        \item Aceitar: $\mathbf{p}_{k+1} = \mathbf{p}_{novo}$
+        \item Reduzir: $\lambda = \lambda / \nu$
+    \end{itemize}
+    \item Senão: $\lambda = \lambda \cdot \nu$ e repetir passo 4
+    \item Repetir até convergência
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação em Python (scipy) (1/3)}
+\begin{lstlisting}[language=Python, caption=Ajuste Michaelis-Menten (Definição e Dados), basicstyle=\ttfamily\scriptsize]
+import numpy as np
+from scipy.optimize import curve_fit
+
+# Modelo de Michaelis-Menten
+def michaelis_menten(x, Vmax, Km):
+    return Vmax * x / (Km + x)
+
+# Dados experimentais
+x_data = np.array([0.1, 0.5, 1.0, 2.0, 5.0])
+y_data = np.array([0.5, 2.0, 3.2, 4.5, 5.8])
+y_errors = np.array([0.1, 0.2, 0.3, 0.2, 0.3])
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação em Python (scipy) (2/3)}
+\begin{lstlisting}[language=Python, caption=Ajuste Michaelis-Menten (Fitting e Resultados), basicstyle=\ttfamily\scriptsize]
+# Ajuste com Levenberg-Marquardt
+params, cov = curve_fit(
+    michaelis_menten,
+    x_data, y_data,
+    p0=[6.0, 1.0],  # chutes iniciais
+    sigma=y_errors,
+    method='lm'  # Levenberg-Marquardt
+)
+
+Vmax, Km = params
+print(f"Vmax = {Vmax:.3f}")
+print(f"Km = {Km:.3f}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Implementação em Python (scipy) (3/3)}
+\begin{block}{Parâmetros importantes}
+\begin{itemize}
+    \item \texttt{p0}: chute inicial dos parâmetros
+    \item \texttt{bounds}: limites inferior/superior
+    \item \texttt{sigma}: incertezas dos dados
+    \item \texttt{maxfev}: máximo de avaliações
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Vantagens do método}
+\begin{itemize}
+    \item Muito eficiente para mínimos quadrados
+    \item Converge rapidamente perto do ótimo
+    \item Implementado em numpy, scipy, MATLAB
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Vantagens e Limitações do Levenberg-Marquardt}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Vantagens}
+\begin{itemize}
+    \item \textbf{Rápido}: converge em poucas iterações
+    \item \textbf{Robusto}: funciona bem com chutes ruins
+    \item \textbf{Eficiente}: usa informação do gradiente
+    \item \textbf{Padrão}: disponível em todos os pacotes
+    \item \textbf{Robusto a ruído}: bom para dados experimentais
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Limitações}
+\begin{itemize}
+    \item \textbf{Mínimo local}: pode ficar preso
+    \item \textbf{Escala}: sensível à escala dos parâmetros
+    \item \textbf{Jacobiana}: precisa calcular ou aproximar
+    \item \textbf{Não-global}: não garante solução ótima global
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{0.4cm}
+\begin{block}{Quando NÃO usar Levenberg-Marquardt}
+\begin{itemize}
+    \item Problemas com muitos mínimos locais
+    \item Parâmetros com escalas muito diferentes
+    \item Funções objetivo não-diferenciáveis
+    \item Quando se precisa de garantia de ótimo global
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 2: EVOLUÇÃO DIFERENCIAL
+% ============================================================================
+\section{Evolução Diferencial}
+
+\begin{frame}{Evolução Diferencial: Fundamentos (1/2)}
+\begin{block}{Introdução}
+Método de otimização estocástico proposto por Rainer Storn e Kenneth Price (1997), particularmente eficaz para otimização global de funções não-lineares e não-diferenciáveis.
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Características principais}
+\begin{itemize}
+    \item Baseado em evolução population-based
+    \item Usa operações vetoriais diferencias
+    \item Não requer cálculo de derivadas
+    \item Bom para otimização global
+    \item Paralelizável naturalmente
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Aplicações em biologia}
+\begin{itemize}
+    \item Ajuste de modelos cinéticos
+    \item Otimização de fluxos
+    \item Parameter estimation (SBML)
+    \item Docking molecular
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Evolução Diferencial: Fundamentos (2/2)}
+\begin{block}{Inspiração biológica}
+Semelhante aos Algoritmos Genéticos, mas usa vetores diferença para guiar a busca, simulando a variação genética diferencial em populações.
+\end{block}
+\destaque{A principal inovação é a mutação baseada na diferença entre indivíduos da própria população.}
+\end{frame}
+
+\begin{frame}{Operadores Fundamentais (1/2)}
+\begin{block}{Mutação Diferencial}
+Para cada vetor $\mathbf{x}_i$ na geração $g$:
+$$\mathbf{v}_i = \mathbf{x}_{r_1} + F \cdot (\mathbf{x}_{r_2} - \mathbf{x}_{r_3})$$
+\end{block}
+
+\begin{itemize}
+    \item $\mathbf{x}_{r_1, r_2, r_3}$: vetores aleatórios
+    \item $F$: fator de escala (tipicamente 0.5-1.0)
+    \item $r_1 \neq r_2 \neq r_3 \neq i$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Operadores Fundamentais (2/2)}
+\begin{block}{Cruzamento (Crossover)}
+$$\mathbf{u}_j = \begin{cases}
+\mathbf{v}_{i,j} & \text{se } rand \leq CR \\
+\mathbf{x}_{i,j} & \text{caso contrário}
+\end{cases}$$
+\begin{itemize}
+    \item $CR$: taxa de cruzamento (0.1-1.0)
+\end{itemize}
+\end{block}
+
+\begin{block}{Seleção}
+$$\mathbf{x}_{i}^{g+1} = \begin{cases}
+\mathbf{u}_i & \text{se } f(\mathbf{u}_i) \leq f(\mathbf{x}_i^g) \\
+\mathbf{x}_i^g & \text{caso contrário}
+\end{cases}$$
+\end{block}
+\end{frame}
+
+\begin{frame}{Algoritmo da Evolução Diferencial (1/2)}
+\begin{block}{Pseudocódigo}
+\begin{enumerate}
+    \item \textbf{Inicializar} população aleatória $\mathbf{x}_i, i = 1, \ldots, NP$
+    \item \textbf{Avaliar} aptidão de todos os indivíduos
+    \item \textbf{Repetir} até convergência ou máximo de gerações:
+    \begin{enumerate}
+        \item Para cada indivíduo $i$:
+        \begin{enumerate}
+            \item Selecionar 3 indivíduos aleatórios $r_1, r_2, r_3 \neq i$
+            \item Criar vetor mutante $\mathbf{v}_i$
+            \item Criar vetor de teste $\mathbf{u}_i$ via cruzamento
+            \item Selecionar: $\mathbf{x}_i^{g+1} = \mathbf{u}_i$ ou $\mathbf{x}_i^g$
+        \end{enumerate}
+        \item Avaliar nova população
+    \end{enumerate}
+    \item \textbf{Retornar} melhor solução encontrada
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Algoritmo da Evolução Diferencial (2/2)}
+\begin{alertblock}{Parâmetros principais}
+\begin{itemize}
+    \item $NP$: tamanho da população (tipicamente 5-10 × D)
+    \item $F$: fator de escala (0.5-1.0)
+    \item $CR$: taxa de cruzamento (0.7-0.9 é comum)
+    \item $G_{max}$: máximo de gerações
+\end{itemize}
+\end{alertblock}
+\destaque{A Evolução Diferencial é robusta e requer poucos parâmetros para ajuste.}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação em Python (scipy) (1/3)}
+\begin{lstlisting}[language=Python, caption=Evolução Diferencial (Definição), basicstyle=\ttfamily\scriptsize]
+import numpy as np
+from scipy.optimize import differential_evolution
+
+# Funcao objetivo: Rosenbrock em 10D
+def rosenbrock(x):
+    return sum(100 * (x[1:] - x[:-1]**2)**2 + 
+               (1 - x[:-1])**2)
+
+# Limites para cada variavel
+bounds = [(-5, 5)] * 10
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação em Python (scipy) (2/3)}
+\begin{lstlisting}[language=Python, caption=Evolução Diferencial (Otimização), basicstyle=\ttfamily\scriptsize]
+# Otimizacao com Evolucao Diferencial
+result = differential_evolution(
+    rosenbrock,
+    bounds,
+    strategy='best1bin',
+    maxiter=1000,
+    popsize=15,
+    tol=1e-7,
+    mutation=(0.5, 1),
+    recombination=0.7,
+    seed=None,
+    polish=True  # refinamento final
+)
+
+print(f"Optimo encontrado: {result.x}")
+print(f"Valor da funcao: {result.fun:.6f}")
+print(f"Numero de avaliacoes: {result.nfev}")
+print(f"Convergiu: {result.success}")
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Implementação em Python (scipy) (3/3)}
+\begin{block}{Parâmetros do scipy}
+\begin{itemize}
+    \item \texttt{bounds}: limites de cada variável
+    \item \texttt{strategy}: estratégia de mutação
+    \item \texttt{popsize}: tamanho da população
+    \item \texttt{maxiter}: máximo de iterações
+    \item \texttt{tol}: tolerância de convergência
+    \item \texttt{polish}: refina com L-BFGS-B
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Estratégias comuns}
+\begin{itemize}
+    \item \texttt{best1bin}: melhor + 1 diferença
+    \item \texttt{rand1bin}: rand + 1 diferença
+    \item \texttt{best2bin}: melhor + 2 diferenças
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Estratégias de Mutação (1/2)}
+\begin{center}
+\scriptsize
+\begin{tabular}{lcp{4.5cm}}
+\toprule
+\textbf{Estratégia} & \textbf{Equação} & \textbf{Quando usar} \\
+\midrule
+best1bin & $\mathbf{v} = \mathbf{x}_{best} + F(\mathbf{x}_{r1} - \mathbf{x}_{r2})$ & Convergência rápida, bom para problemas unimodais \\
+rand1bin & $\mathbf{v} = \mathbf{x}_{r1} + F(\mathbf{x}_{r2} - \mathbf{x}_{r3})$ & Explora mais, melhor para multimodais \\
+best2bin & $\mathbf{v} = \mathbf{x}_{best} + F(\mathbf{x}_{r1} + \mathbf{x}_{r2} - \mathbf{x}_{r3} - \mathbf{x}_{r4})$ & Mais exploratório \\
+rand2bin & $\mathbf{v} = \mathbf{x}_{r1} + F(\mathbf{x}_{r2} + \mathbf{x}_{r3} - \mathbf{x}_{r4} - \mathbf{x}_{r5})$ & Maior diversidade \\
+current-to-best & $\mathbf{v} = \mathbf{x}_i + F(\mathbf{x}_{best} - \mathbf{x}_i) + F(\mathbf{x}_{r1} - \mathbf{x}_{r2})$ & Direciona para melhor \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Estratégias de Mutação (2/2)}
+\begin{block}{Escolha de estratégia}
+\begin{itemize}
+    \item \textbf{best1bin}: padrão, funciona bem na maioria dos casos
+    \item \textbf{rand1bin}: melhor para problemas multimodais
+    \item \textbf{rand2bin}: para alta dimensionalidade (D > 30)
+    \item Teste diferentes estratégias para seu problema específico
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Aplicação: Ajuste de Parâmetros (1/2)}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Exemplo: Modelo de repressilator}
+O repressilator é um circuito sintético com 3 genes que se reprimem mutuamente. O ajuste de parâmetros cinéticos é crucial para reproduzir as oscilações observadas.
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Função objetivo}
+$$S(\theta) = \sum_{i=1}^{n} (y_i^{exp} - y_i^{sim}(\theta))^2$$
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Por que usar DE?}
+\begin{itemize}
+    \item Múltiplos mínimos locais
+    \item Parâmetros com escalas variadas
+    \item Simulação custosa (ODE solver)
+    \item Necessidade de robustez
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Aplicação: Ajuste de Parâmetros (2/2)}
+\begin{block}{Dicas práticas}
+\begin{itemize}
+    \item Use \texttt{polish=True} para refinar a solução
+    \item Escalone os parâmetros se tiver escalas muito diferentes
+    \item Considere restrições dos parâmetros
+    \item Paralelize as avaliações se possível
+\end{itemize}
+\end{block}
+
+\destaque{A Evolução Diferencial é frequentemente o método de escolha na comunidade de Modelagem em Biologia de Sistemas (ex: Copasi, AMIGO2).}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: ALGORITMOS GENÉTICOS
+% ============================================================================
+\section{Algoritmos Genéticos}
+
+\begin{frame}{Algoritmos Genéticos: Fundamentos (1/2)}
+\begin{block}{Introdução}
+Método de otimização inspirado na evolução natural, proposto por John Holland (1975). Utiliza operadores de seleção, cruzamento e mutação sobre uma população de soluções candidatas.
+\end{block}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Analogia Biológica}
+\begin{itemize}
+    \item \textbf{Indivíduo} = solução
+    \item \textbf{Cromossomo} = representação
+    \item \textbf{Aptidão} = qualidade
+    \item \textbf{Cruzamento} = recombinação
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Características}
+\begin{itemize}
+    \item População de soluções
+    \item Busca estocástica
+    \item Global e paralelizável
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Algoritmos Genéticos: Fundamentos (2/2)}
+\begin{block}{O Processo Evolutivo}
+\begin{enumerate}
+    \item \textbf{Gerar} população inicial
+    \item \textbf{Avaliar} indivíduos (Função de aptidão)
+    \item \textbf{Selecionar} os melhores (reprodutores)
+    \item \textbf{Gerar descendentes} via cruzamento e mutação
+    \item \textbf{Substituir} população antiga
+\end{enumerate}
+\end{block}
+\destaque{GAs são ideais para problemas onde o espaço de busca é complexo e desconhecido.}
+\end{frame}
+
+\begin{frame}{Representação Cromossomial (1/2)}
+\begin{block}{Codificação Binária}
+\begin{itemize}
+    \item Cada gene: 0 ou 1
+    \item Cromossomo: string de bits
+    \item Exemplo: $10110101$ (8 bits)
+    \item Transformação para valores reais:
+    $$x = x_{min} + \frac{b}{2^n-1}(x_{max} - x_{min})$$
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Codificação Real}
+\begin{itemize}
+    \item Valores contínuos diretamente
+    \item Mais natural para otimização numérica
+    \item Evita erro de discretização
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Representação Cromossomial (2/2)}
+\begin{block}{Exemplo em Biologia}
+Parâmetros cinéticos de um modelo de Michaelis-Menten:
+\begin{center}
+$[\underbrace{V_{max}}_{genes[0]}, \underbrace{K_m}_{genes[1]}, \underbrace{n}_{genes[2]}, \ldots]$
+\end{center}
+\end{block}
+
+\vspace{0.2cm}
+\begin{block}{Codificação Mista}
+\begin{itemize}
+    \item Genes discretos (seleção de rota)
+    \item Genes contínuos (parâmetros)
+    \item Gerações combinadas
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Operadores Genéticos (1/2)}
+\begin{block}{Seleção}
+\textbf{Tipos principais:}
+\begin{itemize}
+    \item \textbf{Roleta}: probabilidade proporcional à aptidão
+    \item \textbf{Torneio}: $k$ indivíduos competem
+    \item \textbf{Elitismo}: melhores passam direto
+    \item \textbf{Ranking}: baseada em posição
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Cruzamento (Crossover)}
+\begin{itemize}
+    \item \textbf{Ponto único}: corta em um ponto
+    \item \textbf{Dois pontos}: corta em dois pontos
+    \item \textbf{Uniforme}: cada gene independently
+    \item \textbf{Aritmético}: média ponderada
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Operadores Genéticos (2/2)}
+\begin{block}{Mutação}
+\begin{itemize}
+    \item \textbf{Bit flip}: inverte bit (binário)
+    \item \textbf{Gaussian}: adiciona ruído (real)
+    \item \textbf{Boundary}: substitui por limite
+    \item \textbf{Non-uniform}: reduz com gerações
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Taxas típicas}
+\begin{itemize}
+    \item Cruzamento: 0.6 -- 0.9
+    \item Mutação: 0.01 -- 0.1
+    \item Elitismo: 1 -- 5 melhores
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Algoritmo Genético Padrão (1/2)}
+\begin{block}{Pseudocódigo}
+\begin{enumerate}
+    \item \textbf{Inicializar} população aleatória $P$ de tamanho $N$
+    \item \textbf{Avaliar} aptidão de todos os indivíduos
+    \item \textbf{Repetir} até critério de parada:
+    \begin{enumerate}
+        \item \textbf{Seleção}: pais para reprodução
+        \item \textbf{Cruzamento}: criar descendentes
+        \item \textbf{Mutação}: alterar genes
+        \item \textbf{Avaliação}: calcular aptidão
+        \item \textbf{Sobrevivência}: nova geração
+    \end{enumerate}
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Algoritmo Genético Padrão (2/2)}
+\begin{block}{Critérios de parada}
+\begin{itemize}
+    \item Máximo de gerações
+    \item Convergência da população
+    \item Sem melhoria por $n$ gerações
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Pressão seletiva}
+\begin{itemize}
+    \item Muito alta: converge rápido, pode falhar
+    \item Muito baixa: busca aleatória
+    \item Equilíbrio necessário
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação com DEAP (1/2)}
+\begin{lstlisting}[language=Python, caption=GA com DEAP, basicstyle=\ttfamily\scriptsize]
+from deap import base, creator, tools, algorithms
+import random
+
+# Funcao de aptidao (minimizar)
+creator.create("FitnessMin", 
+    base.Fitness, weights=(-1.0,))
+creator.create("Individual", list, 
+    fitness=creator.FitnessMin)
+
+# Toolbox
+toolbox = base.Toolbox()
+toolbox.register("attr_float", random.uniform, -10, 10)
+toolbox.register("individual", tools.initRepeat,
+    creator.Individual, toolbox.attr_float, n=10)
+toolbox.register("population", tools.initRepeat, 
+    list, toolbox.individual)
+
+# Funcao objetivo
+def rosenbrock(individual):
+    return sum(100*(x[1:]-x[:-1]**2)**2 + 
+               (1-x[:-1])**2 for x in [individual]),
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Implementação com DEAP (2/2)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\scriptsize]
+toolbox.register("evaluate", rosenbrock)
+toolbox.register("mate", tools.cxSimulatedBinary,
+    eta=20, indpb=0.5)
+toolbox.register("mutate", tools.mutPolynomialBounded,
+    eta=20, low=-10, up=10, indpb=0.1)
+toolbox.register("select", tools.selTournament,
+    tournsize=3)
+
+# Executar
+population = toolbox.population(n=100)
+algorithms.eaSimple(population, toolbox,
+    cxpb=0.8, mutpb=0.2, ngen=500, verbose=True)
+\end{lstlisting}
+
+\begin{block}{Destaques do DEAP}
+Facilita representações complexas e paralelização.
+\end{block}
+\end{frame}
+
+\begin{frame}{Exemplo: Otimização de Redes Metabólicas (1/2)}
+\begin{block}{Problema e Formulação}
+Encontrar fluxos metabólicos que maximizam a produção de um metabólito.
+\begin{itemize}
+    \item Variáveis: fluxos $v_i$
+    \item Restrições: $\mathbf{S} \cdot \mathbf{v} = 0$
+    \item Função objetivo: maximizar produto
+    \item Limites: $0 \leq v_i \leq v_i^{max}$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Exemplo: Otimização de Redes Metabólicas (2/2)}
+\begin{block}{Por que GA?}
+\begin{itemize}
+    \item Não-linearidades e restrições
+    \item Múltiplos mínimos locais
+    \item Trade-offs biológicos
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{block}{Extensões para biologia}
+\begin{itemize}
+    \item \textbf{MOGA}: multi-objectivo
+    \item \textbf{Hybrid}: GA + gradiente local
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[shrink=10]{GA vs. Evolução Diferencial: Comparação}
+\begin{center}
+\scriptsize
+\begin{tabular}{lcc}
+\toprule
+\textbf{Característica} & \textbf{GA} & \textbf{ED} \\
+\midrule
+Operadores & Seleção, cruzamento, mutação & Mutação diferencial + cruzamento \\
+Representação & Binária ou real & Tipicamente real \\
+Parâmetros & Muitos (taxas, métodos) & Poucos ($F$, $CR$) \\
+Convergência & Mais lenta & Mais rápida \\
+Exploração & Bom & Muito bom \\
+Exploitação & Moderado & Bom \\
+Implementação & Mais complexa & Mais simples \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Quando usar cada um}
+\vspace{0.3cm}
+\begin{block}{Critérios de escolha}
+\begin{itemize}
+    \item \textbf{GA}: problemas com representações mistas, otimização combinatória
+    \item \textbf{DE}: otimização numérica contínua, problemas com restrições
+    \item \textbf{Recomendação}: teste ambos, use o que funcionar melhor para seu problema
+\end{itemize}
+\end{block}
+\end{frame}
+
+% ============================================================================
+% COMPARAÇÃO E RECOMENDAÇÕES
+% ============================================================================
+\section{Comparação e Recomendações}
+
+\begin{frame}{Qual método escolher? (1/2)}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Levenberg-Marquardt}
+\begin{itemize}
+    \item Use quando: gradientes bem-definidos, mínimos quadrados
+    \item Vantagens: rápido, preciso, eficiente
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Evolução Diferencial}
+\begin{itemize}
+    \item Use quando: otimização global
+    \item Vantagens: robusto, poucos parâmetros
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Qual método escolher? (2/2)}
+\begin{block}{Algoritmos Genéticos}
+\begin{itemize}
+    \item Use quando: problemas complexos, multi-objetivo
+    \item Vantagens: flexível, robusto, paralelo
+    \item Limitações: muitos hiperparâmetros
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\destaque{Sempre valide sua solução com múltiplos pontos iniciais.}
+\end{frame}
+
+\begin{frame}{Estratégias Híbridas (1/2)}
+\begin{block}{GA/DE + Refino Local}
+\begin{enumerate}
+    \item Usar método global (GA/DE) para explorar o espaço
+    \item Quando próximo do ótimo, usar Levenberg-Marquardt
+    \item Combina robustez global com precisão local
+\end{enumerate}
+\end{block}
+
+\begin{block}{Algoritmo Híbrido Típico}
+\begin{itemize}
+    \item \texttt{differential\_evolution} com \texttt{polish=True}
+    \item Usa L-BFGS-B como refino final
+    \item Implementado no scipy!
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Estratégias Híbridas (2/2)}
+\begin{block}{Estratégias avançadas}
+\begin{itemize}
+    \item \textbf{Memético}: GA + busca local em cada indivíduo
+    \item \textbf{Multi-nicho}: múltiplas subpopulações
+    \item \textbf{Co-evolução}: populações que competem/cooperam
+    \item \textbf{Adaptive}: parâmetros que evoluem
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Boa prática}
+Sempre valide sua solução: teste com múltiplos pontos iniciais, verifique sensibilidade, e compare com literatura.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Resumo: Pontos-chave}
+\begin{block}{O que aprendemos}
+\begin{itemize}
+    \item \textbf{Levenberg-Marquardt}: eficiente para mínimos quadrados e ajuste local.
+    \item \textbf{Evolução Diferencial}: robusto para otimização global.
+    \item \textbf{Algoritmos Genéticos}: flexíveis para problemas complexos.
+    \item \textbf{Hibridização}: combina global com local para melhores resultados.
+\end{itemize}
+\end{block}
+\destaque{Sempre valide seus resultados com múltiplos experimentos.}
+\end{frame}
+
+\begin{frame}{Recursos Adicionais (1/2)}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Próximos passos}
+\begin{itemize}
+    \item Pratique com os notebooks
+    \item Aplique aos seus dados reais
+    \item Teste validação cruzada
+\end{itemize}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{block}{Leituras sugeridas}
+\scriptsize
+\begin{itemize}
+    \item Moré, J.J. (1978). LM Algorithm.
+    \item Storn, R. (1997). DE Evolution.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Recursos Adicionais (2/2)}
+\begin{block}{Destaques da Literatura}
+\scriptsize
+\begin{itemize}
+    \item Holland, J.H. (1975). Adaptation in Natural and Artificial Systems.
+    \item Goldberg, D.E. (1989). Genetic Algorithms.
+    \item Ashyraliyev et al. (2009). Parameter estimation in systems biology.
+\end{itemize}
+\end{block}
+\destaque{Acesse o material complementar no Moodle/Classroom para exemplos avançados.}
+\end{frame}
+
+% ============================================================================
+% FIM
+% ============================================================================
+\begin{frame}{}
+\begin{center}
+\LARGE
+\color{azulescuro}
+Obrigado!
+\\[1cm]
+\normalsize
+Slides disponíveis em: \url{https://github.com/neylemkeunesp/bbs}
+\\[0.5cm]
+\color{gray}
+Ney Lemke — DBF-Unesp
+\end{center}
+\end{frame}
+
+\end{document}
