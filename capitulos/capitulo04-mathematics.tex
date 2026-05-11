@@ -35,7 +35,7 @@
 % ============================================================================
 \section{Introdução}
 
-\begin{frame}{Visão Geral do Capítulo}
+\begin{frame}[shrink=5]{Visão Geral do Capítulo}
 \begin{block}{Objetivos de Aprendizagem}
 \begin{itemize}
     \item Dominar ferramentas matemáticas avançadas para sistemas biológicos
@@ -60,7 +60,7 @@ A matemática é essencial para:
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Matemática como Linguagem da Biologia}
+\begin{frame}[shrink=8]{Matemática como Linguagem da Biologia}
 \definicao{Modelagem Matemática}{
 A modelagem matemática traduz processos biológicos em equações que capturam a essência dinâmica do sistema, permitindo simulação, análise e predição quantitativas.
 }
@@ -94,10 +94,10 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 }
 \end{frame}
 
-\begin{frame}{Visão Integrada: Do Modelo à Predição}
+\begin{frame}[shrink=10]{Visão Integrada: Do Modelo à Predição}
 \begin{center}
-\begin{tikzpicture}[node distance=2cm, scale=0.9, transform shape,
-    box/.style={rectangle, draw, fill=azulclaro!20, text width=3cm, text centered, rounded corners, minimum height=1cm}]
+\begin{tikzpicture}[node distance=1.5cm, scale=0.85, transform shape,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=3cm, text centered, rounded corners, minimum height=0.8cm}]
 
     \node[box, fill=verdeacido!20] (bio) {Sistema Biológico};
     \node[box, fill=laranjacel!20, below of=bio] (model) {Modelo Matemático\\(EDOs)};
@@ -115,7 +115,7 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 \end{center}
 \end{frame}
 
-\begin{frame}{Tópicos Avançados deste Capítulo}
+\begin{frame}[shrink=5]{Tópicos Avançados deste Capítulo}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Parte I: Dinâmica}
@@ -160,7 +160,7 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 % ============================================================================
 \section{Sistemas de Equações Diferenciais}
 
-\begin{frame}{Revisão: Equações Diferenciais Ordinárias}
+\begin{frame}[shrink=8]{Revisão: Equações Diferenciais Ordinárias}
 \definicao{Equação Diferencial Ordinária (EDO)}{
 Uma EDO relaciona uma função desconhecida $y(t)$ com suas derivadas:
 \begin{equation*}
@@ -198,7 +198,7 @@ Sistemas biológicos geralmente requerem sistemas de EDOs acopladas!
 }
 \end{frame}
 
-\begin{frame}{Sistemas de EDOs Não-Lineares}
+\begin{frame}[shrink=5]{Sistemas de EDOs Não-Lineares}
 \begin{block}{Forma Geral}
 Um sistema de $n$ equações diferenciais de primeira ordem:
 \begin{align*}
@@ -220,7 +220,7 @@ onde $\vect{x} = (x_1, x_2, \ldots, x_n)^T$ e $\vect{f} = (f_1, f_2, \ldots, f_n
 \textbf{Sistema Autônomo:} quando $\vect{f}$ não depende explicitamente de $t$
 \end{frame}
 
-\begin{frame}{Campos Vetoriais e Retratos de Fase}
+\begin{frame}[shrink=8]{Campos Vetoriais e Retratos de Fase}
 \definicao{Campo Vetorial}{
 O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que associa a cada ponto do espaço de estados um vetor velocidade.
 }
@@ -255,7 +255,7 @@ O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que asso
             \draw[->, azulescuro, thick] (\x,\y) -- ++(0.15*\y, -0.15*\x);
 
     % Trajetória circular
-    \draw[verdeacido, thick, ->] (1,0) arc (0:270:1);
+    \draw[verdeacido, thick, ->] (1,0) arc[start angle=0, end angle=270, radius=1];
 
     \node[below] at (0,-2.5) {Oscilador Harmônico};
 \end{tikzpicture}
@@ -263,7 +263,7 @@ O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que asso
 \end{columns}
 \end{frame}
 
-\begin{frame}{Nulclinas}
+\begin{frame}[shrink=8]{Nulclinas}
 \definicao{Nulclina}{
 Curva no espaço de fase onde uma das derivadas é zero:
 \begin{itemize}
@@ -302,7 +302,7 @@ Pontos de equilíbrio ocorrem na interseção das nulclinas!
 }
 \end{frame}
 
-\begin{frame}{Campos de Direção}
+\begin{frame}[shrink=8]{Campos de Direção}
 \begin{block}{Construindo Retratos de Fase}
 \begin{enumerate}
     \item Calcular e plotar nulclinas ($\dot{x}=0$ e $\dot{y}=0$)
@@ -341,7 +341,7 @@ Pontos de equilíbrio ocorrem na interseção das nulclinas!
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Resolvendo EDOs com SciPy}
+\begin{frame}[fragile,allowframebreaks]{Resolvendo EDOs com SciPy}
 \begin{lstlisting}[language=Python, caption=Sistema de EDOs com scipy.integrate, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.integrate import odeint
@@ -379,7 +379,7 @@ plt.grid(True)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Exemplo: Modelo Lotka-Volterra}
+\begin{frame}[shrink=5]{Exemplo: Modelo Lotka-Volterra}
 \begin{block}{Sistema Predador-Presa}
 \begin{align*}
 \frac{dx}{dt} &= \alpha x - \beta xy \quad \text{(presas)}\\
@@ -446,8 +446,8 @@ Este sistema exibe oscilações periódicas (órbitas fechadas)!
     \draw[thick, azulescuro] (2,2) ellipse (1.5 and 1.2);
 
     % Setas indicando direcao
-    \draw[->, thick] (2.5,2) arc (0:45:0.5 and 0.4);
-    \draw[->, thick] (3,2) arc (0:45:1 and 0.8);
+    \draw[->, thick] (2.5,2) arc[start angle=0, end angle=45, x radius=0.5, y radius=0.4];
+    \draw[->, thick] (3,2) arc[start angle=0, end angle=45, x radius=1, y radius=0.8];
 \end{tikzpicture}
 \end{center}
 \textbf{Interpretação:}\\
@@ -455,7 +455,7 @@ Populações oscilam ciclicamente com defasagem temporal
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Simulando Lotka-Volterra}
+\begin{frame}[fragile,allowframebreaks]{Simulando Lotka-Volterra}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.integrate import odeint
@@ -496,7 +496,7 @@ plt.grid(True)
 % ============================================================================
 \section{Análise de Estabilidade}
 
-\begin{frame}{Pontos de Equilíbrio}
+\begin{frame}[shrink=5]{Pontos de Equilíbrio}
 \definicao{Ponto de Equilíbrio (Ponto Fixo)}{
 Um ponto $\vect{x}^*$ é um ponto de equilíbrio se:
 \begin{equation*}
@@ -526,7 +526,7 @@ Pontos de equilíbrio representam:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Análise de Estabilidade Linear}
+\begin{frame}[shrink=5]{Análise de Estabilidade Linear}
 \begin{block}{Linearização em torno do Equilíbrio}
 Considere pequena perturbação $\vect{\xi}(t) = \vect{x}(t) - \vect{x}^*$:
 \begin{equation*}
@@ -553,7 +553,7 @@ Para sistema 2D:
 }
 \end{frame}
 
-\begin{frame}{Autovalores e Estabilidade}
+\begin{frame}[shrink=5]{Autovalores e Estabilidade}
 \importante{
 A estabilidade do equilíbrio $\vect{x}^*$ é determinada pelos autovalores $\lambda_i$ da matriz Jacobiana $\vect{J}(\vect{x}^*)$.
 }
@@ -578,7 +578,7 @@ Para cada autovalor $\lambda = a + bi$:
 onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - J_{12}J_{21}$
 \end{frame}
 
-\begin{frame}{Classificação de Pontos Fixos em 2D}
+\begin{frame}[shrink=8]{Classificação de Pontos Fixos em 2D}
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
     % Eixos
@@ -618,7 +618,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{center}
 \end{frame}
 
-\begin{frame}{Tipos de Pontos Fixos}
+\begin{frame}[shrink=10]{Tipos de Pontos Fixos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{1. Nó Estável}
@@ -633,7 +633,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
     \draw[->] (0,-2) -- (0,2);
     \fill[red] (0,0) circle (2pt);
     \foreach \angle in {0,45,90,135,180,225,270,315} {
-        \draw[->, thick, azulescuro] ({1.5*cos(\angle)},{1.5*sin(\angle)}) -- (0.3*cos(\angle),0.3*sin(\angle));
+        \draw[->, thick, azulescuro] ({1.5*cos(\angle)},{1.5*sin(\angle)}) -- ({0.3*cos(\angle)},{0.3*sin(\angle)});
     }
 \end{tikzpicture}
 \end{center}
@@ -650,7 +650,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
     \draw[->] (0,-2) -- (0,2);
     \fill[red] (0,0) circle (2pt);
     \foreach \angle in {0,45,90,135,180,225,270,315} {
-        \draw[->, thick, verdeacido] (0.3*cos(\angle),0.3*sin(\angle)) -- ({1.5*cos(\angle)},{1.5*sin(\angle)});
+        \draw[->, thick, verdeacido] ({0.3*cos(\angle)},{0.3*sin(\angle)}) -- ({1.5*cos(\angle)},{1.5*sin(\angle)});
     }
 \end{tikzpicture}
 \end{center}
@@ -691,14 +691,14 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
     \fill[red] (0,0) circle (2pt);
     \draw[thick, azulclaro] (0,0) circle (0.7);
     \draw[thick, azulclaro] (0,0) circle (1.3);
-    \draw[->, thick] (0.7,0) arc (0:45:0.7);
+    \draw[->, thick] (0.7,0) arc[start angle=0, end angle=45, radius=0.7];
 \end{tikzpicture}
 \end{center}
 \end{block}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Espirais: Estáveis vs. Instáveis}
+\begin{frame}[shrink=8]{Espirais: Estáveis vs. Instáveis}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Espiral Estável}
@@ -750,7 +750,7 @@ Espirais são comuns em sistemas biológicos com feedback negativo e atraso!
 }
 \end{frame}
 
-\begin{frame}{Teorema de Estabilidade de Lyapunov}
+\begin{frame}[shrink=5]{Teorema de Estabilidade de Lyapunov}
 \definicao{Estabilidade de Lyapunov}{
 Um ponto de equilíbrio $\vect{x}^*$ é:
 \begin{itemize}
@@ -776,7 +776,7 @@ Se $\dot{V}(\vect{x}) < 0$ (estritamente), então é assintoticamente estável.
 \textbf{Interpretação:} $V(\vect{x})$ é uma ``energia'' que sempre diminui
 \end{frame}
 
-\begin{frame}[fragile]{Calculando Jacobiano e Autovalores com Python}
+\begin{frame}[fragile,allowframebreaks]{Calculando Jacobiano e Autovalores com Python}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.linalg import eig
@@ -811,7 +811,7 @@ print("Estavel?", all(np.real(eigenvalues) < 0))
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Exemplo: Análise de Estabilidade}
+\begin{frame}[shrink=8]{Exemplo: Análise de Estabilidade}
 \textbf{Sistema:}
 \begin{align*}
 \frac{dx}{dt} &= x(1 - x - 0.5y)\\
@@ -852,7 +852,7 @@ O equilíbrio é uma \textbf{espiral estável}!
 % ============================================================================
 \section{Bifurcações}
 
-\begin{frame}{O que são Bifurcações?}
+\begin{frame}[shrink=5]{O que são Bifurcações?}
 \definicao{Bifurcação}{
 Uma bifurcação é uma mudança qualitativa na dinâmica de um sistema quando um parâmetro atravessa um valor crítico. Novos comportamentos emergem, equilíbrios aparecem/desaparecem ou mudam de estabilidade.
 }
@@ -875,7 +875,7 @@ Bifurcações explicam:
 \textbf{Parâmetro de bifurcação:} $\mu$ (valor crítico: $\mu_c$)
 \end{frame}
 
-\begin{frame}{Bifurcação Saddle-Node (Fold)}
+\begin{frame}[shrink=8]{Bifurcação Saddle-Node (Fold)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Equação Normal}
@@ -934,7 +934,7 @@ Saddle-node é a forma mais comum de equilíbrios aparecerem/desaparecerem!
 }
 \end{frame}
 
-\begin{frame}{Bifurcação Transcrítica}
+\begin{frame}[shrink=8]{Bifurcação Transcrítica}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Equação Normal}
@@ -994,7 +994,7 @@ Transição de crescimento populacional quando recurso disponível muda
 \end{columns}
 \end{frame}
 
-\begin{frame}{Bifurcação Pitchfork}
+\begin{frame}[shrink=10]{Bifurcação Pitchfork}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Supercrítica (Suave)}
@@ -1068,7 +1068,7 @@ Pitchfork supercrítica: transição suave. Subcrítica: salto catastrófico!
 }
 \end{frame}
 
-\begin{frame}{Bifurcação de Hopf}
+\begin{frame}[shrink=8]{Bifurcação de Hopf}
 \definicao{Bifurcação de Hopf}{
 Transição em que um equilíbrio estável perde estabilidade e dá origem a um ciclo limite periódico (oscilação).
 }
@@ -1132,7 +1132,7 @@ Hopf é crucial para o surgimento de oscilações biológicas!
 }
 \end{frame}
 
-\begin{frame}{Diagramas de Bifurcação: Resumo Visual}
+\begin{frame}[shrink=10]{Diagramas de Bifurcação: Resumo Visual}
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
     % Saddle-node
@@ -1183,7 +1183,7 @@ Hopf é crucial para o surgimento de oscilações biológicas!
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Gerando Diagramas de Bifurcação com Python}
+\begin{frame}[fragile,allowframebreaks]{Gerando Diagramas de Bifurcação com Python}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1235,7 +1235,7 @@ plt.title('Bifurcacao Pitchfork')
 % ============================================================================
 \section{Oscilações e Ciclos Limite}
 
-\begin{frame}{Soluções Periódicas}
+\begin{frame}[shrink=5]{Soluções Periódicas}
 \definicao{Solução Periódica}{
 Uma solução $\vect{x}(t)$ é periódica com período $T$ se:
 \begin{equation*}
@@ -1264,11 +1264,11 @@ No espaço de fase, corresponde a uma órbita fechada.
 
     % Ciclo limite
     \draw[thick, azulescuro] (0,0) circle (1.5);
-    \draw[->, thick] (1.5,0) arc (0:30:1.5);
+    \draw[->, thick] (1.5,0) arc[start angle=0, end angle=30, radius=1.5];
 
     % Trajetorias convergindo
-    \draw[verdeacido, ->] (0.8,0) arc (0:60:0.8);
-    \draw[verdeacido, ->] (2,0) arc (0:60:2);
+    \draw[verdeacido, ->] (0.8,0) arc[start angle=0, end angle=60, radius=0.8];
+    \draw[verdeacido, ->] (2,0) arc[start angle=0, end angle=60, radius=2];
 
     \node[below] at (0,-2.5) {Ciclo Limite};
 \end{tikzpicture}
@@ -1276,7 +1276,7 @@ No espaço de fase, corresponde a uma órbita fechada.
 \end{columns}
 \end{frame}
 
-\begin{frame}{Ciclos Limite}
+\begin{frame}[shrink=8]{Ciclos Limite}
 \definicao{Ciclo Limite}{
 Uma órbita periódica isolada para a qual trajetórias próximas convergem (estável) ou divergem (instável). Diferente de centro, é estruturalmente estável sob perturbações.
 }
@@ -1311,7 +1311,7 @@ Uma órbita periódica isolada para a qual trajetórias próximas convergem (est
 
     % Ciclo limite
     \draw[thick, red, line width=1.5pt] (0,0) circle (1.2);
-    \draw[->, thick, red] (1.2,0) arc (0:30:1.2);
+    \draw[->, thick, red] (1.2,0) arc[start angle=0, end angle=30, radius=1.2];
 
     % Trajetorias internas convergindo
     \draw[azulescuro, ->, domain=0:2*pi, samples=50]
@@ -1331,7 +1331,7 @@ Ciclos limite são essenciais para modelar ritmos biológicos robustos!
 }
 \end{frame}
 
-\begin{frame}{Teorema de Poincaré-Bendixson}
+\begin{frame}[shrink=5]{Teorema de Poincaré-Bendixson}
 \begin{block}{Teorema de Poincaré-Bendixson}
 Para sistemas 2D ($\dot{\vect{x}} = \vect{f}(\vect{x})$), se:
 \begin{enumerate}
@@ -1358,7 +1358,7 @@ Este teorema garante a existência de oscilações em sistemas 2D! Não vale par
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Oscilador de Van der Pol}
+\begin{frame}[shrink=8]{Oscilador de Van der Pol}
 \begin{block}{Equação de Van der Pol}
 \begin{equation*}
 \frac{d^2x}{dt^2} - \mu(1 - x^2)\frac{dx}{dt} + x = 0
@@ -1397,7 +1397,7 @@ $\text{Re}(\lambda) > 0$ se $\mu > 0$ $\Rightarrow$ instável
 \end{columns}
 \end{frame}
 
-\begin{frame}{Retratos de Fase do Van der Pol}
+\begin{frame}[shrink=8]{Retratos de Fase do Van der Pol}
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
     % mu pequeno (quase harmonico)
@@ -1405,7 +1405,7 @@ $\text{Re}(\lambda) > 0$ se $\mu > 0$ $\Rightarrow$ instável
         \draw[->] (-2,0) -- (2,0) node[right, font=\small] {$x$};
         \draw[->] (0,-2) -- (0,2) node[above, font=\small] {$y$};
         \draw[thick, azulescuro] (0,0) circle (1.5);
-        \draw[->, thick] (1.5,0) arc (0:30:1.5);
+        \draw[->, thick] (1.5,0) arc[start angle=0, end angle=30, radius=1.5];
         \fill[red] (0,0) circle (2pt);
         \node[below] at (0,-2.5) {$\mu = 0.5$ (quase senoidal)};
     \end{scope}
@@ -1416,7 +1416,7 @@ $\text{Re}(\lambda) > 0$ se $\mu > 0$ $\Rightarrow$ instável
         \draw[->] (0,-2.5) -- (0,2.5) node[above, font=\small] {$y$};
         \draw[thick, verdeacido, domain=0:360, samples=100]
             plot ({1.5*cos(\x)*(1+0.2*sin(3*\x))}, {1.8*sin(\x)*(1+0.15*cos(3*\x))});
-        \draw[->, thick] (1.5,0) arc (0:30:1.5 and 1.8);
+        \draw[->, thick] (1.5,0) arc[start angle=0, end angle=30, x radius=1.5, y radius=1.8];
         \fill[red] (0,0) circle (2pt);
         \node[below] at (0,-3) {$\mu = 2$ (não-linear)};
     \end{scope}
@@ -1440,7 +1440,7 @@ Van der Pol é paradigmático para osciladores biológicos não-lineares!
 }
 \end{frame}
 
-\begin{frame}[fragile]{Simulando Van der Pol}
+\begin{frame}[fragile,allowframebreaks]{Simulando Van der Pol}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.integrate import odeint
@@ -1487,7 +1487,7 @@ plt.grid(True)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Osciladores Biológicos}
+\begin{frame}[shrink=8]{Osciladores Biológicos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Ritmos Circadianos}
@@ -1540,7 +1540,7 @@ Todos esses sistemas exibem ciclos limite robustos a perturbações!
 % ============================================================================
 \section{Análise de Sensibilidade}
 
-\begin{frame}{Análise de Sensibilidade Local}
+\begin{frame}[shrink=5]{Análise de Sensibilidade Local}
 \definicao{Análise de Sensibilidade}{
 Estudo de como mudanças nos parâmetros do modelo afetam as saídas (variáveis de estado, fluxos, propriedades emergentes).
 }
@@ -1568,7 +1568,7 @@ Estudo de como mudanças nos parâmetros do modelo afetam as saídas (variáveis
 \end{columns}
 \end{frame}
 
-\begin{frame}{Coeficientes de Sensibilidade}
+\begin{frame}[shrink=5]{Coeficientes de Sensibilidade}
 \definicao{Coeficiente de Sensibilidade Local}{
 Derivada normalizada da saída $y$ em relação ao parâmetro $p$:
 \begin{equation*}
@@ -1593,7 +1593,7 @@ Mede a variação percentual em $y$ quando $p$ varia 1\%.
 \textbf{Para EDOs:} sensibilidade depende do tempo: $S_{y,p}(t)$
 \end{frame}
 
-\begin{frame}{Equações de Sensibilidade}
+\begin{frame}[shrink=5]{Equações de Sensibilidade}
 Para sistema $\dot{\vect{x}} = \vect{f}(\vect{x}, \vect{p})$, definimos:
 \begin{equation*}
 \vect{s}_i(t) = \frac{\partial \vect{x}(t)}{\partial p_i}
@@ -1622,7 +1622,7 @@ Resolver equações de sensibilidade junto com o sistema original!
 }
 \end{frame}
 
-\begin{frame}{Análise de Sensibilidade Global}
+\begin{frame}[shrink=8]{Análise de Sensibilidade Global}
 \begin{block}{Métodos Globais}
 Exploram todo o espaço paramétrico, não apenas um ponto:
 \end{block}
@@ -1661,7 +1661,7 @@ onde $p_{\sim i}$ denota todos os parâmetros exceto $p_i$.
 \end{block}
 \end{frame}
 
-\begin{frame}{Exploração do Espaço Paramétrico}
+\begin{frame}[shrink=8]{Exploração do Espaço Paramétrico}
 \begin{block}{Técnicas de Amostragem}
 \begin{itemize}
     \item \textbf{Monte Carlo:} amostragem aleatória
@@ -1713,7 +1713,7 @@ onde $p_{\sim i}$ denota todos os parâmetros exceto $p_i$.
 \end{center}
 \end{frame}
 
-\begin{frame}{Exemplo: Sensibilidade de Modelo Cinético}
+\begin{frame}[shrink=8]{Exemplo: Sensibilidade de Modelo Cinético}
 \textbf{Modelo:} Reação enzimática simples
 \begin{equation*}
 \frac{dx}{dt} = \frac{V_{max} \cdot S}{K_M + S} - k_{deg} \cdot x
@@ -1742,7 +1742,7 @@ $x^*$ é mais sensível a $V_{max}$ e $k_{deg}$ do que a $K_M$!
 }
 \end{frame}
 
-\begin{frame}[fragile]{Calculando Sensibilidade com Python}
+\begin{frame}[fragile,allowframebreaks]{Calculando Sensibilidade com Python}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 from scipy.integrate import odeint
@@ -1786,7 +1786,7 @@ for param in ['Vmax', 'Km', 'kdeg']:
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Análise Global com SALib}
+\begin{frame}[fragile,allowframebreaks]{Análise Global com SALib}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 from SALib.sample import saltelli
 from SALib.analyze import sobol
@@ -1832,7 +1832,7 @@ for name, st in zip(problem['names'], Si['ST']):
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}{Exercícios - Parte 1: EDOs}
+\begin{frame}[shrink=10]{Exercícios - Parte 1: EDOs}
 \begin{block}{Questão 1: Sistema Linear}
 Resolva analiticamente e numericamente (Python) o sistema:
 \begin{align*}
@@ -1856,7 +1856,7 @@ Para o sistema:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 2: Estabilidade}
+\begin{frame}[shrink=5]{Exercícios - Parte 2: Estabilidade}
 \begin{block}{Questão 3: Análise de Estabilidade}
 Analise a estabilidade de todos os equilíbrios do sistema:
 \begin{align*}
@@ -1881,7 +1881,7 @@ com $K=10$, $\alpha=0.5$, $\beta=0.3$, $\delta=1$.
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 3: Bifurcações}
+\begin{frame}[shrink=5]{Exercícios - Parte 3: Bifurcações}
 \begin{block}{Questão 5: Diagrama de Bifurcação}
 Para $\dot{x} = \mu + x - x^3$, construa o diagrama de bifurcação completo:
 \begin{enumerate}
@@ -1902,7 +1902,7 @@ Varie $\mu$ de $-1$ a $1$ e observe surgimento do ciclo limite em $\mu = 0$.
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 4: Oscilações}
+\begin{frame}[shrink=5]{Exercícios - Parte 4: Oscilações}
 \begin{block}{Questão 7: Van der Pol}
 Simule o oscilador de Van der Pol para $\mu \in \{0.1, 1, 5\}$:
 \begin{enumerate}
@@ -1924,7 +1924,7 @@ com $n=4$, $k_1=k_2=k_3=1$. Mostre que exibe ciclo limite.
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 5: Sensibilidade}
+\begin{frame}[shrink=5]{Exercícios - Parte 5: Sensibilidade}
 \begin{block}{Questão 9: Sensibilidade Local}
 Para o sistema de síntese e degradação:
 \begin{equation*}
@@ -1969,7 +1969,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}{Leitura Complementar}
+\begin{frame}[shrink=5]{Leitura Complementar}
 \begin{block}{Livros Avançados}
 \begin{itemize}
     \item Kuznetsov Y.A. (2004). \textit{Elements of Applied Bifurcation Theory}, 3rd ed. Springer.
@@ -1987,7 +1987,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 \end{block}
 \end{frame}
 
-\begin{frame}{Recursos Computacionais}
+\begin{frame}[shrink=3]{Recursos Computacionais}
 \begin{block}{Software e Bibliotecas}
 \begin{itemize}
     \item \textbf{Python:} scipy.integrate (odeint, solve\_ivp), sympy (álgebra simbólica)
