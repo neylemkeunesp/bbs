@@ -786,6 +786,65 @@ Universalidade & \checkmark & \checkmark \\
 \end{tabular}
 \end{center}
 \end{columns}
+%Comentario 
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{uv: a nova geração ultrarrápida}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[language=bash, caption=Usando uv, basicstyle=\ttfamily\footnotesize]
+# Instalar o uv (Linux/Mac)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Criar ambiente virtual
+uv venv
+
+# Ativar (Linux/Mac)
+source .venv/bin/activate
+
+# Instalar pacotes (10-100x mais rapido)
+uv pip install numpy pandas scipy
+
+# Exportar dependencias
+uv pip freeze > requirements.txt
+\end{lstlisting}
+
+\column{0.48\textwidth}
+\begin{block}{O que é o uv?}
+\begin{itemize}
+    \item Escrito em Rust pela Astral
+    \item Substitui drop-in para \texttt{pip} e \texttt{venv}
+    \item \textbf{Extremamente rápido} (cache global eficiente)
+    \item Resolve dependências com maior precisão
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\begin{alertblock}{Por que mudar?}
+A comunidade Python está adotando ferramentas em Rust pela sua velocidade brutal. O \texttt{uv} acaba com a espera de minutos na instalação de pacotes grandes em ciência de dados.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=10]{Comparação: conda vs pip/venv vs uv}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Característica} & \textbf{conda} & \textbf{pip+venv} & \textbf{uv} \\
+\midrule
+Velocidade & Lento & Média & \textbf{Ultrarrápido} \\
+Linguagem base & Python/C & Python & Rust \\
+Leveza & Pesado (GBs) & Leve (MBs) & \textbf{Super leve} \\
+Bibliotecas Não-Python & \checkmark (Bioconda) & -- & -- \\
+Adoção & Bioinformática & Padrão legado & \textbf{Novo Padrão} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\importante{
+\textbf{Qual escolher?} Use \textbf{conda} se sua análise exigir pacotes não-Python complexos (ex: \texttt{bwa}, \texttt{samtools} via Bioconda). Para projetos focados apenas em bibliotecas Python (ex: \texttt{pandas}, \texttt{scanpy}), use \textbf{uv} pela sua velocidade imbatível e simplicidade.
+}
 \end{frame}
 
 % ============================================================================
