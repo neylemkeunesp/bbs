@@ -342,7 +342,7 @@ Caminho fechado: $v_1 = v_k$
     \draw[thick] (3) -- (5);
     \draw[thick] (4) -- (5);
 
-    \node[below left, red] at (1) {Caminho: 1-2-3-4};
+    \node[red] at (1, -0.8) {Caminho: 1-2-3-4};
 \end{tikzpicture}
 \end{center}
 \end{columns}
@@ -559,7 +559,7 @@ A maioria das redes biológicas segue distribuição scale-free!
 \begin{tikzpicture}[scale=0.5]
     \draw[->] (0,0) -- (4,0) node[right] {$k$};
     \draw[->] (0,0) -- (0,3) node[above] {$P(k)$};
-    \draw[thick, verdeacido, domain=0.3:3.5, smooth] plot (\x, {3/\x});
+    \draw[thick, verdeacido, domain=1.1:3.8, smooth] plot (\x, {3/\x});
 \end{tikzpicture}
 \end{center}
 \end{columns}
