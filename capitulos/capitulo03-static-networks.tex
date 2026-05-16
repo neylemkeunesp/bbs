@@ -190,7 +190,7 @@ Arestas com direção: $(u, v) \neq (v, u)$
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=15]{Representação de Grafos: Matriz de Adjacência}
+\begin{frame}{Matriz de Adjacência: Definição (1/2)}
 \definicao{Matriz de Adjacência}{
 Matriz $A$ de dimensão $n \times n$ onde $n = |V|$:
 \begin{equation*}
@@ -201,27 +201,31 @@ A_{ij} = \begin{cases}
 \end{equation*}
 }
 
-\vspace{0.3cm}
-
-\begin{columns}
-\column{0.4\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    \node[circle, draw, fill=azulclaro!30] (1) at (0,0) {1};
-    \node[circle, draw, fill=azulclaro!30] (2) at (2,0) {2};
-    \node[circle, draw, fill=azulclaro!30] (3) at (0,2) {3};
-    \node[circle, draw, fill=azulclaro!30] (4) at (2,2) {4};
+\textbf{Grafo de Exemplo:}
+
+\vspace{0.1cm}
+
+\begin{tikzpicture}[scale=0.85]
+    \node[circle, draw, fill=azulclaro!30, minimum size=0.8cm] (1) at (0,0) {1};
+    \node[circle, draw, fill=azulclaro!30, minimum size=0.8cm] (2) at (2.5,0) {2};
+    \node[circle, draw, fill=azulclaro!30, minimum size=0.8cm] (3) at (0,2.5) {3};
+    \node[circle, draw, fill=azulclaro!30, minimum size=0.8cm] (4) at (2.5,2.5) {4};
     \draw[thick] (1) -- (2);
     \draw[thick] (1) -- (3);
     \draw[thick] (2) -- (4);
     \draw[thick] (3) -- (4);
 \end{tikzpicture}
 \end{center}
+\end{frame}
 
-\column{0.6\textwidth}
+\begin{frame}{Matriz de Adjacência: Exemplo (2/2)}
+\begin{columns}
+\column{0.5\textwidth}
 \begin{center}
-\textbf{Matriz de Adjacência:}
-\vspace{0.2cm}
+\textbf{Matriz correspondente:}
+
+\vspace{0.3cm}
 
 $A = \begin{bmatrix}
 0 & 1 & 1 & 0 \\
@@ -229,15 +233,22 @@ $A = \begin{bmatrix}
 1 & 0 & 0 & 1 \\
 0 & 1 & 1 & 0
 \end{bmatrix}$
+\end{center}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Propriedades}
+\begin{itemize}
+    \item Simétrica para grafos não-direcionados
+    \item Diagonal zero (sem auto-loops)
+    \item $A_{ij} = 1 \Leftrightarrow$ existe aresta $(i,j)$
+\end{itemize}
+\end{exampleblock}
 
 \vspace{0.3cm}
 
-\textbf{Propriedades:}
-\begin{itemize}
-    \item Simétrica para grafos não-direcionados
-    \item Diagonal geralmente zero (sem auto-loops)
-\end{itemize}
-\end{center}
+\importante{
+$\sum_j A_{ij} = k_i$ \\ (grau do vértice $i$)
+}
 \end{columns}
 \end{frame}
 
