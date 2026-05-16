@@ -686,31 +686,31 @@ Padrões de interconexão recorrentes que aparecem significativamente mais frequ
 \vspace{0.3cm}
 
 \begin{center}
-\begin{tikzpicture}[scale=0.8, node distance=1.2cm]
+\begin{tikzpicture}[scale=0.9]
     % Feed-forward loop
     \node (t1) at (0,0) {Feed-forward Loop};
-    \node[circle, draw, fill=azulclaro!30] (A1) at (0,-1) {X};
-    \node[circle, draw, fill=azulclaro!30] (B1) at (-0.7,-2) {Y};
-    \node[circle, draw, fill=azulclaro!30] (C1) at (0.7,-2) {Z};
+    \node[circle, draw, fill=azulclaro!30] (A1) at (0,-0.8) {X};
+    \node[circle, draw, fill=azulclaro!30] (B1) at (-1,-2.2) {Y};
+    \node[circle, draw, fill=azulclaro!30] (C1) at (1,-2.2) {Z};
     \draw[->, thick] (A1) -- (B1);
     \draw[->, thick] (A1) -- (C1);
     \draw[->, thick] (B1) -- (C1);
 
     % Bi-fan
-    \node (t2) at (3.5,0) {Bi-fan};
-    \node[circle, draw, fill=verdeacido!30] (A2) at (3,-1) {X};
-    \node[circle, draw, fill=verdeacido!30] (B2) at (4,-1) {Y};
-    \node[circle, draw, fill=verdeacido!30] (C2) at (3,-2.5) {Z};
-    \node[circle, draw, fill=verdeacido!30] (D2) at (4,-2.5) {W};
+    \node (t2) at (4.5,0) {Bi-fan};
+    \node[circle, draw, fill=verdeacido!30] (A2) at (3.8,-0.8) {X};
+    \node[circle, draw, fill=verdeacido!30] (B2) at (5.2,-0.8) {Y};
+    \node[circle, draw, fill=verdeacido!30] (C2) at (3.8,-2.2) {Z};
+    \node[circle, draw, fill=verdeacido!30] (D2) at (5.2,-2.2) {W};
     \draw[->, thick] (A2) -- (C2);
     \draw[->, thick] (A2) -- (D2);
     \draw[->, thick] (B2) -- (C2);
     \draw[->, thick] (B2) -- (D2);
 
     % Feedback loop
-    \node (t3) at (7,0) {Feedback Loop};
-    \node[circle, draw, fill=laranjacel!30] (A3) at (6.5,-1.5) {X};
-    \node[circle, draw, fill=laranjacel!30] (B3) at (7.5,-1.5) {Y};
+    \node (t3) at (8.5,0) {Feedback Loop};
+    \node[circle, draw, fill=laranjacel!30] (A3) at (7.8,-1.5) {X};
+    \node[circle, draw, fill=laranjacel!30] (B3) at (9.2,-1.5) {Y};
     \draw[->, thick, bend left=30] (A3) to (B3);
     \draw[->, thick, bend left=30] (B3) to (A3);
 \end{tikzpicture}
