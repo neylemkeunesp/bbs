@@ -93,7 +93,7 @@ Uma rede biológica é uma representação matemática de interações entre com
 \end{columns}
 \end{frame}
 
-\begin{frame}{Tipos de Redes Biológicas}
+\begin{frame}[shrink=5]{Tipos de Redes Biológicas (1/2)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Redes de Interação Proteica (PPI)}
@@ -105,6 +105,7 @@ Uma rede biológica é uma representação matemática de interações entre com
 \end{itemize}
 \end{block}
 
+\column{0.5\textwidth}
 \begin{block}{Redes Metabólicas}
 \begin{itemize}
     \item Nós: metabólitos ou reações
@@ -113,7 +114,11 @@ Uma rede biológica é uma representação matemática de interações entre com
     \item Ex: glicólise, ciclo de Krebs
 \end{itemize}
 \end{block}
+\end{columns}
+\end{frame}
 
+\begin{frame}[shrink=5]{Tipos de Redes Biológicas (2/2)}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Redes Regulatórias Gênicas}
 \begin{itemize}
@@ -124,6 +129,7 @@ Uma rede biológica é uma representação matemática de interações entre com
 \end{itemize}
 \end{block}
 
+\column{0.5\textwidth}
 \begin{block}{Redes de Sinalização}
 \begin{itemize}
     \item Nós: proteínas sinalizadoras
@@ -184,7 +190,7 @@ Arestas com direção: $(u, v) \neq (v, u)$
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=5]{Representação de Grafos: Matriz de Adjacência}
+\begin{frame}[shrink=15]{Representação de Grafos: Matriz de Adjacência}
 \definicao{Matriz de Adjacência}{
 Matriz $A$ de dimensão $n \times n$ onde $n = |V|$:
 \begin{equation*}
@@ -235,7 +241,7 @@ $A = \begin{bmatrix}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Representação de Grafos: Matriz de Incidência}
+\begin{frame}[shrink=5]{Representação de Grafos: Matriz de Incidência}
 \definicao{Matriz de Incidência}{
 Matriz $B$ de dimensão $n \times m$ onde $n = |V|$ e $m = |E|$:
 \begin{equation*}
@@ -353,7 +359,7 @@ Caminho fechado: $v_1 = v_k$
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=15]{Componentes Conectados}
+\begin{frame}[shrink=20]{Componentes Conectados}
 \definicao{Componente Conectado}{
 Subconjunto máximo de vértices tal que existe um caminho entre qualquer par de vértices.
 }
@@ -674,7 +680,7 @@ Redes small-world permitem comunicação eficiente com conexões locais e alguns
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=15]{Motivos de Rede (Network Motifs)}
+\begin{frame}[shrink=20]{Motivos de Rede (Network Motifs)}
 \definicao{Motivo de Rede}{
 Padrões de interconexão recorrentes que aparecem significativamente mais frequentes que em redes aleatórias.
 }
@@ -721,7 +727,7 @@ Padrões de interconexão recorrentes que aparecem significativamente mais frequ
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=15]{Nós Hub e Vulnerabilidade}
+\begin{frame}[shrink=20]{Nós Hub e Vulnerabilidade}
 \begin{columns}
 \column{0.5\textwidth}
 \definicao{Hub}{
@@ -765,7 +771,7 @@ Redes scale-free são robustas a falhas aleatórias mas vulneráveis a ataques d
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=10]{Calculando Propriedades de Rede com NetworkX}
+\begin{frame}[fragile, shrink=30]{Calculando Propriedades de Rede com NetworkX}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import networkx as nx
 import numpy as np
@@ -792,7 +798,7 @@ print(f"Hubs encontrados: {len(hubs)}")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile, shrink=10]{Gerando Diferentes Modelos de Rede (1/2)}
+\begin{frame}[fragile, shrink=30]{Gerando Diferentes Modelos de Rede (1/2)}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
 import networkx as nx
 
@@ -827,7 +833,7 @@ for G, name in zip(models, names):
 % ============================================================================
 \section{Redes Biológicas}
 
-\begin{frame}{Redes de Interação Proteína-Proteína (PPI)}
+\begin{frame}[shrink=5]{Redes de Interação Proteína-Proteína (1/2)}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Características:}
@@ -839,13 +845,12 @@ for G, name in zip(models, names):
     \item Modularidade alta
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 
 \textbf{Detecção Experimental:}
 \begin{itemize}
     \item Yeast two-hybrid (Y2H)
     \item Affinity purification MS
-    \item Protein arrays
     \item Co-immunoprecipitation
 \end{itemize}
 
@@ -872,14 +877,27 @@ for G, name in zip(models, names):
     \node[below] at (2,-2) {Rede PPI};
 \end{tikzpicture}
 \end{center}
-
-\textbf{Aplicações:}
-\begin{itemize}
-    \item Predição de função
-    \item Identificação de complexos
-    \item Descoberta de alvos
-\end{itemize}
 \end{columns}
+\end{frame}
+
+\begin{frame}[shrink=5]{Redes de Interação Proteína-Proteína (2/2)}
+\begin{block}{Aplicações Principais}
+\begin{itemize}
+    \item Predição de função proteica por homologia de interação
+    \item Identificação de complexos proteicos
+    \item Descoberta de alvos terapêuticos
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{Bases de Dados Principais}
+\begin{itemize}
+    \item \textbf{STRING:} string-db.org — score de confiança integrado
+    \item \textbf{BioGRID:} thebiogrid.org — interações experimentais
+    \item \textbf{IntAct:} ebi.ac.uk/intact — curada manualmente
+\end{itemize}
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}[shrink=10]{Redes Metabólicas}
@@ -976,7 +994,7 @@ for G, name in zip(models, names):
 \end{center}
 \end{frame}
 
-\begin{frame}[shrink=10]{Bases de Dados: PPI e Metabolismo}
+\begin{frame}[shrink=5]{Bases de Dados: PPI e Metabolismo}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Redes PPI}
@@ -1051,7 +1069,7 @@ print(f"Rede {gene}: {G.number_of_nodes()} nos, {G.number_of_edges()} arestas")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[shrink=10]{Exemplo: Rede de Interação de TP53}
+\begin{frame}[shrink=20]{Exemplo: Rede de Interação de TP53}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Gene TP53 (p53):}
@@ -1135,7 +1153,7 @@ Henrik Kacser, Jim Burns (1973) e Reinhart Heinrich, Tom Rapoport (1974)
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=15]{Coeficientes de Controle}
+\begin{frame}[shrink=25]{Coeficientes de Controle}
 \definicao{Coeficiente de Controle de Fluxo}{
 Mede como mudança na atividade da enzima $i$ afeta o fluxo $J$:
 \begin{equation*}
@@ -1158,7 +1176,7 @@ Coeficientes de controle são propriedades sistêmicas, não locais!
 }
 \end{frame}
 
-\begin{frame}[shrink=15]{Coeficientes de Elasticidade}
+\begin{frame}[shrink=25]{Coeficientes de Elasticidade}
 \definicao{Elasticidade}{
 Propriedade local que mede sensibilidade da taxa de reação $v_i$ a mudanças em metabólito $S$:
 \begin{equation*}
@@ -1224,7 +1242,7 @@ C_1^J \varepsilon_S^{v_1} + C_2^J \varepsilon_S^{v_2} = 0
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=10]{Exemplo: Via Linear Simples}
+\begin{frame}[shrink=15]{Exemplo: Via Linear Simples}
 \begin{center}
 \begin{tikzpicture}[scale=1.2,
     node distance=2cm,
@@ -1260,7 +1278,7 @@ C_2^J \varepsilon_{S_2}^{v_2} + C_3^J \varepsilon_{S_2}^{v_3} &= 0 \quad \text{(
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=15]{Cálculo de Coeficientes de Controle}
+\begin{frame}[shrink=25]{Cálculo de Coeficientes de Controle}
 \textbf{Para via linear:} $X_0 \xrightarrow{v_1} S_1 \xrightarrow{v_2} S_2 \xrightarrow{v_3} X_1$
 
 \vspace{0.3cm}
