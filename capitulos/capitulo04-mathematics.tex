@@ -19,14 +19,14 @@
 % ============================================================================
 % SLIDE DE TÍTULO
 % ============================================================================
-\begin{frame}
+\begin{frame}[allowframebreaks]
 \titlepage
 \end{frame}
 
 % ============================================================================
 % SUMÁRIO
 % ============================================================================
-\begin{frame}{Sumário}
+\begin{frame}[allowframebreaks]{Sumário}
 \tableofcontents
 \end{frame}
 
@@ -35,7 +35,7 @@
 % ============================================================================
 \section{Introdução}
 
-\begin{frame}[shrink=5]{Visão Geral do Capítulo}
+\begin{frame}[allowframebreaks]{Visão Geral do Capítulo}
 \begin{block}{Objetivos de Aprendizagem}
 \begin{itemize}
     \item Dominar ferramentas matemáticas avançadas para sistemas biológicos
@@ -60,7 +60,7 @@ A matemática é essencial para:
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=8]{Matemática como Linguagem da Biologia}
+\begin{frame}[allowframebreaks]{Matemática como Linguagem da Biologia}
 \definicao{Modelagem Matemática}{
 A modelagem matemática traduz processos biológicos em equações que capturam a essência dinâmica do sistema, permitindo simulação, análise e predição quantitativas.
 }
@@ -94,7 +94,7 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 }
 \end{frame}
 
-\begin{frame}[shrink=10]{Visão Integrada: Do Modelo à Predição}
+\begin{frame}[allowframebreaks]{Visão Integrada: Do Modelo à Predição}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm, scale=0.85, transform shape,
     box/.style={rectangle, draw, fill=azulclaro!20, text width=3cm, text centered, rounded corners, minimum height=0.8cm}]
@@ -115,7 +115,7 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 \end{center}
 \end{frame}
 
-\begin{frame}[shrink=5]{Tópicos Avançados deste Capítulo}
+\begin{frame}[allowframebreaks]{Tópicos Avançados deste Capítulo}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Parte I: Dinâmica}
@@ -160,7 +160,7 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 % ============================================================================
 \section{Sistemas de Equações Diferenciais}
 
-\begin{frame}[shrink=8]{Revisão: Equações Diferenciais Ordinárias}
+\begin{frame}[allowframebreaks]{Revisão: Equações Diferenciais Ordinárias}
 \definicao{Equação Diferencial Ordinária (EDO)}{
 Uma EDO relaciona uma função desconhecida $y(t)$ com suas derivadas:
 \begin{equation*}
@@ -198,7 +198,7 @@ Sistemas biológicos geralmente requerem sistemas de EDOs acopladas!
 }
 \end{frame}
 
-\begin{frame}[shrink=5]{Sistemas de EDOs Não-Lineares}
+\begin{frame}[allowframebreaks]{Sistemas de EDOs Não-Lineares}
 \begin{block}{Forma Geral}
 Um sistema de $n$ equações diferenciais de primeira ordem:
 \begin{align*}
@@ -220,7 +220,7 @@ onde $\vect{x} = (x_1, x_2, \ldots, x_n)^T$ e $\vect{f} = (f_1, f_2, \ldots, f_n
 \textbf{Sistema Autônomo:} quando $\vect{f}$ não depende explicitamente de $t$
 \end{frame}
 
-\begin{frame}[shrink=8]{Campos Vetoriais e Retratos de Fase}
+\begin{frame}[allowframebreaks]{Campos Vetoriais e Retratos de Fase}
 \definicao{Campo Vetorial}{
 O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que associa a cada ponto do espaço de estados um vetor velocidade.
 }
@@ -263,7 +263,7 @@ O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que asso
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=8]{Nulclinas}
+\begin{frame}[allowframebreaks]{Nulclinas}
 \definicao{Nulclina}{
 Curva no espaço de fase onde uma das derivadas é zero:
 \begin{itemize}
@@ -302,7 +302,7 @@ Pontos de equilíbrio ocorrem na interseção das nulclinas!
 }
 \end{frame}
 
-\begin{frame}[shrink=8]{Campos de Direção}
+\begin{frame}[allowframebreaks]{Campos de Direção}
 \begin{block}{Construindo Retratos de Fase}
 \begin{enumerate}
     \item Calcular e plotar nulclinas ($\dot{x}=0$ e $\dot{y}=0$)
@@ -379,7 +379,7 @@ plt.grid(True)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[shrink=5]{Exemplo: Modelo Lotka-Volterra}
+\begin{frame}[allowframebreaks]{Exemplo: Modelo Lotka-Volterra}
 \begin{block}{Sistema Predador-Presa}
 \begin{align*}
 \frac{dx}{dt} &= \alpha x - \beta xy \quad \text{(presas)}\\
@@ -406,7 +406,7 @@ Este sistema exibe oscilações periódicas (órbitas fechadas)!
 }
 \end{frame}
 
-\begin{frame}{Retrato de Fase do Lotka-Volterra}
+\begin{frame}[allowframebreaks]{Retrato de Fase do Lotka-Volterra}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Características:}
@@ -496,7 +496,7 @@ plt.grid(True)
 % ============================================================================
 \section{Análise de Estabilidade}
 
-\begin{frame}[shrink=5]{Pontos de Equilíbrio}
+\begin{frame}[allowframebreaks]{Pontos de Equilíbrio}
 \definicao{Ponto de Equilíbrio (Ponto Fixo)}{
 Um ponto $\vect{x}^*$ é um ponto de equilíbrio se:
 \begin{equation*}
@@ -526,7 +526,7 @@ Pontos de equilíbrio representam:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[shrink=5]{Análise de Estabilidade Linear}
+\begin{frame}[allowframebreaks]{Análise de Estabilidade Linear}
 \begin{block}{Linearização em torno do Equilíbrio}
 Considere pequena perturbação $\vect{\xi}(t) = \vect{x}(t) - \vect{x}^*$:
 \begin{equation*}
@@ -553,7 +553,7 @@ Para sistema 2D:
 }
 \end{frame}
 
-\begin{frame}[shrink=5]{Autovalores e Estabilidade}
+\begin{frame}[allowframebreaks]{Autovalores e Estabilidade}
 \importante{
 A estabilidade do equilíbrio $\vect{x}^*$ é determinada pelos autovalores $\lambda_i$ da matriz Jacobiana $\vect{J}(\vect{x}^*)$.
 }
@@ -578,7 +578,7 @@ Para cada autovalor $\lambda = a + bi$:
 onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - J_{12}J_{21}$
 \end{frame}
 
-\begin{frame}[shrink=8]{Classificação de Pontos Fixos em 2D}
+\begin{frame}[allowframebreaks]{Classificação de Pontos Fixos em 2D}
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
     % Eixos
@@ -618,7 +618,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{center}
 \end{frame}
 
-\begin{frame}[shrink=10]{Tipos de Pontos Fixos}
+\begin{frame}[allowframebreaks]{Tipos de Pontos Fixos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{1. Nó Estável}
@@ -698,7 +698,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=8]{Espirais: Estáveis vs. Instáveis}
+\begin{frame}[allowframebreaks]{Espirais: Estáveis vs. Instáveis}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Espiral Estável}
@@ -750,7 +750,7 @@ Espirais são comuns em sistemas biológicos com feedback negativo e atraso!
 }
 \end{frame}
 
-\begin{frame}[shrink=5]{Teorema de Estabilidade de Lyapunov}
+\begin{frame}[allowframebreaks]{Teorema de Estabilidade de Lyapunov}
 \definicao{Estabilidade de Lyapunov}{
 Um ponto de equilíbrio $\vect{x}^*$ é:
 \begin{itemize}
@@ -811,7 +811,7 @@ print("Estavel?", all(np.real(eigenvalues) < 0))
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[shrink=8]{Exemplo: Análise de Estabilidade}
+\begin{frame}[allowframebreaks]{Exemplo: Análise de Estabilidade}
 \textbf{Sistema:}
 \begin{align*}
 \frac{dx}{dt} &= x(1 - x - 0.5y)\\
@@ -852,7 +852,7 @@ O equilíbrio é uma \textbf{espiral estável}!
 % ============================================================================
 \section{Bifurcações}
 
-\begin{frame}[shrink=5]{O que são Bifurcações?}
+\begin{frame}[allowframebreaks]{O que são Bifurcações?}
 \definicao{Bifurcação}{
 Uma bifurcação é uma mudança qualitativa na dinâmica de um sistema quando um parâmetro atravessa um valor crítico. Novos comportamentos emergem, equilíbrios aparecem/desaparecem ou mudam de estabilidade.
 }
@@ -875,7 +875,7 @@ Bifurcações explicam:
 \textbf{Parâmetro de bifurcação:} $\mu$ (valor crítico: $\mu_c$)
 \end{frame}
 
-\begin{frame}[shrink=8]{Bifurcação Saddle-Node (Fold)}
+\begin{frame}[allowframebreaks]{Bifurcação Saddle-Node (Fold)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Equação Normal}
@@ -934,7 +934,7 @@ Saddle-node é a forma mais comum de equilíbrios aparecerem/desaparecerem!
 }
 \end{frame}
 
-\begin{frame}[shrink=8]{Bifurcação Transcrítica}
+\begin{frame}[allowframebreaks]{Bifurcação Transcrítica}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Equação Normal}
@@ -994,7 +994,7 @@ Transição de crescimento populacional quando recurso disponível muda
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=10]{Bifurcação Pitchfork}
+\begin{frame}[allowframebreaks]{Bifurcação Pitchfork}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Supercrítica (Suave)}
@@ -1068,7 +1068,7 @@ Pitchfork supercrítica: transição suave. Subcrítica: salto catastrófico!
 }
 \end{frame}
 
-\begin{frame}[shrink=8]{Bifurcação de Hopf}
+\begin{frame}[allowframebreaks]{Bifurcação de Hopf}
 \definicao{Bifurcação de Hopf}{
 Transição em que um equilíbrio estável perde estabilidade e dá origem a um ciclo limite periódico (oscilação).
 }
@@ -1132,7 +1132,7 @@ Hopf é crucial para o surgimento de oscilações biológicas!
 }
 \end{frame}
 
-\begin{frame}[shrink=10]{Diagramas de Bifurcação: Resumo Visual}
+\begin{frame}[allowframebreaks]{Diagramas de Bifurcação: Resumo Visual}
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
     % Saddle-node
@@ -1235,7 +1235,7 @@ plt.title('Bifurcacao Pitchfork')
 % ============================================================================
 \section{Oscilações e Ciclos Limite}
 
-\begin{frame}[shrink=5]{Soluções Periódicas}
+\begin{frame}[allowframebreaks]{Soluções Periódicas}
 \definicao{Solução Periódica}{
 Uma solução $\vect{x}(t)$ é periódica com período $T$ se:
 \begin{equation*}
@@ -1276,7 +1276,7 @@ No espaço de fase, corresponde a uma órbita fechada.
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=8]{Ciclos Limite}
+\begin{frame}[allowframebreaks]{Ciclos Limite}
 \definicao{Ciclo Limite}{
 Uma órbita periódica isolada para a qual trajetórias próximas convergem (estável) ou divergem (instável). Diferente de centro, é estruturalmente estável sob perturbações.
 }
@@ -1331,7 +1331,7 @@ Ciclos limite são essenciais para modelar ritmos biológicos robustos!
 }
 \end{frame}
 
-\begin{frame}[shrink=5]{Teorema de Poincaré-Bendixson}
+\begin{frame}[allowframebreaks]{Teorema de Poincaré-Bendixson}
 \begin{block}{Teorema de Poincaré-Bendixson}
 Para sistemas 2D ($\dot{\vect{x}} = \vect{f}(\vect{x})$), se:
 \begin{enumerate}
@@ -1358,7 +1358,7 @@ Este teorema garante a existência de oscilações em sistemas 2D! Não vale par
 \end{itemize}
 \end{frame}
 
-\begin{frame}[shrink=8]{Oscilador de Van der Pol}
+\begin{frame}[allowframebreaks]{Oscilador de Van der Pol}
 \begin{block}{Equação de Van der Pol}
 \begin{equation*}
 \frac{d^2x}{dt^2} - \mu(1 - x^2)\frac{dx}{dt} + x = 0
@@ -1397,7 +1397,7 @@ $\text{Re}(\lambda) > 0$ se $\mu > 0$ $\Rightarrow$ instável
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=8]{Retratos de Fase do Van der Pol}
+\begin{frame}[allowframebreaks]{Retratos de Fase do Van der Pol}
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
     % mu pequeno (quase harmonico)
@@ -1487,7 +1487,7 @@ plt.grid(True)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[shrink=8]{Osciladores Biológicos}
+\begin{frame}[allowframebreaks]{Osciladores Biológicos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Ritmos Circadianos}
@@ -1540,7 +1540,7 @@ Todos esses sistemas exibem ciclos limite robustos a perturbações!
 % ============================================================================
 \section{Análise de Sensibilidade}
 
-\begin{frame}[shrink=5]{Análise de Sensibilidade Local}
+\begin{frame}[allowframebreaks]{Análise de Sensibilidade Local}
 \definicao{Análise de Sensibilidade}{
 Estudo de como mudanças nos parâmetros do modelo afetam as saídas (variáveis de estado, fluxos, propriedades emergentes).
 }
@@ -1568,7 +1568,7 @@ Estudo de como mudanças nos parâmetros do modelo afetam as saídas (variáveis
 \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=5]{Coeficientes de Sensibilidade}
+\begin{frame}[allowframebreaks]{Coeficientes de Sensibilidade}
 \definicao{Coeficiente de Sensibilidade Local}{
 Derivada normalizada da saída $y$ em relação ao parâmetro $p$:
 \begin{equation*}
@@ -1593,7 +1593,7 @@ Mede a variação percentual em $y$ quando $p$ varia 1\%.
 \textbf{Para EDOs:} sensibilidade depende do tempo: $S_{y,p}(t)$
 \end{frame}
 
-\begin{frame}[shrink=5]{Equações de Sensibilidade}
+\begin{frame}[allowframebreaks]{Equações de Sensibilidade}
 Para sistema $\dot{\vect{x}} = \vect{f}(\vect{x}, \vect{p})$, definimos:
 \begin{equation*}
 \vect{s}_i(t) = \frac{\partial \vect{x}(t)}{\partial p_i}
@@ -1622,7 +1622,7 @@ Resolver equações de sensibilidade junto com o sistema original!
 }
 \end{frame}
 
-\begin{frame}[shrink=8]{Análise de Sensibilidade Global}
+\begin{frame}[allowframebreaks]{Análise de Sensibilidade Global}
 \begin{block}{Métodos Globais}
 Exploram todo o espaço paramétrico, não apenas um ponto:
 \end{block}
@@ -1661,7 +1661,7 @@ onde $p_{\sim i}$ denota todos os parâmetros exceto $p_i$.
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=8]{Exploração do Espaço Paramétrico}
+\begin{frame}[allowframebreaks]{Exploração do Espaço Paramétrico}
 \begin{block}{Técnicas de Amostragem}
 \begin{itemize}
     \item \textbf{Monte Carlo:} amostragem aleatória
@@ -1713,7 +1713,7 @@ onde $p_{\sim i}$ denota todos os parâmetros exceto $p_i$.
 \end{center}
 \end{frame}
 
-\begin{frame}[shrink=8]{Exemplo: Sensibilidade de Modelo Cinético}
+\begin{frame}[allowframebreaks]{Exemplo: Sensibilidade de Modelo Cinético}
 \textbf{Modelo:} Reação enzimática simples
 \begin{equation*}
 \frac{dx}{dt} = \frac{V_{max} \cdot S}{K_M + S} - k_{deg} \cdot x
@@ -1832,7 +1832,7 @@ for name, st in zip(problem['names'], Si['ST']):
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}[shrink=10]{Exercícios - Parte 1: EDOs}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 1: EDOs}
 \begin{block}{Questão 1: Sistema Linear}
 Resolva analiticamente e numericamente (Python) o sistema:
 \begin{align*}
@@ -1856,7 +1856,7 @@ Para o sistema:
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=5]{Exercícios - Parte 2: Estabilidade}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 2: Estabilidade}
 \begin{block}{Questão 3: Análise de Estabilidade}
 Analise a estabilidade de todos os equilíbrios do sistema:
 \begin{align*}
@@ -1881,7 +1881,7 @@ com $K=10$, $\alpha=0.5$, $\beta=0.3$, $\delta=1$.
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=5]{Exercícios - Parte 3: Bifurcações}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 3: Bifurcações}
 \begin{block}{Questão 5: Diagrama de Bifurcação}
 Para $\dot{x} = \mu + x - x^3$, construa o diagrama de bifurcação completo:
 \begin{enumerate}
@@ -1902,7 +1902,7 @@ Varie $\mu$ de $-1$ a $1$ e observe surgimento do ciclo limite em $\mu = 0$.
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=5]{Exercícios - Parte 4: Oscilações}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 4: Oscilações}
 \begin{block}{Questão 7: Van der Pol}
 Simule o oscilador de Van der Pol para $\mu \in \{0.1, 1, 5\}$:
 \begin{enumerate}
@@ -1924,7 +1924,7 @@ com $n=4$, $k_1=k_2=k_3=1$. Mostre que exibe ciclo limite.
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=5]{Exercícios - Parte 5: Sensibilidade}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 5: Sensibilidade}
 \begin{block}{Questão 9: Sensibilidade Local}
 Para o sistema de síntese e degradação:
 \begin{equation*}
@@ -1955,7 +1955,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 % ============================================================================
 \section{Referências}
 
-\begin{frame}{Referências Principais}
+\begin{frame}[allowframebreaks]{Referências Principais}
 \begin{thebibliography}{99}
 \bibitem{strogatz} Strogatz S.H. (2015). \textit{Nonlinear Dynamics and Chaos: With Applications to Physics, Biology, Chemistry, and Engineering}, 2nd ed. Westview Press.
 
@@ -1969,7 +1969,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}[shrink=5]{Leitura Complementar}
+\begin{frame}[allowframebreaks]{Leitura Complementar}
 \begin{block}{Livros Avançados}
 \begin{itemize}
     \item Kuznetsov Y.A. (2004). \textit{Elements of Applied Bifurcation Theory}, 3rd ed. Springer.
@@ -1987,7 +1987,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 \end{block}
 \end{frame}
 
-\begin{frame}[shrink=3]{Recursos Computacionais}
+\begin{frame}[allowframebreaks]{Recursos Computacionais}
 \begin{block}{Software e Bibliotecas}
 \begin{itemize}
     \item \textbf{Python:} scipy.integrate (odeint, solve\_ivp), sympy (álgebra simbólica)
@@ -2010,7 +2010,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 % ============================================================================
 % SLIDE FINAL
 % ============================================================================
-\begin{frame}
+\begin{frame}[allowframebreaks]
 \begin{center}
 {\Huge Obrigado!}
 
