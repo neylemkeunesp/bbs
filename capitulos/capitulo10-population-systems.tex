@@ -88,7 +88,7 @@ Conjunto de indivíduos da mesma espécie (ou espécies interagentes) cuja densi
 \begin{frame}{Processos Fundamentais}
 \begin{center}
 \begin{tikzpicture}[node distance=2cm, scale=0.9, transform shape]
-    \node[draw, circle, fill=azulclaro!30, minimum size=2cm] (pop) {População\\$N(t)$};
+    \node[draw, circle, fill=azulclaro!30, minimum size=2cm] (pop) {População $N(t)$};
 
     \node[above=1.5cm of pop, fill=verdeacido!30, rounded corners] (nasc) {Nascimentos: $b N$};
     \node[below=1.5cm of pop, fill=red!30, rounded corners] (morte) {Mortes: $d N$};
@@ -103,9 +103,7 @@ Conjunto de indivíduos da mesma espécie (ou espécies interagentes) cuja densi
 \end{center}
 
 \destaque{
-\begin{equation*}
-\derivada{N}{t} = \underbrace{bN}_{\text{nascimento}} - \underbrace{dN}_{\text{morte}} + \underbrace{I}_{\text{imigração}} - \underbrace{E}_{\text{emigração}}
-\end{equation*}
+$\displaystyle \derivada{N}{t} = \underbrace{bN}_{\text{nascimento}} - \underbrace{dN}_{\text{morte}} + \underbrace{I}_{\text{imigração}} - \underbrace{E}_{\text{emigração}}$
 }
 \end{frame}
 
@@ -125,9 +123,7 @@ onde $r = b - d$ é a taxa intrínseca de crescimento per capita.
 
 \textbf{Solução analítica:}
 \destaque{
-\begin{equation*}
-N(t) = N_0 e^{rt}
-\end{equation*}
+$\displaystyle N(t) = N_0 e^{rt}$
 }
 
 \begin{columns}
@@ -806,9 +802,7 @@ Número médio de infecções secundárias causadas por um indivíduo infectado 
 }
 
 \destaque{
-\begin{equation*}
-R_0 = \frac{\beta}{\gamma} = \beta \times \frac{1}{\gamma} = \text{(taxa de contato)} \times \text{(duração da infecção)}
-\end{equation*}
+$\displaystyle R_0 = \frac{\beta}{\gamma} = \beta \times \frac{1}{\gamma} = \text{(taxa de contato)} \times \text{(duração da infecção)}$
 }
 
 \begin{block}{Interpretação Epidemiológica}
@@ -1207,10 +1201,12 @@ Sistema de duas espécies com difusão diferencial pode gerar padrões espaciais
     \foreach \x in {0,1,...,6} {
         \foreach \y in {0,1,...,4} {
             \pgfmathsetmacro{\val}{sin(60*\x + 45)*sin(60*\y + 30)}
-            \ifnum\val>0
+            \pgfmathparse{\val > 0 ? 1 : 0}
+            \ifnum\pgfmathresult=1
                 \fill[azulescuro, opacity=\val] (\x*0.6, \y*0.6) circle (0.25);
             \else
-                \fill[laranjacel, opacity={-\val}] (\x*0.6, \y*0.6) circle (0.25);
+                \pgfmathsetmacro{\absval}{-\val}
+                \fill[laranjacel, opacity=\absval] (\x*0.6, \y*0.6) circle (0.25);
             \fi
         }
     }

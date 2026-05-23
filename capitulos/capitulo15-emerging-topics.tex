@@ -1091,18 +1091,20 @@ COVID-19 demonstrou necessidade de biologia de sistemas para resposta rápida!
 
     % Data sources
     \node[draw, ellipse, fill=roxodna!30, font=\tiny] (genome) at (-2,2) {Genoma};
-    \node[draw, ellipse, fill=laranjacel!30, font=\tiny] (omics) at (0,2.5) {Multi-\\omics};
-    \node[draw, ellipse, fill=verdeacido!30, font=\tiny] (micro) at (2,2) {Micro-\\bioma};
-    \node[draw, ellipse, fill=yellow!30, font=\tiny] (wear) at (2.5,0) {Wear-\\ables};
+    \node[draw, ellipse, fill=laranjacel!30, font=\tiny] (omics) at (0,2.5) {Multi-omics};
+    \node[draw, ellipse, fill=verdeacido!30, font=\tiny] (micro) at (2,2) {Microbioma};
+    \node[draw, ellipse, fill=yellow!30, font=\tiny] (wear) at (2.5,0) {Wearables};
     \node[draw, ellipse, fill=red!30, font=\tiny] (ehr) at (-2.5,0) {EHR};
 
     % Connections
-    \foreach \src in {genome, omics, micro, wear, ehr} {
-        \draw[->, thick] (\src) -- (person);
-    }
+    \draw[->, thick] (genome) -- (person);
+    \draw[->, thick] (omics) -- (person);
+    \draw[->, thick] (micro) -- (person);
+    \draw[->, thick] (wear) -- (person);
+    \draw[->, thick] (ehr) -- (person);
 
     % Output
-    \draw[->, ultra thick, blue] (person) -- ++(0,-2) node[below, font=\small] {Tratamento\\Personalizado};
+    \draw[->, ultra thick, blue] (person) -- ++(0,-2) node[below, font=\small] {Tratamento Personalizado};
 \end{tikzpicture}
 \end{center}
 \end{columns}
@@ -1221,14 +1223,14 @@ Réplica computacional dinâmica de um paciente individual, integrando dados mul
     \draw[->, thick, blue] (patient) -- node[above, font=\small] {Dados} (twin);
 
     % Simulation
-    \node[draw, cloud, fill=verdeacido!30, text width=1.5cm, align=center, font=\small] (sim) at (5,2.5) {Simulações};
+    \node[draw, ellipse, fill=verdeacido!30, text width=1.5cm, align=center, font=\small] (sim) at (5,2.5) {Simulações};
     \draw[->, thick] (twin) -- (sim);
 
     % Predictions
     \draw[->, thick, red] (sim) to[bend left] node[right, font=\small] {Predições} (patient);
 
     % Wearables
-    \node[font=\tiny] at (0,-1.5) {Wearables, EHR,\\omics, microbioma};
+    \node[font=\tiny, align=center] at (0,-1.5) {Wearables, EHR,\\omics, microbioma};
 \end{tikzpicture}
 \end{center}
 

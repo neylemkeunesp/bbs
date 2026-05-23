@@ -289,9 +289,7 @@ onde:
 
 \textbf{Condição para Bistabilidade:}
 \destaque{
-\begin{equation*}
-\alpha_1 \alpha_2 > (\beta + 1)(\gamma + 1)
-\end{equation*}
+$\displaystyle \alpha_1 \alpha_2 > (\beta + 1)(\gamma + 1)$
 }
 \end{frame}
 
@@ -381,7 +379,7 @@ Três genes que se reprimem em cascata:
     \draw[-|, thick, red, line width=1.5pt] (cI) to[bend right=20] (lacI);
 
     % Centro
-    \node[font=\small] at (0,0) {Ciclo de\\repressão};
+    \node[font=\small] at (0,0) {Ciclo de repressão};
 \end{tikzpicture}
 \end{center}
 
@@ -564,7 +562,7 @@ Sistema que detecta sinais químicos/físicos e produz resposta mensurável
     \node[above, font=\tiny] at (0,3.4) {Analito};
 
     % Sensor
-    \node[draw, rectangle, fill=verdeacido!30, minimum width=2.5cm, minimum height=0.8cm] (sensor) at (0,2) {Promotor\\Sensor};
+    \node[draw, rectangle, fill=verdeacido!30, minimum width=2.5cm, minimum height=0.8cm] (sensor) at (0,2) {Promotor Sensor};
 
     % Arrow
     \draw[->, thick, red] (target) -- (sensor);
@@ -967,11 +965,11 @@ Método computacional para predizer fluxos metabólicos
 
 \textbf{Formulação:}
 \destaque{
-\begin{align*}
+$\displaystyle \begin{aligned}
 \text{maximizar} \quad & c^T v\\
 \text{sujeito a} \quad & Sv = 0\\
 & v_{min} \leq v \leq v_{max}
-\end{align*}
+\end{aligned}$
 }
 
 onde:
