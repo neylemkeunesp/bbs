@@ -238,51 +238,40 @@ O ruído estocástico impede que o sistema permaneça exatamente em um ponto fix
 
 \begin{frame}{Cadeias de Markov de Tempo Discreto}
 \definicao{Cadeia de Markov Discreta (DTMC)}{
-Processo estocástico onde a probabilidade do próximo estado depende estritamente e apenas do estado atual (ausência de memória):
+Processo estocástico sem memória, onde a probabilidade de transição depende apenas do estado atual:
 \begin{equation*}
 P(X_{t+1} = j \mid X_t = i, X_{t-1} = i_{t-1}, \ldots) = P_{ij}
 \end{equation*}
 }
 
 \begin{block}{Evolução Probabilística Recursiva}
-Dada a matriz de transição $\vect{P}$ e o vetor de probabilidade de estados $\vect{p}(t)$ no tempo $t$:
+Dada a matriz de transição $\vect{P}$ (onde $\sum_{j} P_{ij} = 1$) e o vetor de estados $\vect{p}(t)$:
 \begin{equation*}
 \vect{p}(t+1) = \vect{P} \cdot \vect{p}(t) \quad \Rightarrow \quad \vect{p}(t) = \vect{P}^t \vect{p}(0)
 \end{equation*}
 \end{block}
-
-\begin{exampleblock}{Aplicações em Biologia}
-\begin{itemize}
-    \item \textbf{Canais Iônicos}: Transição estocástica entre estados (aberto, fechado, inativo).
-    \item \textbf{Evolução Molecular}: Modelos de mutação de nucleotídeos (ex: Jukes-Cantor).
-\end{itemize}
-\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Cadeias de Markov: Distribuição Estacionária}
-\begin{block}{Propriedades da Matriz de Transição $\vect{P}$}
-\begin{itemize}
-    \item Elementos são probabilidades: $P_{ij} \ge 0$.
-    \item Matriz Estocástica por Linha: $\sum_{j} P_{ij} = 1$ (soma de cada linha é 1).
-\end{itemize}
-\end{block}
-
 \definicao{Distribuição Estacionária ($\vect{\pi}$)}{
-A distribuição estacionária é o vetor de probabilidades $\vect{\pi}$ que permanece invariante após um passo de transição:
+É o vetor de probabilidades $\vect{\pi}$ que permanece invariante após um passo de transição da cadeia de Markov:
 \begin{equation*}
 \vect{\pi} = \vect{P}^T \vect{\pi} \quad \text{ou} \quad \pi_j = \sum_{i} \pi_i P_{ij}
 \end{equation*}
-sujeito a $\sum_{i} \pi_i = 1$.
+sujeito à normalização: $\sum_{i} \pi_i = 1$.
 }
 
-\begin{exampleblock}{Comportamento de Longo Prazo}
-Para cadeias ergódicas (irredutíveis e aperiódicas), qualquer condição inicial converge para a distribuição estacionária: $\lim_{t \to \infty} \vect{p}(t) = \vect{\pi}$.
+\vspace{0.2cm}
+
+\begin{exampleblock}{Comportamento Assintótico (Longo Prazo)}
+Para cadeias irredutíveis e aperiódicas (ergódicas), o sistema converge para a distribuição estacionária independente do estado inicial:
+\begin{equation*}
+\lim_{t \to \infty} \vect{p}(t) = \vect{\pi}
+\end{equation*}
 \end{exampleblock}
 \end{frame}
 
 \begin{frame}{Cadeias de Markov: Exemplo de Canal Iônico}
-Considere um canal iônico simplificado com dois estados: \textbf{Fechado (F)} e \textbf{Aberto (A)}.
-
 \begin{columns}
 \column{0.48\textwidth}
 \textbf{Matriz de Transição $\vect{P}$:}
@@ -305,14 +294,14 @@ Resolve-se $\vect{\pi} \vect{P} = \vect{\pi}$:
 \pi_F &= \frac{\beta}{\alpha + \beta} \\
 \pi_A &= \frac{\alpha}{\alpha + \beta}
 \end{align*}
-$\pi_A$ representa a fração de canais abertos no equilíbrio!
+$\pi_A$ é a fração de canais abertos no equilíbrio!
 \end{columns}
 
-\vspace{0.4cm}
+\vspace{0.1cm}
 \begin{center}
-\begin{tikzpicture}[node distance=2.2cm, auto, scale=0.8, transform shape]
-    \node[circle, draw, fill=laranjacel!20, minimum size=1cm] (F) {Fechado (F)};
-    \node[circle, draw, fill=azulclaro!20, minimum size=1cm, right of=F] (A) {Aberto (A)};
+\begin{tikzpicture}[node distance=1.8cm, auto, scale=0.7, transform shape]
+    \node[circle, draw, fill=laranjacel!20, minimum size=0.9cm] (F) {Fechado (F)};
+    \node[circle, draw, fill=azulclaro!20, minimum size=0.9cm, right of=F] (A) {Aberto (A)};
     \path[->, thick, >=stealth]
         (F) edge [bend left] node {$\alpha$} (A)
         (A) edge [bend left] node {$\beta$} (F)
