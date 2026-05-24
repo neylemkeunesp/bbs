@@ -1289,45 +1289,89 @@ Cada enzima contribui $\sim 33\%$ para controle do fluxo.
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[shrink=10]{Exemplo Numérico: MCA (1/2)}
-\textbf{Via:} $A \xrightarrow{E_1} B \xrightarrow{E_2} C$
-\begin{align*}
-v_1 &= \frac{10 \cdot A}{5 + A}, \quad A = 10 \text{ mM (fixo)}\\
-v_2 &= \frac{8 \cdot B}{4 + B}
-\end{align*}
-
-\begin{block}{Passo 1: Estado estacionário ($v_1 = v_2 = J$)}
-$100/15 = 8B/(4+B) \Rightarrow B \approx 5.7$ mM, $J = 6.67$ mM/min
-\end{block}
-\end{frame}
-
-\begin{frame}[shrink=10]{Exemplo Numérico: MCA (2/2)}
-\begin{block}{Passo 2: Elasticidades}
-$\varepsilon_B^{v_1} = 0, \quad \varepsilon_B^{v_2} = \frac{4}{4 + 5.7} = 0.41$
+\begin{frame}[shrink=10]{Exemplo Prático: O Início da Glicólise}
+\begin{block}{Enunciado do Problema}
+Queremos analisar quantitativamente o controle do fluxo na etapa inicial da glicólise em células tumorais (efeito Warburg). O sistema consiste na fosforilação da Glicose ($G$) extracelular pela enzima \textbf{Hexocinase} ($E_1$), produzindo \textbf{Glicose-6-Fosfato} ($S$), que é então isomerizada pela \textbf{G6P Isomerase} ($E_2$) em \textbf{Frutose-6-Fosfato} ($P$).
 \end{block}
 
-\begin{block}{Passo 3: Coeficientes de Controle}
-Conectividade: $C_2^J \times 0.41 = 0 \Rightarrow C_2^J = 0$\\
-Soma: $C_1^J + C_2^J = 1 \Rightarrow C_1^J = 1$
-\end{block}
-\end{frame}
+\vspace{0.1cm}
+\begin{center}
+$\text{Glicose } (G) \xrightarrow{E_1 \text{ (Hexocinase)}} \text{G6P } (S) \xrightarrow{E_2 \text{ (Isomerase)}} \text{F6P } (P)$
+\end{center}
+\vspace{0.1cm}
 
-\begin{frame}[shrink=10]{Exemplo Numérico: Interpretação}
-\vspace{0.3cm}
-
-\importante{
-\textbf{Resultado:} $C_1^J = 1$, $C_2^J = 0$
-
-\vspace{0.2cm}
-
-\textbf{Interpretação:}
+\begin{block}{Parâmetros do Modelo}
 \begin{itemize}
-    \item A primeira enzima $E_1$ tem controle total do fluxo!
-    \item A segunda enzima $E_2$ não controla o fluxo
-    \item Aumentar $E_2$ não aumentará $J$
-    \item $E_1$ é o alvo terapêutico ideal para aumentar fluxo
+    \item Concentração de Glicose mantida fixa por transporte celular: $G = 5.0$ mM.
+    \item Hexocinase ($E_1$): $v_1 = \frac{V_{max1} \cdot G}{K_{M1} + G}$, com $V_{max1} = 10.0$ mM/min, $K_{M1} = 1.0$ mM.
+    \item Isomerase ($E_2$): $v_2 = \frac{V_{max2} \cdot S}{K_{M2} + S}$, com $V_{max2} = 15.0$ mM/min, $K_{M2} = 2.0$ mM.
 \end{itemize}
-}
+\end{block}
+\end{frame}
+
+\begin{frame}[shrink=10]{Resolução: Passo 1 (Estado Estacionário)}
+\begin{block}{Determinar o Fluxo da Via ($J$) e Concentração de G6P ($S$)}
+No estado estacionário, as taxas de consumo e produção devem se equilibrar: $v_1 = v_2 = J$.
+\end{block}
+
+\begin{enumerate}
+    \item \textbf{Cálculo da taxa da Hexocinase ($v_1$)}:
+    Como $G$ é fixo, $v_1$ funciona como fluxo de entrada constante:
+    \begin{equation*}
+    v_1 = \frac{10.0 \cdot 5.0}{1.0 + 5.0} = \frac{50.0}{6.0} \approx 8.33 \text{ mM/min} \quad \Rightarrow \quad J = 8.33 \text{ mM/min}
+    \end{equation*}
+    
+    \item \textbf{Cálculo da concentração estacionária do intermediário G6P ($S$)}:
+    \begin{equation*}
+    v_2(S) = J \quad \Rightarrow \quad \frac{15.0 \cdot S}{2.0 + S} = \frac{25.0}{3.0}
+    \end{equation*}
+    Multiplicando em cruz:
+    \begin{equation*}
+    45.0 \cdot S = 50.0 + 25.0 \cdot S \quad \Rightarrow \quad 20.0 \cdot S = 50.0 \quad \Rightarrow \quad S = 2.50 \text{ mM}
+    \end{equation*}
+\end{enumerate}
+
+\vspace{0.1cm}
+\centering
+\textcolor{azulescuro}{\textbf{Conclusão}: O fluxo estacionário da via é $J = 8.33$ mM/min e a concentração de G6P é $S = 2.5$ mM.}
+\end{frame}
+
+\begin{frame}{Resolução: Passos 2 e 3 (Elasticidade e Controle)}
+\begin{block}{Passo 2: Calcular as Elasticidades Locais}
+Mede a sensibilidade de cada reação em relação ao intermediário G6P ($S$):
+\begin{itemize}
+    \item $\varepsilon_S^{v_1} = 0$ (a Hexocinase não depende de $S$ neste modelo linear simplificado).
+    \item $\varepsilon_S^{v_2} = \frac{K_{M2}}{K_{M2} + S} = \frac{2.0}{2.0 + 2.5} = \frac{2.0}{4.5} \approx 0.44$.
+\end{itemize}
+\end{block}
+
+\begin{block}{Passo 3: Resolver os Teoremas da MCA}
+\begin{align*}
+C_1^J \varepsilon_S^{v_1} + C_2^J \varepsilon_S^{v_2} &= 0 \quad \text{(Conectividade)} \quad \Rightarrow \quad C_1^J \cdot (0) + C_2^J \cdot (0.44) = 0 \quad \Rightarrow \quad C_2^J = 0 \\
+C_1^J + C_2^J &= 1 \quad \text{(Soma)} \quad \Rightarrow \quad C_1^J + 0 = 1 \quad \Rightarrow \quad C_1^J = 1
+\end{align*}
+\end{block}
+
+\vspace{0.1cm}
+\centering
+\textcolor{azulescuro}{\textbf{Resultado}: $C_{HK}^J$ (Hexocinase) = $1.0$ e $C_{PGI}^J$ (Isomerase) = $0.0$. A Hexocinase detém todo o controle sobre o fluxo; aumentar a Isomerase não altera o fluxo $J$ da via.}
+\end{frame}
+
+\begin{frame}{Feedback alostérico e a Realidade Celular}
+\begin{block}{A Realidade Biológica: Inibição por Produto}
+In vivo, a Hexocinase é inibida por feedback alostérico pelo seu próprio produto $S$ ($G6P$):
+\begin{equation*}
+v_1 = \frac{V_{max1} \cdot G}{K_{M1} + G} \cdot \frac{1}{1 + S / K_{I}} \quad \Rightarrow \quad \varepsilon_S^{v_1} < 0 \quad \text{(elasticidade negativa)}
+\end{equation*}
+\end{block}
+
+\vspace{0.1cm}
+\centering\small
+\textcolor{azulescuro}{\textbf{Redistribuição do Controle}: A inibição por produto ($\varepsilon_S^{v_1} \neq 0$) redistribui o controle. O Teorema da Conectividade passa a dar:
+\begin{equation*}
+C_1^J \varepsilon_S^{v_1} + C_2^J \varepsilon_S^{v_2} = 0 \quad \Rightarrow \quad \frac{C_1^J}{C_2^J} = -\frac{\varepsilon_S^{v_2}}{\varepsilon_S^{v_1}} > 0
+\end{equation*}
+Ambas as enzimas passam a compartilhar o controle de fluxo, ilustrando o princípio central da MCA de que \textbf{o controle metabólico é distribuído}!}
 \end{frame}
 
 \begin{frame}[fragile, shrink=10]{Simulando MCA com Python}
@@ -1335,36 +1379,110 @@ Soma: $C_1^J + C_2^J = 1 \Rightarrow C_1^J = 1$
 import numpy as np
 from scipy.optimize import fsolve
 
-# Taxas
-def v1(A, Vmax1=10, Km1=5): return Vmax1 * A / (Km1 + A)
-def v2(B, Vmax2=8, Km2=4): return Vmax2 * B / (Km2 + B)
+# Taxas da Hexocinase (v_hk) e Isomerase (v_pgi)
+def v_hk(G, Vmax1=10.0, Km1=1.0): return Vmax1 * G / (Km1 + G)
+def v_pgi(S, Vmax2=15.0, Km2=2.0): return Vmax2 * S / (Km2 + S)
 
-# Estado estacionario (v1 = v2)
-A_fixed = 10
-B_ss = fsolve(lambda B: v1(A_fixed) - v2(B), 5)[0]
-J_ss = v2(B_ss)
+# Estado estacionario (v_hk = v_pgi)
+G_fixed = 5.0
+S_ss = fsolve(lambda S: v_hk(G_fixed) - v_pgi(S), 2.5)[0]
+J_ss = v_pgi(S_ss)
 
-print(f"B_ss = {B_ss:.2f}, Fluxo J = {J_ss:.2f}")
+print(f"G6P estacionario (S_ss) = {S_ss:.2f} mM")
+print(f"Fluxo estacionario (J_ss) = {J_ss:.2f} mM/min")
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile, shrink=10]{Cálculo de Coeficientes de Controle (Python)}
 \begin{lstlisting}[language=Python, basicstyle=\ttfamily\scriptsize]
 def calc_C(idx, delta=0.01):
-    def get_J(v1_v, v2_v):
-        B = fsolve(lambda B: v1_v(A_fixed) - v2_v(B), 5)[0]
-        return v2_v(B)
+    def get_J(v_hk_func, v_pgi_func):
+        S = fsolve(lambda S: v_hk_func(G_fixed) - v_pgi_func(S), 2.5)[0]
+        return v_pgi_func(S)
     
     if idx == 1:
-        Jb = get_J(lambda a: v1(a, 10), v2)
-        Jp = get_J(lambda a: v1(a, 10*(1+delta)), v2)
+        Jb = get_J(lambda g: v_hk(g, 10.0), v_pgi)
+        Jp = get_J(lambda g: v_hk(g, 10.0*(1+delta)), v_pgi)
     else:
-        Jb = get_J(v1, lambda b: v2(b, 8))
-        Jp = get_J(v1, lambda b: v2(b, 8*(1+delta)))
+        Jb = get_J(v_hk, lambda s: v_pgi(s, 15.0))
+        Jp = get_J(v_hk, lambda s: v_pgi(s, 15.0*(1+delta)))
     return ((Jp - Jb) / Jb) / delta
 
-print(f"C1^J = {calc_C(1):.3f}, C2^J = {calc_C(2):.3f}")
+print(f"C_HK^J  = {calc_C(1):.3f}")
+print(f"C_PGI^J = {calc_C(2):.3f}")
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}[shrink=10]{Limitações da MCA Tradicional}
+\begin{block}{Desafios da Modelagem Cinética Clássica}
+Embora a MCA forneça uma descrição quantitativa rigorosa do controle do metabolismo, sua aplicação prática enfrenta barreiras significativas:
+\begin{itemize}
+    \item \textbf{Dependência de Parâmetros}: Exige dados cinéticos detalhados (como $K_M$, $V_{max}$, constantes de inibição) para todas as enzimas envolvidas na rede.
+    \item \textbf{Dificuldade de Medição}: Muitos desses parâmetros são difíceis ou impossíveis de se medir de forma confiável \textit{in vivo} em condições fisiológicas.
+    \item \textbf{Natureza Local}: As conclusões da MCA (elasticidades e coeficientes de controle) são linearizações válidas estritamente em torno de um \textbf{estado estacionário específico}. Perturbações grandes ou transições metabólicas invalidam a análise linear local.
+    \item \textbf{Escalabilidade Limitada}: Modelar redes metabólicas em escala genômica (GEMs) com cinética detalhada é computacional e experimentalmente inviável atualmente.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[shrink=10]{A Abordagem Baseada em Restrições (Palsson)}
+\definicao{Abordagem de Palsson (COBRA)}{
+Proposta por Bernhard Palsson e colaboradores, a modelagem \textbf{COBRA} (\textit{Constraint-Based Reconstruction and Analysis}) foca na reconstrução de redes metabólicas em escala genômica usando propriedades estequiométricas fundamentais, eliminando a dependência de parâmetros cinéticos individuais.
+}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Princípios das Restrições}
+\begin{itemize}
+    \item \textbf{Espaço Nulo ($S \cdot v = 0$)}: Define o estado estacionário estrutural baseado estritamente na estequiometria (Matriz $S$).
+    \item \textbf{Restrições Físicas}: Delimita o espaço de fluxos permitidos por meio de termodinâmica e capacidade enzimática ($v_{min} \le v \le v_{max}$).
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Espaço de Soluções}
+As restrições físicas definem um \textbf{cone de fluxo poliedral}. O fenótipo metabólico deve operar dentro deste espaço. Ferramentas como o FBA (\textit{Flux Balance Analysis}) buscam soluções ótimas dentro deste cone maximizando objetivos biológicos (ex: produção de biomassa).
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Comparativo: MCA vs. Abordagem de Palsson}
+\begin{table}[h]
+\centering
+\small
+\resizebox{\textwidth}{!}{
+\begin{tabular}{p{2.6cm} p{5.2cm} p{5.2cm}}
+\toprule
+\textbf{Característica} & \textbf{MCA Tradicional} & \textbf{Abordagem de Palsson (COBRA)} \\
+\midrule
+\textbf{Foco da Análise} & Regulação cinética local e sensibilidade. & Capacidades de fluxo globais e limites estruturais. \\
+\textbf{Requisitos de Dados} & Parâmetros cinéticos ($K_M$, $V_{max}$). & Estequiometria (Matriz $S$) e limites de fluxo. \\
+\textbf{Escala de Aplicação} & Vias metabólicas pequenas ou isoladas. & Redes em escala genômica (GEMs). \\
+\textbf{Fundamento} & EDOs linearizadas localmente. & Álgebra linear (espaço nulo) e prog. linear (FBA). \\
+\textbf{Tratamento do Espaço} & Um único ponto de estado estacionário. & Cone de todas as soluções possíveis. \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+\end{frame}
+
+\begin{frame}[shrink=10]{Principais Aplicações do FBA}
+\definicao{FBA (Flux Balance Analysis)}{
+O FBA é a ferramenta central da abordagem baseada em restrições para calcular fluxos metabólicos estacionários sem requerer cinética detalhada.
+}
+
+\begin{block}{Previsões e Resultados Possíveis com FBA}
+\begin{itemize}
+    \item \textbf{Crescimento Celular}: Predição da taxa máxima de crescimento de biomassa sob diferentes fontes de nutrientes.
+    \item \textbf{Essencialidade Gênica}: Identificação \textit{in silico} de knockouts de genes ou reações letais (relevante para novos fármacos).
+    \item \textbf{Engenharia Metabólica}: Redirecionamento de fluxos para superproduzir subprodutos industriais (ex: etanol, aminoácidos).
+    \item \textbf{Trade-offs Fenotípicos}: Mapeamento de relações de troca (envelopes de produção) entre crescimento e produtos.
+\end{itemize}
+\end{block}
+
+\vspace{0.1cm}
+\centering\small
+\textcolor{azulescuro}{\textbf{Visão Integrada:} A modelagem COBRA/FBA delimita a fronteira física de capacidades da rede; a MCA descreve como o controle dinâmico opera localmente dentro dela.}
 \end{frame}
 
 % ============================================================================
