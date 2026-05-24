@@ -96,22 +96,7 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 
 \begin{frame}[allowframebreaks]{Visão Integrada: Do Modelo à Predição}
 \begin{center}
-\begin{tikzpicture}[node distance=1.5cm, scale=0.85, transform shape,
-    box/.style={rectangle, draw, fill=azulclaro!20, text width=3cm, text centered, rounded corners, minimum height=0.8cm}]
-
-    \node[box, fill=verdeacido!20] (bio) {Sistema Biológico};
-    \node[box, fill=laranjacel!20, below of=bio] (model) {Modelo Matemático\\(EDOs)};
-    \node[box, fill=roxodna!20, below of=model] (analysis) {Análise\\(Estabilidade, Bifurcações)};
-    \node[box, fill=azulclaro!30, below of=analysis] (sim) {Simulação\\Numérica};
-    \node[box, fill=verdeacido!30, below of=sim] (pred) {Predição \&\\Validação};
-
-    \draw[->, thick, azulescuro] (bio) -- (model) node[midway, right, font=\tiny] {abstração};
-    \draw[->, thick, azulescuro] (model) -- (analysis) node[midway, right, font=\tiny] {matemática};
-    \draw[->, thick, azulescuro] (analysis) -- (sim) node[midway, right, font=\tiny] {computação};
-    \draw[->, thick, azulescuro] (sim) -- (pred) node[midway, right, font=\tiny] {interpretação};
-    \draw[->, thick, verdeacido, bend right=60] (pred) to node[left, font=\tiny] {refinamento} (bio);
-
-\end{tikzpicture}
+\includegraphics[width=0.75\textwidth,keepaspectratio]{images/diagrama_modelagem.png}
 \end{center}
 \end{frame}
 
