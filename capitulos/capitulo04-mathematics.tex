@@ -118,46 +118,216 @@ Este capítulo foca em sistemas dinâmicos determinísticos descritos por EDOs
 \begin{frame}[allowframebreaks]{Tópicos Avançados deste Capítulo}
 \begin{columns}
 \column{0.5\textwidth}
-\begin{block}{Parte I: Dinâmica}
+\begin{block}{Parte I: Modelagem Discreta}
 \begin{enumerate}
-    \item Sistemas de EDOs
-    \item Retratos de fase
-    \item Análise de estabilidade
-    \item Linearização e Jacobiano
+    \item Modelos discretos e recursivos
+    \item O mapa logístico e estabilidade
+    \item Processos estocásticos e ramificação
 \end{enumerate}
 \end{block}
 
-\begin{block}{Parte II: Transições}
+\begin{block}{Parte II: Dinâmica Contínua}
 \begin{enumerate}
-    \setcounter{enumi}{4}
-    \item Bifurcações
-    \item Oscilações e ciclos limite
+    \setcounter{enumi}{3}
+    \item Sistemas de EDOs e retratos de fase
+    \item Análise de estabilidade e Jacobiano
 \end{enumerate}
 \end{block}
 
 \column{0.5\textwidth}
-\begin{block}{Parte III: Análise e Modelagem Discreta}
+\begin{block}{Parte III: Transições e Sensibilidade}
 \begin{enumerate}
-    \setcounter{enumi}{6}
+    \setcounter{enumi}{5}
+    \item Bifurcações
+    \item Oscilações e ciclos limite
     \item Análise de sensibilidade
-    \item Modelos recursivos determinísticos
-    \item Processos estocásticos discretos
 \end{enumerate}
 \end{block}
 
-\begin{exampleblock}{Aplicações}
+\begin{exampleblock}{Aplicações Práticas}
 \begin{itemize}
+    \item Crescimento populacional e caos
+    \item Cadeias de Markov em biologia
     \item Lotka-Volterra e Van der Pol
-    \item Mapa Logístico e Caos
-    \item Cadeias de Markov
-    \item Processo de Galton-Watson
+    \item Sensibilidade local e global
 \end{itemize}
 \end{exampleblock}
 \end{columns}
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 2: SISTEMAS DE EQUAÇÕES DIFERENCIAIS
+% SEÇÃO 2: MODELOS DISCRETOS E RECURSIVOS
+% ============================================================================
+\section{Modelos Discretos e Recursivos}
+
+\begin{frame}[allowframebreaks]{Introdução aos Modelos Discretos}
+\definicao{Sistema Dinâmico em Tempo Discreto}{
+Um modelo onde o tempo progride em passos inteiros discretos ($t = 0, 1, 2, \ldots$). É descrito por uma relação de recorrência ou equação de diferenças:
+\begin{equation*}
+x_{t+1} = f(x_t)
+\end{equation*}
+onde $f$ mapeia o estado atual no próximo estado.
+}
+
+\begin{block}{Relevância Biológica}
+Muitos processos ocorrem naturalmente em etapas discretas:
+\begin{itemize}
+    \item \textbf{Gerações não-sobrepostas}: Ciclos de vida anuais de insetos ou plantas sazonais.
+    \item \textbf{Divisão Celular Sincronizada}: Populações de células duplicando em intervalos fixos.
+    \item \textbf{Replicação Viral}: Ciclos discretos de infecção celular e liberação de vírions.
+    \item \textbf{Dados Experimentais}: Medições em pontos fixos (ex: coletas diárias de dados populacionais).
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Modelos Recursivos Determinísticos: O Mapa Logístico}
+\begin{block}{Crescimento Populacional Discreto}
+Proposto por Robert May (1976), o \textbf{Mapa Logístico} descreve a dinâmica de uma população sob restrição de recursos em tempo discreto:
+\begin{equation*}
+x_{t+1} = r x_t (1 - x_t)
+\end{equation*}
+onde $x_t \in [0, 1]$ representa a densidade populacional e $r > 0$ é a taxa de crescimento.
+\end{block}
+
+\begin{exampleblock}{Comportamentos Emergentes com a Variação de $r$}
+\begin{itemize}
+    \item $0 < r < 1$: Extinção da população ($x_t \to 0$).
+    \item $1 < r < 3$: Estabilização em um ponto fixo estável $x^* = 1 - 1/r$.
+    \item $3 < r < 3.44$: Ciclo estável de período 2 (oscilação entre dois valores).
+    \item $3.44 < r < 3.57$: Duplicação de período (surgimento de ciclos de período 4, 8, 16...).
+    \item $r > 3.57$: \textbf{Caos Determinístico} (trajetórias aperiódicas e extrema sensibilidade às condições iniciais).
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Estabilidade de Pontos Fixos Discretos}
+\definicao{Ponto Fixo Discreto}{
+Um ponto $x^*$ é um equilíbrio de $x_{t+1} = f(x_t)$ se $f(x^*) = x^*$.
+}
+
+\begin{block}{Critério de Estabilidade Linear}
+O equilíbrio discreto $x^*$ é estável se uma pequena perturbação $\xi_t = x_t - x^*$ diminuir em magnitude ao longo do tempo. Expandindo por série de Taylor:
+\begin{equation*}
+\xi_{t+1} \approx f'(x^*) \xi_t \quad \Rightarrow \quad \xi_t \approx [f'(x^*)]^t \xi_0
+\end{equation*}
+\end{block}
+
+\importante{
+\textbf{Critério de Estabilidade}:
+\begin{itemize}
+    \item Se $|f'(x^*)| < 1$ $\Rightarrow$ \textbf{estável} (convergência para o ponto fixo).
+    \item Se $|f'(x^*)| > 1$ $\Rightarrow$ \textbf{instável} (divergência ou oscilação crescente).
+\end{itemize}
+}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Modelos Recursivos Estocásticos: Ruído}
+\definicao{Estocasticidade}{
+Sistemas biológicos operam sob ruído e flutuações, que podem ser incorporados adicionando variáveis aleatórias ao modelo recursivo.
+}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{block}{Ruído Aditivo}
+Mente perturbações externas constantes (ruído ambiental):
+\begin{equation*}
+x_{t+1} = f(x_t) + \eta_t
+\end{equation*}
+onde $\eta_t \sim \mathcal{N}(0, \sigma^2)$ é ruído branco gaussiano.
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Ruído Multiplicativo}
+Mente flutuações proporcionais à própria população (estocasticidade demográfica):
+\begin{equation*}
+x_{t+1} = f(x_t) \cdot e^{\eta_t}
+\end{equation*}
+\end{block}
+\end{columns}
+
+\vspace{0.2cm}
+\importante{
+O ruído estocástico impede que o sistema permaneça exatamente em um ponto fixo, gerando uma distribuição estatística de estados em torno dele.
+}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Cadeias de Markov de Tempo Discreto}
+\definicao{Cadeia de Markov Discreta (DTMC)}{
+Processo estocástico onde a probabilidade do próximo estado depende estritamente e apenas do estado atual (ausência de memória):
+\begin{equation*}
+P(X_{t+1} = j \mid X_t = i, X_{t-1} = i_{t-1}, \ldots) = P_{ij}
+\end{equation*}
+}
+
+\begin{block}{Evolução Probabilística Recursiva}
+Dada a matriz de transição $\vect{P}$ e o vetor de probabilidade de estados $\vect{p}(t)$ no tempo $t$:
+\begin{equation*}
+\vect{p}(t+1) = \vect{P} \cdot \vect{p}(t) \quad \Rightarrow \quad \vect{p}(t) = \vect{P}^t \vect{p}(0)
+\end{equation*}
+\end{block}
+
+\begin{exampleblock}{Aplicações em Biologia}
+\begin{itemize}
+    \item \textbf{Canais Iônicos}: Transição estocástica entre estados (aberto, fechado, inativo).
+    \item \textbf{Evolução Molecular}: Modelos de mutação de nucleotídeos (ex: Jukes-Cantor).
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Processos de Ramificação (Galton-Watson)}
+\definicao{Processo de Galton-Watson}{
+Modelo estocástico clássico para o tamanho de populações que se reproduzem de forma discreta e independente:
+\begin{equation*}
+Z_{t+1} = \sum_{i=1}^{Z_t} Y_i^{(t)}
+\end{equation*}
+onde $Z_t$ é a população no tempo $t$, e $Y_i^{(t)}$ é uma variável aleatória que representa o número de descendentes gerados pelo indivíduo $i$.
+}
+
+\begin{block}{Propriedades de Sobrevivência e Extinção}
+Seja $m = E[Y]$ o número médio de descendentes por indivíduo:
+\begin{itemize}
+    \item \textbf{Subcrítico} ($m < 1$): A população entra em extinção com probabilidade 1.
+    \item \textbf{Crítico} ($m = 1$): A população entra em extinção com probabilidade 1 (a menos que $P(Y=1)=1$).
+    \item \textbf{Supercrítico} ($m > 1$): Há uma probabilidade positiva de sobrevivência infinita.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Simulando Sistemas Discretos (Python)}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parametros do Mapa Logistico
+r = 3.8       # Comportamento caotico
+sigma = 0.02  # Intensidade do ruido estocastico
+steps = 50
+x_det = np.zeros(steps)
+x_est = np.zeros(steps)
+x_det[0] = x_est[0] = 0.5
+
+# Simulacao Recursiva
+for t in range(steps - 1):
+    # Determinista
+    x_det[t+1] = r * x_det[t] * (1 - x_det[t])
+    # Estocastico com ruido multiplicativo (truncado em 0 e 1)
+    noise = np.random.normal(0, sigma)
+    val = r * x_est[t] * (1 - x_est[t]) * np.exp(noise)
+    x_est[t+1] = np.clip(val, 0.0, 1.0)
+
+# Visualizar
+plt.figure(figsize=(10, 4))
+plt.plot(x_det, 'b-o', label='Determinista')
+plt.plot(x_est, 'r--x', label='Estocastico')
+plt.xlabel('Tempo (t)')
+plt.ylabel('Populacao x(t)')
+plt.legend()
+plt.grid(True)
+\end{lstlisting}
+\end{frame}
+
+% ============================================================================
+% SEÇÃO 3: SISTEMAS DE EQUAÇÕES DIFERENCIAIS
 % ============================================================================
 \section{Sistemas de Equações Diferenciais}
 
@@ -493,7 +663,7 @@ plt.grid(True)
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 3: ANÁLISE DE ESTABILIDADE
+% SEÇÃO 4: ANÁLISE DE ESTABILIDADE
 % ============================================================================
 \section{Análise de Estabilidade}
 
@@ -849,7 +1019,7 @@ O equilíbrio é uma \textbf{espiral estável}!
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 4: BIFURCAÇÕES
+% SEÇÃO 5: BIFURCAÇÕES
 % ============================================================================
 \section{Bifurcações}
 
@@ -1232,7 +1402,7 @@ plt.title('Bifurcacao Pitchfork')
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 5: OSCILAÇÕES E CICLOS LIMITE
+% SEÇÃO 6: OSCILAÇÕES E CICLOS LIMITE
 % ============================================================================
 \section{Oscilações e Ciclos Limite}
 
@@ -1537,7 +1707,7 @@ Todos esses sistemas exibem ciclos limite robustos a perturbações!
 \end{frame}
 
 % ============================================================================
-% SEÇÃO 6: ANÁLISE DE SENSIBILIDADE
+% SEÇÃO 7: ANÁLISE DE SENSIBILIDADE
 % ============================================================================
 \section{Análise de Sensibilidade}
 
@@ -1828,183 +1998,35 @@ for name, st in zip(problem['names'], Si['ST']):
 \end{lstlisting}
 \end{frame}
 
-% ============================================================================
-% SEÇÃO 7: MODELOS DISCRETOS E RECURSIVOS
-% ============================================================================
-\section{Modelos Discretos e Recursivos}
 
-\begin{frame}[allowframebreaks]{Introdução aos Modelos Discretos}
-\definicao{Sistema Dinâmico em Tempo Discreto}{
-Um modelo onde o tempo progride em passos inteiros discretos ($t = 0, 1, 2, \ldots$). É descrito por uma relação de recorrência ou equação de diferenças:
-\begin{equation*}
-x_{t+1} = f(x_t)
-\end{equation*}
-onde $f$ mapeia o estado atual no próximo estado.
-}
-
-\begin{block}{Relevância Biológica}
-Muitos processos ocorrem naturalmente em etapas discretas:
-\begin{itemize}
-    \item \textbf{Gerações não-sobrepostas}: Ciclos de vida anuais de insetos ou plantas sazonais.
-    \item \textbf{Divisão Celular Sincronizada}: Populações de células duplicando em intervalos fixos.
-    \item \textbf{Replicação Viral}: Ciclos discretos de infecção celular e liberação de vírions.
-    \item \textbf{Dados Experimentais}: Medições em pontos fixos (ex: coletas diárias de dados populacionais).
-\end{itemize}
-\end{block}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Modelos Recursivos Determinísticos: O Mapa Logístico}
-\begin{block}{Crescimento Populacional Discreto}
-Proposto por Robert May (1976), o \textbf{Mapa Logístico} descreve a dinâmica de uma população sob restrição de recursos em tempo discreto:
-\begin{equation*}
-x_{t+1} = r x_t (1 - x_t)
-\end{equation*}
-onde $x_t \in [0, 1]$ representa a densidade populacional e $r > 0$ é a taxa de crescimento.
-\end{block}
-
-\begin{exampleblock}{Comportamentos Emergentes com a Variação de $r$}
-\begin{itemize}
-    \item $0 < r < 1$: Extinção da população ($x_t \to 0$).
-    \item $1 < r < 3$: Estabilização em um ponto fixo estável $x^* = 1 - 1/r$.
-    \item $3 < r < 3.44$: Ciclo estável de período 2 (oscilação entre dois valores).
-    \item $3.44 < r < 3.57$: Duplicação de período (surgimento de ciclos de período 4, 8, 16...).
-    \item $r > 3.57$: \textbf{Caos Determinístico} (trajetórias aperiódicas e extrema sensibilidade às condições iniciais).
-\end{itemize}
-\end{exampleblock}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Estabilidade de Pontos Fixos Discretos}
-\definicao{Ponto Fixo Discreto}{
-Um ponto $x^*$ é um equilíbrio de $x_{t+1} = f(x_t)$ se $f(x^*) = x^*$.
-}
-
-\begin{block}{Critério de Estabilidade Linear}
-O equilíbrio discreto $x^*$ é estável se uma pequena perturbação $\xi_t = x_t - x^*$ diminuir em magnitude ao longo do tempo. Expandindo por série de Taylor:
-\begin{equation*}
-\xi_{t+1} \approx f'(x^*) \xi_t \quad \Rightarrow \quad \xi_t \approx [f'(x^*)]^t \xi_0
-\end{equation*}
-\end{block}
-
-\importante{
-\textbf{Critério de Estabilidade}:
-\begin{itemize}
-    \item Se $|f'(x^*)| < 1$ $\Rightarrow$ \textbf{estável} (convergência para o ponto fixo).
-    \item Se $|f'(x^*)| > 1$ $\Rightarrow$ \textbf{instável} (divergência ou oscilação crescente).
-\end{itemize}
-}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Modelos Recursivos Estocásticos: Ruído}
-\definicao{Estocasticidade}{
-Sistemas biológicos operam sob ruído e flutuações, que podem ser incorporados adicionando variáveis aleatórias ao modelo recursivo.
-}
-
-\begin{columns}
-\column{0.5\textwidth}
-\begin{block}{Ruído Aditivo}
-Mente perturbações externas constantes (ruído ambiental):
-\begin{equation*}
-x_{t+1} = f(x_t) + \eta_t
-\end{equation*}
-onde $\eta_t \sim \mathcal{N}(0, \sigma^2)$ é ruído branco gaussiano.
-\end{block}
-
-\column{0.5\textwidth}
-\begin{block}{Ruído Multiplicativo}
-Mente flutuações proporcionais à própria população (estocasticidade demográfica):
-\begin{equation*}
-x_{t+1} = f(x_t) \cdot e^{\eta_t}
-\end{equation*}
-\end{block}
-\end{columns}
-
-\vspace{0.2cm}
-\importante{
-O ruído estocástico impede que o sistema permaneça exatamente em um ponto fixo, gerando uma distribuição estatística de estados em torno dele.
-}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Cadeias de Markov de Tempo Discreto}
-\definicao{Cadeia de Markov Discreta (DTMC)}{
-Processo estocástico onde a probabilidade do próximo estado depende estritamente e apenas do estado atual (ausência de memória):
-\begin{equation*}
-P(X_{t+1} = j \mid X_t = i, X_{t-1} = i_{t-1}, \ldots) = P_{ij}
-\end{equation*}
-}
-
-\begin{block}{Evolução Probabilística Recursiva}
-Dada a matriz de transição $\vect{P}$ e o vetor de probabilidade de estados $\vect{p}(t)$ no tempo $t$:
-\begin{equation*}
-\vect{p}(t+1) = \vect{P} \cdot \vect{p}(t) \quad \Rightarrow \quad \vect{p}(t) = \vect{P}^t \vect{p}(0)
-\end{equation*}
-\end{block}
-
-\begin{exampleblock}{Aplicações em Biologia}
-\begin{itemize}
-    \item \textbf{Canais Iônicos}: Transição estocástica entre estados (aberto, fechado, inativo).
-    \item \textbf{Evolução Molecular}: Modelos de mutação de nucleotídeos (ex: Jukes-Cantor).
-\end{itemize}
-\end{exampleblock}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Processos de Ramificação (Galton-Watson)}
-\definicao{Processo de Galton-Watson}{
-Modelo estocástico clássico para o tamanho de populações que se reproduzem de forma discreta e independente:
-\begin{equation*}
-Z_{t+1} = \sum_{i=1}^{Z_t} Y_i^{(t)}
-\end{equation*}
-onde $Z_t$ é a população no tempo $t$, e $Y_i^{(t)}$ é uma variável aleatória que representa o número de descendentes gerados pelo indivíduo $i$.
-}
-
-\begin{block}{Propriedades de Sobrevivência e Extinção}
-Seja $m = E[Y]$ o número médio de descendentes por indivíduo:
-\begin{itemize}
-    \item \textbf{Subcrítico} ($m < 1$): A população entra em extinção com probabilidade 1.
-    \item \textbf{Crítico} ($m = 1$): A população entra em extinção com probabilidade 1 (a menos que $P(Y=1)=1$).
-    \item \textbf{Supercrítico} ($m > 1$): Há uma probabilidade positiva de sobrevivência infinita.
-\end{itemize}
-\end{block}
-\end{frame}
-
-\begin{frame}[fragile, allowframebreaks]{Simulando Sistemas Discretos (Python)}
-\begin{lstlisting}[language=Python, basicstyle=\ttfamily\footnotesize]
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Parametros do Mapa Logistico
-r = 3.8       # Comportamento caotico
-sigma = 0.02  # Intensidade do ruido estocastico
-steps = 50
-x_det = np.zeros(steps)
-x_est = np.zeros(steps)
-x_det[0] = x_est[0] = 0.5
-
-# Simulacao Recursiva
-for t in range(steps - 1):
-    # Determinista
-    x_det[t+1] = r * x_det[t] * (1 - x_det[t])
-    # Estocastico com ruido multiplicativo (truncado em 0 e 1)
-    noise = np.random.normal(0, sigma)
-    val = r * x_est[t] * (1 - x_est[t]) * np.exp(noise)
-    x_est[t+1] = np.clip(val, 0.0, 1.0)
-
-# Visualizar
-plt.figure(figsize=(10, 4))
-plt.plot(x_det, 'b-o', label='Determinista')
-plt.plot(x_est, 'r--x', label='Estocastico')
-plt.xlabel('Tempo (t)')
-plt.ylabel('Populacao x(t)')
-plt.legend()
-plt.grid(True)
-\end{lstlisting}
-\end{frame}
 
 % ============================================================================
 % SEÇÃO 8: EXERCÍCIOS
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}[allowframebreaks]{Exercícios - Parte 1: EDOs}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 1: Modelos Discretos}
+\begin{block}{Questão 10: Estabilidade no Mapa Logístico}
+Para o mapa logístico $x_{t+1} = r x_t (1 - x_t)$:
+\begin{enumerate}
+    \item Encontre analiticamente os pontos fixos $x^* = 0$ e $x^* = 1 - 1/r$.
+    \item Use o critério $|f'(x^*)| < 1$ para mostrar que $x^* = 0$ é estável para $0 < r < 1$ e instável para $r > 1$.
+    \item Mostre que o ponto fixo não-trivial $x^* = 1 - 1/r$ é estável para $1 < r < 3$.
+\end{enumerate}
+\end{block}
+
+\begin{block}{Questão 11: Processo de Galton-Watson}
+Suponha um processo de ramificação onde a distribuição reprodutiva de cada indivíduo é:
+$P(Y=0) = 0.25$, $P(Y=1) = 0.50$, $P(Y=2) = 0.25$.
+\begin{enumerate}
+    \item Calcule o número médio de descendentes $m = E[Y]$.
+    \item Classifique o processo (subcrítico, crítico ou supercrítico).
+    \item Qual é a probabilidade de extinção a longo prazo?
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Exercícios - Parte 2: EDOs}
 \begin{block}{Questão 1: Sistema Linear}
 Resolva analiticamente e numericamente (Python) o sistema:
 \begin{align*}
@@ -2028,7 +2050,7 @@ Para o sistema:
 \end{block}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Exercícios - Parte 2: Estabilidade}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 3: Estabilidade}
 \begin{block}{Questão 3: Análise de Estabilidade}
 Analise a estabilidade de todos os equilíbrios do sistema:
 \begin{align*}
@@ -2053,7 +2075,7 @@ com $K=10$, $\alpha=0.5$, $\beta=0.3$, $\delta=1$.
 \end{block}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Exercícios - Parte 3: Bifurcações}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 4: Bifurcações}
 \begin{block}{Questão 5: Diagrama de Bifurcação}
 Para $\dot{x} = \mu + x - x^3$, construa o diagrama de bifurcação completo:
 \begin{enumerate}
@@ -2074,7 +2096,7 @@ Varie $\mu$ de $-1$ a $1$ e observe surgimento do ciclo limite em $\mu = 0$.
 \end{block}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Exercícios - Parte 4: Oscilações}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 5: Oscilações}
 \begin{block}{Questão 7: Van der Pol}
 Simule o oscilador de Van der Pol para $\mu \in \{0.1, 1, 5\}$:
 \begin{enumerate}
@@ -2096,7 +2118,7 @@ com $n=4$, $k_1=k_2=k_3=1$. Mostre que exibe ciclo limite.
 \end{block}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Exercícios - Parte 5: Sensibilidade}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 6: Sensibilidade}
 \begin{block}{Questão 9: Sensibilidade Local}
 Para o sistema de síntese e degradação:
 \begin{equation*}
@@ -2122,26 +2144,7 @@ Escolha um modelo de rede regulatória (ex: toggle switch, repressilator) e:
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Exercícios - Parte 6: Modelos Discretos}
-\begin{block}{Questão 10: Estabilidade no Mapa Logístico}
-Para o mapa logístico $x_{t+1} = r x_t (1 - x_t)$:
-\begin{enumerate}
-    \item Encontre analiticamente os pontos fixos $x^* = 0$ e $x^* = 1 - 1/r$.
-    \item Use o critério $|f'(x^*)| < 1$ para mostrar que $x^* = 0$ é estável para $0 < r < 1$ e instável para $r > 1$.
-    \item Mostre que o ponto fixo não-trivial $x^* = 1 - 1/r$ é estável para $1 < r < 3$.
-\end{enumerate}
-\end{block}
 
-\begin{block}{Questão 11: Processo de Galton-Watson}
-Suponha um processo de ramificação onde a distribuição reprodutiva de cada indivíduo é:
-$P(Y=0) = 0.25$, $P(Y=1) = 0.50$, $P(Y=2) = 0.25$.
-\begin{enumerate}
-    \item Calcule o número médio de descendentes $m = E[Y]$.
-    \item Classifique o processo (subcrítico, crítico ou supercrítico).
-    \item Qual é a probabilidade de extinção a longo prazo?
-\end{enumerate}
-\end{block}
-\end{frame}
 
 % ============================================================================
 % SEÇÃO 9: REFERÊNCIAS
