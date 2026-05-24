@@ -316,7 +316,7 @@ plt.grid(True)
 % ============================================================================
 \section{Sistemas de Equações Diferenciais}
 
-\begin{frame}[allowframebreaks]{Revisão: Equações Diferenciais Ordinárias}
+\begin{frame}{Revisão: Equações Diferenciais Ordinárias}
 \definicao{Equação Diferencial Ordinária (EDO)}{
 Uma EDO relaciona uma função desconhecida $y(t)$ com suas derivadas:
 \begin{equation*}
@@ -325,8 +325,14 @@ Uma EDO relaciona uma função desconhecida $y(t)$ com suas derivadas:
 onde $t$ é a variável independente (geralmente tempo) e $y$ é a variável dependente.
 }
 
-\vspace{0.3cm}
+\vspace{0.6cm}
 
+\importante{
+Sistemas biológicos geralmente requerem sistemas de EDOs acopladas!
+}
+\end{frame}
+
+\begin{frame}{Revisão: Exemplos de EDOs}
 \begin{columns}
 \column{0.48\textwidth}
 \begin{exampleblock}{EDO de 1ª Ordem}
@@ -346,12 +352,6 @@ Solução: $x(t) = A\cos(\omega t) + B\sin(\omega t)$\\
 (oscilador harmônico)
 \end{exampleblock}
 \end{columns}
-
-\vspace{0.3cm}
-
-\importante{
-Sistemas biológicos geralmente requerem sistemas de EDOs acopladas!
-}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Sistemas de EDOs Não-Lineares}
