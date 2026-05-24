@@ -299,14 +299,14 @@ $\pi_A$ é a fração de canais abertos no equilíbrio!
 
 \vspace{0.1cm}
 \begin{center}
-\begin{tikzpicture}[node distance=1.8cm, auto, scale=0.7, transform shape]
-    \node[circle, draw, fill=laranjacel!20, minimum size=0.9cm] (F) {Fechado (F)};
-    \node[circle, draw, fill=azulclaro!20, minimum size=0.9cm, right of=F] (A) {Aberto (A)};
-    \path[->, thick, >=stealth]
-        (F) edge [bend left] node {$\alpha$} (A)
-        (A) edge [bend left] node {$\beta$} (F)
-        (F) edge [loop left] node {$1-\alpha$} (F)
-        (A) edge [loop right] node {$1-\beta$} (A);
+\begin{tikzpicture}[auto, scale=0.75, transform shape, >=stealth]
+    \node[circle, draw, fill=laranjacel!20, minimum size=1.6cm, align=center, draw=laranjacel!80, thick] (F) {Fechado\\(F)};
+    \node[circle, draw, fill=azulclaro!20, minimum size=1.6cm, align=center, right=1.6cm of F, draw=azulclaro!80, thick] (A) {Aberto\\(A)};
+    \path[->, thick]
+        (F) edge [bend left=25, draw=roxodna] node {$\alpha$} (A)
+        (A) edge [bend left=25, draw=roxodna] node {$\beta$} (F)
+        (F) edge [loop left, looseness=8, draw=laranjacel] node {$1-\alpha$} (F)
+        (A) edge [loop right, looseness=8, draw=azulclaro] node {$1-\beta$} (A);
 \end{tikzpicture}
 \end{center}
 \end{frame}
