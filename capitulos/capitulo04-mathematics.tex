@@ -428,31 +428,30 @@ onde $\vect{x} = (x_1, x_2, \ldots, x_n)^T$ e $\vect{f} = (f_1, f_2, \ldots, f_n
 \textbf{Sistema Autônomo:} quando $\vect{f}$ não depende explicitamente de $t$
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Campos Vetoriais e Retratos de Fase}
+\begin{frame}{Campos Vetoriais e Retratos de Fase}
 \definicao{Campo Vetorial}{
 O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que associa a cada ponto do espaço de estados um vetor velocidade.
 }
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 
 \begin{columns}
 \column{0.48\textwidth}
-\textbf{Exemplo Simples:}
-\begin{align*}
-\frac{dx}{dt} &= y\\
-\frac{dy}{dt} &= -x
-\end{align*}
+\textbf{Exemplo Simples:} \\
+$\frac{dx}{dt} = y, \quad \frac{dy}{dt} = -x$
+
+\vspace{0.2cm}
 
 \textbf{Interpretação:}
 \begin{itemize}
     \item Em cada ponto $(x,y)$ existe um vetor $(\dot{x}, \dot{y})$
-    \item Soluções seguem as linhas de fluxo
-    \item Trajetórias formam o retrato de fase
+    \item As soluções seguem as linhas de fluxo
+    \item O conjunto de todas as trajetórias forma o retrato de fase
 \end{itemize}
 
 \column{0.48\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=0.7]
     % Eixos
     \draw[->] (-2,0) -- (2,0) node[right] {$x$};
     \draw[->] (0,-2) -- (0,2) node[above] {$y$};
@@ -465,7 +464,7 @@ O lado direito do sistema $\vect{f}(\vect{x})$ define um campo vetorial que asso
     % Trajetória circular
     \draw[verdeacido, thick, ->] (1,0) arc[start angle=0, end angle=270, radius=1];
 
-    \node[below] at (0,-2.5) {Oscilador Harmônico};
+    \node[below] at (0,-2.1) {\small Oscilador Harmônico};
 \end{tikzpicture}
 \end{center}
 \end{columns}
@@ -826,7 +825,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{center}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Tipos de Pontos Fixos}
+\begin{frame}{Tipos de Pontos Fixos: Nós}
 \begin{columns}
 \column{0.48\textwidth}
 \begin{block}{1. Nó Estável}
@@ -836,7 +835,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
     \item Sem oscilações
 \end{itemize}
 \begin{center}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.55]
     \draw[->] (-2,0) -- (2,0);
     \draw[->] (0,-2) -- (0,2);
     \fill[red] (0,0) circle (2pt);
@@ -847,13 +846,15 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{center}
 \end{block}
 
+\column{0.48\textwidth}
 \begin{block}{2. Nó Instável}
 \begin{itemize}
     \item Ambos $\lambda_i > 0$ (reais)
     \item Divergência exponencial
+    \item Sem oscilações
 \end{itemize}
 \begin{center}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.55]
     \draw[->] (-2,0) -- (2,0);
     \draw[->] (0,-2) -- (0,2);
     \fill[red] (0,0) circle (2pt);
@@ -863,15 +864,20 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{tikzpicture}
 \end{center}
 \end{block}
+\end{columns}
+\end{frame}
 
+\begin{frame}{Tipos de Pontos Fixos: Sela e Centro}
+\begin{columns}
 \column{0.48\textwidth}
 \begin{block}{3. Ponto de Sela}
 \begin{itemize}
-    \item $\lambda_1 < 0 < \lambda_2$
-    \item Instável (pelo menos uma direção diverge)
+    \item $\lambda_1 < 0 < \lambda_2$ (sinais opostos)
+    \item Instável (a direção $\lambda_2 > 0$ diverge)
+    \item Trajetórias hiperbólicas
 \end{itemize}
 \begin{center}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.55]
     \draw[->] (-2,0) -- (2,0);
     \draw[->] (0,-2) -- (0,2);
     \fill[red] (0,0) circle (2pt);
@@ -887,13 +893,15 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{center}
 \end{block}
 
+\column{0.48\textwidth}
 \begin{block}{4. Centro}
 \begin{itemize}
     \item $\lambda = \pm i\omega$ (imaginários puros)
-    \item Órbitas fechadas
+    \item Órbitas fechadas oscilatórias
+    \item Estável (mas não assintoticamente)
 \end{itemize}
 \begin{center}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.55]
     \draw[->] (-2,0) -- (2,0);
     \draw[->] (0,-2) -- (0,2);
     \fill[red] (0,0) circle (2pt);
@@ -906,7 +914,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{columns}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Espirais: Estáveis vs. Instáveis}
+\begin{frame}{Espirais: Estáveis vs. Instáveis}
 \begin{columns}
 \column{0.48\textwidth}
 \begin{block}{Espiral Estável}
@@ -917,9 +925,9 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
     \item Amortecimento: $e^{at}$
 \end{itemize}
 \begin{center}
-\begin{tikzpicture}[scale=0.6]
-    \draw[->] (-2,0) -- (2,0) node[right] {$x$};
-    \draw[->] (0,-2) -- (0,2) node[above] {$y$};
+\begin{tikzpicture}[scale=0.4]
+    \draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+    \draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
     \fill[red] (0,0) circle (2pt);
     \draw[thick, azulescuro, domain=0:6*pi, samples=100]
         plot ({exp(-0.1*\x)*cos(\x r)}, {exp(-0.1*\x)*sin(\x r)});
@@ -938,9 +946,9 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
     \item Crescimento: $e^{at}$
 \end{itemize}
 \begin{center}
-\begin{tikzpicture}[scale=0.6]
-    \draw[->] (-2,0) -- (2,0) node[right] {$x$};
-    \draw[->] (0,-2) -- (0,2) node[above] {$y$};
+\begin{tikzpicture}[scale=0.4]
+    \draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+    \draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
     \fill[red] (0,0) circle (2pt);
     \draw[thick, verdeacido, domain=0:4*pi, samples=100]
         plot ({exp(0.08*\x)*cos(\x r)}, {exp(0.08*\x)*sin(\x r)});
@@ -951,7 +959,7 @@ onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - 
 \end{block}
 \end{columns}
 
-\vspace{0.3cm}
+\vspace{0.05cm}
 
 \importante{
 Espirais são comuns em sistemas biológicos com feedback negativo e atraso!
@@ -1083,7 +1091,7 @@ Bifurcações explicam:
 \textbf{Parâmetro de bifurcação:} $\mu$ (valor crítico: $\mu_c$)
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Bifurcação Saddle-Node (Fold)}
+\begin{frame}{Bifurcação Saddle-Node (Fold): Teoria}
 \begin{columns}
 \column{0.48\textwidth}
 \begin{block}{Equação Normal}
@@ -1092,30 +1100,41 @@ Bifurcações explicam:
 \end{equation*}
 \end{block}
 
-\textbf{Análise:}
+\textbf{Análise de Equilíbrios:}
 \begin{itemize}
-    \item $\mu < 0$: dois equilíbrios\\
-    $(x^* = \pm\sqrt{-\mu})$
-    \item $\mu = 0$: um equilíbrio\\
-    $(x^* = 0)$ - bifurcação!
-    \item $\mu > 0$: nenhum equilíbrio
+    \item $\mu < 0$: Dois equilíbrios, um estável e um instável: $x^* = \pm\sqrt{-\mu}$.
+    \item $\mu = 0$: Colisão em um único equilíbrio $x^* = 0$ (bifurcação).
+    \item $\mu > 0$: Nenhum equilíbrio (sistema diverge).
 \end{itemize}
 
-\vspace{0.3cm}
-
-\textbf{Interpretação:}
+\column{0.48\textwidth}
+\textbf{Interpretação e Dinâmica:}
 \begin{itemize}
-    \item Colisão e aniquilação de equilíbrios
-    \item Transição para divergência
+    \item Representa o nascimento ou aniquilação de um par de pontos fixos.
+    \item À medida que $\mu$ aumenta além de 0, os equilíbrios se fundem e desaparecem.
+    \item Cria um "gargalo" onde as trajetórias passam muito lentamente.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Bifurcação Saddle-Node (Fold): Diagrama}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Estrutura de Estabilidade:}
+\begin{itemize}
+    \item O ramo inferior ($x^* = -\sqrt{-\mu}$) é estável (linha sólida).
+    \item O ramo superior ($x^* = \sqrt{-\mu}$) é instável (linha tracejada).
+    \item Para $\mu > 0$, o sistema não possui pontos de equilíbrio.
 \end{itemize}
 
 \column{0.48\textwidth}
 \begin{center}
 \textbf{Diagrama de Bifurcação}
-\begin{tikzpicture}[scale=0.9]
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.85]
     % Eixos
     \draw[->] (-2,0) -- (2,0) node[right] {$\mu$};
-    \draw[->] (0,-2) -- (0,2) node[above] {$x^*$};
+    \draw[->] (0,-1.8) -- (0,1.8) node[above] {$x^*$};
 
     % Ramo estavel
     \draw[thick, azulescuro, domain=-1.8:0] plot (\x, {-sqrt(-\x)});
@@ -1128,21 +1147,22 @@ Bifurcações explicam:
 
     % Regiao sem equilibrio
     \draw[thick, gray, ->] (0.5,0.5) -- (1,1);
-    \node[right, font=\small] at (1,1) {sem equilíbrio};
+    \node[right, font=\small] at (1,1) {sem eq.};
 
-    % Legendas
-    \node[below, font=\tiny] at (0,-2.5) {Linha sólida: estável};
-    \node[below, font=\tiny] at (0,-2.8) {Linha tracejada: instável};
+    % Legendas em nó unico com align=center para evitar sobreposição
+    \node[below, font=\tiny, align=center] at (0,-1.8) {Linha sólida: estável \\ Linha tracejada: instável};
 \end{tikzpicture}
 \end{center}
 \end{columns}
+
+\vspace{0.2cm}
 
 \importante{
 Saddle-node é a forma mais comum de equilíbrios aparecerem/desaparecerem!
 }
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Bifurcação Transcrítica}
+\begin{frame}{Bifurcação Transcrítica: Teoria}
 \begin{columns}
 \column{0.48\textwidth}
 \begin{block}{Equação Normal}
@@ -1151,40 +1171,58 @@ Saddle-node é a forma mais comum de equilíbrios aparecerem/desaparecerem!
 \end{equation*}
 \end{block}
 
-\textbf{Equilíbrios:}
+\textbf{Equilíbrios e Estabilidade:}
 \begin{itemize}
-    \item $x^* = 0$ (sempre existe)
-    \item $x^* = \mu$
+    \item Dois ramos: $x^* = 0$ (sempre existe) e $x^* = \mu$.
+    \item Para $\mu < 0$: $x^*=0$ é estável, $x^*=\mu$ é instável.
+    \item Para $\mu > 0$: $x^*=0$ é instável, $x^*=\mu$ é estável.
+    \item Para $\mu = 0$: Colisão e troca de estabilidade.
 \end{itemize}
 
-\textbf{Estabilidade:}
+\column{0.48\textwidth}
+\textbf{Interpretação e Dinâmica:}
 \begin{itemize}
-    \item $\mu < 0$: $x=0$ estável, $x=\mu$ instável
-    \item $\mu > 0$: $x=0$ instável, $x=\mu$ estável
-    \item $\mu = 0$: troca de estabilidade!
+    \item Os equilíbrios não desaparecem (diferente de saddle-node).
+    \item Eles se cruzam em $\mu_c = 0$ e trocam de estabilidade.
+    \item Muito comum em sistemas ecológicos e físicos onde um estado trivial ($x^*=0$, e.g. extinção) sempre existe.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Bifurcação Transcrítica: Diagrama}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Estrutura do Diagrama:}
+\begin{itemize}
+    \item Linha sólida: Ramo estável ($x^* = 0$ para $\mu < 0$ e $x^* = \mu$ para $\mu > 0$).
+    \item Linha tracejada: Ramo instável.
 \end{itemize}
 
-\textbf{Interpretação:}
+\vspace{0.2cm}
+
+\textbf{Exemplo Biológico:}
 \begin{itemize}
-    \item Equilíbrios trocam de estabilidade
-    \item Comum quando há conservação
+    \item Modelo de população com capacidade de suporte.
+    \item Para $\mu < 0$ (recursos escassos): Extinção é estável.
+    \item Para $\mu > 0$ (recursos abundantes): População sobrevive estável no equilíbrio $x^* = \mu$.
 \end{itemize}
 
 \column{0.48\textwidth}
 \begin{center}
 \textbf{Diagrama de Bifurcação}
-\begin{tikzpicture}[scale=0.9]
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.85]
     % Eixos
     \draw[->] (-2,0) -- (2,0) node[right] {$\mu$};
-    \draw[->] (0,-2) -- (0,2) node[above] {$x^*$};
+    \draw[->] (0,-1.8) -- (0,1.8) node[above] {$x^*$};
 
     % x = 0 (estavel mu<0, instavel mu>0)
     \draw[thick, azulescuro] (-2,0) -- (0,0);
     \draw[thick, azulescuro, dashed] (0,0) -- (2,0);
 
     % x = mu (instavel mu<0, estavel mu>0)
-    \draw[thick, azulescuro, dashed, domain=-2:0] plot (\x, \x);
-    \draw[thick, azulescuro, domain=0:2] plot (\x, \x);
+    \draw[thick, azulescuro, dashed, domain=-1.8:0] plot (\x, \x);
+    \draw[thick, azulescuro, domain=0:1.8] plot (\x, \x);
 
     % Ponto de bifurcacao
     \fill[red] (0,0) circle (2pt) node[below right] {$\mu_c=0$};
@@ -1192,17 +1230,15 @@ Saddle-node é a forma mais comum de equilíbrios aparecerem/desaparecerem!
     % Setas indicando direcao
     \draw[->, gray] (-1,-0.3) -- (-1,-0.6);
     \draw[->, gray] (1,0.3) -- (1,0.6);
+    
+    % Legendas em nó unico
+    \node[below, font=\tiny, align=center] at (0,-1.8) {Linha sólida: estável \\ Linha tracejada: instável};
 \end{tikzpicture}
 \end{center}
-
-\vspace{0.3cm}
-
-\textbf{Exemplo Biológico:}\\
-Transição de crescimento populacional quando recurso disponível muda
 \end{columns}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Bifurcação Pitchfork}
+\begin{frame}{Bifurcação Pitchfork: Teoria}
 \begin{columns}
 \column{0.48\textwidth}
 \begin{block}{Supercrítica (Suave)}
@@ -1211,30 +1247,12 @@ Transição de crescimento populacional quando recurso disponível muda
 \end{equation*}
 \end{block}
 
-\textbf{Equilíbrios:}
+\textbf{Equilíbrios e Estabilidade:}
 \begin{itemize}
-    \item $x^* = 0$
-    \item $x^* = \pm\sqrt{\mu}$ (se $\mu > 0$)
+    \item $x^* = 0$ (sempre existe).
+    \item Para $\mu < 0$: $x^* = 0$ é estável (único).
+    \item Para $\mu > 0$: $x^* = 0$ torna-se instável e surgem dois novos equilíbrios estáveis $x^* = \pm\sqrt{\mu}$.
 \end{itemize}
-
-\textbf{Estabilidade:}
-\begin{itemize}
-    \item $\mu < 0$: só $x=0$ (estável)
-    \item $\mu > 0$: $x=0$ instável, $x=\pm\sqrt{\mu}$ estáveis
-\end{itemize}
-
-\begin{center}
-\begin{tikzpicture}[scale=0.7]
-    \draw[->] (-2,0) -- (2,0) node[right] {$\mu$};
-    \draw[->] (0,-1.5) -- (0,1.5) node[above] {$x^*$};
-    \draw[thick, azulescuro] (-2,0) -- (0,0);
-    \draw[thick, azulescuro, dashed] (0,0) -- (2,0);
-    \draw[thick, azulescuro, domain=0:1.5] plot (\x, {sqrt(\x)});
-    \draw[thick, azulescuro, domain=0:1.5] plot (\x, {-sqrt(\x)});
-    \fill[red] (0,0) circle (2pt);
-    \node[below] at (0,-1.8) {Supercrítica};
-\end{tikzpicture}
-\end{center}
 
 \column{0.48\textwidth}
 \begin{block}{Subcrítica (Abrupta)}
@@ -1243,20 +1261,40 @@ Transição de crescimento populacional quando recurso disponível muda
 \end{equation*}
 \end{block}
 
-\textbf{Equilíbrios:}
+\textbf{Equilíbrios e Estabilidade:}
 \begin{itemize}
-    \item $x^* = 0$
-    \item $x^* = \pm\sqrt{-\mu}$ (se $\mu < 0$)
+    \item $x^* = 0$ (sempre existe).
+    \item Para $\mu < 0$: $x^* = 0$ é estável, cercado por dois equilíbrios instáveis $x^* = \pm\sqrt{-\mu}$.
+    \item Para $\mu > 0$: $x^* = 0$ torna-se instável e não há outros equilíbrios locais (sistema diverge).
 \end{itemize}
+\end{columns}
+\end{frame}
 
-\textbf{Estabilidade:}
-\begin{itemize}
-    \item $\mu < 0$: $x=0$ estável, $x=\pm\sqrt{-\mu}$ instáveis
-    \item $\mu > 0$: $x=0$ instável (divergência)
-\end{itemize}
-
+\begin{frame}{Bifurcação Pitchfork: Diagramas de Fase}
+\begin{columns}
+\column{0.48\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.7]
+\textbf{Caso Supercrítico (Suave)}
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.85]
+    \draw[->] (-2,0) -- (2,0) node[right] {$\mu$};
+    \draw[->] (0,-1.5) -- (0,1.5) node[above] {$x^*$};
+    \draw[thick, azulescuro] (-2,0) -- (0,0);
+    \draw[thick, azulescuro, dashed] (0,0) -- (2,0);
+    \draw[thick, azulescuro, domain=0:1.5] plot (\x, {sqrt(\x)});
+    \draw[thick, azulescuro, domain=0:1.5] plot (\x, {-sqrt(\x)});
+    \fill[red] (0,0) circle (2pt);
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item Transição suave: os novos ramos estáveis crescem continuamente a partir de zero.
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{center}
+\textbf{Caso Subcrítico (Abrupto)}
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.85]
     \draw[->] (-2,0) -- (2,0) node[right] {$\mu$};
     \draw[->] (0,-1.5) -- (0,1.5) node[above] {$x^*$};
     \draw[thick, azulescuro] (-2,0) -- (0,0);
@@ -1264,24 +1302,26 @@ Transição de crescimento populacional quando recurso disponível muda
     \draw[thick, azulescuro, dashed, domain=-1.5:0] plot (\x, {sqrt(-\x)});
     \draw[thick, azulescuro, dashed, domain=-1.5:0] plot (\x, {-sqrt(-\x)});
     \fill[red] (0,0) circle (2pt);
-    \node[below] at (0,-1.8) {Subcrítica};
 \end{tikzpicture}
 \end{center}
+\begin{itemize}
+    \item Salto catastrófico: pequenas perturbações levam o sistema para longe da origem.
+\end{itemize}
 \end{columns}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 
 \importante{
 Pitchfork supercrítica: transição suave. Subcrítica: salto catastrófico!
 }
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Bifurcação de Hopf}
+\begin{frame}{Bifurcação de Hopf: Definição e Condições}
 \definicao{Bifurcação de Hopf}{
 Transição em que um equilíbrio estável perde estabilidade e dá origem a um ciclo limite periódico (oscilação).
 }
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 
 \begin{columns}
 \column{0.48\textwidth}
@@ -1289,29 +1329,47 @@ Transição em que um equilíbrio estável perde estabilidade e dá origem a um 
 \begin{itemize}
     \item Par de autovalores complexos conjugados: $\lambda = \alpha(\mu) \pm i\omega(\mu)$
     \item No ponto crítico $\mu_c$: $\alpha(\mu_c) = 0$
-    \item $\frac{d\alpha}{d\mu}\bigg|_{\mu_c} > 0$
+    \item Travessia transversal: $\frac{d\alpha}{d\mu}\bigg|_{\mu_c} > 0$
 \end{itemize}
 
-\vspace{0.3cm}
-
-\textbf{Tipos:}
+\column{0.48\textwidth}
+\textbf{Tipos principais:}
 \begin{itemize}
-    \item \textbf{Supercrítica:} ciclo limite estável emerge
-    \item \textbf{Subcrítica:} ciclo limite instável colapsa
+    \item \textbf{Supercrítica (suave):} Um ciclo limite estável emerge ao redor do equilíbrio instável.
+    \item \textbf{Subcrítica (abrupta):} Um ciclo limite instável colapsa sobre o equilíbrio, tornando-o instável.
 \end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Bifurcação de Hopf: Caso Supercrítico}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Dinâmica no Plano de Fase:}
+\begin{itemize}
+    \item Para $\mu < \mu_c$: O equilíbrio é um foco estável (trajetórias espiralam para a origem).
+    \item Para $\mu > \mu_c$: O equilíbrio torna-se instável e surge um ciclo limite estável atrator.
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Amplitude do Ciclo Limite:}
+\begin{equation*}
+A \sim \sqrt{\mu - \mu_c}
+\end{equation*}
+A amplitude cresce continuamente a partir de zero.
 
 \column{0.48\textwidth}
 \begin{center}
 \textbf{Hopf Supercrítica}
-\begin{tikzpicture}[scale=0.8]
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.9, >=stealth]
     % mu < mu_c: equilibrio estavel
     \begin{scope}[xshift=-2cm]
         \draw[->] (-0.8,0) -- (0.8,0);
         \draw[->] (0,-0.8) -- (0,0.8);
         \fill[red] (0,0) circle (2pt);
-        \draw[->, thick] (0.5,0) -- (0.1,0);
-        \node[below] at (0,-1) {$\mu < \mu_c$};
-        \node[below] at (0,-1.3) {\tiny estável};
+        \draw[->, thick, roxodna] (0.5,0) -- (0.1,0);
+        \node[below, align=center] at (0,-0.8) {$\mu < \mu_c$ \\ \tiny estável};
     \end{scope}
 
     % mu > mu_c: ciclo limite
@@ -1320,17 +1378,11 @@ Transição em que um equilíbrio estável perde estabilidade e dá origem a um 
         \draw[->] (0,-0.8) -- (0,0.8);
         \fill[red] (0,0) circle (2pt);
         \draw[thick, azulescuro] (0,0) circle (0.4);
-        \draw[->, thick] (0,0.4) arc (90:135:0.4);
-        \node[below] at (0,-1) {$\mu > \mu_c$};
-        \node[below] at (0,-1.3) {\tiny oscilação};
+        \draw[->, thick, roxodna] (0,0.4) arc (90:135:0.4);
+        \node[below, align=center] at (0,-0.8) {$\mu > \mu_c$ \\ \tiny oscilação};
     \end{scope}
 \end{tikzpicture}
 \end{center}
-
-\textbf{Amplitude do ciclo:}
-\begin{equation*}
-A \sim \sqrt{\mu - \mu_c}
-\end{equation*}
 \end{columns}
 
 \vspace{0.3cm}
@@ -1443,7 +1495,7 @@ plt.title('Bifurcacao Pitchfork')
 % ============================================================================
 \section{Oscilações e Ciclos Limite}
 
-\begin{frame}[allowframebreaks]{Soluções Periódicas}
+\begin{frame}{Soluções Periódicas}
 \definicao{Solução Periódica}{
 Uma solução $\vect{x}(t)$ é periódica com período $T$ se:
 \begin{equation*}
@@ -1452,7 +1504,7 @@ Uma solução $\vect{x}(t)$ é periódica com período $T$ se:
 No espaço de fase, corresponde a uma órbita fechada.
 }
 
-\vspace{0.3cm}
+\vspace{0.15cm}
 
 \begin{columns}
 \column{0.48\textwidth}
@@ -1461,35 +1513,35 @@ No espaço de fase, corresponde a uma órbita fechada.
     \item \textbf{Linear:} oscilador harmônico (centro)
     \item \textbf{Não-linear:} ciclos limite
     \item \textbf{Forçada:} com input periódico
-    \item \textbf{Relaxação:} fast-slow dynamics
+    \item \textbf{Relaxação:} dinâmica rápido-lento
 \end{itemize}
 
 \column{0.48\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    \draw[->] (-2,0) -- (2,0) node[right] {$x$};
-    \draw[->] (0,-2) -- (0,2) node[above] {$y$};
+\begin{tikzpicture}[scale=0.65]
+    \draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+    \draw[->] (0,-1.5) -- (0,1.5) node[above] {$y$};
 
     % Ciclo limite
-    \draw[thick, azulescuro] (0,0) circle (1.5);
-    \draw[->, thick] (1.5,0) arc[start angle=0, end angle=30, radius=1.5];
+    \draw[thick, azulescuro] (0,0) circle (1.0);
+    \draw[->, thick] (1.0,0) arc[start angle=0, end angle=30, radius=1.0];
 
     % Trajetorias convergindo
-    \draw[verdeacido, ->] (0.8,0) arc[start angle=0, end angle=60, radius=0.8];
-    \draw[verdeacido, ->] (2,0) arc[start angle=0, end angle=60, radius=2];
+    \draw[verdeacido, ->] (0.5,0) arc[start angle=0, end angle=60, radius=0.5];
+    \draw[verdeacido, ->] (1.5,0) arc[start angle=0, end angle=60, radius=1.5];
 
-    \node[below] at (0,-2.5) {Ciclo Limite};
+    \node[below] at (0,-1.6) {\small Ciclo Limite};
 \end{tikzpicture}
 \end{center}
 \end{columns}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Ciclos Limite}
+\begin{frame}{Ciclos Limite}
 \definicao{Ciclo Limite}{
 Uma órbita periódica isolada para a qual trajetórias próximas convergem (estável) ou divergem (instável). Diferente de centro, é estruturalmente estável sob perturbações.
 }
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 
 \begin{columns}
 \column{0.48\textwidth}
@@ -1502,18 +1554,19 @@ Uma órbita periódica isolada para a qual trajetórias próximas convergem (est
     \item Não existe em sistemas lineares
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 
 \textbf{Diferença de Centro:}
 \begin{itemize}
-    \item Centro: família de órbitas
-    \item Ciclo limite: órbita única
+    \item Centro: família de órbitas infinitas
+    \item Ciclo limite: órbita única e isolada
 \end{itemize}
 
 \column{0.48\textwidth}
 \begin{center}
 \textbf{Ciclo Limite Estável}
-\begin{tikzpicture}[scale=0.8]
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.6]
     \draw[->] (-2,0) -- (2,0) node[right] {$x$};
     \draw[->] (0,-2) -- (0,2) node[above] {$y$};
 
@@ -1533,6 +1586,8 @@ Uma órbita periódica isolada para a qual trajetórias próximas convergem (est
 \end{tikzpicture}
 \end{center}
 \end{columns}
+
+\vspace{0.15cm}
 
 \importante{
 Ciclos limite são essenciais para modelar ritmos biológicos robustos!
