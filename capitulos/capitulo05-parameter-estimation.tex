@@ -55,42 +55,42 @@ Processo de determinar valores numéricos de parâmetros de um modelo matemátic
 
 \begin{frame}{O Problema Inverso}
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Problema Direto:}
-\begin{itemize}
+\begin{itemize}\small
     \item Parâmetros conhecidos
     \item Condições iniciais dadas
     \item Simular $\rightarrow$ Previsões
     \item Determinístico
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.08cm}
 
-\begin{exampleblock}{Exemplo}
+\begin{exampleblock}{Exemplo}\small
 Dados $k_1=0.5$, $k_2=0.1$\\
 Simular: $\frac{dx}{dt} = k_1 - k_2 x$\\
 $\Rightarrow$ obter $x(t)$
 \end{exampleblock}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Problema Inverso:}
-\begin{itemize}
+\begin{itemize}\small
     \item Dados experimentais
     \item Parâmetros desconhecidos
     \item Estimar $\leftarrow$ Ajuste
     \item Mal-posto (ill-posed)
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.08cm}
 
-\begin{alertblock}{Exemplo}
+\begin{alertblock}{Exemplo}\small
 Dados $x(t)$ experimentais\\
 Modelo: $\frac{dx}{dt} = k_1 - k_2 x$\\
 $\Rightarrow$ encontrar $k_1$, $k_2$
 \end{alertblock}
 \end{columns}
 
-\vspace{0.3cm}
+\vspace{0.1cm}
 
 \importante{
 O problema inverso é geralmente mais difícil que o direto!
@@ -98,48 +98,51 @@ O problema inverso é geralmente mais difícil que o direto!
 \end{frame}
 
 \begin{frame}{Desafios na Estimação de Parâmetros}
+\begin{columns}
+\column{0.55\textwidth}
 \begin{block}{Principais Obstáculos}
-\begin{enumerate}
-    \item \textbf{Identificabilidade:} múltiplas soluções possíveis
-    \item \textbf{Ruído experimental:} medições imprecisas
+\begin{enumerate}\small
+    \item \textbf{Identificabilidade:} múltiplas soluções
+    \item \textbf{Ruído:} medições imprecisas
     \item \textbf{Dados escassos:} poucas observações
     \item \textbf{Mínimos locais:} otimização não-convexa
-    \item \textbf{Correlação de parâmetros:} dificuldade de separação
-    \item \textbf{Custo computacional:} simulações repetidas
+    \item \textbf{Correlação:} parâmetros colineares
+    \item \textbf{Custo computacional:} simulações
     \item \textbf{Incerteza:} quantificação de confiança
 \end{enumerate}
 \end{block}
 
+\column{0.41\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
+\begin{tikzpicture}[scale=0.6]
     % Landscape with multiple minima
-    \draw[->] (0,0) -- (8,0) node[right] {$\theta$};
-    \draw[->] (0,0) -- (0,3) node[above] {$J(\theta)$};
+    \draw[->] (0,0) -- (5,0) node[right] {\tiny $\theta$};
+    \draw[->] (0,0) -- (0,2.5) node[above] {\tiny $J(\theta)$};
 
     % Objective function
-    \draw[thick, azulescuro, domain=0.5:7.5, samples=100, smooth]
-        plot (\x, {1 + 0.5*sin(3*\x r) + 0.3*(\x-4)^2/8});
+    \draw[thick, azulescuro, domain=0.4:4.6, samples=100, smooth]
+        plot (\x, {0.8 + 0.4*sin(4*\x r) + 0.3*(\x-2.5)^2/3});
 
     % Local minima
-    \fill[red] (1.5,0.7) circle (2pt) node[above, font=\tiny] {Local};
-    \fill[red] (5,1.2) circle (2pt) node[above, font=\tiny] {Local};
-    \fill[verdeacido] (3.2,0.5) circle (2pt) node[below, font=\tiny] {Global};
+    \fill[red] (0.9,0.5) circle (1.5pt) node[above, font=\tiny] {Local};
+    \fill[red] (3.9,1.1) circle (1.5pt) node[above, font=\tiny] {Local};
+    \fill[verdeacido] (2.3,0.3) circle (1.5pt) node[below, font=\tiny] {Global};
 \end{tikzpicture}
 \end{center}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Visão Geral dos Métodos}
+\begin{columns}
+\column{0.50\textwidth}
 \begin{center}
-\begin{tikzpicture}[node distance=2.5cm, auto,
-    box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=1cm, font=\small}]
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}, node distance=2.0cm, auto,
+    box/.style={rectangle, draw, text width=2.4cm, text centered, rounded corners, minimum height=0.8cm, font=\scriptsize}]
 
     \node[box, fill=azulclaro!30] (methods) {Métodos de\\Estimação};
-
-    \node[box, fill=laranjacel!30, above left=1.5cm and 2cm of methods] (grid) {Busca em\\Grade};
-
-    \node[box, fill=verdeacido!30, above right=1.5cm and 2cm of methods] (local) {Otimização\\Local};
-
-    \node[box, fill=roxodna!30, below=1.5cm of methods] (global) {Otimização\\Global};
+    \node[box, fill=laranjacel!30, above left=1.2cm and 0.6cm of methods] (grid) {Busca em\\Grade};
+    \node[box, fill=verdeacido!30, above right=1.2cm and 0.6cm of methods] (local) {Otimização\\Local};
+    \node[box, fill=roxodna!30, below=1.0cm of methods] (global) {Otimização\\Global};
 
     \draw[->, thick] (methods) -- (grid);
     \draw[->, thick] (methods) -- (local);
@@ -151,13 +154,15 @@ O problema inverso é geralmente mais difícil que o direto!
 \end{tikzpicture}
 \end{center}
 
+\column{0.48\textwidth}
 \begin{exampleblock}{Escolha do Método}
-\begin{itemize}
-    \item \textbf{Poucos parâmetros + boa estimativa inicial:} métodos locais
-    \item \textbf{Muitos parâmetros + incerteza:} métodos globais
-    \item \textbf{Exploração inicial:} busca em grade
+\begin{itemize}\small
+    \item \textbf{Poucos parâmetros + boa estimativa:} locais (rápido)
+    \item \textbf{Muitos parâmetros + incerteza:} globais (robusto)
+    \item \textbf{Exploração inicial:} busca em grade (simples)
 \end{itemize}
 \end{exampleblock}
+\end{columns}
 \end{frame}
 
 % ============================================================================
@@ -165,29 +170,34 @@ O problema inverso é geralmente mais difícil que o direto!
 % ============================================================================
 \section{Formulação do Problema}
 
-\begin{frame}{Função Objetivo}
+\begin{frame}{Função Objetivo: Conceito}
 \definicao{Função Objetivo (Cost Function)}{
-Medida quantitativa da discrepância entre dados experimentais e previsões do modelo. Objetivo: minimizar esta função.
+Medida quantitativa da discrepância entre dados experimentais e previsões do modelo. O objetivo na estimação é encontrar parâmetros que minimizam esta função.
 }
 
-\vspace{0.3cm}
-
-\begin{block}{Componentes}
+\begin{block}{Componentes Principais}
 \begin{itemize}
-    \item $y_i$: dados experimentais (observações)
-    \item $\hat{y}_i(\vect{\theta})$: previsões do modelo
-    \item $\vect{\theta}$: vetor de parâmetros a estimar
-    \item $n$: número de observações
+    \item $y_i$: dados experimentais observados no ponto $i$
+    \item $\hat{y}_i(\vect{\theta})$: previsão ou simulação gerada pelo modelo
+    \item $\vect{\theta}$: vetor de parâmetros a serem ajustados/estimados
+    \item $n$: número total de observações experimentais
 \end{itemize}
 \end{block}
+\end{frame}
+
+\begin{frame}{Função Objetivo: Formulação}
+A função objetivo quantifica o erro total entre os dados e as previsões:
 
 \destaque{
 \begin{equation*}
-J(\vect{\theta}) = \text{medida de erro entre } \{y_i\} \text{ e } \{\hat{y}_i(\vect{\theta})\}
+J(\vect{\theta}) = \text{medida de discrepância entre } \{y_i\} \text{ e } \{\hat{y}_i(\vect{\theta})\}
 \end{equation*}
 }
 
+\vspace{0.4cm}
+
 \textbf{Problema de Otimização:}
+A estimação é formulada matematicamente como a busca pelo argumento minimizador de $J(\vect{\theta})$:
 \begin{equation*}
 \vect{\theta}^* = \arg\min_{\vect{\theta}} J(\vect{\theta})
 \end{equation*}
@@ -195,7 +205,7 @@ J(\vect{\theta}) = \text{medida de erro entre } \{y_i\} \text{ e } \{\hat{y}_i(\
 
 \begin{frame}{Mínimos Quadrados Ordinários (OLS)}
 \begin{block}{Método Mais Comum}
-Minimizar a soma dos quadrados dos resíduos:
+Minimização da soma dos quadrados dos desvios entre o modelo e os dados:
 \end{block}
 
 \destaque{
@@ -204,36 +214,42 @@ J(\vect{\theta}) = \text{SSE}(\vect{\theta}) = \sum_{i=1}^{n} [y_i - \hat{y}_i(\
 \end{equation*}
 }
 
+\vspace{0.2cm}
+\begin{exampleblock}{Resíduo}
+O resíduo $r_i$ representa o erro de previsão individual no ponto $i$:
+\begin{equation*}
+r_i = y_i - \hat{y}_i(\vect{\theta}) \quad \Rightarrow \quad \text{SSE}(\vect{\theta}) = \sum_{i=1}^{n} r_i^2
+\end{equation*}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Mínimos Quadrados Ordinários (OLS): Propriedades}
+A formulação OLS clássica possui características importantes:
+
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Vantagens:}
-\begin{itemize}
+\begin{itemize}\small
     \item Simples e intuitivo
-    \item Bem estabelecido
-    \item Solução analítica (modelos lineares)
-    \item Interpretação estatística
+    \item Bem estabelecido na literatura
+    \item Solução analítica para modelos lineares
+    \item Interpretação estatística direta
 \end{itemize}
 
-\column{0.5\textwidth}
-\textbf{Suposições:}
-\begin{itemize}
-    \item Erros gaussianos
-    \item Variância constante
+\column{0.48\textwidth}
+\textbf{Suposições Estatísticas:}
+\begin{itemize}\small
+    \item Erros gaussianos (ruído branco)
+    \item Variância constante (homocedasticidade)
     \item Erros independentes
-    \item Outliers problemáticos
+    \item Outliers são muito problemáticos
 \end{itemize}
 \end{columns}
-
-\vspace{0.3cm}
-
-\begin{exampleblock}{Resíduo}
-$r_i = y_i - \hat{y}_i(\vect{\theta})$ = erro de previsão no ponto $i$
-\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Mínimos Quadrados Ponderados (WLS)}
 \begin{block}{Quando usar?}
-Quando as observações têm diferentes níveis de incerteza ou confiabilidade
+Quando as observações têm diferentes níveis de incerteza ou confiabilidade.
 \end{block}
 
 \destaque{
@@ -242,24 +258,27 @@ J(\vect{\theta}) = \sum_{i=1}^{n} w_i [y_i - \hat{y}_i(\vect{\theta})]^2
 \end{equation*}
 }
 
+\begin{columns}
+\column{0.52\textwidth}
 \textbf{Pesos $w_i$:}
-\begin{itemize}
+\begin{itemize}\small
     \item $w_i = 1/\sigma_i^2$: inverso da variância (comum)
     \item $w_i = 1/y_i$: proporcional ao valor (dados log-scale)
-    \item $w_i$ customizado: baseado em conhecimento experimental
+    \item $w_i$ customizado: baseado no erro experimental
 \end{itemize}
 
-\vspace{0.3cm}
-
+\column{0.44\textwidth}
 \exemplo{Cinética Enzimática}{
-Concentrações baixas têm maior erro relativo\\
-$\Rightarrow$ usar pesos $w_i = 1/\hat{y}_i$ ou $w_i = 1/\hat{y}_i^2$
+\small
+Concentrações baixas têm maior erro relativo.\\
+$\Rightarrow$ usar pesos $w_i = 1/\hat{y}_i$ ou $w_i = 1/\hat{y}_i^2$.
 }
+\end{columns}
 \end{frame}
 
-\begin{frame}{Maximum Likelihood Estimation (MLE)}
+\begin{frame}{Maximum Likelihood Estimation (MLE): Conceito}
 \begin{block}{Abordagem Estatística}
-Encontrar parâmetros que maximizam a probabilidade (likelihood) de observar os dados
+Encontrar parâmetros que maximizam a probabilidade (likelihood) de observar os dados reais obtidos.
 \end{block}
 
 \textbf{Função de Verossimilhança:}
@@ -267,25 +286,29 @@ Encontrar parâmetros que maximizam a probabilidade (likelihood) de observar os 
 \mathcal{L}(\vect{\theta}) = P(\text{dados} | \vect{\theta})
 \end{equation*}
 
-\textbf{Log-verossimilhança (mais conveniente):}
+\textbf{Log-verossimilhança (computacionalmente preferível):}
 \begin{equation*}
 \ln \mathcal{L}(\vect{\theta}) = \sum_{i=1}^{n} \ln P(y_i | \vect{\theta})
 \end{equation*}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Maximum Likelihood Estimation (MLE): Caso Gaussiano}
 \begin{exampleblock}{Caso Gaussiano}
-Se erros $\sim \mathcal{N}(0, \sigma^2)$:
+Assumindo que os erros de medição $\epsilon_i$ são independentes e normalmente distribuídos, $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$:
 \begin{equation*}
 \ln \mathcal{L}(\vect{\theta}) = -\frac{n}{2}\ln(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum_{i=1}^{n}[y_i - \hat{y}_i(\vect{\theta})]^2
 \end{equation*}
-Maximizar $\ln \mathcal{L}$ = Minimizar SSE!
 \end{exampleblock}
+
+\vspace{0.3cm}
+\importante{
+Sob a hipótese de ruído gaussiano, maximizar a log-verossimilhança $\ln \mathcal{L}(\vect{\theta})$ é matematicamente equivalente a minimizar a soma dos quadrados dos resíduos (SSE) do método de OLS!
+}
 \end{frame}
 
-\begin{frame}{Abordagem Bayesiana}
+\begin{frame}{Abordagem Bayesiana: Teorema e Termos}
 \begin{block}{Incorpora Conhecimento Prévio}
-Usa teorema de Bayes para atualizar crenças sobre parâmetros
+Usa o Teorema de Bayes para atualizar a nossa crença sobre as distribuições dos parâmetros à medida que novos dados são observados.
 \end{block}
 
 \destaque{
@@ -295,24 +318,26 @@ P(\vect{\theta} | \text{dados}) = \frac{P(\text{dados} | \vect{\theta}) \cdot P(
 }
 
 \begin{itemize}
-    \item $P(\vect{\theta} | \text{dados})$: \textbf{posterior} (o que queremos)
-    \item $P(\text{dados} | \vect{\theta})$: \textbf{likelihood} (ajuste aos dados)
-    \item $P(\vect{\theta})$: \textbf{prior} (conhecimento prévio)
-    \item $P(\text{dados})$: constante de normalização
+    \item $P(\vect{\theta} | \text{dados})$: \textbf{posterior} (distribuição pós-dados)
+    \item $P(\text{dados} | \vect{\theta})$: \textbf{likelihood} (verossimilhança dos dados)
+    \item $P(\vect{\theta})$: \textbf{prior} (conhecimento prévio sobre os parâmetros)
+    \item $P(\text{dados})$: evidência (constante de normalização)
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Abordagem Bayesiana: Vantagens e Desafios}
 \begin{exampleblock}{Vantagens}
 \begin{itemize}
-    \item Incorpora informação da literatura
-    \item Quantifica incerteza naturalmente
-    \item Previne overfitting (regularização)
+    \item Permite incorporar dados históricos ou da literatura nas distribuições priors
+    \item Quantifica incerteza de forma natural (probabilidade dos parâmetros)
+    \item Previne overfitting agindo como uma regularização natural
 \end{itemize}
 \end{exampleblock}
 
+\vspace{0.3cm}
+
 \begin{alertblock}{Desafio}
-Requer escolha de distribuições priors e métodos computacionais intensivos (MCMC)
+Requer a escolha de distribuições priors adequadas e demanda alto custo computacional com algoritmos de amostragem (como MCMC).
 \end{alertblock}
 \end{frame}
 
@@ -326,17 +351,28 @@ Requer escolha de distribuições priors e métodos computacionais intensivos (M
 Método de otimização que avalia sistematicamente a função objetivo em uma grade regular de valores de parâmetros.
 }
 
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Algoritmo:}
+\begin{enumerate}\small
+    \item Definir limites para os parâmetros
+    \item Criar grade regular com $n_1 \times n_2 \times \ldots$ pontos
+    \item Avaliar a função objetivo $J(\vect{\theta})$ em cada nó da grade
+    \item Selecionar o ponto com o menor valor de $J$
+\end{enumerate}
+
+\column{0.48\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.9]
+\begin{tikzpicture}[scale=0.7]
     % 2D grid
-    \draw[step=0.8cm, gray, very thin] (0,0) grid (4,4);
-    \draw[->] (0,0) -- (4.5,0) node[right] {$\theta_1$};
-    \draw[->] (0,0) -- (0,4.5) node[above] {$\theta_2$};
+    \draw[step=0.6cm, gray, very thin] (0,0) grid (3,3);
+    \draw[->] (0,0) -- (3.5,0) node[right] {\tiny $\theta_1$};
+    \draw[->] (0,0) -- (0,3.5) node[above] {\tiny $\theta_2$};
 
     % Grid points with values
-    \foreach \x in {0.4, 1.2, 2.0, 2.8, 3.6} {
-        \foreach \y in {0.4, 1.2, 2.0, 2.8, 3.6} {
-            \pgfmathsetmacro{\val}{100*exp(-(\x-2)^2/2 - (\y-2.4)^2/2)}
+    \foreach \x in {0.3, 0.9, 1.5, 2.1, 2.7} {
+        \foreach \y in {0.3, 0.9, 1.5, 2.1, 2.7} {
+            \pgfmathsetmacro{\val}{100*exp(-(\x-1.5)^2/2 - (\y-1.8)^2/2)}
             \pgfmathparse{\val>50 ? 1 : 0}
             \ifnum\pgfmathresult=1
                 \fill[verdeacido] (\x,\y) circle (2pt);
@@ -352,73 +388,63 @@ Método de otimização que avalia sistematicamente a função objetivo em uma g
     }
 
     % Best point
-    \fill[blue] (2,2.4) circle (3pt) node[right, font=\tiny] {Mínimo};
-
-    \node[below, font=\tiny] at (2,-0.5) {Grade 5x5 = 25 avaliações};
+    \fill[blue] (1.5,1.8) circle (3pt) node[right, font=\tiny] {Mínimo};
+    \node[below, font=\tiny] at (1.5,-0.2) {Grade 5x5 = 25 avaliações};
 \end{tikzpicture}
 \end{center}
-
-\textbf{Algoritmo:}
-\begin{enumerate}
-    \item Definir intervalos para cada parâmetro
-    \item Criar grade com $n_1 \times n_2 \times \ldots \times n_p$ pontos
-    \item Avaliar $J(\vect{\theta})$ em cada ponto
-    \item Selecionar ponto com menor $J$
-\end{enumerate}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Vantagens e Desvantagens}
 \begin{columns}
-\column{0.5\textwidth}
-\begin{block}{Vantagens}
+\column{0.48\textwidth}
+\begin{block}{Vantagens}\small
 \begin{itemize}
     \item Simples de implementar
     \item Facilmente paralelizável
-    \item Garantia de exploração
-    \item Visualização intuitiva
+    \item Garantia de encontrar o mínimo global
     \item Sem derivadas necessárias
 \end{itemize}
 \end{block}
 
-\column{0.5\textwidth}
-\begin{alertblock}{Desvantagens}
+\column{0.48\textwidth}
+\begin{alertblock}{Desvantagens}\small
 \begin{itemize}
     \item Custo exponencial: $O(n^p)$
     \item Inviável para muitos parâmetros
-    \item Resolução limitada
-    \item Desperdício de avaliações
+    \item Resolução da grade limitada
     \item Maldição da dimensionalidade
 \end{itemize}
 \end{alertblock}
 \end{columns}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{Grid Search: Custo Computacional}
+O custo computacional cresce exponencialmente com o número de parâmetros estimáveis.
 
 \importante{
-\textbf{Custo Computacional:}\\
-Com 10 valores por parâmetro:
+\textbf{Custo Computacional:} assumindo 10 valores testados por parâmetro:
 \begin{itemize}
-    \item 2 parâmetros: $10^2 = 100$ avaliações
-    \item 5 parâmetros: $10^5 = 100.000$ avaliações
-    \item 10 parâmetros: $10^{10}$ avaliações (impraticável!)
+    \item 2 parâmetros: $10^2 = 100$ avaliações de $J$
+    \item 5 parâmetros: $10^5 = 100.000$ avaliações de $J$
+    \item 10 parâmetros: $10^{10}$ avaliações (impraticável em tempo viável!)
 \end{itemize}
 }
+
+\vspace{0.3cm}
+\textbf{Conclusão:} A busca em grade é útil para exploração inicial de poucos parâmetros (1 ou 2), mas inadequada para problemas de alta dimensão.
 \end{frame}
 
 \begin{frame}[fragile]{Implementação: Grid Search 1D}
-\begin{lstlisting}[language=Python, caption=Busca em grade unidimensional, basicstyle=\ttfamily\footnotesize]
+\begin{lstlisting}[language=Python, caption=Busca em grade unidimensional, basicstyle=\ttfamily\scriptsize]
 import numpy as np
-import matplotlib.pyplot as plt
 
 def objective_function(theta):
-    """Funcao objetivo a minimizar"""
     return (theta - 3)**2 + 5
 
-# Definir grade
+# Definir grade e avaliar
 theta_values = np.linspace(0, 6, 50)
-
-# Avaliar funcao objetivo
-J_values = [objective_function(theta) for theta in theta_values]
+J_values = [objective_function(t) for t in theta_values]
 
 # Encontrar minimo
 idx_min = np.argmin(J_values)
@@ -427,67 +453,41 @@ J_best = J_values[idx_min]
 
 print(f"Parametro otimo: {theta_best:.3f}")
 print(f"Valor da funcao: {J_best:.3f}")
-
-# Visualizar
-plt.figure(figsize=(10, 6))
-plt.plot(theta_values, J_values, 'b-', linewidth=2)
-plt.plot(theta_best, J_best, 'ro', markersize=10,
-         label=f'Minimo: theta={theta_best:.2f}')
-plt.xlabel('Parametro theta')
-plt.ylabel('J(theta)')
-plt.legend()
-plt.grid(True)
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Implementação: Grid Search 2D}
-\begin{lstlisting}[language=Python, caption=Busca em grade bidimensional, basicstyle=\ttfamily\footnotesize]
-def sse_model(params, t_data, y_data):
-    """SSE para modelo exponencial y = a*exp(-b*t)"""
+\begin{lstlisting}[language=Python, caption=Busca em grade bidimensional, basicstyle=\ttfamily\scriptsize]
+def sse_model(params, t, y):
     a, b = params
-    y_pred = a * np.exp(-b * t_data)
-    sse = np.sum((y_data - y_pred)**2)
-    return sse
+    return np.sum((y - a * np.exp(-b * t))**2)
 
-# Dados experimentais
-t_data = np.array([0, 1, 2, 3, 4, 5])
-y_data = np.array([10, 6.1, 3.7, 2.2, 1.4, 0.8])
-
-# Grade de parametros
+# Dados experimentais e grade
+t = np.array([0, 1, 2, 3, 4, 5])
+y = np.array([10, 6.1, 3.7, 2.2, 1.4, 0.8])
 a_range = np.linspace(5, 15, 20)
 b_range = np.linspace(0.1, 1.0, 20)
-
-# Avaliar em toda a grade
-SSE_grid = np.zeros((len(a_range), len(b_range)))
-
-for i, a in enumerate(a_range):
-    for j, b in enumerate(b_range):
-        SSE_grid[i, j] = sse_model([a, b], t_data, y_data)
+SSE_grid = np.array([[sse_model([a, b], t, y) for b in b_range] for a in a_range])
 
 # Encontrar minimo
-min_idx = np.unravel_index(SSE_grid.argmin(), SSE_grid.shape)
-a_best = a_range[min_idx[0]]
-b_best = b_range[min_idx[1]]
-
+idx = np.unravel_index(SSE_grid.argmin(), SSE_grid.shape)
+a_best, b_best = a_range[idx[0]], b_range[idx[1]]
 print(f"Parametros otimos: a={a_best:.3f}, b={b_best:.3f}")
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Visualização: Contour Plot}
-\begin{lstlisting}[language=Python, caption=Mapa de contorno da funcao objetivo, basicstyle=\ttfamily\footnotesize]
+\begin{lstlisting}[language=Python, caption=Mapa de contorno da funcao objetivo, basicstyle=\ttfamily\scriptsize]
 # Criar contour plot
 A, B = np.meshgrid(a_range, b_range)
 
-plt.figure(figsize=(10, 8))
-contour = plt.contourf(A, B, SSE_grid.T, levels=20,
-                       cmap='viridis')
+plt.figure(figsize=(8, 5))
+contour = plt.contourf(A, B, SSE_grid.T, levels=20, cmap='viridis')
 plt.colorbar(contour, label='SSE')
 
-# Marcar minimo
-plt.plot(a_best, b_best, 'r*', markersize=20,
+# Marcar minimo e contornos
+plt.plot(a_best, b_best, 'r*', markersize=15,
          label=f'Minimo: ({a_best:.2f}, {b_best:.2f})')
-
-# Contornos
 plt.contour(A, B, SSE_grid.T, levels=10,
             colors='white', linewidths=0.5, alpha=0.5)
 
@@ -506,7 +506,7 @@ plt.grid(True, alpha=0.3)
 
 \begin{frame}{Gradient Descent (Descida do Gradiente)}
 \definicao{Gradient Descent}{
-Método iterativo que se move na direção do negativo do gradiente para encontrar um mínimo local da função objetivo.
+Método iterativo que se move na direção oposta ao gradiente para encontrar um mínimo local da função objetivo.
 }
 
 \destaque{
@@ -515,42 +515,41 @@ Método iterativo que se move na direção do negativo do gradiente para encontr
 \end{equation*}
 }
 
-\begin{itemize}
+\begin{columns}
+\column{0.54\textwidth}
+\textbf{Componentes:}
+\begin{itemize}\small
     \item $\vect{\theta}^{(k)}$: parâmetros na iteração $k$
-    \item $\alpha$: taxa de aprendizado (step size)
-    \item $\nabla J = \left[\frac{\partial J}{\partial \theta_1}, \frac{\partial J}{\partial \theta_2}, \ldots\right]^T$: gradiente
+    \item $\alpha > 0$: taxa de aprendizado (passo)
+    \item $\nabla J = \left[\frac{\partial J}{\partial \theta_1}, \frac{\partial J}{\partial \theta_2}, \ldots\right]^T$: vetor gradiente
 \end{itemize}
 
-\vspace{0.3cm}
-
+\column{0.42\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    \draw[->] (0,0) -- (5,0) node[right] {$\theta$};
-    \draw[->] (0,0) -- (0,3) node[above] {$J$};
+\begin{tikzpicture}[scale=0.65]
+    \draw[->] (0,0) -- (4.5,0) node[right] {\tiny $\theta$};
+    \draw[->] (0,0) -- (0,2.5) node[above] {\tiny $J$};
 
     % Objective function
-    \draw[thick, azulescuro, domain=0.3:4.7, samples=100, smooth]
-        plot (\x, {0.3*(\x-2.5)^2 + 0.5});
+    \draw[thick, azulescuro, domain=0.3:4.2, samples=100, smooth]
+        plot (\x, {0.3*(\x-2.2)^2 + 0.4});
 
     % Gradient descent steps
-    \foreach \x/\y in {4/2, 3.5/1.5, 3/1.1, 2.7/0.7, 2.6/0.55} {
-        \fill[red] (\x,\y) circle (2pt);
+    \foreach \x/\y in {3.6/1.8, 3.1/1.3, 2.7/0.9, 2.4/0.6, 2.3/0.45} {
+        \fill[red] (\x,\y) circle (1.5pt);
         \draw[->, thick, verdeacido] (\x,\y) -- +(-.3,-.2);
     }
 
-    \node[above, font=\tiny] at (4,2.2) {Início};
-    \node[below, font=\tiny] at (2.5,0.3) {Mínimo};
+    \node[above, font=\tiny] at (3.6,1.9) {Início};
+    \node[below, font=\tiny] at (2.2,0.3) {Mínimo};
 \end{tikzpicture}
 \end{center}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Escolha da Taxa de Aprendizado}
-\importante{
-A escolha de $\alpha$ é crucial para convergência!
-}
-
+\begin{frame}{Escolha da Taxa de Aprendizado: Impacto}
 \begin{columns}
-\column{0.33\textwidth}
+\column{0.32\textwidth}
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
     \draw[thick, azulescuro, domain=0:3, samples=50]
@@ -562,7 +561,7 @@ A escolha de $\alpha$ é crucial para convergência!
 \end{tikzpicture}
 \end{center}
 
-\column{0.33\textwidth}
+\column{0.32\textwidth}
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
     \draw[thick, azulescuro, domain=0:3, samples=50]
@@ -573,7 +572,7 @@ A escolha de $\alpha$ é crucial para convergência!
 \end{tikzpicture}
 \end{center}
 
-\column{0.33\textwidth}
+\column{0.32\textwidth}
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
     \draw[thick, azulescuro, domain=0:3, samples=50]
@@ -585,8 +584,12 @@ A escolha de $\alpha$ é crucial para convergência!
 \end{tikzpicture}
 \end{center}
 \end{columns}
+\end{frame}
 
-\vspace{0.3cm}
+\begin{frame}{Escolha da Taxa de Aprendizado: Estratégias}
+\importante{
+A escolha de $\alpha$ é crucial para convergência!
+}
 
 \begin{block}{Estratégias}
 \begin{itemize}
@@ -631,14 +634,8 @@ $\epsilon_g = 10^{-6}$, $\epsilon_\theta = 10^{-6}$, $\epsilon_J = 10^{-8}$, $k_
 \end{frame}
 
 \begin{frame}[fragile]{Implementação: Gradient Descent}
-\begin{lstlisting}[language=Python, caption=Descida do gradiente com derivadas numéricas, basicstyle=\ttfamily\footnotesize]
-def gradient_descent(f, theta0, alpha=0.01, max_iter=1000,
-                      tol=1e-6):
-    """
-    Gradient descent com derivadas numericas
-    f: funcao objetivo
-    theta0: chute inicial
-    """
+\begin{lstlisting}[language=Python, caption=Descida do gradiente principal, basicstyle=\ttfamily\scriptsize]
+def gradient_descent(f, theta0, alpha=0.01, max_iter=1000, tol=1e-6):
     theta = np.array(theta0, dtype=float)
     history = [theta.copy()]
 
@@ -646,10 +643,8 @@ def gradient_descent(f, theta0, alpha=0.01, max_iter=1000,
         # Calcular gradiente numericamente
         grad = numerical_gradient(f, theta)
 
-        # Atualizar parametros
+        # Atualizar parametros e checar convergencia
         theta_new = theta - alpha * grad
-
-        # Checar convergencia
         if np.linalg.norm(theta_new - theta) < tol:
             print(f"Convergiu em {k} iteracoes")
             break
@@ -658,7 +653,11 @@ def gradient_descent(f, theta0, alpha=0.01, max_iter=1000,
         history.append(theta.copy())
 
     return theta, np.array(history)
+\end{lstlisting}
+\end{frame}
 
+\begin{frame}[fragile]{Implementação: Gradiente Numérico}
+\begin{lstlisting}[language=Python, caption=Calculo numerico do gradiente, basicstyle=\ttfamily\scriptsize]
 def numerical_gradient(f, theta, h=1e-5):
     """Gradiente por diferencas finitas"""
     grad = np.zeros_like(theta)
@@ -681,39 +680,36 @@ Usar informação de segunda ordem (curvatura) para convergência mais rápida
 \end{equation*}
 }
 
-\begin{itemize}
+\begin{itemize}\small
     \item $\mathbf{H}$: matriz Hessiana (derivadas segundas)
     \item $H_{ij} = \frac{\partial^2 J}{\partial \theta_i \partial \theta_j}$
 \end{itemize}
 
-\vspace{0.3cm}
-
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Vantagens:}
-\begin{itemize}
+\begin{itemize}\small
     \item Convergência quadrática
-    \item Muito rápido perto do mínimo
+    \item Rápido perto do mínimo
     \item Não precisa de step size
 \end{itemize}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Desvantagens:}
-\begin{itemize}
+\begin{itemize}\small
     \item Calcular $\mathbf{H}$ é caro
     \item Inverter $\mathbf{H}$ também
-    \item Pode não convergir longe do mínimo
-    \item Requer $\mathbf{H}$ positiva definida
+    \item Não-convergência longe do mínimo
 \end{itemize}
 \end{columns}
 \end{frame}
 
 \begin{frame}{Método de Gauss-Newton}
-\begin{block}{Específico para Mínimos Quadrados}
-Aproxima Hessiana usando Jacobiano das previsões do modelo
+\begin{block}{Específico para Mínimos Quadrados}\small
+Aproxima a Hessiana usando apenas o Jacobiano das previsões do modelo.
 \end{block}
 
-Para $J(\vect{\theta}) = \sum_{i=1}^{n} r_i^2(\vect{\theta})$ onde $r_i = y_i - \hat{y}_i(\vect{\theta})$:
+Para $J(\vect{\theta}) = \sum r_i^2(\vect{\theta})$ com resíduos $r_i = y_i - \hat{y}_i(\vect{\theta})$:
 
 \destaque{
 \begin{equation*}
@@ -721,23 +717,26 @@ Para $J(\vect{\theta}) = \sum_{i=1}^{n} r_i^2(\vect{\theta})$ onde $r_i = y_i - 
 \end{equation*}
 }
 
-\begin{itemize}
-    \item $\mathbf{J}$: matriz Jacobiana dos resíduos ($J_{ij} = \partial r_i / \partial \theta_j$)
-    \item $\vect{r}$: vetor de resíduos
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Onde:}
+\begin{itemize}\scriptsize
+    \item $\mathbf{J}$: Jacobiana ($J_{ij} = \partial r_i / \partial \theta_j$)
+    \item $\vect{r}$: vetor de resíduos individuais
 \end{itemize}
 
-\vspace{0.3cm}
-
-\begin{exampleblock}{Vantagens}
+\column{0.48\textwidth}
+\begin{exampleblock}{Vantagens}\scriptsize
 \begin{itemize}
-    \item Evita calcular Hessiana completa
-    \item Boa performance para problemas de mínimos quadrados
-    \item Usado como base do Levenberg-Marquardt
+    \item Evita o cálculo da Hessiana completa
+    \item Excelente para mínimos quadrados
+    \item Base do algoritmo Levenberg-Marquardt
 \end{itemize}
 \end{exampleblock}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Levenberg-Marquardt (LM)}
+\begin{frame}{Levenberg-Marquardt (LM): Algoritmo}
 \definicao{Levenberg-Marquardt}{
 Combina Gauss-Newton e gradient descent, interpolando entre ambos via parâmetro de amortecimento.
 }
@@ -748,28 +747,30 @@ Combina Gauss-Newton e gradient descent, interpolando entre ambos via parâmetro
 \end{equation*}
 }
 
-\begin{itemize}
+\begin{itemize}\small
     \item $\lambda$: parâmetro de amortecimento (damping)
     \item $\lambda$ grande $\Rightarrow$ gradient descent (pequenos passos, robusto)
     \item $\lambda$ pequeno $\Rightarrow$ Gauss-Newton (passos grandes, rápido)
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
-
-\textbf{Estratégia Adaptativa:}
+\begin{frame}{Levenberg-Marquardt (LM): Estratégia}
+\textbf{Estratégia Adaptativa de Ajuste:}
 \begin{itemize}
     \item Se $J$ diminui: aceitar passo, diminuir $\lambda$ (mais agressivo)
     \item Se $J$ aumenta: rejeitar passo, aumentar $\lambda$ (mais conservador)
 \end{itemize}
+
+\vspace{0.5cm}
 
 \importante{
 LM é o método padrão para ajuste não-linear de curvas!
 }
 \end{frame}
 
-\begin{frame}[fragile]{Exemplo: Michaelis-Menten com scipy}
-\begin{lstlisting}[language=Python, caption=Ajuste de parâmetros com Levenberg-Marquardt, basicstyle=\ttfamily\footnotesize]
-from scipy.optimize import least_squares, curve_fit
+\begin{frame}[fragile]{Otimização Local: Michaelis-Menten (curve\_fit)}
+\begin{lstlisting}[language=Python, caption=Ajuste simples usando curve\_fit, basicstyle=\ttfamily\scriptsize]
+from scipy.optimize import curve_fit
 import numpy as np
 
 # Modelo de Michaelis-Menten
@@ -780,15 +781,22 @@ def michaelis_menten(S, Vmax, Km):
 S_data = np.array([0.5, 1, 2, 5, 10, 20, 50])
 v_data = np.array([0.4, 0.7, 1.2, 1.8, 2.1, 2.3, 2.4])
 
-# Metodo 1: curve_fit (interface simples)
+# Otimizacao via curve_fit
 params, cov = curve_fit(michaelis_menten, S_data, v_data,
                          p0=[3, 5])
 Vmax_fit, Km_fit = params
 
 print(f"Vmax = {Vmax_fit:.3f}")
 print(f"Km = {Km_fit:.3f}")
+\end{lstlisting}
+\end{frame}
 
-# Metodo 2: least_squares (mais controle)
+\begin{frame}[fragile]{Otimização Local: Michaelis-Menten (least\_squares)}
+\begin{lstlisting}[language=Python, caption=Ajuste via least\_squares (LM), basicstyle=\ttfamily\footnotesize]
+from scipy.optimize import least_squares
+import numpy as np
+
+# Reuso dos dados anteriores e definicao de residuos
 def residuals(params):
     Vmax, Km = params
     return v_data - michaelis_menten(S_data, Vmax, Km)
@@ -801,30 +809,25 @@ print(f"Sucesso: {result.success}")
 \end{frame}
 
 \begin{frame}[fragile]{Visualização do Ajuste}
-\begin{lstlisting}[language=Python, caption=Comparação dados vs modelo ajustado, basicstyle=\ttfamily\footnotesize]
+\begin{lstlisting}[language=Python, caption=Comparação dados vs modelo ajustado, basicstyle=\ttfamily\scriptsize]
 # Gerar curva do modelo ajustado
 S_smooth = np.linspace(0, 60, 200)
 v_fit = michaelis_menten(S_smooth, Vmax_fit, Km_fit)
 
-# Plotar
+# Plotar dados e ajuste
 plt.figure(figsize=(10, 6))
-plt.plot(S_data, v_data, 'ko', markersize=10,
-         label='Dados experimentais')
+plt.plot(S_data, v_data, 'ko', markersize=10, label='Dados exp')
 plt.plot(S_smooth, v_fit, 'b-', linewidth=2,
          label=f'Ajuste: Vmax={Vmax_fit:.2f}, Km={Km_fit:.2f}')
 
 # Linhas de referencia
-plt.axhline(y=Vmax_fit, color='r', linestyle='--',
-            alpha=0.5, label=f'Vmax')
-plt.axvline(x=Km_fit, color='g', linestyle='--',
-            alpha=0.5, label=f'Km')
+plt.axhline(y=Vmax_fit, color='r', linestyle='--', alpha=0.5, label='Vmax')
+plt.axvline(x=Km_fit, color='g', linestyle='--', alpha=0.5, label='Km')
 plt.axhline(y=Vmax_fit/2, color='gray', linestyle=':')
 
-plt.xlabel('[Substrato] (mM)')
-plt.ylabel('Velocidade (umol/min)')
+plt.xlabel('[Substrato] (mM)'); plt.ylabel('Velocidade (umol/min)')
 plt.title('Ajuste de Michaelis-Menten')
-plt.legend()
-plt.grid(True, alpha=0.3)
+plt.legend(); plt.grid(True, alpha=0.3)
 \end{lstlisting}
 \end{frame}
 
@@ -834,39 +837,39 @@ plt.grid(True, alpha=0.3)
 \section{Algoritmos Globais}
 
 \begin{frame}{Por que Otimização Global?}
+\begin{columns}
+\column{0.48\textwidth}
 \begin{alertblock}{Problema}
 Métodos locais podem ficar presos em mínimos locais
 \end{alertblock}
 
 \begin{center}
-\begin{tikzpicture}[scale=1]
-    \draw[->] (0,0) -- (9,0) node[right] {$\theta$};
+\begin{tikzpicture}[scale=0.65]
+    \draw[->] (0,0) -- (6.5,0) node[right] {$\theta$};
     \draw[->] (0,0) -- (0,3) node[above] {$J(\theta)$};
 
-    % Complex landscape
-    \draw[thick, azulescuro, domain=0.5:8.5, samples=150, smooth]
-        plot (\x, {1.2 + 0.8*sin(2*\x r) + 0.15*(\x-4.5)^2});
+    \draw[thick, azulescuro, domain=0.4:6.0, samples=120, smooth]
+        plot (\x, {1.2 + 0.8*sin(3.0*\x r) + 0.15*(\x-3.2)^2});
 
-    % Multiple local minima
-    \fill[red] (1.3,0.6) circle (2pt);
-    \fill[red] (3.8,1.1) circle (2pt);
-    \fill[red] (5.9,1.3) circle (2pt);
-    \fill[verdeacido] (7.5,0.5) circle (3pt) node[below, font=\tiny] {Global};
+    \fill[red] (0.9,0.7) circle (2pt);
+    \fill[red] (3.0,1.2) circle (2pt);
+    \fill[verdeacido] (5.1,0.5) circle (3pt) node[below, font=\tiny] {Global};
 
-    \node[above, font=\tiny] at (1.3,0.9) {Local 1};
-    \node[above, font=\tiny] at (3.8,1.4) {Local 2};
-    \node[above, font=\tiny] at (5.9,1.6) {Local 3};
+    \node[above, font=\tiny] at (0.9,0.9) {Local 1};
+    \node[above, font=\tiny] at (3.0,1.4) {Local 2};
 \end{tikzpicture}
 \end{center}
 
-\textbf{Quando Usar Otimização Global?}
-\begin{itemize}
+\column{0.48\textwidth}
+\textbf{Quando Usar?}
+\begin{itemize}\small
     \item Função objetivo altamente não-linear
     \item Múltiplos mínimos locais
     \item Sem boa estimativa inicial
     \item Parâmetros com grande incerteza
     \item Modelos biológicos complexos
 \end{itemize}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Algoritmos Genéticos (GA)}
@@ -874,39 +877,44 @@ Métodos locais podem ficar presos em mínimos locais
 Método inspirado na evolução biológica que mantém uma população de soluções candidatas e as evolui usando seleção, cruzamento e mutação.
 }
 
+\begin{columns}
+\column{0.48\textwidth}
 \textbf{Analogia Biológica:}
-\begin{itemize}
-    \item \textbf{Indivíduo:} conjunto de parâmetros $\vect{\theta}$
+\begin{itemize}\small
+    \item \textbf{Indivíduo:} parâmetros $\vect{\theta}$
     \item \textbf{Gene:} parâmetro individual $\theta_i$
     \item \textbf{Fitness:} inverso da função objetivo $1/J(\vect{\theta})$
-    \item \textbf{População:} conjunto de soluções candidatas
+    \item \textbf{População:} conjunto de soluções
 \end{itemize}
 
-\vspace{0.3cm}
-
-\begin{block}{Operadores Genéticos}
+\column{0.48\textwidth}
+\begin{block}{Operadores Genéticos}\small
 \begin{enumerate}
-    \item \textbf{Seleção:} escolher indivíduos com melhor fitness
-    \item \textbf{Cruzamento:} combinar dois pais para gerar filhos
-    \item \textbf{Mutação:} introduzir variação aleatória
-    \item \textbf{Elitismo:} preservar melhores soluções
+    \item \textbf{Seleção:} melhores soluções
+    \item \textbf{Cruzamento:} combinar dois pais
+    \item \textbf{Mutação:} variação aleatória
+    \item \textbf{Elitismo:} manter o campeão
 \end{enumerate}
 \end{block}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Simulated Annealing (SA)}
+\begin{frame}{Simulated Annealing (SA): Conceito}
 \begin{block}{Inspiração}
-Processo de recozimento em metalurgia: aquecer metal e esfriar lentamente para alcançar estrutura cristalina de mínima energia
+Processo de recozimento em metalurgia: aquecer metal e esfriar lentamente para alcançar estrutura cristalina de mínima energia.
 \end{block}
 
 \textbf{Ideia Principal:}
 \begin{itemize}
-    \item Permitir movimentos para soluções piores com probabilidade decrescente
-    \item "Temperatura" controla aceitação de soluções piores
-    \item Alta temperatura: exploração ampla
-    \item Baixa temperatura: refinamento local
+    \item Permitir movimentos para soluções piores com probabilidade decrescente.
+    \item A "Temperatura" ($T$) controla a aceitação de soluções piores.
+    \item Alta temperatura: exploração ampla do espaço.
+    \item Baixa temperatura: refinamento e convergência local.
 \end{itemize}
+\end{frame}
 
+\begin{frame}{Simulated Annealing (SA): Algoritmo}
+\textbf{Probabilidade de Aceitação:}
 \destaque{
 \begin{equation*}
 P(\text{aceitar}) = \begin{cases}
@@ -915,11 +923,12 @@ e^{-\Delta J / T} & \text{se } \Delta J \geq 0
 \end{cases}
 \end{equation*}
 }
-
 onde $\Delta J = J(\vect{\theta}_{\text{novo}}) - J(\vect{\theta}_{\text{atual}})$ e $T$ é a temperatura.
 
+\vspace{0.5cm}
+
 \begin{exampleblock}{Cronograma de Resfriamento}
-$T_k = T_0 \cdot \alpha^k$ onde $0 < \alpha < 1$ (ex: $\alpha = 0.95$)
+$T_k = T_0 \cdot \alpha^k$ onde $0 < \alpha < 1$ (tipicamente $\alpha \in [0.8, 0.99]$)
 \end{exampleblock}
 \end{frame}
 
@@ -928,44 +937,42 @@ $T_k = T_0 \cdot \alpha^k$ onde $0 < \alpha < 1$ (ex: $\alpha = 0.95$)
 Algoritmo evolutivo que cria novos candidatos através de diferenças entre membros da população.
 }
 
+\begin{columns}
+\column{0.48\textwidth}
 \textbf{Operação Principal:}
-\begin{enumerate}
-    \item Selecionar 3 indivíduos aleatórios: $\vect{a}$, $\vect{b}$, $\vect{c}$
-    \item Criar vetor de mutação: $\vect{v} = \vect{a} + F(\vect{b} - \vect{c})$
-    \item Cruzamento: $\vect{u}_i = \begin{cases} v_i & \text{se } rand < CR \\ \theta_i & \text{caso contrário} \end{cases}$
-    \item Seleção: manter melhor entre atual e novo
+\begin{enumerate}\small
+    \item Escolher 3 indivíduos: $\vect{a}$, $\vect{b}$, $\vect{c}$
+    \item Mutação: $\vect{v} = \vect{a} + F(\vect{b} - \vect{c})$
+    \item Cruzamento usando taxa $CR$
+    \item Seleção: manter o melhor
 \end{enumerate}
-
-\begin{itemize}
-    \item $F$: fator de escala (diferential weight), tipicamente $F \in [0.5, 1]$
-    \item $CR$: taxa de cruzamento (crossover rate), tipicamente $CR \in [0.5, 0.9]$
+\begin{itemize}\small
+    \item Fator de escala $F \in [0.5, 1.0]$
+    \item Crossover $CR \in [0.5, 0.9]$
 \end{itemize}
 
-\vspace{0.3cm}
-
-\begin{exampleblock}{Vantagens}
+\column{0.48\textwidth}
+\begin{exampleblock}{Vantagens}\small
 \begin{itemize}
     \item Simples de implementar
-    \item Poucos parâmetros para ajustar
-    \item Boa performance em muitos problemas
-    \item Robusto e confiável
+    \item Poucos parâmetros de ajuste
+    \item Excelente robustez
+    \item Não requer gradientes
+    \item Ótimo para múltiplos mínimos
 \end{itemize}
 \end{exampleblock}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Particle Swarm Optimization (PSO)}
 \begin{block}{Inspiração}
-Comportamento social de bandos de pássaros ou cardumes de peixes
+Comportamento social de bandos de pássaros ou cardumes de peixes.
 \end{block}
 
 \textbf{Conceito:}
-\begin{itemize}
-    \item Cada partícula tem posição $\vect{x}_i$ e velocidade $\vect{v}_i$
-    \item Partículas se movem influenciadas por:
-    \begin{itemize}
-        \item Sua melhor posição histórica ($\vect{p}_i$)
-        \item Melhor posição global do enxame ($\vect{g}$)
-    \end{itemize}
+\begin{itemize}\small
+    \item Cada partícula tem posição $\vect{x}_i$ e velocidade $\vect{v}_i$.
+    \item Movimento influenciado por: melhor posição própria ($\vect{p}_i$) e melhor posição global ($\vect{g}$).
 \end{itemize}
 
 \destaque{
@@ -975,16 +982,16 @@ Comportamento social de bandos de pássaros ou cardumes de peixes
 \end{align*}
 }
 
-\begin{itemize}
-    \item $w$: peso de inércia
-    \item $c_1$, $c_2$: coeficientes cognitivo e social
-    \item $r_1$, $r_2$: números aleatórios em $[0,1]$
+\begin{itemize}\small
+    \item $w$: peso de inércia | $c_1$, $c_2$: coeficientes cognitivo e social
+    \item $r_1$, $r_2$: números aleatórios uniformes em $[0,1]$
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Implementação: Differential Evolution}
-\begin{lstlisting}[language=Python, caption=DE usando scipy.optimize, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile]{Implementação: Differential Evolution (Função)}
+\begin{lstlisting}[language=Python, caption=Modelo e funcao objetivo para DE, basicstyle=\ttfamily\footnotesize]
 from scipy.optimize import differential_evolution
+import numpy as np
 
 # Funcao objetivo
 def objective(params, t_data, y_data):
@@ -997,22 +1004,19 @@ def objective(params, t_data, y_data):
 # Dados experimentais
 t_data = np.array([0, 1, 2, 3, 4, 5])
 y_data = np.array([10, 6.1, 3.7, 2.2, 1.4, 0.8])
+\end{lstlisting}
+\end{frame}
 
-# Definir bounds para parametros
-bounds = [(1, 20), (0.01, 2.0)]  # [(a_min, a_max), (b_min, b_max)]
+\begin{frame}[fragile]{Implementação: Differential Evolution (Otimização)}
+\begin{lstlisting}[language=Python, caption=Otimizacao global usando scipy, basicstyle=\ttfamily\scriptsize]
+# Definir bounds para parametros: [(a_min, a_max), (b_min, b_max)]
+bounds = [(1, 20), (0.01, 2.0)]
 
 # Otimizar com DE
 result = differential_evolution(
-    objective,
-    bounds,
-    args=(t_data, y_data),
-    strategy='best1bin',
-    maxiter=1000,
-    popsize=15,
-    tol=1e-7,
-    mutation=(0.5, 1),
-    recombination=0.7,
-    seed=42
+    objective, bounds, args=(t_data, y_data),
+    strategy='best1bin', maxiter=1000, popsize=15,
+    tol=1e-7, mutation=(0.5, 1), recombination=0.7, seed=42
 )
 
 print(f"Parametros otimos: a={result.x[0]:.3f}, b={result.x[1]:.3f}")
@@ -1021,7 +1025,7 @@ print(f"Convergiu: {result.success}")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Comparação de Métodos}
+\begin{frame}{Comparação de Métodos de Otimização}
 \begin{center}
 \begin{tabular}{lccccc}
 \toprule
@@ -1039,15 +1043,15 @@ Particle Swarm & ++ & Sim & Não & Média & Rápido \\
 \bottomrule
 \end{tabular}
 \end{center}
+\end{frame}
 
-\vspace{0.3cm}
-
-\begin{exampleblock}{Recomendações}
+\begin{frame}{Diretrizes para Estimação de Parâmetros}
+\begin{exampleblock}{Recomendações Práticas}
 \begin{itemize}
-    \item \textbf{Boa estimativa inicial + poucos parâmetros:} Levenberg-Marquardt
-    \item \textbf{Sem estimativa inicial + mínimos locais:} Differential Evolution
-    \item \textbf{Problema altamente não-linear:} DE seguido de LM (híbrido)
-    \item \textbf{Muitos parâmetros ($>20$):} métodos Bayesianos (MCMC)
+    \item \textbf{Boa estimativa inicial + poucos parâmetros:} Use Levenberg-Marquardt (rápido e local).
+    \item \textbf{Sem estimativa inicial + mínimos locais:} Use Differential Evolution (robusto e global).
+    \item \textbf{Problema altamente não-linear:} Abordagem híbrida (rodar DE primeiro e usar resultado como inicial no LM).
+    \item \textbf{Muitos parâmetros ($>20$):} Considere métodos Bayesianos (MCMC).
 \end{itemize}
 \end{exampleblock}
 \end{frame}
@@ -1057,41 +1061,41 @@ Particle Swarm & ++ & Sim & Não & Média & Rápido \\
 % ============================================================================
 \section{Análise de Identificabilidade}
 
-\begin{frame}{Identificabilidade Estrutural}
+\begin{frame}{Identificabilidade Estrutural: Exemplos}
 \definicao{Identificabilidade Estrutural}{
 Propriedade teórica do modelo: os parâmetros podem ser determinados unicamente a partir de dados perfeitos (infinitos e sem ruído)?
 }
 
-\vspace{0.3cm}
-
 \begin{columns}
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{block}{Identificável}
 \begin{equation*}
 \frac{dx}{dt} = k_1 - k_2 x
 \end{equation*}
-Ambos $k_1$ e $k_2$ podem ser determinados unicamente
+Ambos $k_1$ e $k_2$ podem ser determinados unicamente.
 \end{block}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \begin{alertblock}{Não Identificável}
 \begin{equation*}
 \frac{dx}{dt} = (k_1 k_2) - k_2 x
 \end{equation*}
-Apenas o produto $k_1 k_2$ é identificável, não $k_1$ e $k_2$ separadamente
+Apenas o produto $k_1 k_2$ é identificável, não $k_1$ e $k_2$ separadamente.
 \end{alertblock}
 \end{columns}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Identificabilidade Estrutural: Diretrizes}
 \importante{
 Antes de estimar parâmetros, verifique se o modelo é estruturalmente identificável!
 }
 
-\textbf{Ferramentas:}
+\vspace{0.5cm}
+
+\textbf{Ferramentas de Análise:}
 \begin{itemize}
-    \item Análise algébrica (eliminação de variáveis)
-    \item Software especializado: DAISY, GenSSI
+    \item \textbf{Análise algébrica:} eliminação de variáveis via álgebra computacional.
+    \item \textbf{Softwares Especializados:} DAISY, GenSSI, STRIKE-GOLDD.
 \end{itemize}
 \end{frame}
 
@@ -1100,29 +1104,29 @@ Antes de estimar parâmetros, verifique se o modelo é estruturalmente identific
 Podem os parâmetros ser determinados com precisão razoável a partir de dados experimentais reais (finitos e com ruído)?
 }
 
-\vspace{0.3cm}
-
-\textbf{Causas de Não-Identificabilidade Prática:}
-\begin{itemize}
-    \item Dados insuficientes ou de baixa qualidade
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Causas de Não-Identificabilidade:}
+\begin{itemize}\small
+    \item Dados insuficientes/baixa qualidade
     \item Parâmetros altamente correlacionados
     \item Modelo super-parametrizado (overfitting)
-    \item Sensibilidade muito baixa a alguns parâmetros
+    \item Baixa sensibilidade a parâmetros
 \end{itemize}
 
-\vspace{0.3cm}
-
-\exemplo{Correlação de Parâmetros}{
+\column{0.48\textwidth}
+\exemplo{Correlação de Parâmetros}{\small
 Modelo: $y = a \cdot e^{-b \cdot t}$\\
 Se $t$ é pequeno: $e^{-bt} \approx 1 - bt$\\
 $\Rightarrow y \approx a(1 - bt) = a - abt$\\
-Difícil separar $a$ de $ab$ (produto correlacionado)
+Difícil separar $a$ de $ab$ (produto correlacionado).
 }
+\end{columns}
 \end{frame}
 
 \begin{frame}{Matriz de Informação de Fisher (FIM)}
 \begin{block}{Quantifica Informação sobre Parâmetros}
-Mede quanta informação os dados contêm sobre cada parâmetro
+Mede quanta informação os dados contêm sobre cada parâmetro.
 \end{block}
 
 \destaque{
@@ -1131,24 +1135,26 @@ Mede quanta informação os dados contêm sobre cada parâmetro
 \end{equation*}
 }
 
-onde:
-\begin{itemize}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Onde:}
+\begin{itemize}\small
     \item $\hat{y}_k$: previsão do modelo no ponto $k$
     \item $\sigma_k^2$: variância do erro no ponto $k$
     \item $\theta_i$, $\theta_j$: parâmetros
 \end{itemize}
 
-\vspace{0.3cm}
-
+\column{0.48\textwidth}
 \textbf{Interpretação:}
-\begin{itemize}
-    \item FIM grande $\Rightarrow$ alta informação, parâmetros bem determinados
-    \item FIM pequena $\Rightarrow$ baixa informação, alta incerteza
-    \item $\text{det}(\mathbf{F}) \approx 0$ $\Rightarrow$ parâmetros não identificáveis
+\begin{itemize}\small
+    \item FIM grande $\Rightarrow$ alta precisão
+    \item FIM pequena $\Rightarrow$ alta incerteza
+    \item $\text{det}(\mathbf{F}) \approx 0$ $\Rightarrow$ não-identificável
 \end{itemize}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Intervalos de Confiança}
+\begin{frame}{Intervalos de Confiança: Teoria}
 \begin{block}{Estimativa Assintótica}
 Para grandes amostras, $\vect{\theta} \sim \mathcal{N}(\vect{\theta}^*, \mathbf{C})$ onde:
 \end{block}
@@ -1163,11 +1169,10 @@ Para grandes amostras, $\vect{\theta} \sim \mathcal{N}(\vect{\theta}^*, \mathbf{
 \begin{equation*}
 \theta_i^* \pm 1.96 \sqrt{C_{ii}}
 \end{equation*}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Intervalos de Confiança: Aplicação Prática}
 \begin{exampleblock}{Na Prática}
-\texttt{scipy.optimize.curve\_fit} retorna matriz de covariância:
 \begin{itemize}
     \item Diagonal: $\sqrt{C_{ii}}$ = erro padrão do parâmetro $i$
     \item Off-diagonal: $C_{ij}$ = correlação entre parâmetros $i$ e $j$
@@ -1185,62 +1190,61 @@ Apenas indicam precisão do ajuste.
 Método robusto para calcular intervalos de confiança explorando o espaço de parâmetros sistematicamente.
 }
 
-\textbf{Procedimento para parâmetro $\theta_i$:}
-\begin{enumerate}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Procedimento para $\theta_i$:}
+\begin{enumerate}\small
     \item Fixar $\theta_i$ em valor específico
-    \item Otimizar todos os outros parâmetros
+    \item Otimizar os outros parâmetros
     \item Registrar $J_{\min}(\theta_i)$
-    \item Repetir para vários valores de $\theta_i$
+    \item Repetir para vários valores
     \item Plotar $J_{\min}$ vs $\theta_i$
 \end{enumerate}
 
-\vspace{0.3cm}
-
+\column{0.48\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    \draw[->] (0,0) -- (6,0) node[right] {$\theta_i$};
-    \draw[->] (0,0) -- (0,3) node[above] {$J_{\min}$};
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {$\theta_i$};
+    \draw[->] (0,0) -- (0,2.5) node[above, font=\tiny] {$J_{\min}$};
 
-    % Profile likelihood
-    \draw[thick, azulescuro, domain=0.5:5.5, samples=100, smooth]
-        plot (\x, {0.5*(\x-3)^2 + 0.3});
+    \draw[thick, azulescuro, domain=0.4:4.6, samples=80, smooth]
+        plot (\x, {0.5*(\x-2.5)^2 + 0.3});
 
-    % Threshold for 95% CI
-    \draw[dashed, red] (0,1.23) -- (6,1.23) node[right, font=\tiny] {$\chi^2$ threshold};
+    \draw[dashed, red] (0,1.2) -- (5,1.2) node[right, font=\tiny] {Threshold};
 
-    % Confidence interval
-    \draw[<->, thick, verdeacido] (1.5,0.1) -- (4.5,0.1);
-    \node[below, font=\tiny] at (3,0.1) {IC 95\%};
+    \draw[<->, thick, verdeacido] (1.2,0.1) -- (3.8,0.1);
+    \node[below, font=\tiny] at (2.5,0.1) {IC 95\%};
 
-    \fill[red] (3,0.3) circle (2pt) node[below, font=\tiny] {$\theta_i^*$};
+    \fill[red] (2.5,0.3) circle (2pt) node[below, font=\tiny] {$\theta_i^*$};
 \end{tikzpicture}
 \end{center}
+\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Correlação de Parâmetros}
-\begin{lstlisting}[language=Python, caption=Matriz de correlação, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile]{Implementação: Visualização de Correlação}
+\begin{lstlisting}[language=Python, caption=Heatmap de correlacao usando seaborn, basicstyle=\ttfamily\scriptsize]
 from scipy.optimize import curve_fit
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Ajustar modelo
+# Ajustar e extrair correlacao
 params, cov = curve_fit(model_func, x_data, y_data)
-
-# Calcular matriz de correlacao
 std = np.sqrt(np.diag(cov))
 corr = cov / np.outer(std, std)
 
-# Visualizar
+# Plotar heatmap
 param_names = ['k1', 'k2', 'k3']
 plt.figure(figsize=(8, 6))
 sns.heatmap(corr, annot=True, fmt='.2f',
-            xticklabels=param_names,
-            yticklabels=param_names,
-            cmap='coolwarm', center=0,
-            vmin=-1, vmax=1)
-plt.title('Matriz de Correlacao de Parametros')
+            xticklabels=param_names, yticklabels=param_names,
+            cmap='coolwarm', center=0, vmin=-1, vmax=1)
+plt.title('Matriz de Correlacao')
+\end{lstlisting}
+\end{frame}
 
-# Interpretar
+\begin{frame}[fragile]{Implementação: Alertas de Correlação}
+\begin{lstlisting}[language=Python, caption=Deteccao de parametros colineares, basicstyle=\ttfamily\footnotesize]
+# Alerta de alta correlacao
 for i in range(len(params)):
     for j in range(i+1, len(params)):
         if abs(corr[i,j]) > 0.9:
@@ -1249,32 +1253,36 @@ for i in range(len(params)):
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Implementação: Intervalos de Confiança}
-\begin{lstlisting}[language=Python, caption=Calcular e visualizar ICs, basicstyle=\ttfamily\footnotesize]
-# Extrair parametros e erros
+\begin{frame}[fragile]{Implementação: Cálculo de Intervalos de Confiança}
+\begin{lstlisting}[language=Python, caption=Calcular ICs usando distribuicao t, basicstyle=\ttfamily\footnotesize]
+from scipy import stats
+import numpy as np
+
 params_best = params
 errors = np.sqrt(np.diag(cov))
 
-# Intervalo de confianca 95% (aproximacao normal)
+# Intervalo de confianca 95%
 alpha = 0.05
-from scipy import stats
 t_val = stats.t.ppf(1-alpha/2, len(x_data)-len(params))
 ci = t_val * errors
+\end{lstlisting}
+\end{frame}
 
-# Visualizar
+\begin{frame}[fragile]{Implementação: Plot de Parâmetros e CIs}
+\begin{lstlisting}[language=Python, caption=Visualizar parametros com barras de erro, basicstyle=\ttfamily\scriptsize]
+import matplotlib.pyplot as plt
+
 fig, ax = plt.subplots(figsize=(10, 6))
 x_pos = np.arange(len(param_names))
 
-ax.bar(x_pos, params_best, yerr=ci, alpha=0.7,
-       capsize=10, color='steelblue',
-       error_kw={'elinewidth': 2, 'capthick': 2})
+ax.bar(x_pos, params_best, yerr=ci, alpha=0.7, capsize=10,
+       color='steelblue', error_kw={'elinewidth': 2, 'capthick': 2})
 ax.set_xticks(x_pos)
 ax.set_xticklabels(param_names)
 ax.set_ylabel('Valor do Parametro')
 ax.set_title('Parametros Estimados com ICs 95%')
 ax.grid(axis='y', alpha=0.3)
 
-# Imprimir resultados
 for name, val, err in zip(param_names, params_best, ci):
     print(f"{name} = {val:.4f} +/- {err:.4f} "
           f"({100*err/val:.1f}% erro relativo)")
@@ -1286,15 +1294,15 @@ for name, val, err in zip(param_names, params_best, ci):
 % ============================================================================
 \section{Validação e Critérios de Ajuste}
 
-\begin{frame}{Análise de Resíduos}
+\begin{frame}{Análise de Resíduos: Padrões}
 \begin{block}{Verificação de Hipóteses}
-Examinar resíduos $r_i = y_i - \hat{y}_i$ para validar suposições do modelo
+Examinar resíduos $r_i = y_i - \hat{y}_i$ para validar suposições do modelo.
 \end{block}
 
 \textbf{Padrões a Verificar:}
 \begin{columns}
-\column{0.5\textwidth}
-\begin{exampleblock}{Bom Ajuste}
+\column{0.48\textwidth}
+\begin{exampleblock}{Bom Ajuste}\small
 \begin{itemize}
     \item Distribuição aleatória
     \item Sem padrão sistemático
@@ -1304,19 +1312,19 @@ Examinar resíduos $r_i = y_i - \hat{y}_i$ para validar suposições do modelo
 \end{itemize}
 \end{exampleblock}
 
-\column{0.5\textwidth}
-\begin{alertblock}{Problemas}
+\column{0.48\textwidth}
+\begin{alertblock}{Problemas}\small
 \begin{itemize}
-    \item Padrão curvo: modelo inadequado
+    \item Padrão curvo: inadequação
     \item Funil: heterocedasticidade
     \item Outliers: dados anômalos
-    \item Não-normalidade: transformar dados
+    \item Não-normalidade do erro
 \end{itemize}
 \end{alertblock}
 \end{columns}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Análise de Resíduos: Visualização}
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
     % Residual plot - good
@@ -1327,7 +1335,7 @@ Examinar resíduos $r_i = y_i - \hat{y}_i$ para validar suposições do modelo
             \pgfmathsetmacro{\y}{0.3*rand}
             \fill[azulescuro] (\x,\y) circle (1pt);
         }
-        \node[below, font=\tiny] at (2,-1.3) {Bom};
+        \node[below, font=\tiny] at (2,-1.3) {Bom (Aleatório)};
     \end{scope}
 
     % Residual plot - bad
@@ -1339,13 +1347,13 @@ Examinar resíduos $r_i = y_i - \hat{y}_i$ para validar suposições do modelo
         \foreach \x in {0.5,1,1.5,2,2.5,3,3.5} {
             \fill[red] (\x,{0.5*sin(3*\x r)}) circle (1pt);
         }
-        \node[below, font=\tiny] at (2,-1.3) {Padrão (ruim)};
+        \node[below, font=\tiny] at (2,-1.3) {Ruim (Padrão Curvo)};
     \end{scope}
 \end{tikzpicture}
 \end{center}
 \end{frame}
 
-\begin{frame}{Coeficiente de Determinação ($R^2$)}
+\begin{frame}{Coeficiente de Determinação ($R^2$): Definição}
 \definicao{$R^2$}{
 Proporção da variância nos dados explicada pelo modelo. Varia de 0 (nenhum ajuste) a 1 (ajuste perfeito).
 }
@@ -1356,26 +1364,27 @@ R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum
 \end{equation*}
 }
 
-\begin{itemize}
+\begin{itemize}\small
     \item $\text{SS}_{\text{res}}$: soma dos quadrados dos resíduos
     \item $\text{SS}_{\text{tot}}$: soma dos quadrados totais
-    \item $\bar{y}$: média dos dados
+    \item $\bar{y}$: média dos dados experimentais
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
-
-\begin{alertblock}{ATENÇÃO!}
+\begin{frame}{Coeficiente de Determinação ($R^2$): Limitações}
+\begin{alertblock}{Limitações Importantes}
 \begin{itemize}
-    \item $R^2$ sempre aumenta ao adicionar parâmetros (mesmo irrelevantes)
-    \item $R^2$ alto não garante modelo correto ou preditivo
-    \item Pode ser enganoso para modelos não-lineares
-    \item Use $R^2$ ajustado para comparar modelos com diferentes números de parâmetros
+    \item $R^2$ sempre aumenta ao adicionar novos parâmetros (mesmo irrelevantes).
+    \item Um $R^2$ alto não garante que o modelo é correto ou preditivo.
+    \item Pode ser altamente enganoso para modelos não-lineares.
+    \item Use o $R^2$ ajustado para comparar modelos com diferentes números de parâmetros.
 \end{itemize}
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{$R^2$ Ajustado}
+\begin{frame}{$R^2$ Ajustado: Definição}
 \begin{block}{Penaliza Complexidade do Modelo}
+Ajusta o $R^2$ baseando-se no número de graus de liberdade.
 \end{block}
 
 \destaque{
@@ -1385,63 +1394,59 @@ R^2_{\text{adj}} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
 }
 
 onde:
-\begin{itemize}
-    \item $n$: número de observações
-    \item $p$: número de parâmetros
+\begin{itemize}\small
+    \item $n$: número de observações (tamanho da amostra)
+    \item $p$: número de parâmetros estimáveis
 \end{itemize}
 
 \vspace{0.3cm}
 
 \textbf{Características:}
-\begin{itemize}
-    \item Pode diminuir ao adicionar parâmetros ruins
-    \item Mais apropriado para comparação de modelos
-    \item Ainda limitado como métrica única
+\begin{itemize}\small
+    \item Pode diminuir ao adicionar parâmetros ruins ou irrelevantes.
+    \item Mais apropriado para comparação de modelos.
 \end{itemize}
-
-\begin{exampleblock}{Exemplo}
-Modelo A: $R^2 = 0.95$, $p = 10$\\
-Modelo B: $R^2 = 0.93$, $p = 3$\\
-Para $n = 50$: $R^2_{\text{adj,A}} = 0.936$, $R^2_{\text{adj,B}} = 0.925$\\
-$\Rightarrow$ Modelo B pode ser preferível (mais parcimonioso)
-\end{exampleblock}
 \end{frame}
 
-\begin{frame}{Akaike Information Criterion (AIC)}
+\begin{frame}{Akaike Information Criterion (AIC): Teoria}
 \definicao{AIC}{
-Critério que balanceia qualidade do ajuste com complexidade do modelo, baseado em teoria da informação.
+Critério que balanceia a qualidade do ajuste com a complexidade do modelo.
 }
 
-\destaque{
+\destaque{\small
 \begin{equation*}
 \text{AIC} = 2p - 2\ln(\mathcal{L}) \approx n\ln\left(\frac{\text{SSE}}{n}\right) + 2p
 \end{equation*}
 }
 
-\begin{itemize}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{Onde:}
+\begin{itemize}\scriptsize
     \item $p$: número de parâmetros
     \item $\mathcal{L}$: máxima verossimilhança
-    \item SSE: soma dos quadrados dos erros
+    \item SSE: soma dos resíduos quadrados
 \end{itemize}
 
-\vspace{0.3cm}
-
+\vspace{0.1cm}
 \textbf{Interpretação:}
-\begin{itemize}
+\begin{itemize}\scriptsize
     \item Menor AIC = melhor modelo
-    \item Penaliza adição de parâmetros
-    \item Diferenças: $\Delta\text{AIC} > 10$ = evidência forte
+    \item Penaliza complexidade extra
+    \item $\Delta\text{AIC} > 10$: evidência forte
 \end{itemize}
 
-\begin{exampleblock}{AIC Corrigido (AICc)}
+\column{0.48\textwidth}
+\begin{exampleblock}{AIC Corrigido (AICc)}\small
 Para amostras pequenas ($n/p < 40$):
 \begin{equation*}
 \text{AICc} = \text{AIC} + \frac{2p(p+1)}{n-p-1}
 \end{equation*}
 \end{exampleblock}
+\end{columns}
 \end{frame}
 
-\begin{frame}{Bayesian Information Criterion (BIC)}
+\begin{frame}{Bayesian Information Criterion (BIC): Definição}
 \definicao{BIC (ou Schwarz Criterion)}{
 Similar ao AIC, mas penaliza mais fortemente a complexidade do modelo.
 }
@@ -1452,140 +1457,133 @@ Similar ao AIC, mas penaliza mais fortemente a complexidade do modelo.
 \end{equation*}
 }
 
-\vspace{0.3cm}
-
 \textbf{Comparação AIC vs BIC:}
-\begin{itemize}
-    \item BIC penaliza mais complexidade que AIC (termo $\ln(n)$ vs $2$)
-    \item BIC tende a selecionar modelos mais simples
-    \item AIC minimiza erro de previsão; BIC busca "modelo verdadeiro"
-    \item Para $n > 7$: BIC penaliza mais que AIC
+\begin{itemize}\small
+    \item BIC penaliza complexidade mais forte (termo $p\ln(n)$ vs $2p$ do AIC).
+    \item Para $n > 7$, o BIC seleciona modelos mais parcimoniosos (menores).
+    \item O AIC busca otimizar a previsão futura, enquanto o BIC tenta identificar o "modelo verdadeiro".
 \end{itemize}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}{Comparação de Critérios de Seleção (AIC vs BIC)}
 \begin{center}
 \begin{tabular}{lcc}
 \toprule
 \textbf{Critério} & \textbf{Objetivo} & \textbf{Preferência} \\
 \midrule
-AIC & Previsão & Modelos maiores \\
-BIC & Seleção & Modelos menores \\
+AIC & Previsão / Incerteza & Modelos maiores \\
+BIC & Identificação do Processo & Modelos menores \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Resumo Prático}
+Na biologia de sistemas, onde os dados costumam ser limitados e o ruído é alto, o **AICc** e o **BIC** são usados em conjunto. Se divergirem, prioriza-se o modelo mais simples (BIC) para evitar overfitting.
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Cross-Validation (Validação Cruzada)}
 \begin{block}{Teste de Capacidade Preditiva}
-Avaliar desempenho do modelo em dados não vistos durante o treinamento
+Avaliar o desempenho do modelo em dados não vistos durante o treinamento para evitar overfitting.
 \end{block}
 
+\begin{columns}
+\column{0.48\textwidth}
 \textbf{K-Fold Cross-Validation:}
-\begin{enumerate}
-    \item Dividir dados em $K$ subconjuntos (folds)
+\begin{enumerate}\small
+    \item Dividir dados em $K$ folds.
     \item Para cada fold $k$:
     \begin{itemize}
-        \item Treinar modelo nos outros $K-1$ folds
-        \item Testar no fold $k$
-        \item Calcular erro de previsão
+        \item Treinar modelo nos outros $K-1$ folds.
+        \item Testar no fold $k$.
+        \item Registrar erro de previsão.
     \end{itemize}
-    \item Calcular erro médio de CV
+    \item Calcular erro médio de CV.
 \end{enumerate}
 
-\vspace{0.3cm}
-
+\column{0.48\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.7]
-    % 5-fold illustration
+\begin{tikzpicture}[scale=0.65]
     \foreach \i in {0,...,4} {
-        \pgfmathsetmacro{\x}{\i*1.5}
-        \draw[fill=azulclaro!50] (\x,0) rectangle +(1.2,0.5);
+        \pgfmathsetmacro{\x}{\i*1.1}
         \ifnum\i=2
-            \draw[fill=red!50] (\x,0) rectangle +(1.2,0.5);
-            \node at (\x+0.6,0.25) {\tiny Test};
+            \draw[fill=red!40] (\x,0) rectangle +(0.9,0.4);
+            \node at (\x+0.45,0.2) {\tiny Test};
         \else
-            \node at (\x+0.6,0.25) {\tiny Train};
+            \draw[fill=azulclaro!40] (\x,0) rectangle +(0.9,0.4);
+            \node at (\x+0.45,0.2) {\tiny Train};
         \fi
     }
-    \node[below, font=\small] at (3.75,-0.5) {Fold 3 como teste};
+    \node[below, font=\tiny] at (2.5,-0.2) {5-Fold CV (Dobra 3 como teste)};
 \end{tikzpicture}
 \end{center}
 
-\importante{
-Típico: $K=5$ ou $K=10$\\
-Leave-one-out (LOO): $K=n$ (caro computacionalmente)
-}
+\begin{block}{Diretrizes}\small
+Típico: $K=5$ ou $K=10$. Se $K=n$, chamamos de Leave-One-Out (LOO), muito custoso.
+\end{block}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Overfitting vs Underfitting}
 \begin{center}
-\begin{tikzpicture}[scale=0.9]
+\begin{tikzpicture}[scale=0.75]
     % Underfitting
     \begin{scope}
         \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$x$};
-        \draw[->] (0,0) -- (0,2.5) node[above, font=\tiny] {$y$};
-        % Data
+        \draw[->] (0,0) -- (0,2.2) node[above, font=\tiny] {$y$};
         \foreach \x/\y in {0.5/0.8, 1/1.3, 1.5/1.7, 2/1.4, 2.5/0.9} {
             \fill[blue] (\x,\y) circle (1.5pt);
         }
-        % Linear fit (bad)
         \draw[thick, red] (0.3,1.3) -- (2.7,1.3);
-        \node[below, font=\tiny] at (1.5,-0.3) {Underfitting};
-        \node[below, font=\tiny] at (1.5,-0.6) {Viés alto};
+        \node[below, font=\tiny] at (1.5,-0.2) {Underfitting};
+        \node[below, font=\tiny] at (1.5,-0.5) {Viés alto};
     \end{scope}
 
     % Good fit
-    \begin{scope}[xshift=4cm]
+    \begin{scope}[xshift=3.8cm]
         \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$x$};
-        \draw[->] (0,0) -- (0,2.5) node[above, font=\tiny] {$y$};
-        % Data
+        \draw[->] (0,0) -- (0,2.2) node[above, font=\tiny] {$y$};
         \foreach \x/\y in {0.5/0.8, 1/1.3, 1.5/1.7, 2/1.4, 2.5/0.9} {
             \fill[blue] (\x,\y) circle (1.5pt);
         }
-        % Good fit
         \draw[thick, verdeacido, domain=0.3:2.7, samples=50, smooth]
             plot (\x, {0.8 + 1.8*sin((\x-0.5)*120)});
-        \node[below, font=\tiny] at (1.5,-0.3) {Bom Ajuste};
-        \node[below, font=\tiny] at (1.5,-0.6) {Balanceado};
+        \node[below, font=\tiny] at (1.5,-0.2) {Bom Ajuste};
+        \node[below, font=\tiny] at (1.5,-0.5) {Balanceado};
     \end{scope}
 
     % Overfitting
-    \begin{scope}[xshift=8cm]
+    \begin{scope}[xshift=7.6cm]
         \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$x$};
-        \draw[->] (0,0) -- (0,2.5) node[above, font=\tiny] {$y$};
-        % Data
+        \draw[->] (0,0) -- (0,2.2) node[above, font=\tiny] {$y$};
         \foreach \x/\y in {0.5/0.8, 1/1.3, 1.5/1.7, 2/1.4, 2.5/0.9} {
             \fill[blue] (\x,\y) circle (1.5pt);
         }
-        % Overfit
         \draw[thick, red, samples=100, smooth]
             plot coordinates {(0.5,0.8) (1,1.3) (1.5,1.7) (2,1.4) (2.5,0.9)};
-        \node[below, font=\tiny] at (1.5,-0.3) {Overfitting};
-        \node[below, font=\tiny] at (1.5,-0.6) {Variância alta};
+        \node[below, font=\tiny] at (1.5,-0.2) {Overfitting};
+        \node[below, font=\tiny] at (1.5,-0.5) {Variância alta};
     \end{scope}
 \end{tikzpicture}
 \end{center}
 
 \begin{alertblock}{Sintomas de Overfitting}
-\begin{itemize}
-    \item Erro de treinamento muito menor que erro de teste
-    \item Modelo complexo com muitos parâmetros
-    \item Intervalos de confiança muito largos
-    \item Previsões ruins fora do range dos dados
+\begin{itemize}\small
+    \item Erro de treinamento muito menor que o erro de teste.
+    \item Modelo complexo com excesso de parâmetros livres.
+    \item ICs excessivamente largos; previsões ruins fora do domínio.
 \end{itemize}
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[fragile]{Implementação: Cálculo de Métricas}
-\begin{lstlisting}[language=Python, caption=Métricas de validação, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile]{Implementação: Cálculo de Métricas (RMSE, R2)}
+\begin{lstlisting}[language=Python, caption=Calculo de RMSE e R-squared ajustado, basicstyle=\ttfamily\scriptsize]
 import numpy as np
 
 def calculate_metrics(y_true, y_pred, n_params):
-    """Calcula varias metricas de ajuste"""
     n = len(y_true)
-
-    # Residuos
     residuals = y_true - y_pred
 
     # SSE e MSE
@@ -1593,25 +1591,26 @@ def calculate_metrics(y_true, y_pred, n_params):
     mse = sse / n
     rmse = np.sqrt(mse)
 
-    # R-squared
+    # R-squared e R-squared ajustado
     ss_tot = np.sum((y_true - np.mean(y_true))**2)
     r2 = 1 - (sse / ss_tot)
-
-    # R-squared ajustado
     r2_adj = 1 - (1-r2)*(n-1)/(n-n_params-1)
+\end{lstlisting}
+\end{frame}
 
-    # AIC e BIC
+\begin{frame}[fragile]{Implementação: Cálculo de Métricas (AIC, BIC)}
+\begin{lstlisting}[language=Python, caption=Calculo de AIC/BIC e execucao, basicstyle=\ttfamily\scriptsize]
+    # Calculo continuacao: AIC e BIC
     aic = n*np.log(sse/n) + 2*n_params
     bic = n*np.log(sse/n) + n_params*np.log(n)
 
     return {
         'SSE': sse, 'MSE': mse, 'RMSE': rmse,
-        'R2': r2, 'R2_adj': r2_adj,
-        'AIC': aic, 'BIC': bic,
+        'R2': r2, 'R2_adj': r2_adj, 'AIC': aic, 'BIC': bic,
         'residuals': residuals
     }
 
-# Usar
+# Executar e exibir resultados
 metrics = calculate_metrics(y_data, y_pred, n_params=2)
 for key, val in metrics.items():
     if key != 'residuals':
@@ -1624,7 +1623,7 @@ for key, val in metrics.items():
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}{Exercícios - Parte 1}
+\begin{frame}{Exercícios - Parte 1: Busca em Grade}
 \begin{block}{Questão 1: Busca em Grade}
 Implemente busca em grade para encontrar parâmetros $a$ e $b$ do modelo $y = a \cdot x^b$ usando os dados:
 \begin{center}
@@ -1636,7 +1635,9 @@ $y$ & 2.1 & 8.3 & 18.2 & 32.5 & 50.1 & 72.3
 \end{center}
 Use: $a \in [1, 3]$, $b \in [1.5, 2.5]$, grade 20x20.
 \end{block}
+\end{frame}
 
+\begin{frame}{Exercícios - Parte 1: Descida do Gradiente}
 \begin{block}{Questão 2: Gradient Descent}
 Implemente gradient descent manualmente para minimizar $J(\theta) = (\theta - 5)^2 + 3$:
 \begin{enumerate}
@@ -1648,7 +1649,7 @@ Implemente gradient descent manualmente para minimizar $J(\theta) = (\theta - 5)
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 2}
+\begin{frame}{Exercícios - Parte 2: Levenberg-Marquardt}
 \begin{block}{Questão 3: Levenberg-Marquardt}
 Ajuste parâmetros da cinética de Michaelis-Menten $v = \frac{V_{\max}[S]}{K_M + [S]}$ aos dados:
 \begin{center}
@@ -1661,65 +1662,65 @@ $v$ ($\mu$mol/min) & 0.3 & 1.1 & 1.8 & 2.5 & 3.3 & 3.7 & 3.9
 \begin{enumerate}
     \item Use \texttt{scipy.optimize.curve\_fit}
     \item Calcule intervalos de confiança
-    \item Plote dados vs modelo ajustado
-    \item Faça análise de resíduos
+    \item Plote dados vs modelo ajustado e faça análise de resíduos
 \end{enumerate}
 \end{block}
+\end{frame}
 
+\begin{frame}{Exercícios - Parte 2: Differential Evolution}
 \begin{block}{Questão 4: Differential Evolution}
 Compare DE com LM no problema anterior:
 \begin{enumerate}
     \item Use bounds amplos: $V_{\max} \in [0.1, 10]$, $K_M \in [0.1, 10]$
-    \item Qual método é mais rápido?
-    \item Qual encontra melhor solução?
-    \item Use DE para encontrar boa estimativa inicial para LM
+    \item Qual método é mais rápido? Qual encontra melhor solução?
+    \item Use DE para encontrar boa estimativa inicial para o LM
 \end{enumerate}
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 3}
-\begin{alertblock}{Questão 5: Modelo de Crescimento Logístico}
+\begin{frame}{Exercícios - Parte 3: Modelo Logístico}
+\begin{alertblock}{Questão 5: Crescimento Logístico}
 Considere dados de crescimento bacteriano:
-\begin{enumerate}
-    \item Gere dados sintéticos: $N(t) = \frac{K}{1 + \left(\frac{K}{N_0}-1\right)e^{-rt}}$\\
-    com $N_0=1$, $r=0.5$, $K=100$, $t \in [0, 20]$, adicione ruído gaussiano
-    \item Estime $r$ e $K$ usando três métodos diferentes
-    \item Compare SSE, AIC e tempo computacional
-    \item Analise identificabilidade: $r$ e $K$ são correlacionados?
-    \item Calcule profile likelihood para $r$ e $K$
+\begin{enumerate}\small
+    \item Gere dados sintéticos: $N(t) = \frac{K}{1 + \left(\frac{K}{N_0}-1\right)e^{-rt}}$ com $N_0=1, r=0.5, K=100, t \in [0, 20]$ + ruído.
+    \item Estime $r$ e $K$ usando três métodos diferentes.
+    \item Analise identificabilidade e profile likelihood.
 \end{enumerate}
 \end{alertblock}
+\end{frame}
 
+\begin{frame}{Exercícios - Parte 3: Validação Cruzada}
 \begin{block}{Questão 6: Validação Cruzada}
 Implemente 5-fold cross-validation para o modelo logístico:
 \begin{enumerate}
-    \item Divida dados em 5 folds
-    \item Calcule RMSE médio de CV
-    \item Compare com RMSE de treinamento (overfitting?)
-    \item Teste com modelos de complexidade crescente
+    \item Divida dados em 5 folds.
+    \item Calcule RMSE médio de CV.
+    \item Compare com RMSE de treinamento (checar overfitting).
+    \item Teste com modelos de complexidade crescente.
 \end{enumerate}
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 4: Projeto}
+\begin{frame}{Exercícios - Parte 4: Descrição do Projeto}
 \begin{alertblock}{Projeto: Sistema de Lotka-Volterra}
 Estime parâmetros do sistema predador-presa:
 \begin{align*}
 \frac{dV}{dt} &= \alpha V - \beta V P\\
 \frac{dP}{dt} &= \delta \beta V P - \gamma P
 \end{align*}
+\textbf{Dados simulados:} Gere séries temporais com parâmetros conhecidos + ruído gaussiano.
+\end{alertblock}
+\end{frame}
 
-\textbf{Dados simulados:} Gere séries temporais com parâmetros conhecidos + ruído
-
-\textbf{Tarefas:}
+\begin{frame}{Exercícios - Parte 4: Tarefas do Projeto}
+\begin{alertblock}{Tarefas Recomendadas}
 \begin{enumerate}
-    \item Implementar função de custo (SSE de ambas variáveis)
-    \item Estimar 4 parâmetros usando Differential Evolution
-    \item Refinar com Levenberg-Marquardt
-    \item Analisar identificabilidade (matriz de correlação)
-    \item Calcular intervalos de confiança
-    \item Validar: simular modelo ajustado vs dados
-    \item Extra: teste com dados esparsos ou ruidosos
+    \item Implementar função de custo (SSE de ambas variáveis).
+    \item Estimar 4 parâmetros usando Differential Evolution.
+    \item Refinar estimativas com Levenberg-Marquardt.
+    \item Analisar identificabilidade (matriz de correlação de Fisher).
+    \item Calcular intervalos de confiança assintóticos e plotá-los.
+    \item Validar o ajuste simulando o modelo vs dados ruidosos.
 \end{enumerate}
 \end{alertblock}
 \end{frame}
@@ -1744,29 +1745,32 @@ Estime parâmetros do sistema predador-presa:
 \end{frame}
 
 \begin{frame}{Leitura Complementar}
-\begin{block}{Livros}
+\begin{columns}
+\column{0.48\textwidth}
+\begin{block}{Livros}\scriptsize
 \begin{itemize}
-    \item Press W.H. et al. (2007). \textit{Numerical Recipes}, 3rd ed. Cambridge.
-    \item Bard Y. (1974). \textit{Nonlinear Parameter Estimation}. Academic Press.
+    \item Press W.H. et al. (2007). \textit{Numerical Recipes}. Cambridge.
+    \item Bard Y. (1974). \textit{Nonlinear Parameter Estimation}.
     \item Seber G.A.F., Wild C.J. (2003). \textit{Nonlinear Regression}. Wiley.
 \end{itemize}
 \end{block}
 
-\begin{block}{Artigos Importantes}
+\column{0.48\textwidth}
+\begin{block}{Artigos Importantes}\scriptsize
 \begin{itemize}
-    \item Gutenkunst R.N. et al. (2007). Universally sloppy parameter sensitivities. \textit{PLoS Comp. Biol.}
-    \item Villaverde A.F. et al. (2016). A cooperative strategy for parameter estimation. \textit{BMC Sys. Biol.}
-    \item Hug S. et al. (2013). High-dimensional Bayesian parameter estimation. \textit{Math. Biosci.}
+    \item Gutenkunst R.N. (2007). Universally sloppy parameter sensitivities.
+    \item Villaverde A.F. (2016). Cooperative parameter estimation.
 \end{itemize}
 \end{block}
 
-\begin{block}{Software e Tutoriais}
+\begin{block}{Software e Tutoriais}\scriptsize
 \begin{itemize}
-    \item \textbf{SciPy optimize:} \url{https://docs.scipy.org/doc/scipy/reference/optimize.html}
-    \item \textbf{lmfit:} \url{https://lmfit.github.io} (wrapper amigável)
-    \item \textbf{PyMC:} \url{https://www.pymc.io} (Bayesiano)
+    \item \textbf{SciPy:} \url{https://docs.scipy.org/doc/scipy/reference/optimize.html}
+    \item \textbf{lmfit:} \url{https://lmfit.github.io}
+    \item \textbf{PyMC:} \url{https://www.pymc.io}
 \end{itemize}
 \end{block}
+\end{columns}
 \end{frame}
 
 % ============================================================================
