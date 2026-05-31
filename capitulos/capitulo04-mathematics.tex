@@ -785,42 +785,52 @@ Para cada autovalor $\lambda = a + bi$:
 onde $\text{tr}(\vect{J}) = J_{11} + J_{22}$ e $\det(\vect{J}) = J_{11}J_{22} - J_{12}J_{21}$
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Classificação de Pontos Fixos em 2D}
+\begin{frame}{Classificação de Pontos Fixos em 2D}
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
-    % Eixos
-    \draw[->] (-0.5,0) -- (5,0) node[right] {$\text{tr}(\vect{J})$};
-    \draw[->] (0,-0.5) -- (0,4) node[above] {$\det(\vect{J})$};
+    % 1. Preenchimento das Regiões (Fills)
+    % Espirais (acima da parábola)
+    \fill[azulclaro!15] (-4,4) -- plot[domain=-4:4] (\x, {\x*\x/4}) -- (4,4) -- cycle;
+    
+    % Nós Estáveis (esquerda)
+    \fill[verdeacido!15] (-4,0) -- (-4,4) -- plot[domain=-4:0] (\x, {\x*\x/4}) -- (0,0) -- cycle;
+    
+    % Nós Instáveis (direita)
+    \fill[verdeacido!15] (0,0) -- plot[domain=0:4] (\x, {\x*\x/4}) -- (4,4) -- (4,0) -- cycle;
+    
+    % Selas (abaixo do eixo tr)
+    \fill[laranjacel!10] (-4,-1.0) -- (-4,0) -- (4,0) -- (4,-1.0) -- cycle;
 
-    % Parabola: tr^2 = 4*det
-    \draw[thick, dashed] plot[domain=0:4] (\x, {\x*\x/4});
+    % 2. Linhas de Divisão e Parábola
+    % Parábola: tr^2 = 4*det
+    \draw[thick, dashed, draw=black!60] plot[domain=-4:4] (\x, {\x*\x/4});
 
-    % Regioes
-    \fill[azulclaro!20] (0,0) -- (0,4) -- plot[domain=0:4] (\x, {\x*\x/4}) -- cycle;
-    \node at (1,2.5) {\small Espirais};
+    % Eixos coordenados
+    \draw[->, thick] (-4.5,0) -- (4.5,0) node[right] {$\text{tr}(\vect{J})$};
+    \draw[->, thick] (0,-1.2) -- (0,4.2) node[above] {$\det(\vect{J})$};
 
-    \fill[verdeacido!20] plot[domain=0:4] (\x, {\x*\x/4}) -- (4,0) -- cycle;
-    \node at (3,1) {\small Nós};
+    % Rótulos da curva da parábola
+    \node[rotate=-45, fill=white, inner sep=1pt, font=\tiny, text=black!70] at (-2.8, 1.96) {$\text{tr}^2 = 4\det$};
+    \node[rotate=45, fill=white, inner sep=1pt, font=\tiny, text=black!70] at (2.8, 1.96) {$\text{tr}^2 = 4\det$};
 
-    % Linha det = 0
-    \draw[thick] (0,0) -- (5,0);
-    \node[below] at (4,-0.3) {\small Selas};
+    % 3. Rótulos das Regiões
+    \node[align=center, font=\small\bfseries, color=azulescuro] at (-1.8, 2.3) {Espirais\\Estáveis};
+    \node[align=center, font=\small\bfseries, color=azulescuro] at (1.8, 2.3) {Espirais\\Instáveis};
+    
+    \node[align=center, font=\small\bfseries, color=verdeacido!50!black] at (-3.1, 0.8) {Nós\\Estáveis};
+    \node[align=center, font=\small\bfseries, color=verdeacido!50!black] at (3.1, 0.8) {Nós\\Instáveis};
+    
+    \node[align=center, font=\small\bfseries, color=laranjacel!80!black] at (-2, -0.5) {Selas};
+    \node[align=center, font=\small\bfseries, color=laranjacel!80!black] at (2, -0.5) {Selas};
 
-    % Linha tr = 0
-    \draw[thick] (0,0) -- (0,4);
-
-    % Anotacoes
-    \node[left, font=\tiny] at (-0.3,2) {Estável};
-    \node[right, font=\tiny] at (5,2) {Instável};
-    \node[above, font=\tiny] at (1,3.8) {$\text{tr}^2 < 4\det$};
-    \node[below, font=\tiny, rotate=45] at (3.5,3) {$\text{tr}^2 > 4\det$};
-
-    % Pontos exemplo
-    \fill[red] (-1.5,1) circle (2pt);
-    \node[left, font=\tiny] at (-1.5,1) {Espiral estável};
-
-    \fill[red] (1.5,1) circle (2pt);
-    \node[right, font=\tiny] at (1.5,1) {Espiral instável};
+    % 4. Indicações de Estabilidade Geral
+    \node[font=\tiny\bfseries, color=verdeacido!50!black] at (-2.5, 3.7) {ESTÁVEL ($\text{tr} < 0$)};
+    \node[font=\tiny\bfseries, color=red!70!black] at (2.5, 3.7) {INSTÁVEL ($\text{tr} > 0$)};
+    
+    % Rótulos de inequações
+    \node[fill=azulclaro!15, inner sep=1pt, font=\tiny, text=black!70] at (0, 3.4) {$\text{tr}^2 < 4\det$};
+    \node[fill=verdeacido!15, inner sep=1pt, font=\tiny, text=black!70] at (-2.5, 1.3) {$\text{tr}^2 > 4\det$};
+    \node[fill=verdeacido!15, inner sep=1pt, font=\tiny, text=black!70] at (2.5, 1.3) {$\text{tr}^2 > 4\det$};
 \end{tikzpicture}
 \end{center}
 \end{frame}
