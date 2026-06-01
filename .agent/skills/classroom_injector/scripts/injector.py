@@ -68,17 +68,7 @@ def upload_to_drive(drive_service, filepath, title):
     drive_service.permissions().create(fileId=uploaded['id'], body={'type': 'anyone', 'role': 'reader'}).execute()
     return uploaded['id']
 
-def post_material_with_drive_file(service, course_id, title, drive_file_id):
-    try:
-        material = {
-            'title': title,
-            'state': 'PUBLISHED',
-            'materials': [{'driveFile': {'driveFile': {'id': drive_file_id}, 'shareMode': 'VIEW'}}]
-        }
-        res = service.courses().courseWorkMaterials().create(courseId=course_id, body=material).execute()
-        print(f"[Sucesso] Material com arquivo anexado! ID: {res.get('id')}")
-    except HttpError as error:
-        print(f"Erro ao injetar material com arquivo: {error}", file=sys.stderr)
+# A funcao post_material_with_drive_file foi removida pois post_material agora suporta multiplos arquivos.
 
 def list_courses(service):
     try:
@@ -91,19 +81,25 @@ def list_courses(service):
     except HttpError as error:
         print(f"Erro ao listar cursos: {error}", file=sys.stderr)
 
-def post_material(service, course_id, title, content):
+def post_material(service, course_id, title, content, drive_file_ids=None):
     try:
         material = {
             'title': title,
-            'description': content,
             'state': 'PUBLISHED'
         }
+        if content:
+            material['description'] = content
+        if drive_file_ids:
+            material['materials'] = [
+                {'driveFile': {'driveFile': {'id': fid}, 'shareMode': 'VIEW'}}
+                for fid in drive_file_ids
+            ]
         res = service.courses().courseWorkMaterials().create(courseId=course_id, body=material).execute()
         print(f"[Sucesso] Material didático injetado! ID: {res.get('id')}")
     except HttpError as error:
         print(f"Erro ao injetar material: {error}", file=sys.stderr)
 
-def post_assignment(service, course_id, title, content):
+def post_assignment(service, course_id, title, content, drive_file_ids=None):
     try:
         assignment = {
             'title': title,
@@ -111,6 +107,11 @@ def post_assignment(service, course_id, title, content):
             'workType': 'ASSIGNMENT',
             'state': 'PUBLISHED'
         }
+        if drive_file_ids:
+            assignment['materials'] = [
+                {'driveFile': {'driveFile': {'id': fid}, 'shareMode': 'VIEW'}}
+                for fid in drive_file_ids
+            ]
         res = service.courses().courseWork().create(courseId=course_id, body=assignment).execute()
         print(f"[Sucesso] Atividade (Assignment) injetada! ID: {res.get('id')}")
     except HttpError as error:
@@ -136,12 +137,14 @@ def main():
     p_mat.add_argument("--course-id", required=True, help="O ID da sala (Course-ID)")
     p_mat.add_argument("--title", required=True, help="Título do Material")
     p_mat.add_argument("--file", required=True, help="Caminho do arquivo .md ou .pdf a ser postado")
+    p_mat.add_argument("--attach", nargs="+", help="Caminhos de arquivos adicionais para fazer upload e anexar")
 
     # Comando para Atividade
     p_ativ = subparsers.add_parser("post-atividade", help="Injeta atividade (Assignment) com base em arquivo Markdown")
     p_ativ.add_argument("--course-id", required=True, help="O ID da sala (Course-ID)")
     p_ativ.add_argument("--title", required=True, help="Título da Atividade")
     p_ativ.add_argument("--file", required=True, help="Caminho do arquivo .md a ser lido")
+    p_ativ.add_argument("--attach", nargs="+", help="Caminhos de arquivos adicionais para fazer upload e anexar")
 
     args = parser.parse_args()
 
@@ -154,17 +157,43 @@ def main():
     if args.command == "list-courses":
         list_courses(classroom)
     elif args.command == "post-material":
-        if args.file.lower().endswith('.pdf') or not args.file.lower().endswith('.md'):
-            print(f"Fazendo upload do arquivo para o Google Drive: {args.file}")
-            drive_file_id = upload_to_drive(drive, args.file, args.title)
-            print(f"Upload concluído. Drive file ID: {drive_file_id}")
-            post_material_with_drive_file(classroom, args.course_id, args.title, drive_file_id)
-        else:
+        drive_file_ids = []
+        if getattr(args, 'attach', None):
+            for attach_path in args.attach:
+                if os.path.exists(attach_path):
+                    file_title = os.path.basename(attach_path)
+                    print(f"Fazendo upload de anexo para o Google Drive: {attach_path} ({file_title})")
+                    fid = upload_to_drive(drive, attach_path, file_title)
+                    print(f"Anexo enviado. ID: {fid}")
+                    drive_file_ids.append(fid)
+                else:
+                    print(f"Aviso: O arquivo de anexo '{attach_path}' não foi encontrado.", file=sys.stderr)
+
+        if args.file.lower().endswith('.md'):
             content = read_markdown(args.file)
-            post_material(classroom, args.course_id, args.title, content)
+            post_material(classroom, args.course_id, args.title, content, drive_file_ids)
+        else:
+            file_title = os.path.basename(args.file)
+            print(f"Fazendo upload do arquivo principal para o Google Drive: {args.file}")
+            main_fid = upload_to_drive(drive, args.file, file_title)
+            drive_file_ids.insert(0, main_fid)
+            post_material(classroom, args.course_id, args.title, "", drive_file_ids)
+            
     elif args.command == "post-atividade":
+        drive_file_ids = []
+        if getattr(args, 'attach', None):
+            for attach_path in args.attach:
+                if os.path.exists(attach_path):
+                    file_title = os.path.basename(attach_path)
+                    print(f"Fazendo upload de anexo para o Google Drive: {attach_path} ({file_title})")
+                    fid = upload_to_drive(drive, attach_path, file_title)
+                    print(f"Anexo enviado. ID: {fid}")
+                    drive_file_ids.append(fid)
+                else:
+                    print(f"Aviso: O arquivo de anexo '{attach_path}' não foi encontrado.", file=sys.stderr)
+
         content = read_markdown(args.file)
-        post_assignment(classroom, args.course_id, args.title, content)
+        post_assignment(classroom, args.course_id, args.title, content, drive_file_ids)
 
 if __name__ == "__main__":
     main()
