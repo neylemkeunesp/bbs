@@ -22,7 +22,7 @@
 % ============================================================================
 % SLIDE DE TÍTULO
 % ============================================================================
-\begin{frame}
+\begin{frame}{}
 \titlepage
 \end{frame}
 
@@ -38,18 +38,17 @@
 % ============================================================================
 \section{Dogma Central da Biologia Molecular}
 
-\begin{frame}{6.1 Dogma Central da Biologia Molecular}
+\begin{frame}[shrink=10]{6.1 Dogma Central da Biologia Molecular}
 \begin{center}
-\begin{tikzpicture}[node distance=3.5cm, auto,
-    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.5cm, text centered, rounded corners, minimum height=1.2cm, font=\large}]
+\begin{tikzpicture}[box/.style={rectangle, draw, fill=azulclaro!20, text width=2.4cm, text centered, rounded corners, minimum height=0.9cm, font=\large}]
 
-    \node[box, fill=roxodna!30] (dna) {\textbf{DNA}};
-    \node[box, fill=laranjacel!30, right of=dna] (rna) {\textbf{RNA}};
-    \node[box, fill=verdeacido!30, right of=rna] (prot) {\textbf{Proteína}};
+    \node[box, fill=roxodna!30] (dna) at (0,0) {\textbf{DNA}};
+    \node[box, fill=laranjacel!30] (rna) at (4.8,0) {\textbf{RNA}};
+    \node[box, fill=verdeacido!30] (prot) at (9.6,0) {\textbf{Proteína}};
 
-    \draw[->, ultra thick, azulescuro, line width=2pt] (dna) -- node[above] {\textbf{Transcrição}} (rna);
-    \draw[->, ultra thick, azulescuro, line width=2pt] (rna) -- node[above] {\textbf{Tradução}} (prot);
-    \draw[->, ultra thick, azulescuro, line width=2pt] (dna) to [out=135,in=45,looseness=8] node[above] {\textbf{Replicação}} (dna);
+    \draw[->, ultra thick, azulescuro, line width=2pt] (dna) -- node[above=2mm] {\textbf{Transcrição}} (rna);
+    \draw[->, ultra thick, azulescuro, line width=2pt] (rna) -- node[above=2mm] {\textbf{Tradução}} (prot);
+    \draw[->, ultra thick, azulescuro, line width=2pt] (dna) to [out=135,in=45,looseness=5] node[above] {\textbf{Replicação}} (dna);
 
 \end{tikzpicture}
 \end{center}
@@ -59,6 +58,8 @@
 \importante{
 O fluxo de informação genética segue a direção: DNA $\rightarrow$ RNA $\rightarrow$ Proteína
 }
+
+\vspace{0.3cm}
 
 \begin{exampleblock}{Exceção: Retrovírus}
 Transcriptase reversa: RNA $\rightarrow$ DNA
@@ -176,7 +177,7 @@ Região onde a RNA polimerase se liga para iniciar a transcrição
 }
 \end{frame}
 
-\begin{frame}{Open Reading Frame (ORF)}
+\begin{frame}[shrink=15]{Open Reading Frame (ORF)}
 \definicao{ORF}{
 Sequência contínua de códons entre um códon de início (ATG) e um códon de parada (TAA, TAG, TGA), sem códons de parada internos.
 }
@@ -192,6 +193,8 @@ Sequência contínua de códons entre um códon de início (ATG) e um códon de 
 \textbf{ORF:} 15 nucleotídeos = 5 códons
 \end{exampleblock}
 
+\vspace{0.3cm}
+
 \begin{block}{Identificação de ORFs}
 Critérios:
 \begin{itemize}
@@ -203,8 +206,8 @@ Critérios:
 \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Busca de ORFs Computacional}
-\begin{lstlisting}[language=Python, caption=Identificação de ORFs, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=10]{Busca de ORFs Computacional}
+\begin{lstlisting}[language=Python, caption=Identificação de ORFs, basicstyle=\ttfamily\tiny]
 def find_orfs(sequence, min_length=100):
     """
     Encontra ORFs em uma sequencia de DNA
@@ -242,7 +245,7 @@ def find_orfs(sequence, min_length=100):
 % ============================================================================
 \section{Regulação Gênica}
 
-\begin{frame}{6.3 Regulação Gênica}
+\begin{frame}[shrink=10]{6.3 Regulação Gênica}
 \begin{block}{Níveis de Regulação}
 \begin{enumerate}
     \item \textbf{Transcricional:} controle da síntese de RNA
@@ -312,7 +315,7 @@ Sistema clássico de regulação negativa e positiva
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Regulação Transcricional em Eucariotos}
+\begin{frame}[shrink=15]{Regulação Transcricional em Eucariotos}
 \begin{columns}
 \column{0.5\textwidth}
 \textbf{Fatores de Transcrição:}
@@ -334,23 +337,37 @@ Sistema clássico de regulação negativa e positiva
 
 \column{0.5\textwidth}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    % DNA wrapping around histone
-    \draw[thick, roxodna, domain=0:360, samples=100, smooth]
-        plot ({1.5 + 0.8*cos(\x)}, {0.02*\x + 0.8*sin(\x)});
+\begin{tikzpicture}[
+    scale=1.1,
+    dna/.style={double=roxodna!30, double distance=2.5pt, draw=roxodna, line width=1.2pt}
+]
+    % 1. Histone Tails (Tails emerge from the core)
+    \draw[thick, azulclaro!60!black] (-0.35, 0.35) to[out=135, in=315] (-1.2, 1.2);
+    \draw[thick, azulclaro!60!black] (0.35, 0.35) to[out=45, in=225] (1.2, 1.2);
+    \draw[thick, azulclaro!60!black] (-0.35, -0.35) to[out=225, in=45] (-1.2, -1.2);
+    \draw[thick, azulclaro!60!black] (0.35, -0.35) to[out=315, in=135] (1.2, -1.2);
 
-    % Histone core
-    \fill[azulclaro!50] (1.5,1.5) circle (0.7);
-    \node at (1.5,1.5) {H};
+    % 2. DNA Strand (Wrapping around the core as a continuous spiral)
+    \draw[dna] (-2.2, -1.5) -- (-0.77, -0.77);
+    \draw[dna, smooth, samples=100] plot[domain=-135:495] ({ (1.15 + 0.15*\x/360) * cos(\x) }, { (1.15 + 0.15*\x/360) * sin(\x) });
+    \draw[dna] (-0.96, 0.96) -- (-2.2, 1.5);
 
-    % Labels
-    \node[below, font=\tiny] at (1.5,0) {Nucleossomo};
+    % 3. Histone Octamer Core (Faint background circle + 4 visible subunits)
+    \filldraw[azulclaro!20, draw=azulescuro!30, line width=1pt] (0,0) circle (1.0);
+    \filldraw[azulclaro!50, draw=azulescuro!60, line width=1pt] (-0.35, 0.35) circle (0.45) node[font=\tiny\bfseries, color=azulescuro] {H2A};
+    \filldraw[azulclaro!50, draw=azulescuro!60, line width=1pt] (0.35, 0.35) circle (0.45) node[font=\tiny\bfseries, color=azulescuro] {H2B};
+    \filldraw[azulclaro!50, draw=azulescuro!60, line width=1pt] (-0.35, -0.35) circle (0.45) node[font=\tiny\bfseries, color=azulescuro] {H3};
+    \filldraw[azulclaro!50, draw=azulescuro!60, line width=1pt] (0.35, -0.35) circle (0.45) node[font=\tiny\bfseries, color=azulescuro] {H4};
 
-    % Modificações
-    \foreach \angle in {45, 135, 225, 315} {
-        \fill[laranjacel] ({1.5 + 0.9*cos(\angle)}, {1.5 + 0.9*sin(\angle)}) circle (1.5pt);
-    }
-    \node[right, font=\tiny] at (2.5,1.5) {Modificações};
+    % 4. Modification Groups (drawn on top of tail ends)
+    \fill[laranjacel] (-1.2, 1.2) circle (2.5pt);
+    \fill[laranjacel] (1.2, 1.2) circle (2.5pt) node[right=2mm, font=\tiny\bfseries, color=laranjacel!80!black] {Modificações};
+    \fill[laranjacel] (-1.2, -1.2) circle (2.5pt);
+    \fill[laranjacel] (1.2, -1.2) circle (2.5pt);
+
+    % 5. Labels
+    \node[below=3mm, font=\small\bfseries, color=azulescuro] at (0,-1.5) {Nucleossomo};
+
 \end{tikzpicture}
 \end{center}
 \end{columns}
@@ -365,7 +382,7 @@ Sistema clássico de regulação negativa e positiva
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Modelo Matemático de Regulação Gênica}
+\begin{frame}[shrink=15]{Modelo Matemático de Regulação Gênica}
 \begin{block}{Equação de Hill}
 Modelo para regulação cooperativa:
 \begin{equation*}
@@ -381,6 +398,8 @@ onde:
 \end{itemize}
 \end{block}
 
+\vspace{0.3cm}
+
 \begin{exampleblock}{Interpretação de $n$}
 \begin{itemize}
     \item $n = 1$: sem cooperatividade (Michaelis-Menten)
@@ -391,7 +410,7 @@ onde:
 \end{frame}
 
 \begin{frame}[fragile]{Simulação de Regulação Gênica}
-\begin{lstlisting}[language=Python, caption=Função de Hill, basicstyle=\ttfamily\footnotesize]
+\begin{lstlisting}[language=Python, caption=Função de Hill, basicstyle=\ttfamily\tiny]
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -464,38 +483,41 @@ plt.grid(True)
 \begin{frame}{6.4 RNA Mensageiro (mRNA)}
 \begin{block}{Estrutura do mRNA em Eucariotos}
 \begin{center}
-\begin{tikzpicture}[scale=0.8]
-    % mRNA structure
-    \draw[thick, laranjacel] (0,0) -- (10,0);
+\begin{tikzpicture}[scale=1.0]
+    % 1. Back skeleton line (base RNA strand)
+    \draw[thick, gray!40, line width=1pt] (0,0) -- (9.0,0);
 
-    % 5' cap
-    \node[draw, circle, fill=roxodna!50, minimum size=0.6cm] at (0,0) {Cap};
-    \node[above, font=\tiny] at (0,0.5) {5' m$^7$G};
+    % 2. 5' Cap
+    \node[circle, top color=roxodna!10, bottom color=roxodna!50, draw=roxodna, line width=1.5pt, inner sep=4pt] (cap) at (0,0) {\textbf{\color{roxodna!50!black}Cap}};
+    \node[above=2mm, color=roxodna!80!black, font=\scriptsize\bfseries] at (0,0.3) {5' m$^7$G};
 
-    % 5' UTR
-    \draw[thick] (0.5,0) -- (2,0);
-    \node[above, font=\tiny] at (1.25,0.3) {5' UTR};
+    % 3. 5' UTR
+    \draw[line width=3.5pt, azulclaro!40] (0.4, 0) -- (2.0, 0);
+    \node[above=1mm, color=azulclaro!80!black, font=\scriptsize\bfseries] at (1.2, 0.1) {5' UTR};
 
-    % Start codon
-    \fill[verdeacido!50] (2,0) circle (2pt);
-    \node[below, font=\tiny] at (2,-0.3) {AUG};
+    % 4. Start Codon (AUG)
+    \draw[draw=verdeacido!80!black, line width=1.5pt] (2.0, -0.4) -- (2.0, 0.4);
+    \node[below=1mm, color=verdeacido!80!black, font=\scriptsize\bfseries] at (2.0, -0.4) {AUG};
 
-    % Coding region
-    \fill[verdeacido!50] (2,-0.2) rectangle (7,0.2);
-    \node[above, font=\tiny] at (4.5,0.3) {Região Codificante};
+    % 5. Coding Region (CDS)
+    \filldraw[top color=verdeacido!10, bottom color=verdeacido!40, draw=verdeacido!80!black, line width=1.5pt, rounded corners=3pt] (2.0, -0.25) rectangle (7.0, 0.25);
+    \node[above=3mm, color=verdeacido!80!black, font=\small\bfseries] at (4.5, 0.25) {Região Codificante};
 
-    % Stop codon
-    \fill[red!50] (7,0) circle (2pt);
-    \node[below, font=\tiny] at (7,-0.3) {STOP};
+    % 6. Stop Codon (STOP)
+    \draw[draw=red!80!black, line width=1.5pt] (7.0, -0.4) -- (7.0, 0.4);
+    \node[below=1mm, color=red!80!black, font=\scriptsize\bfseries] at (7.0, -0.4) {STOP};
 
-    % 3' UTR
-    \draw[thick] (7,0) -- (9,0);
-    \node[above, font=\tiny] at (8,0.3) {3' UTR};
+    % 7. 3' UTR
+    \draw[line width=3.5pt, azulclaro!40] (7.0, 0) -- (8.6, 0);
+    \node[above=1mm, color=azulclaro!80!black, font=\scriptsize\bfseries] at (7.8, 0.1) {3' UTR};
 
-    % Poly-A tail
-    \draw[thick, azulclaro] (9,0) -- (10,0);
-    \node[above, font=\tiny] at (9.5,0.3) {Poly(A)};
-    \node[below, font=\tiny] at (9.5,-0.3) {AAAA...};
+    % 8. Poly(A) Tail (A-A-A-A-A chain)
+    \foreach \x in {8.9, 9.2, 9.5, 9.8} {
+        \node[circle, fill=laranjacel!30, draw=laranjacel, line width=1pt, inner sep=1pt, font=\tiny\bfseries, text=laranjacel!70!black] at (\x, 0) {A};
+    }
+    \node[right, font=\scriptsize\bfseries, color=laranjacel!80!black] at (9.95, 0) {...};
+    \node[above=2mm, color=laranjacel!80!black, font=\scriptsize\bfseries] at (9.3, 0.2) {Cauda Poly(A)};
+
 \end{tikzpicture}
 \end{center}
 \end{block}
@@ -510,7 +532,7 @@ plt.grid(True)
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Processamento do mRNA em Eucariotos}
+\begin{frame}[shrink=5]{Processamento do mRNA em Eucariotos}
 \begin{center}
 \begin{tikzpicture}[node distance=2cm, auto,
     box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
@@ -593,7 +615,7 @@ Flexibilidade na 3ª posição do códon
 \end{columns}
 \end{frame}
 
-\begin{frame}{6.6 RNA Ribossomal (rRNA)}
+\begin{frame}[shrink=5]{6.6 RNA Ribossomal (rRNA)}
 \begin{block}{Componente Estrutural dos Ribossomos}
 \begin{center}
 \begin{tabular}{lccc}
@@ -712,35 +734,41 @@ Regulação pós-transcricional e pós-traducional
 \column{0.5\textwidth}
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-    % Microarray chip
-    \draw[thick] (0,0) rectangle (4,4);
+    % Microarray chip with black background (realistic scan view)
+    \fill[black!95] (0,0) rectangle (4,4);
+    \draw[thick, gray!50] (0,0) rectangle (4,4);
 
-    % Grid of spots
-    \foreach \x in {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5} {
-        \foreach \y in {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5} {
-            \pgfmathsetmacro{\intensity}{random(0,100)}
-            \definecolor{spotcolor}{rgb}{1,\intensity/100,0}
-            \fill[spotcolor] (\x,\y) circle (1.5pt);
+    % Grid of glowing spots (Red, Green, Yellow, and Dark)
+    \foreach \x in {0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6} {
+        \foreach \y in {0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6} {
+            \pgfmathrandominteger{\r}{1}{4}
+            \ifnum\r=1 \fill[red] (\x,\y) circle (2.5pt); \fi
+            \ifnum\r=2 \fill[verdeacido] (\x,\y) circle (2.5pt); \fi
+            \ifnum\r=3 \fill[yellow] (\x,\y) circle (2.5pt); \fi
+            \ifnum\r=4 \fill[black!70] (\x,\y) circle (2.5pt); \fi
         }
     }
 
-    \node[below] at (2,-0.3) {Microarray};
+    \node[below, font=\small\bfseries, color=azulescuro] at (2,-0.3) {Microarray Chip};
 
-    % Legend
-    \draw[fill=red] (4.5,3.5) rectangle (5,4);
-    \node[right, font=\tiny] at (5.1,3.75) {Alta expressão};
+    % Legend representing a real two-channel hybridization
+    \filldraw[red, draw=black!40] (4.4,3.2) rectangle (4.8,3.6);
+    \node[right, font=\tiny] at (4.9,3.4) {Alta no Tratamento (Cy5)};
 
-    \draw[fill=yellow] (4.5,2.5) rectangle (5,3);
-    \node[right, font=\tiny] at (5.1,2.75) {Média};
+    \filldraw[verdeacido, draw=black!40] (4.4,2.4) rectangle (4.8,2.8);
+    \node[right, font=\tiny] at (4.9,2.6) {Alta no Controle (Cy3)};
 
-    \draw[fill=orange] (4.5,1.5) rectangle (5,2);
-    \node[right, font=\tiny] at (5.1,1.75) {Baixa};
+    \filldraw[yellow, draw=black!40] (4.4,1.6) rectangle (4.8,2.0);
+    \node[right, font=\tiny] at (4.9,1.8) {Expressão Equivalente};
+
+    \filldraw[black!85, draw=black!40] (4.4,0.8) rectangle (4.8,1.2);
+    \node[right, font=\tiny] at (4.9,1.0) {Sem Expressão / Baixa};
 \end{tikzpicture}
 \end{center}
 \end{columns}
 \end{frame}
 
-\begin{frame}{RNA-seq: Sequenciamento de RNA}
+\begin{frame}[shrink=15]{RNA-seq: Sequenciamento de RNA}
 \begin{block}{Vantagens sobre Microarrays}
 \begin{itemize}
     \item Maior faixa dinâmica
@@ -751,6 +779,8 @@ Regulação pós-transcricional e pós-traducional
     \item Quantificação absoluta (não relativa)
 \end{itemize}
 \end{block}
+
+\vspace{0.3cm}
 
 \begin{exampleblock}{Pipeline RNA-seq}
 \begin{enumerate}
@@ -764,8 +794,8 @@ Regulação pós-transcricional e pós-traducional
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Dados de RNA-seq}
-\begin{lstlisting}[language=Python, caption=Análise de expressão diferencial, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=15]{Análise de Dados de RNA-seq}
+\begin{lstlisting}[language=Python, caption=Análise de expressão diferencial, basicstyle=\ttfamily\tiny]
 import pandas as pd
 import numpy as np
 from scipy import stats
@@ -802,8 +832,8 @@ log_fc, p_val = differential_expression(
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Visualização: Volcano Plot}
-\begin{lstlisting}[language=Python, caption=Volcano plot para DE genes, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=5]{Visualização: Volcano Plot}
+\begin{lstlisting}[language=Python, caption=Volcano plot para DE genes, basicstyle=\ttfamily\tiny]
 import matplotlib.pyplot as plt
 
 # Calcular -log10(p-value)
@@ -838,7 +868,7 @@ plt.grid(True, alpha=0.3)
 % ============================================================================
 \section{Localização de Genes}
 
-\begin{frame}{6.8 Localização de Genes (Gene Localization)}
+\begin{frame}[shrink=10]{6.8 Localização de Genes (Gene Localization)}
 \begin{block}{Predição de Genes \textit{Ab Initio}}
 Métodos computacionais que identificam genes baseando-se apenas na sequência de DNA:
 
@@ -849,6 +879,8 @@ Métodos computacionais que identificam genes baseando-se apenas na sequência d
     \item Redes neurais
 \end{itemize}
 \end{block}
+
+\vspace{0.3cm}
 
 \begin{block}{Predição Baseada em Evidências}
 Usa dados experimentais:
@@ -861,9 +893,9 @@ Usa dados experimentais:
 \end{block}
 \end{frame}
 
-\begin{frame}{Ferramentas de Predição de Genes}
-\begin{columns}
-\column{0.5\textwidth}
+\begin{frame}[shrink=15]{Ferramentas de Predição de Genes}
+\begin{columns}[onlytextwidth]
+\column{0.48\textwidth}
 \textbf{Procariotos:}
 \begin{itemize}
     \item \textbf{Prodigal}
@@ -883,7 +915,7 @@ Usa dados experimentais:
 \end{itemize}
 \end{exampleblock}
 
-\column{0.5\textwidth}
+\column{0.48\textwidth}
 \textbf{Eucariotos:}
 \begin{itemize}
     \item \textbf{Augustus}
@@ -906,8 +938,8 @@ Usa dados experimentais:
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Exemplo: Usando BioPython para Anotação}
-\begin{lstlisting}[language=Python, caption=Busca de ORFs com BioPython, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=10]{Exemplo: Usando BioPython para Anotação}
+\begin{lstlisting}[language=Python, caption=Busca de ORFs com BioPython, basicstyle=\ttfamily\scriptsize]
 from Bio import SeqIO
 from Bio.SeqUtils import GC
 
@@ -937,7 +969,7 @@ annotate_sequence("genome.fasta")
 % ============================================================================
 \section{GenBank}
 
-\begin{frame}{GenBank: Banco de Dados de Sequências}
+\begin{frame}[shrink=10]{GenBank: Banco de Dados de Sequências}
 \begin{block}{O que é GenBank?}
 \begin{itemize}
     \item Banco de dados público do NCBI (National Center for Biotechnology Information)
@@ -958,12 +990,14 @@ annotate_sequence("genome.fasta")
 \end{itemize}
 \end{exampleblock}
 
+\vspace{0.3cm}
+
 \begin{block}{URL}
 \url{https://www.ncbi.nlm.nih.gov/genbank/}
 \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Formato de Arquivo GenBank}
+\begin{frame}[fragile, shrink=15]{Formato de Arquivo GenBank}
 \begin{block}{Estrutura}
 \begin{verbatim}
 LOCUS       NM_000518     5510 bp    mRNA
@@ -986,8 +1020,8 @@ ORIGIN
 \end{block}
 \end{frame}
 
-\begin{frame}[fragile]{Acessando GenBank com BioPython}
-\begin{lstlisting}[language=Python, caption=Download de sequências, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=15]{Acessando GenBank com BioPython}
+\begin{lstlisting}[language=Python, caption=Download de sequências, basicstyle=\ttfamily\tiny]
 from Bio import Entrez, SeqIO
 
 # Sempre fornecer email
@@ -1024,8 +1058,8 @@ print(f"Tamanho: {len(seq)} bp")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Features no GenBank}
-\begin{lstlisting}[language=Python, caption=Extrair features, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=15]{Análise de Features no GenBank}
+\begin{lstlisting}[language=Python, caption=Extrair features, basicstyle=\ttfamily\tiny]
 def extract_features(record):
     """Extrai features de um registro GenBank"""
     features_dict = {
@@ -1065,7 +1099,7 @@ print(f"CDSs encontradas: {len(features['CDS'])}")
 % ============================================================================
 \section{Análise Integrada}
 
-\begin{frame}{Análise de Sequências: Pipeline Completo}
+\begin{frame}[shrink=5]{Análise de Sequências: Pipeline Completo}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm, auto,
     box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
@@ -1104,6 +1138,8 @@ print(f"CDSs encontradas: {len(features['CDS'])}")
 \end{itemize}
 \end{block}
 
+\vspace{0.3cm}
+
 \begin{block}{EBI (Europa)}
 \begin{itemize}
     \item \textbf{ENA:} sequências
@@ -1123,13 +1159,15 @@ print(f"CDSs encontradas: {len(features['CDS'])}")
 \end{itemize}
 \end{block}
 
+\vspace{0.3cm}
+
 \begin{exampleblock}{Integração}
 Ferramentas como DAVID, Enrichr e WebGestalt integram múltiplos bancos
 \end{exampleblock}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Ontologia Gênica (GO)}
+\begin{frame}[shrink=10]{Ontologia Gênica (GO)}
 \definicao{Gene Ontology}{
 Vocabulário controlado para descrever funções de genes em três domínios:
 \begin{itemize}
@@ -1149,6 +1187,8 @@ Vocabulário controlado para descrever funções de genes em três domínios:
 \end{itemize}
 \end{exampleblock}
 
+\vspace{0.3cm}
+
 \begin{alertblock}{Análise de Enriquecimento}
 Identificar processos/funções super-representados em conjunto de genes
 \end{alertblock}
@@ -1159,7 +1199,7 @@ Identificar processos/funções super-representados em conjunto de genes
 % ============================================================================
 \section{Estudos de Caso}
 
-\begin{frame}{Caso 1: Análise de Expressão em Câncer}
+\begin{frame}[shrink=15]{Caso 1: Análise de Expressão em Câncer}
 \begin{block}{Objetivo}
 Identificar genes diferencialmente expressos entre tecido normal e tumoral
 \end{block}
@@ -1186,7 +1226,7 @@ Identificar genes diferencialmente expressos entre tecido normal e tumoral
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Caso 2: Descoberta de microRNAs Regulatórios}
+\begin{frame}[shrink=10]{Caso 2: Descoberta de microRNAs Regulatórios}
 \begin{block}{Objetivo}
 Identificar miRNAs que regulam genes envolvidos em resposta ao estresse
 \end{block}
@@ -1216,7 +1256,7 @@ Identificar miRNAs que regulam genes envolvidos em resposta ao estresse
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}{Exercícios - Parte 1}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 1}
 \begin{block}{Questão 1: Cálculo de Códons}
 Uma região codificante tem 1200 nucleotídeos.
 \begin{enumerate}
@@ -1226,10 +1266,14 @@ Uma região codificante tem 1200 nucleotídeos.
 \end{enumerate}
 \end{block}
 
+\vspace{0.3cm}
+
 \begin{block}{Questão 2: Conteúdo GC}
 Por que o conteúdo GC é importante? Calcule o conteúdo GC da sequência:\\
 \texttt{5'-ATGCGATCGTAGCTAGCTA-3'}
 \end{block}
+
+\vspace{0.3cm}
 
 \begin{block}{Questão 3: Função de Hill}
 Para uma função de Hill com $n=4$, $K_d=10$, $V_{max}=100$:
@@ -1240,7 +1284,7 @@ Para uma função de Hill com $n=4$, $K_d=10$, $V_{max}=100$:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 2}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 2}
 \begin{alertblock}{Questão 4: Projeto Prático - Análise de Sequência}
 Escolha um gene de interesse (ex: TP53, BRCA1, MYC):
 \begin{enumerate}
@@ -1251,6 +1295,8 @@ Escolha um gene de interesse (ex: TP53, BRCA1, MYC):
     \item Visualize a estrutura do gene (exons/introns)
 \end{enumerate}
 \end{alertblock}
+
+\vspace{0.3cm}
 
 \begin{block}{Questão 5: RNA-seq}
 Com dados de contagens de RNA-seq:
@@ -1263,7 +1309,7 @@ Com dados de contagens de RNA-seq:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 3}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 3}
 \begin{block}{Questão 6: Predição de miRNA}
 Dada uma sequência 3' UTR de um mRNA:
 \begin{enumerate}
@@ -1273,6 +1319,8 @@ Dada uma sequência 3' UTR de um mRNA:
     \item Proponha experimento para validar a interação
 \end{enumerate}
 \end{block}
+
+\vspace{0.3cm}
 
 \begin{alertblock}{Projeto Final}
 Desenvolva um pipeline de análise completo:
@@ -1293,7 +1341,7 @@ Desenvolva um pipeline de análise completo:
 % ============================================================================
 \section{Referências}
 
-\begin{frame}{Referências Principais}
+\begin{frame}[allowframebreaks]{Referências Principais}
 \begin{thebibliography}{99}
 \bibitem{watson} Watson J.D. et al. (2013). \textit{Molecular Biology of the Gene}, 7th ed. Pearson.
 
@@ -1307,7 +1355,7 @@ Desenvolva um pipeline de análise completo:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}{Leitura Complementar}
+\begin{frame}[allowframebreaks]{Leitura Complementar}
 \begin{block}{Livros}
 \begin{itemize}
     \item Lewin B. (2020). \textit{Genes XII}. Jones \& Bartlett.
@@ -1330,7 +1378,7 @@ Desenvolva um pipeline de análise completo:
 % ============================================================================
 % SLIDE FINAL
 % ============================================================================
-\begin{frame}
+\begin{frame}{}
 \begin{center}
 {\Huge Obrigado!}
 
