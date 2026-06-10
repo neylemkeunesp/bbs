@@ -22,7 +22,7 @@
 % ============================================================================
 % SLIDE DE TÍTULO
 % ============================================================================
-\begin{frame}
+\begin{frame}{}
 \titlepage
 \end{frame}
 
@@ -99,7 +99,7 @@ Proteínas são as máquinas moleculares da vida: executam, regulam e coordenam 
 \end{columns}
 \end{frame}
 
-\begin{frame}{Papel Central das Proteínas}
+\begin{frame}[shrink=5]{Papel Central das Proteínas}
 \begin{center}
 \begin{tikzpicture}[node distance=2.5cm, scale=0.85, transform shape]
     % Central node
@@ -171,7 +171,7 @@ Proteínas são o elo entre genótipo (DNA) e fenótipo (função)
 \end{center}
 \end{frame}
 
-\begin{frame}{Termodinâmica do Dobramento Proteico}
+\begin{frame}[shrink=10]{Termodinâmica do Dobramento Proteico}
 \begin{block}{Energia Livre de Gibbs}
 O dobramento proteico é governado pela mudança de energia livre:
 \begin{equation*}
@@ -209,7 +209,7 @@ Onde:
 \end{columns}
 \end{frame}
 
-\begin{frame}{Diagrama de Ramachandran}
+\begin{frame}[shrink=15]{Diagrama de Ramachandran}
 \begin{columns}
 \column{0.5\textwidth}
 \definicao{Ramachandran Plot}{
@@ -269,7 +269,7 @@ Glicina (sem cadeia lateral) permite todos os ângulos. Prolina (imino ácido) r
 }
 \end{frame}
 
-\begin{frame}{Domínios e Motivos Proteicos}
+\begin{frame}[shrink=15]{Domínios e Motivos Proteicos}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Domínios}
@@ -324,7 +324,7 @@ Padrões estruturais recorrentes:
 \end{columns}
 \end{frame}
 
-\begin{frame}{Proteínas Intrinsecamente Desordenadas (IDPs)}
+\begin{frame}[shrink=15]{Proteínas Intrinsecamente Desordenadas (IDPs)}
 \begin{block}{Características}
 Proteínas ou regiões sem estrutura 3D definida em condições fisiológicas:
 \begin{itemize}
@@ -365,7 +365,7 @@ IDPs desafiam o paradigma estrutura-função: função sem estrutura fixa!
 }
 \end{frame}
 
-\begin{frame}{Protein Data Bank (PDB)}
+\begin{frame}[shrink=10]{Protein Data Bank (PDB)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{O que é o PDB?}
@@ -410,8 +410,8 @@ Medida em Ångströms (\AA):
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Estruturas com BioPython}
-\begin{lstlisting}[language=Python, caption=Parser de arquivos PDB, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=10]{Análise de Estruturas com BioPython}
+\begin{lstlisting}[language=Python, caption=Parser de arquivos PDB, basicstyle=\ttfamily\tiny]
 from Bio.PDB import PDBParser, PDBIO, Select
 from Bio.PDB.DSSP import DSSP
 import numpy as np
@@ -444,8 +444,8 @@ print(f"Folhas beta: {secondary.count('E')}")
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Visualização de Proteínas com PyMOL}
-\begin{lstlisting}[language=Python, caption=Script PyMOL para visualização, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=5]{Visualização de Proteínas com PyMOL}
+\begin{lstlisting}[language=Python, caption=Script PyMOL para visualização, basicstyle=\ttfamily\tiny]
 from pymol import cmd
 
 # Carregar estrutura
@@ -481,7 +481,7 @@ print("Visualizacao criada!")
 % ============================================================================
 \section{Cinética Enzimática Avançada}
 
-\begin{frame}{7.2 Cinética Enzimática - Revisão de Michaelis-Menten}
+\begin{frame}[shrink=5]{7.2 Cinética Enzimática - Revisão de Michaelis-Menten}
 \begin{block}{Equação de Michaelis-Menten}
 \begin{equation*}
 v = \frac{V_{max}[S]}{K_M + [S]}
@@ -566,7 +566,7 @@ Forma linear: $y = mx + b$
 \end{columns}
 \end{frame}
 
-\begin{frame}{Gráfico de Eadie-Hofstee}
+\begin{frame}[shrink=5]{Gráfico de Eadie-Hofstee}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Transformação Alternativa}
@@ -613,7 +613,7 @@ Hoje em dia, ajuste não-linear direto (regressão) é preferível às lineariza
 \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Ligação Cooperativa e Equação de Hill}
+\begin{frame}[shrink=10]{Ligação Cooperativa e Equação de Hill}
 \begin{block}{Cooperatividade em Enzimas Oligoméricas}
 Quando ligação de substrato afeta afinidade de outros sítios:
 \begin{equation*}
@@ -676,7 +676,7 @@ $n > 1$ resulta em resposta switch-like: pequena mudança em $[S]$ causa grande 
 \end{columns}
 \end{frame}
 
-\begin{frame}{Regulação Alostérica: Modelos MWC e KNF}
+\begin{frame}{Regulação Alostérica: Modelo MWC (1/2)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Modelo MWC}
@@ -709,6 +709,11 @@ $n > 1$ resulta em resposta switch-like: pequena mudança em $[S]$ causa grande 
 \end{tikzpicture}
 \end{center}
 
+\end{columns}
+\end{frame}
+
+\begin{frame}{Regulação Alostérica: Modelo KNF (2/2)}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Modelo KNF}
 \textbf{Koshland-Némethy-Filmer}
@@ -742,7 +747,7 @@ $n > 1$ resulta em resposta switch-like: pequena mudança em $[S]$ causa grande 
 \end{columns}
 \end{frame}
 
-\begin{frame}{Inibição Enzimática: Tipos}
+\begin{frame}[shrink=10]{Inibição Enzimática: Tipos}
 \begin{block}{Inibição Competitiva}
 Inibidor compete com substrato pelo sítio ativo
 \begin{equation*}
@@ -762,7 +767,7 @@ $K_M$ inalterado, $V_{max}^{app}$ diminui
 \end{block}
 \end{frame}
 
-\begin{frame}{Inibição Enzimática: Tipos Adicionais}
+\begin{frame}[shrink=10]{Inibição Enzimática: Tipos Adicionais}
 \begin{block}{Inibição Incompetitiva}
 Inibidor liga apenas ao complexo ES
 \begin{equation*}
@@ -826,7 +831,7 @@ Afeta tanto $K_M$ quanto $V_{max}$
 \end{center}
 \end{frame}
 
-\begin{frame}{Inibição Reversível vs Irreversível}
+\begin{frame}[shrink=15]{Inibição Reversível vs Irreversível}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Reversível}
@@ -867,8 +872,8 @@ $K_I$: constante de dissociação do complexo EI (afinidade)
 }
 \end{frame}
 
-\begin{frame}[fragile]{Ajuste de Dados de Cinética Enzimática}
-\begin{lstlisting}[language=Python, caption=Regressão não-linear para Michaelis-Menten, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=10]{Ajuste de Dados de Cinética Enzimática}
+\begin{lstlisting}[language=Python, caption=Regressão não-linear para Michaelis-Menten, basicstyle=\ttfamily\tiny]
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
@@ -901,8 +906,8 @@ plt.legend()
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Cálculo de IC50 e Ki}
-\begin{lstlisting}[language=Python, caption=Determinação de IC50, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=15]{Cálculo de IC50 e Ki}
+\begin{lstlisting}[language=Python, caption=Determinação de IC50, basicstyle=\ttfamily\tiny]
 from scipy.optimize import curve_fit
 
 # Funcao dose-resposta (Hill)
@@ -945,15 +950,25 @@ plt.legend()
 % ============================================================================
 \section{Cascatas de Sinalização Celular}
 
-\begin{frame}{7.3 Sinalização Celular: Visão Geral}
+\begin{frame}[shrink=10]{7.3 Sinalização Celular: Visão Geral (1/2)}
 \definicao{Transdução de Sinal}{
 Processo pelo qual uma célula converte um sinal extracelular em uma resposta intracelular específica.
 }
 
 \vspace{0.3cm}
 
+\begin{block}{Etapas da transdução}
+\begin{itemize}
+    \item Ligante extracelular é reconhecido por um receptor
+    \item O receptor ativa transdutores intracelulares
+    \item O sinal chega a efetores e gera resposta celular
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[shrink=10]{7.3 Sinalização Celular: Visão Geral (2/2)}
 \begin{center}
-\begin{tikzpicture}[node distance=2cm, auto,
+\begin{tikzpicture}[node distance=2.4cm, auto,
     box/.style={rectangle, draw, text width=2.5cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
 
     \node[box, fill=roxodna!30] (lig) {Ligante\\(hormônio, GF)};
@@ -970,7 +985,7 @@ Processo pelo qual uma célula converte um sinal extracelular em uma resposta in
 \end{center}
 \end{frame}
 
-\begin{frame}{Tipos de Receptores de Membrana}
+\begin{frame}[shrink=5]{Tipos de Receptores de Membrana (1/2)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{GPCRs}
@@ -984,6 +999,7 @@ Processo pelo qual uma célula converte um sinal extracelular em uma resposta in
 Exemplos: receptores adrenérgicos, dopaminérgicos, olfativos
 \end{block}
 
+\column{0.5\textwidth}
 \begin{block}{RTKs}
 \textbf{Receptores Tirosina Quinase}
 \begin{itemize}
@@ -994,7 +1010,11 @@ Exemplos: receptores adrenérgicos, dopaminérgicos, olfativos
 \end{itemize}
 Exemplos: EGFR, VEGFR, insulina
 \end{block}
+\end{columns}
+\end{frame}
 
+\begin{frame}[shrink=5]{Tipos de Receptores de Membrana (2/2)}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Canais Iônicos}
 \textbf{Receptores Ionotrópicos}
@@ -1006,6 +1026,7 @@ Exemplos: EGFR, VEGFR, insulina
 Exemplos: receptor nicotínico, GABA$_A$
 \end{block}
 
+\column{0.5\textwidth}
 \begin{block}{Receptores Nucleares}
 \textbf{Fatores de Transcrição}
 \begin{itemize}
@@ -1076,7 +1097,7 @@ Exemplos: receptores de esteroides, tireoide
 \end{columns}
 \end{frame}
 
-\begin{frame}{Segundos Mensageiros}
+\begin{frame}[shrink=10]{Segundos Mensageiros}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{cAMP}
@@ -1122,7 +1143,7 @@ Exemplos: receptores de esteroides, tireoide
 \end{columns}
 \end{frame}
 
-\begin{frame}{Cascata MAPK: Via Clássica}
+\begin{frame}[shrink=20]{Cascata MAPK: Via Clássica}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm, auto,
     box/.style={rectangle, draw, text width=2.2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
@@ -1151,7 +1172,7 @@ Exemplos: receptores de esteroides, tireoide
 \end{center}
 \end{frame}
 
-\begin{frame}{MAPK: Módulo de Amplificação}
+\begin{frame}[shrink=10]{MAPK: Módulo de Amplificação (1/2)}
 \importante{
 Cascata de fosforilação amplifica sinal:
 \begin{itemize}
@@ -1171,17 +1192,19 @@ Se cada quinase ativa 10 moléculas da próxima:
 \end{equation*}
 \end{block}
 
-\vspace{0.3cm}
+\end{frame}
 
+\begin{frame}[shrink=10]{MAPK: Módulo de Amplificação (2/2)}
 \begin{exampleblock}{Outras Vias MAPK}
 \begin{itemize}
     \item \textbf{JNK/SAPK:} estresse, apoptose
     \item \textbf{p38 MAPK:} inflamação, diferenciação
 \end{itemize}
 \end{exampleblock}
+
 \end{frame}
 
-\begin{frame}{Dinâmica de Fosforilação e Desfosforilação}
+\begin{frame}[shrink=10]{Dinâmica de Fosforilação e Desfosforilação}
 \begin{block}{Ciclo de Fosforilação}
 \begin{equation*}
 \text{Proteína} + \text{ATP} \xrightarrow{\text{Quinase}} \text{Proteína-P} + \text{ADP}
@@ -1267,8 +1290,8 @@ Permite decisões digitais (tudo-ou-nada) em sistemas analógicos
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Modelagem de Cascatas de Sinalização}
-\begin{lstlisting}[language=Python, caption=Cascata MAPK simplificada, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=15]{Modelagem de Cascatas de Sinalização}
+\begin{lstlisting}[language=Python, caption=Cascata MAPK simplificada, basicstyle=\ttfamily\tiny]
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
@@ -1312,7 +1335,7 @@ plt.grid(True)
 % ============================================================================
 \section{Modificações Pós-Traducionais}
 
-\begin{frame}{7.4 Modificações Pós-Traducionais (PTMs)}
+\begin{frame}[shrink=10]{7.4 Modificações Pós-Traducionais (PTMs) (1/2)}
 \definicao{PTM}{
 Modificações químicas covalentes em proteínas após tradução, expandindo diversidade e regulação do proteoma.
 }
@@ -1329,11 +1352,17 @@ Modificações químicas covalentes em proteínas após tradução, expandindo d
     \item Ubiquitinação (Lys)
     \item Glicosilação (Asn, Ser, Thr)
     \item SUMOilação (Lys)
-    \item Nitrosilação (Cys)
-    \item Palmitoilação (Cys)
 \end{itemize}
 
 \column{0.5\textwidth}
+\begin{alertblock}{Estatística}
+$>$400 tipos de PTMs conhecidas!\\
+Proteína média: 5-10 PTMs diferentes
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[shrink=10]{7.4 Modificações Pós-Traducionais (PTMs) (2/2)}
 \importante{
 PTMs regulam:
 \begin{itemize}
@@ -1347,14 +1376,15 @@ PTMs regulam:
 
 \vspace{0.3cm}
 
-\begin{alertblock}{Estatística}
-$>$400 tipos de PTMs conhecidas!\\
-Proteína média: 5-10 PTMs diferentes
-\end{alertblock}
-\end{columns}
+\begin{block}{Tipos adicionais}
+\begin{itemize}
+    \item Nitrosilação (Cys)
+    \item Palmitoilação (Cys)
+\end{itemize}
+\end{block}
 \end{frame}
 
-\begin{frame}{Fosforilação: PTM mais Estudada}
+\begin{frame}[shrink=5]{Fosforilação: PTM mais Estudada}
 \begin{block}{Características}
 \begin{itemize}
     \item Mais abundante e dinâmica
@@ -1388,7 +1418,7 @@ Proteína média: 5-10 PTMs diferentes
 \end{columns}
 \end{frame}
 
-\begin{frame}{Acetilação e Metilação: Regulação Epigenética}
+\begin{frame}[shrink=5]{Acetilação e Metilação: Regulação Epigenética}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Acetilação}
@@ -1434,7 +1464,7 @@ Código de histonas: combinação de PTMs determina estado transcricional
 }
 \end{frame}
 
-\begin{frame}{Ubiquitinação e Degradação Proteica}
+\begin{frame}[shrink=10]{Ubiquitinação e Degradação Proteica}
 \begin{block}{Sistema Ubiquitina-Proteassoma}
 \textbf{Ubiquitina:} proteína pequena (76 aa) que marca alvos para degradação
 \end{block}
@@ -1479,7 +1509,7 @@ $>$600 E3s humanas!
 \end{columns}
 \end{frame}
 
-\begin{frame}{Glicosilação: Modificação Mais Complexa}
+\begin{frame}[shrink=10]{Glicosilação: Modificação Mais Complexa}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{N-Glicosilação}
@@ -1524,7 +1554,7 @@ $>$600 E3s humanas!
 \end{columns}
 \end{frame}
 
-\begin{frame}{Crosstalk entre PTMs}
+\begin{frame}[shrink=10]{Crosstalk entre PTMs}
 \importante{
 PTMs não agem isoladamente: interagem e se regulam mutuamente!
 }
@@ -1548,7 +1578,7 @@ Acetilação (ativa) vs. Ubiquitinação (degrada) em Lys$_{382}$ regula estabil
 }
 \end{frame}
 
-\begin{frame}{Bancos de Dados de PTMs}
+\begin{frame}[shrink=10]{Bancos de Dados de PTMs}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{PhosphoSitePlus}
@@ -1596,7 +1626,7 @@ Espectrometria de massa (LC-MS/MS)
 \end{columns}
 \end{frame}
 
-\begin{frame}{PTMs no Controle do Ciclo Celular}
+\begin{frame}[shrink=5]{PTMs no Controle do Ciclo Celular (1/2)}
 \exemplo{Fosforilação de Ciclinas/CDKs}{
 Progressão pelo ciclo celular é regulada por fosforilação:
 }
@@ -1630,14 +1660,16 @@ Progressão pelo ciclo celular é regulada por fosforilação:
     }
 \end{tikzpicture}
 \end{center}
+\end{frame}
 
-\vspace{0.3cm}
-
+\begin{frame}[shrink=5]{PTMs no Controle do Ciclo Celular (2/2)}
+\begin{block}{Principais Efeitos}
 \begin{itemize}
     \item \textbf{Fosforilação de Rb:} libera E2F $\rightarrow$ transição G1/S
     \item \textbf{Fosforilação de histonas:} condensação cromossomal
     \item \textbf{Desfosforilação de CDK1:} entrada em mitose
 \end{itemize}
+\end{block}
 \end{frame}
 
 % ============================================================================
@@ -1645,7 +1677,7 @@ Progressão pelo ciclo celular é regulada por fosforilação:
 % ============================================================================
 \section{Proteômica}
 
-\begin{frame}{7.5 Proteômica: Estudo do Proteoma}
+\begin{frame}[shrink=10]{7.5 Proteômica: Estudo do Proteoma}
 \definicao{Proteoma}{
 Conjunto completo de proteínas expressas por um genoma, célula ou tecido em determinado momento e condição.
 }
@@ -1681,7 +1713,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 }
 \end{frame}
 
-\begin{frame}{Abordagens Proteômicas}
+\begin{frame}[shrink=5]{Abordagens Proteômicas}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Bottom-Up}
@@ -1726,7 +1758,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 \end{columns}
 \end{frame}
 
-\begin{frame}{Espectrometria de Massa: LC-MS/MS}
+\begin{frame}[shrink=20]{Espectrometria de Massa: LC-MS/MS}
 \begin{center}
 \begin{tikzpicture}[node distance=2cm, auto,
     box/.style={rectangle, draw, text width=2cm, text centered, rounded corners, minimum height=0.7cm, font=\small}]
@@ -1767,7 +1799,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 \end{columns}
 \end{frame}
 
-\begin{frame}{Técnicas de Ionização}
+\begin{frame}[shrink=10]{Técnicas de Ionização}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{ESI}
@@ -1805,7 +1837,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 \end{block}
 \end{frame}
 
-\begin{frame}{Quantificação Proteômica}
+\begin{frame}[shrink=10]{Quantificação Proteômica (1/2)}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Label-Free}
@@ -1829,7 +1861,11 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
     \item Requer cultura celular
 \end{itemize}
 \end{block}
+\end{columns}
+\end{frame}
 
+\begin{frame}[shrink=10]{Quantificação Proteômica (2/2)}
+\begin{columns}
 \column{0.5\textwidth}
 \begin{block}{Marcação Química}
 \textbf{TMT/iTRAQ}
@@ -1842,8 +1878,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 \end{itemize}
 \end{block}
 
-\vspace{0.3cm}
-
+\column{0.5\textwidth}
 \begin{exampleblock}{Escolha do Método}
 \begin{itemize}
     \item \textbf{Label-free:} descoberta, custo
@@ -1854,7 +1889,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 \end{columns}
 \end{frame}
 
-\begin{frame}{Interações Proteína-Proteína}
+\begin{frame}[shrink=5]{Interações Proteína-Proteína}
 \begin{block}{Métodos Experimentais}
 \begin{columns}
 \column{0.5\textwidth}
@@ -1898,7 +1933,7 @@ Proteoma humano: $\sim$20,000 genes $\rightarrow$ $>$1,000,000 proteoformas (com
 \end{block}
 \end{frame}
 
-\begin{frame}{Bancos de Dados de Interações}
+\begin{frame}[shrink=10]{Bancos de Dados de Interações}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{block}{STRING}
@@ -1945,8 +1980,8 @@ Dados de diferentes métodos são complementares: integração é chave!
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Análise de Dados Proteômicos}
-\begin{lstlisting}[language=Python, caption=Processamento de dados MS, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=20]{Análise de Dados Proteômicos}
+\begin{lstlisting}[language=Python, caption=Processamento de dados MS, basicstyle=\ttfamily\tiny]
 import pandas as pd
 import numpy as np
 from scipy.stats import ttest_ind
@@ -1988,8 +2023,8 @@ df['-log10(p)'] = -np.log10(df['p_value'])
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Visualização: Volcano Plot}
-\begin{lstlisting}[language=Python, caption=Volcano plot proteômico, basicstyle=\ttfamily\footnotesize]
+\begin{frame}[fragile, shrink=15]{Visualização: Volcano Plot (1/2)}
+\begin{lstlisting}[language=Python, caption=Volcano plot proteômico, basicstyle=\ttfamily\tiny]
 # Continuacao do codigo anterior
 
 # Thresholds
@@ -2002,6 +2037,12 @@ df.loc[(df['log2FC'] > fc_thresh) & (df['p_value'] < p_thresh),
        'significant'] = 'Up'
 df.loc[(df['log2FC'] < -fc_thresh) & (df['p_value'] < p_thresh),
        'significant'] = 'Down'
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile, shrink=15]{Visualização: Volcano Plot (2/2)}
+\begin{lstlisting}[language=Python, caption=Volcano plot proteômico, basicstyle=\ttfamily\tiny]
 
 # Volcano plot
 plt.figure(figsize=(10, 8))
@@ -2031,7 +2072,7 @@ plt.grid(True, alpha=0.3)
 % ============================================================================
 \section{Exercícios}
 
-\begin{frame}{Exercícios - Parte 1: Cinética Enzimática}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 1: Cinética Enzimática}
 \begin{block}{Questão 1: Parâmetros de MM}
 Uma enzima apresenta $K_M = 5$ mM e $V_{max} = 100$ $\mu$mol/min. Calcule:
 \begin{enumerate}
@@ -2051,7 +2092,7 @@ Um inibidor competitivo tem $K_I = 2$ mM. Se $K_M = 5$ mM e $[I] = 10$ mM:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 2: Estrutura e Análise}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 2: Estrutura e Análise}
 \begin{block}{Questão 3: Ramachandran}
 Explique por que:
 \begin{enumerate}
@@ -2073,7 +2114,7 @@ Escolha uma proteína do PDB:
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 3: Sinalização e PTMs}
+\begin{frame}{Exercícios - Parte 3: Sinalização}
 \begin{block}{Questão 5: Cascata MAPK}
 Considerando amplificação 10x em cada nível:
 \begin{enumerate}
@@ -2082,7 +2123,9 @@ Considerando amplificação 10x em cada nível:
     \item Como feedback negativo afeta isso?
 \end{enumerate}
 \end{block}
+\end{frame}
 
+\begin{frame}{Exercícios - Parte 3: PTMs}
 \begin{block}{Questão 6: PTMs}
 Uma proteína tem os seguintes sítios:
 \begin{itemize}
@@ -2097,7 +2140,7 @@ Uma proteína tem os seguintes sítios:
 \end{block}
 \end{frame}
 
-\begin{frame}{Exercícios - Parte 4: Proteômica}
+\begin{frame}[allowframebreaks]{Exercícios - Parte 4: Proteômica}
 \begin{alertblock}{Projeto Final: Pipeline Proteômico}
 Desenvolva análise completa de dados de proteômica:
 \begin{enumerate}
@@ -2127,7 +2170,7 @@ Compare métodos label-free, SILAC e TMT:
 % ============================================================================
 \section{Referências}
 
-\begin{frame}{Referências Principais}
+\begin{frame}[allowframebreaks]{Referências Principais}
 \begin{thebibliography}{99}
 \bibitem{berg} Berg J.M., Tymoczko J.L., Stryer L. (2019). \textit{Biochemistry}, 9th ed. W.H. Freeman.
 
@@ -2141,7 +2184,7 @@ Compare métodos label-free, SILAC e TMT:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}{Referências Complementares}
+\begin{frame}[allowframebreaks]{Referências Complementares}
 \begin{thebibliography}{99}
 \bibitem{cornish} Cornish-Bowden A. (2012). \textit{Fundamentals of Enzyme Kinetics}, 4th ed. Wiley-Blackwell.
 
@@ -2155,7 +2198,7 @@ Compare métodos label-free, SILAC e TMT:
 \end{thebibliography}
 \end{frame}
 
-\begin{frame}{Leitura Complementar e Recursos}
+\begin{frame}[allowframebreaks]{Leitura Complementar e Recursos}
 \begin{block}{Livros Especializados}
 \begin{itemize}
     \item Bairoch A. et al. (2016). \textit{The SWISS-PROT Protein Knowledgebase}
@@ -2180,7 +2223,7 @@ Compare métodos label-free, SILAC e TMT:
 % ============================================================================
 % SLIDE FINAL
 % ============================================================================
-\begin{frame}
+\begin{frame}{}
 \begin{center}
 {\Huge Obrigado!}
 
