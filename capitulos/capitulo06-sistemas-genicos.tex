@@ -38,28 +38,46 @@
 % ============================================================================
 \section{Dogma Central da Biologia Molecular}
 
-\begin{frame}[shrink=10]{6.1 Dogma Central da Biologia Molecular}
+\begin{frame}{6.1 Dogma Central da Biologia Molecular}
 \begin{center}
-\begin{tikzpicture}[box/.style={rectangle, draw, fill=azulclaro!20, text width=2.4cm, text centered, rounded corners, minimum height=0.9cm, font=\large}]
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.4cm,
+                text centered, rounded corners, minimum height=0.9cm, font=\large}
+]
 
-    \node[box, fill=roxodna!30] (dna) at (0,0) {\textbf{DNA}};
-    \node[box, fill=laranjacel!30] (rna) at (4.8,0) {\textbf{RNA}};
-    \node[box, fill=verdeacido!30] (prot) at (9.6,0) {\textbf{Proteína}};
+    \node[box, fill=roxodna!30]    (dna)  at (0,0)   {\textbf{DNA}};
+    \node[box, fill=laranjacel!30] (rna)  at (5.2,0)  {\textbf{RNA}};
+    \node[box, fill=verdeacido!30] (prot) at (10.4,0) {\textbf{Proteína}};
 
-    \draw[->, ultra thick, azulescuro, line width=2pt] (dna) -- node[above=2mm] {\textbf{Transcrição}} (rna);
-    \draw[->, ultra thick, azulescuro, line width=2pt] (rna) -- node[above=2mm] {\textbf{Tradução}} (prot);
-    \draw[->, ultra thick, azulescuro, line width=2pt] (dna) to [out=135,in=45,looseness=5] node[above] {\textbf{Replicação}} (dna);
+    % Replicação: loop above DNA, label placed well above the arc
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (dna) to[out=120, in=60, looseness=6]
+        node[pos=0.5, above=8mm, font=\normalsize\bfseries, color=azulescuro]
+            {Replicação}
+        (dna);
+
+    % Transcrição: arrow from DNA to RNA, label centred above the midpoint
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (dna) -- (rna)
+        node[midway, above=4mm, font=\normalsize\bfseries, color=azulescuro]
+            {Transcrição};
+
+    % Tradução: arrow from RNA to Proteína, label centred above the midpoint
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (rna) -- (prot)
+        node[midway, above=4mm, font=\normalsize\bfseries, color=azulescuro]
+            {Tradução};
 
 \end{tikzpicture}
 \end{center}
 
-\vspace{0.5cm}
+\vspace{0.4cm}
 
 \importante{
 O fluxo de informação genética segue a direção: DNA $\rightarrow$ RNA $\rightarrow$ Proteína
 }
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 
 \begin{exampleblock}{Exceção: Retrovírus}
 Transcriptase reversa: RNA $\rightarrow$ DNA
