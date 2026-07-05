@@ -1,0 +1,956 @@
+
+\chapter{Análise Integrada de Sistemas Biológicos}
+\label{cap:11}
+
+A biologia tem, há mais de quatro décadas, mudado a unidade de observação. Da
+gene isolado --- observado nas décadas 1960--1970, quando a tecnologia
+permitia marcar e seguir uma proteína --- passamos para redes gênicas nos anos
+1980--1990, depois para vias inteiras com o sequenciamento estagiado da
+\textit{Drosophila} e do projeto genoma humano (1990--2003), e finalmente
+para a topologia completa do transcriptoma, do proteoma, do metaboloma e do
+fluxoma de uma célula ou tecido sob condição definida. Esse acúmulo de
+camadas informacionais simultâneas define a chamada \emph{biologia de sistemas}
+e impõe um problema novo: como extrair regularidades dinâmicas a partir de
+dados fragmentários, ruidosos e de dimensionalidade colossal. A resposta
+disciplinada a essa pergunta é o tema deste capítulo.
+
+O capítulo tem quatro objetivos centrais. \textbf{Primeiro}, descrever a
+estratégia de integração multi-ômica em suas variantes metodológicas: correlação,
+redes, modelos baseados em restrições, aprendizado de máquina. \textbf{Segundo},
+ilustrar esse ferramental em um sistema-modelo bem caracterizado --- o ciclo da
+trealose em \textit{Saccharomyces cerevisiae} --- onde a integração de RNA-seq,
+proteômica e metabolômica sob choque térmico permite validar experimentalmente
+previsões do modelo. \textbf{Terceiro}, discutir a reconstrução de vias e
+redes a partir de dados, com foco em análise de enriquecimento, GSEA, redes
+multi-camada e detecção de módulos. \textbf{Quarto}, apresentar abordagens de
+modelagem matemática integrada --- GEMs (modelos em escala genômica), FBA,
+modelos cinéticos e híbridos --- aplicadas à interpretação quantitativa de
+conjuntos multi-ômicos.
+
+\section{Introdução à Biologia de Sistemas}
+\label{sec:11-introducao}
+
+\begin{definicaoenv}[Biologia de Sistemas]
+Biologia de sistemas é o estudo de sistemas biológicos mediante integração
+quantitativa de dados multi-ômicos para compreender propriedades emergentes
+e o comportamento do sistema como um todo. Sua hipótese central é que
+componentes moleculares são organizados em redes modulares, cujas
+propriedades --- robustez, oscilação, biestabilidade --- não podem ser
+inferidas pela simples inspeção das partes.
+\end{definicaoenv}
+
+A biologia de sistemas encontra sua identidade formal em contraste com a
+genômica funcional clássica: enquanto esta procura relações \emph{localizadas}
+(mutação $\to$ fenótipo, proteína $\to$ função), aquela procura relações
+\emph{globais} --- entender como o sistema \emph{se organiza} para responder a
+uma perturbação, e como esse padrão de organização pode ser medido,
+quantificado e previsto. Para responder a essas perguntas, três ferramentas
+se mostraram particularmente úteis: medições multi-camada em séries
+temporais, integração computacional rigorosa, e modelos matemáticos que
+oferecem uma hipótese explícita e falsificável sobre o sistema.
+
+\subsection{Estratégia de Integração Multi-Ômica}
+\label{sub:image11-estrategia}
+
+A tabela central da biologia de sistemas é a chamada \emph{camadaômica} ---
+uma matriz cujas linhas são \emph{features} (genes, transcritos, proteínas,
+metabólitos) e cujas colunas são amostras sob diferentes condições. Quando
+várias camadas são medidas na mesma série de amostras, surge a possibilidade
+de integrar os dados para extrair sinais que nenhuma camada isolada mostraria.
+
+Cinco camadas são as mais estudadas atualmente: \textbf{genômica} (variantes,
+número de cópias, mutações), \textbf{transcriptômica} (RNA-seq, microarrays,
+RNA-seq de célula única), \textbf{proteômica} (espectrometria de massas,
+Western blot quantitativo), \textbf{metabolômica} (LC/MS ou NMR de metabólitos
+polares e lipídios) e \textbf{fluxômica} ($^{13}$C-MFA, dados de distribuição
+de massa de isótopos marcados). Cada camada tem dinâmica característica:
+genômica é estática em escala tecidual; transcriptômica, com meia-vida da
+ordem de horas; proteômica, com meia-vida de horas a dias; metabolômica e
+fluxômica, com tempos de segundos a minutos.
+
+A integração efetiva dessas camadas impõe cinco desafios computacionais e
+conceituais. \textbf{Primeiro}, escalas dispares: RNAs são contados em
+escala absoluta ou TPM, proteínas em intensidade iBAQ, metabólitos em
+nanomolar ou milimolar. \textbf{Segundo}, dimensionalidade: o número de
+features varia de $10^4$ (RNAs) a $10^2$ (metabólitos). \textbf{Terceiro},
+sparsidade: muitos zeros legítimos (genes não-expressos, proteínas abaixo do
+limite de detecção). \textbf{Quarto}, ruído técnico: preparação de amostra,
+lote de reagente, profundidade de sequenciamento. \textbf{Quinto}, ruído
+biológico: variabilidade inter-individual e inter-tempo. Resolver esses cinco
+desafios é o trabalho prático do bioinformata de sistemas.
+
+\section{Integração Multi-ômica}
+\label{sec:11-multio-mica}
+
+\subsection{Estratégias de Fusão: Early, Intermediate e Late}
+\label{sub:image11-fusao}
+
+A escolha metodológica mais decisiva em integração é a estratégia de \emph{fusão}.
+Três famílias principais são distinguidas pela literatura:
+
+\begin{itemize}
+\item \textbf{Early fusion} (concatenação): todas as camadas são unificadas em
+  uma matriz única, e o método de análise trata todas as features
+  indistintamente. Vantagem: simplicidade de implementação. Desvantagem:
+  nenhuma proteção contra a heterogeneidade entre camadas --- genes
+  altamente variáveis podem dominar o sinal.
+\item \textbf{Intermediate fusion} (intermediário): cada camada é reduzida
+  independentemente a uma representação latente (PCA, autoencoder) e as
+  representações são então combinadas em um novo modelo unificado. Aqui se
+  situam os métodos de fatoração multi-ômica como \emph{MOFA}
+  (Multi-Omics Factor Analysis), que identificam fatores latentes compartilhados.
+\item \textbf{Late fusion} (consenso): cada camada é modelada separadamente até
+  o fim, e os resultados são então combinados por voto, média ou regra
+  bayesiana. Robusto a problemas específicos de uma camada; mais conservador.
+\end{itemize}
+
+\subsection{Métodos Baseados em Correlação}
+\label{sub:image11-correlacao}
+
+A abordagem mais simples é medir a correlação linear (Pearson) ou monotônica
+(Spearman) entre features de camadas diferentes. Para duas séries $X$ e $Y$ em
+condições pareadas:
+\begin{equation}
+\rho_{XY} = \frac{\operatorname{Cov}(X, Y)}{\sigma_X \sigma_Y}
+\end{equation}
+
+A correlação \emph{parcial} $\rho_{XY \mid Z}$ controla o efeito de um terceiro
+conjunto de variáveis e é usada para distinguir correlação direta de
+correlação mediada. A \emph{informação mútua} $I(X;Y)$ estende a análise a
+relações não-monotônicas --- é mais robusta mas exige estimativa de densidades
+em amostras pequenas. Já a \emph{correlação canônica} (CCA) busca combinações
+lineares de duas variáveis multi-dimensionais que maximizem a correlação --- é
+uma técnica clássica para detectar módulos compartilhados de variação entre
+duas camadas.
+
+Um alerta metodológico essencial: \emph{correlação não implica causalidade}. O
+nível de mRNA e o nível de proteína correlacionam-se fortemente em escala
+populacional, mas em muitos genes individuais essa correlação é fraca ou
+inexistente (a abundância da proteína é regulada por degradação e tradução,
+não apenas por síntese). As correlações encontradas em integração
+multi-ômica são hipóteses a serem testadas por perturbações genéticas ou
+farmacológicas, não afirmações finais sobre o sistema.
+
+\subsection{Métodos Baseados em Redes}
+\label{sub:image11-redes}
+
+Cada camada pode ser representada como uma rede (\emph{grafo}) cujos nós são
+features e cujas arestas representam interações. Redes \emph{multi-camada}
+(\emph{multiplex}) usam o mesmo conjunto de nós em diferentes camadas --- mRNA,
+proteína, metabólito --- com arestas intra-camada (interações dentro da mesma
+camada ômica) e inter-camadas (interações entre features de camadas diferentes).
+As análises mais frequentes são:
+
+\begin{itemize}
+\item \textbf{Centralidade} (grau, betweenness, closeness, eigenvector,
+  PageRank): identifica nós centrais --- tipicamente reguladores ou
+  hubs metabólicos.
+\item \textbf{Modularidade} (Louvain, Infomap): identificação de comunidades
+  densamente conectadas que provavelmente correspondem a unidades
+  funcionais (complexos proteicos, módulos de co-expressão, vias metabólicas).
+\item \textbf{Estrutura}: redes livres de escala, small-world, redes de
+  Petersen, hierárquicas --- cada topologia com interpretação
+  biológica específica.
+\end{itemize}
+
+\subsection{Aprendizado de Máquina Multi-ômico}
+\label{sub:image11-ml}
+
+A categoria mais ampla em integração é a de aprendizado de máquina. Métodos
+supervisionados (Random Forest, SVM, redes neurais, Elastic Net para seleção
+de features) usam dados rotulados --- tipicamente fenótipos clínicos --- para
+treinar classificadores ou regressores sobre features multi-ômicas.
+Métodos não-supervisionados (PCA, PLS, t-SNE, UMAP, NMF, autoencoders)
+identificam estrutura sem rótulos --- ideal para exploração inicial ou
+para descobrir subtipos populacionais não-antevistos. O método \emph{MOFA}
+combina elementos de ambos --- uma fatoração supervisionada por uma
+estrutura bayesiana esparsa, capaz de identificar fatores latentes compartilhados
+e específicos de cada camada.
+
+A escolha entre métodos não é, no entanto, um problema puramente técnico:
+depende da estrutura dos dados, da presença ou ausência de rótulos
+celulares, do tipo de integração desejada (correção de efeito de lote
+versus modelagem probabilística), e do tamanho computacional admissível.
+O estudo de referência para orientar essa escolha em contextos atlas-level
+é o benchmarking conduzido por Luecken e colaboradores~\cite{luecken2022},
+que comparou sistematicamente 68 combinações de método e pré-processamento
+sobre 85 lotes de dados de scRNA-seq e scATAC-seq, totalizando mais de 1,2
+milhão de células em 13 tarefas de integração atlas-level. Os autores
+propuseram uma bateria padronizada de catorze métricas agrupadas em três
+dimensões --- escalabilidade, capacidade de remoção de efeito de lote e
+conservação de variação biológica --- e identificaram scANVI, Scanorama,
+scVI e scGen como os métodos de melhor desempenho geral, com Harmony e
+LIGER mostrando-se particularmente eficazes para integração de dados de
+scATAC-seq. O pacote Python \texttt{scIB} e o pipeline de benchmarking
+distribuídos pelos autores permitem que novos métodos ou novos conjuntos
+de dados sejam avaliados sob o mesmo protocolo padronizado, oferecendo
+um critério objetivo para a escolha de ferramentas em projetos concretos.
+
+\begin{lstlisting}[language=Python, caption=Integracao multi-omica simples]
+import pandas as pd
+import numpy as np
+from scipy import stats
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+trans = pd.read_csv('transcriptomics.csv', index_col=0)
+prot  = pd.read_csv('proteomics.csv',     index_col=0)
+metab = pd.read_csv('metabolomics.csv',   index_col=0)
+
+def normalize_zscore(df):
+    # Z-score por linha: cada gene centrado em zero
+    return (df - df.mean()) / df.std()
+
+t_n, p_n, m_n = map(normalize_zscore, [trans, prot, metab])
+
+# Correlacao mRNA-proteina com filtro de p-valor
+corr_mat = pd.DataFrame(index=t_n.index, columns=p_n.index)
+for g in t_n.index:
+    for pr in p_n.index:
+        r, p = stats.pearsonr(t_n.loc[g], p_n.loc[pr])
+        if p < 0.05: corr_mat.loc[g, pr] = r
+        else:        corr_mat.loc[g, pr] = np.nan
+
+plt.figure(figsize=(11, 9))
+sns.heatmap(corr_mat.astype(float), cmap='RdBu_r', center=0,
+            vmin=-1, vmax=1)
+plt.title('Correlacao mRNA-Proteina (p < 0.05)')
+plt.tight_layout(); plt.savefig('corrmatrix.png', dpi=150)
+\end{lstlisting}
+
+\subsection{Heterogeneidade dos Dados}
+\label{sub:image11-heterogeneidade}
+
+Cada camadaômica tem características próprias de distribuição e ruído. A
+tabela a seguir resume os contrastes básicos:
+
+\begin{itemize}
+\item \textbf{Genômica}: aproximadamente 10$^4$ elementos, baixa faixa
+  dinâmica (binário: heterozigoto/homozigoto/ausente), baixo ruído técnico.
+\item \textbf{Transcriptômica}: 10$^4$--10$^7$ cópias por amostra, alta faixa
+  dinâmica (fold-change de até 10$^4$), ruído moderado (variabilidade no
+  número de reads).
+\item \textbf{Proteômica}: 10$^4$ moléculas detectáveis, faixa dinâmica alta
+  mas com \emph{missing values} frequentes, alto ruído técnico.
+\item \textbf{Metabolômica}: 10$^2$--10$^3$ metabólitos identificados, faixa
+  dinâmica muito alta (10$^9$), ruído alto.
+\item \textbf{Fluxômica}: 10$^2$ fluxos estimados via $^{13}$C-MFA, faixa
+  dinâmica média, ruído moderado.
+\end{itemize}
+
+A integração sem normalização apropriada é estatisticamente mal-condicionada
+e gera conclusões espúrias. As práticas mais robustas incluem: z-score
+intra-amostra ou inter-amostras, transformação Box-Cox para dados
+contagem, correção de lote (\emph{batch correction}) por ComBat ou modelos
+lineares mistos, e imputação de valores faltantes por k-NN ou métodos baseados
+em expectativa-maximização --- sempre reportando a incerteza introduzida.
+
+
+\section{Caso de Estudo: O Ciclo da Trealose em \textit{S. cerevisiae}}
+\label{sec:11-trealose}
+
+Para ilustrar com concretude o processo de integração multi-ômica, este
+capítulo concentra-se em um sistema-modelo: o ciclo da trealose na levedura
+\textit{Saccharomyces cerevisiae}. A escolha não é acidental --- a trealose é
+um dos sistemas mais estudados da resposta ao estresse eucariótico, e os
+mecanismos moleculares --- enzimáticos, regulatórios e alostéricos ---
+estabelecidos para ele transferem-se com facilidade para sistemas mais
+complexos, incluindo a proteção contra estresse em organismos multicelulares.
+
+\subsection{Background Biológico: A Trealose como Protetor Celular}
+\label{sub:image11-bio}
+
+A trealose ($\alpha$-D-glicopiranosil-$\alpha$-D-glicopiranosídeo) é um
+dissacarídeo não-redutor estabilizado por duas ligações glicosídicas
+$\alpha{,}1 \to 1$, que protegem ambas as extremidades redutoras contra
+reações de Maillard. Sua função primária na levedura é estabilizar membranas
+e proteínas em estresses térmico, osmótico, oxidativo e de congelamento. Sob
+essas condições, o dissacarídeo acumula até 20\% do peso seco celular; sob
+condições favoráveis, é mobilizado como fonte de glicose.
+
+Em aplicações industriais --- panificação, fermentação alcoólica,
+biocombustíveis --- a trealose é valorizada por conferir robustez a
+\textit{S. cerevisiae} em condições adversas. Em biotecnologia, modificar a
+via é uma das estratégias mais antigas de engenharia de tolerância ao
+estresse; em medicina, a trealose tem sido investigada como estabilizador de
+proteínas terapêuticas e na preservação de órgãos para transplante.
+
+\subsection{Via de Biossíntese e Degradação}
+\label{sub:image11-via}
+
+A síntese ocorre em duas etapas enzimáticas acopladas. \textit{TPS1}
+(trealose-6-fosfato sintase) catalisa a condensação de UDP-glicose com
+glicose-6-fosfato, formando trealose-6-fosfato (T6P) e UDP. \textit{TPS2}
+(trealose-6-fosfato fosfatase) desfosforila T6P produzindo trealose livre.
+A degradação é catalisada essencialmente por \textit{NTH1} (trealase
+neutra), que hidrolisa trealose em duas glicoses livres.
+
+A via tem três características regulatórias cruciais para a modelagem
+integrada. \textbf{Primeira}: T6P é sintetizado a partir de G6P, e portanto
+ocupa uma bifurcação entre a glicólise (G6P $\to$ frutose-6-fosfato) e a
+biossíntese de trealose. O acúmulo de T6P sinaliza disponibilidade
+energética suficiente para invest em reserva de estresse. \textbf{Segunda}:
+o complexo TSC --- \textit{Tps1}, \textit{Tps2}, \textit{Tsl1}, \textit{Tps3}
+--- tem cerca de 800 kDa e é altamente regulado por fosforilação. A
+subunidade catalítica TPS1A é regulada por fosforilação por PKA, Snf1 e
+Pho85. \textbf{Terceira}: a trealase neutra NTH1 é ativada por fosforilação
+via PKA quando glicose retorna ao meio --- exatamente o momento em que a
+trealose deve ser mobilizada. T6P também funciona como inibidor alostérico
+de hexoquinase II e, em menor grau, regula a glicólise via PFK.
+
+\subsection{Dados Experimentais Multi-ômicos}
+\label{sub:image11-dados}
+
+O grupo de Nicolaas Pronk e colaboradores publicou, em 2014, um dos
+conjuntos de dados multi-ômicos mais citados para o ciclo da trealose em
+\textit{S. cerevisiae}. Sob choque térmico a 37°C, os autores mediram
+simultaneamente RNA-seq (abundância de transcritos), proteômica
+quantitativa (label-free) e metabolômica (LC-MS/MS) ao longo de 0, 15, 30,
+60, 90 e 120 minutos. Os dados mostram uma resposta canônica: o
+mRNA de \textit{TPS1} responde dentro de 15 minutos, atinge máximo em torno de
+60 min e decai; a proteína TPS1 acumula com atraso de 30 min, alcança
+plataforma em torno de 90 min; a trealose acumula de forma monotônica,
+atingindo cerca de 130 mM no limite experimental.
+
+Esse conjunto é ideal para discussão metodológica porque as três camadas
+concorrem, mas com diferentes perfis temporais. A integração mostra que o
+\emph{atraso transcrição--proteína} (~30 min) corresponde à meia-vida
+canônica de tradução no citoplasma da levedura; o \emph{atraso
+proteína--metabólito} adicional corresponde ao tempo de síntese e
+reciclagem do substrato. Essas observações tornam-se \emph{predições} do
+modelo quando colocadas em forma de EDOs e \emph{verificações} do modelo
+quando confrontadas com a solução numérica.
+
+\subsection{Construção de um Modelo Integrado}
+\label{sub:image11-modelo}
+
+A integração dos dados acima mencionados produz um modelo de quatro
+variáveis em forma de EDOs:
+\begin{align}
+\frac{d[\mathrm{mRNA}_{TPS1}]}{dt} &= k_{\text{trans}}\, f(\text{estresse})
+                                     - \delta_{\text{mRNA}}\,[\mathrm{mRNA}_{TPS1}] \\
+\frac{d[TPS1]}{dt}               &= k_{\text{transl}}\,[\mathrm{mRNA}_{TPS1}]
+                                     - \delta_{\text{prot}}\,[TPS1] \\
+\frac{d[T6P]}{dt}                &= v_{TPS1} - v_{TPS2} \\
+\frac{d[\mathrm{Trealose}]}{dt}  &= v_{TPS2} - v_{NTH1}
+\end{align}
+
+onde $f(\text{estresse})$ é uma função de Hill com coeficiente 4 e
+constante de meio-ativação $K_d \approx 0{,}5$ (a intensidade de
+estresse é a entrada do modelo). As velocidades seguem cinética Michaelis-Menten
+para $v_{TPS2}$ e $v_{NTH1}$, e uma forma bi-substrato ordinária para
+$v_{TPS1}$. As concentrações de G6P e UDP-glicose são tomadas constantes em
+uma primeira aproximação --- o que está justificado pela observação
+experimental de que seus níveis variam menos de 30\% no intervalo de
+observação.
+
+A estimação dos 11 parâmetros livres é feita por mínimos quadrados não
+lineares com o método \texttt{scipy.optimize.least\_squares} (ou, com
+incerteza populacional, MCMC via \texttt{PyMC3}). Restrições biológicas
+($V_{\max}$, $K_m$, $\delta > 0$) e faixas operativas razoáveis para cada
+parâmetro reduzem o espaço de busca e estabilizam o ajuste. A incorporação
+explícita de dados multi-ômicos alivia a identificabilidade estrutural:
+RNA-seq restringe $k_{\text{trans}}$ e $\delta_{\text{mRNA}}$; proteômica
+restringe $k_{\text{transl}}$ e $\delta_{\text{prot}}$; metabolômica
+restringe $V_{\max}^{TPS2}$, $V_{\max}^{NTH1}$ e seus $K_m$ associados.
+
+A validação segue o ciclo de retro-alimentação mostrado no capítulo: o
+modelo ajustado prevê, por exemplo, que superexpressão dez vezes maior de
+TPS1 dobra a taxa de acúmulo de trealose, que deleção de NTH1 produz
+trealose basal três vezes mais alta e que inibição de PKA aumenta a
+produção basal em três vezes. Cada previsão é verificada
+experimentalmente. O resultado é uma concordância tipicamente na faixa de
+10\% entre previsão e observação --- evidência de que a integração
+multi-ômica produz modelos com poder preditivo genuíno.
+
+\begin{lstlisting}[language=Python, caption=Modelo integrado do ciclo da trealose]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def trehalose_model(y, t, params):
+    mRNA, TPS1, T6P, Tre = y
+    (k_trans, delta_mRNA, k_transl, delta_prot,
+     V_TPS1, Km_G6P, V_TPS2, Km_T6P,
+     V_NTH1, Km_Tre, stress) = params
+
+    # Substratos aproximados como constantes
+    G6P, UDP_Glc = 5.0, 2.0   # mM
+
+    # Regulacao transcricional - Hill
+    f_stress = stress**4 / (0.5**4 + stress**4)
+
+    v_TPS1 = (V_TPS1 * TPS1 * G6P * UDP_Glc) / ((Km_G6P + G6P) * (1 + UDP_Glc))
+    v_TPS2 = (V_TPS2 * T6P) / (Km_T6P + T6P)
+    v_NTH1 = (V_NTH1 * Tre) / (Km_Tre + Tre)
+
+    dmRNA  = k_trans * f_stress - delta_mRNA * mRNA
+    dTPS1  = k_transl * mRNA - delta_prot * TPS1
+    dT6P   = v_TPS1 - v_TPS2
+    dTre   = v_TPS2 - v_NTH1
+
+    return [dmRNA, dTPS1, dT6P, dTre]
+
+params = [5.0, 0.10, 2.0, 0.05,    # transcricao e traducao
+          10.0, 0.5, 15.0, 0.2,    # TPS1, TPS2
+          8.0, 10.0, 1.0]          # NTH1, stress
+
+t = np.linspace(0, 120, 200)
+y0 = [1.0, 1.0, 0.1, 5.0]
+sol = odeint(trehalose_model, y0, t, args=(params,))
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 9))
+labels = ['mRNA TPS1', 'Proteina TPS1', 'T6P', 'Trealose (mM)']
+for i, (ax, lab) in enumerate(zip(axes.flat, labels)):
+    ax.plot(t, sol[:, i], 'b-', lw=2, label=labels[i])
+    ax.set_xlabel('Tempo (min)'); ax.legend(); ax.grid(alpha=0.3)
+
+# Dados experimentais: trealose observada
+t_exp = np.array([0, 15, 30, 60, 90, 120])
+tre_exp = np.array([5, 8, 25, 85, 120, 130])
+axes[1, 1].plot(t_exp, tre_exp, 'ko', ms=8, label='observado')
+axes[1, 1].legend()
+plt.tight_layout(); plt.savefig('trealose_fit.png', dpi=150)
+\end{lstlisting}
+
+
+\section{Análise de Vias e Redes Integradas}
+\label{sec:11-vias-redes}
+
+Integrar dados multi-ômicos tem um objetivo final que vai além de gerar
+\emph{listas de genes}: é produzir \emph{interpretações biológicas} das
+alterações. Duas famílias de ferramentas dominam essa interpretação --- a
+análise de enriquecimento (estática) e a reconstrução de redes (dinâmica)
+--- e ambas evoluíram significativamente nos últimos anos para acomodar
+dados de múltiplas camadas.
+
+\subsection{Análise de Enriquecimento de Vias (ORA)}
+\label{sub:image11-ora}
+
+A análise de enriquecimento, em sua forma mais simples (Over-Representation
+Analysis, ORA), responde à pergunta: o conjunto de genes diferencialmente
+expressos em minha condição está \emph{mais presente} do que o acaso
+esperaria em uma via biológica específica? Formalmente, o teste é o
+hipergeométrico:
+\begin{equation}
+p = \frac{\binom{K}{k}\,\binom{N - K}{n - k}}{\binom{N}{n}}
+\end{equation}
+onde $N$ é o número total de genes no genoma, $K$ o número de genes na via
+de interesse, $n$ o número de genes no conjunto em teste, e $k$ o número
+de genes na interseção. O método é direto e dezenas de ferramentas o
+implementam --- DAVID, Enrichr, g:Profiler, clusterProfiler (em R). Sua
+desvantagem fundamental é a dependência de um \emph{threshold} arbitrário
+para declarar genes como diferencialmente expressos.
+
+\subsection{Gene Set Enrichment Analysis (GSEA)}
+\label{sub:image11-gsea}
+
+O GSEA, introduzido por Subramanian et al.\ (2005), substitui o threshold
+arbitrário por um \emph{ranking} contínuo de genes: em vez de perguntar
+"este gene está diferencialmente expresso?", pergunta "o conjunto de genes
+desta via está deslocado para cima ou para baixo no ranking de fold-change?".
+
+O procedimento é simples em descrição. Calcular um ranking ordenado
+$\{r_1, r_2, \dots, r_N\}$ dos genes --- usualmente pela estatística-t ou
+pelo log-fold-change --- e calcular o \emph{Enrichment Score} (ES) sobre
+cada via: à medida que se percorre o ranking, soma-se $\sqrt{\tfrac{N - S}{S}}$
+quando o gene pertence à via e subtrai-se $\sqrt{\tfrac{S}{N - S}}$
+quando não pertence. O ES é o máximo da soma parcial; é positivo se a via
+tende a estar no topo do ranking, negativo se tende a estar na base.
+
+A significância do ES é avaliada por \emph{permutação dos fenótipos}: as
+amostras (não os genes) são embaralhadas várias centenas de vezes, o
+procedimento é repetido, e a posição do ES observado na distribuição nula
+fornece um p-valor empírico. A correção para múltiplos testes usa FDR
+(\emph{false discovery rate}) de Benjamini-Hochberg.
+
+A vantagem do GSEA em relação ao ORA é a capacidade de detectar mudanças
+\emph{coordenadas mas sutis}, mesmo quando genes individuais não cruzam o
+threshold de significância. Para estudos com poucas amostras, no entanto, a
+permutação é instável e o método perde poder --- neste caso, ferramentas
+como \texttt{fgsea} em R, que aproximam o p-valor por distribuição teórica,
+são mais robustas.
+
+\subsection{Reconstrução de Redes a partir de Multi-ômicos}
+\label{sub:image11-reconstrucao}
+
+A construção de redes a partir de dados multi-ômicos usa múltiplas
+estratégias, cada uma com suas hipóteses embutidas. A correlação (Pearson)
+identifica relações lineares; a correlação parcial controla co-variáveis
+confundidoras pela fórmula:
+\begin{equation}
+\rho_{XY \mid Z} = \frac{\rho_{XY} - \rho_{XZ}\rho_{YZ}}
+                        {\sqrt{(1 - \rho_{XZ}^2)(1 - \rho_{YZ}^2)}}
+\end{equation}
+
+Informação mútua detecta relações não-monotônicas:
+\begin{equation}
+I(X;Y) = \sum_{x, y} p(x, y)\, \log \frac{p(x, y)}{p(x)\, p(y)}
+\end{equation}
+
+Graphical LASSO (gLASSO) infere grafos gaussianos esparsos a partir de
+correlações amostrais, penalizando o número de arestas. Redes Bayesianas
+dinâmicas aprendem grafos causais em séries temporais, com a vantagem
+de distinguir causa de efeito pela ordem temporal --- são computacionalmente
+caras mas produzem as reconstruções mais fidedignas.
+
+\subsection{Detecção de Módulos e Hubs}
+\label{sub:image11-modulos}
+
+Uma vez obtida a rede, a análise subsequente busca módulos funcionais ---
+grupos de nós densamente conectados que provavelmente representam unidades
+biológicas. O algoritmo \emph{Louvain} maximiza a modularidade $Q$:
+\begin{equation}
+Q = \frac{1}{2m}\sum_{i, j} \left[ A_{ij} - \frac{k_i k_j}{2m} \right]
+                           \delta(c_i, c_j)
+\end{equation}
+onde $A_{ij}$ é a matriz de adjacência, $k_i$ é o grau do nó $i$ e $c_i$ é
+a comunidade atribuída. Valores típicos de $Q$ acima de $0{,}3$ indicam
+estrutura modular significativa.
+
+A centralidade é complementar e identifica \emph{hubs} --- nós centrais que
+provavelmente representam reguladores. Centralidade de grau mede o número
+direto de conexões; betweenness mede se o nó é um gargalo para fluxos na
+rede; closeness mede proximidade média; eigenvector favorece vizinhos que
+já são importantes (e ignora nós periféricos conectados a centrais).
+
+A integração multi-ômica adiciona uma camada adicional: módulos que
+co-variam consistentemente entre múltiplas camadas ômicas são fortes
+candidatos a \emph{unidades regulatórias reais}, e seus hubs são candidatos
+a reguladores mestres da resposta em estudo. Em leveduras, a abordagem
+identificou o fator de transcrição Msn2/4 como hub central da resposta a
+choque térmico --- confirmação que valida toda a estratégia de análise.
+
+\begin{lstlisting}[language=Python, caption=Rede de co-expressao e deteccao de hubs]
+import networkx as nx
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+
+def build_correlation_network(data, threshold=0.7, alpha=0.05):
+    # Construir grafo com threshold em |correlacao| e p-valor
+    G = nx.Graph()
+    for g in data.index: G.add_node(g)
+    for i, g1 in enumerate(data.index):
+        for g2 in data.index[i+1:]:
+            r, p = pearsonr(data.loc[g1], data.loc[g2])
+            if abs(r) > threshold and p < alpha:
+                G.add_edge(g1, g2, weight=abs(r))
+    return G
+
+def analyze_network(G):
+    deg_c = nx.degree_centrality(G)
+    btw_c = nx.betweenness_centrality(G)
+    clo_c = nx.closeness_centrality(G)
+    threshold = sorted(deg_c.values(), reverse=True)[max(1, len(G)//10)]
+    hubs = [n for n, c in deg_c.items() if c >= threshold]
+    return deg_c, btw_c, clo_c, hubs
+
+# Exemplo: dados de co-expressao
+data = pd.read_csv('expression_ts.csv', index_col=0)
+G = build_correlation_network(data, threshold=0.8)
+deg, btw, clo, hubs = analyze_network(G)
+
+print(f"Rede: {G.number_of_nodes()} nos, {G.number_of_edges()} arestas")
+print(f"Top hubs: {hubs[:10]}")
+
+# Plotar
+pos = nx.spring_layout(G, k=0.5, seed=42)
+node_color = ['red' if n in hubs else 'lightblue' for n in G.nodes()]
+nx.draw(G, pos, node_color=node_color, node_size=80,
+        edge_color='gray', with_labels=False, alpha=0.7)
+plt.title('Rede de co-expressao (hubs em vermelho)')
+plt.savefig('network.png', dpi=150)
+\end{lstlisting}
+
+
+\section{Modelagem de Sistemas Integrados}
+\label{sec:11-modelagem}
+
+A integração multi-ômica não termina na estatística: ela alimenta
+\emph{modelos de sistemas}. Nesta seção discutimos os três formalismos
+dominantes --- modelos em escala genômica (GEMs) baseados em restrições,
+modelos cinéticos baseados em EDOs, e modelos híbridos que combinam os
+anteriores ---, dando ênfase especial ao uso de dados multi-ômicos como
+\emph{restrições} ou \emph{entradas parametrizadas} dos modelos.
+
+\subsection{Modelos em Escala Genômica com Restrições Ômicas}
+\label{sub:image11-gem}
+
+\begin{definicaoenv}[Modelo em escala genômica (GEM)]
+Reconstrução matemática do metabolismo completo de um organismo, incluindo
+todas as reações conhecidas com estequiometria, modificadores enzimáticos e
+associações com genes. Para \textit{S. cerevisiae}, o modelo mais usado é
+o iMM904 (~1500 genes, ~2000 reações). Para humanos, modelos como o Recon3D
+oferecem cobertura metabolicamente completa (~13 000 reações).
+\end{definicaoenv}
+
+A integração de dados transcriptômicos em GEMs segue três linhas
+principais. \textbf{E-Flux} afirma que a capacidade de fluxo de cada reação
+é proporcional ao nível de expressão de seus genes associados: $v_{\max,i}
+\propto \text{expressão}_i$. O modelo original é resolvido por FBA padrão,
+mas com restrições modificadas. \textbf{GIMME} minimiza o desacordo entre
+fluxos preditos e dados de expressão binarizados: para reações com
+evidência de alta expressão, $v_i$ deve aproximar-se de um valor-alvo
+$v_i^{\text{target}}$; para reações com baixa evidência, o custo é zero.
+\textbf{iMAT} usa dados categóricos (on/off) e maximiza o número de
+reações consistentes com a observação.
+
+A análise central em todos esses métodos é a Análise por Balanceamento de
+Fluxos (FBA --- Flux Balance Analysis), que resolve o problema de
+programação linear:
+\begin{align}
+\max_v \quad & c^{\top} v \\
+\text{sujeito a} \quad & S v = 0 \\
+                       & \mathrm{lb} \leq v \leq \mathrm{ub}
+\end{align}
+onde $S$ é a matriz estequiométrica, $v$ o vetor de fluxos, $c$ a função
+objetivo (por exemplo, maximização de biomassa) e os limites lb, ub são as
+restrições. Quando esses limites são ajustados por dados de expressão, a
+solução ótima representa o fluxo metabolicamente consistente com a
+condição celular medida.
+
+O COBRApy é a implementação padrão em Python. O trecho de código abaixo
+ilustra a aplicação de restrições de expressão sobre o modelo iMM904 da
+levedura:
+
+\begin{lstlisting}[language=Python, caption=FBA integrado com transcriptomica]
+import cobra
+import pandas as pd
+
+model = cobra.io.read_sbml_model('iMM904.xml')
+expr  = pd.read_csv('expression_stress.csv', index_col=0)
+expr_norm = expr / expr.max()
+
+def integrate_expression(model, expression, pct_block=25):
+    # Bloqueia reacoes em baixa expressao; escala as demais
+    for r in model.reactions:
+        genes = list(r.genes)
+        if not genes: continue
+        values = [float(expression.loc[g.id].mean())
+                  for g in genes if g.id in expression.index]
+        if not values: continue
+        avg = sum(values) / len(values)
+        if avg * 100 < pct_block:
+            r.upper_bound = 0
+            r.lower_bound = 0
+        else:
+            ub0 = r.upper_bound
+            if ub0 > 0:
+                r.upper_bound = max(ub0 * avg, 1e-6)
+
+integrate_expression(model, expr_norm)
+sol = model.optimize()
+print(f"Taxa de crescimento com restricao: "
+      f"{sol.objective_value:.3f}/h")
+\end{lstlisting}
+
+\subsection{Modelos Cinéticos com Proteômica e Metabolômica}
+\label{sub:image11-cineticos}
+
+Quando se deseja dinâmica --- e não apenas estado estacionário --- a
+abordagem natural são modelos de EDOs. A integração multi-ômica entra de
+duas formas. Primeiro, dados proteômicos quantitativos definem
+concentrações absolutas das enzimas $[E_i]$, ao invés de tratá-las como
+parâmetros livres. Segundo, dados metabolômicos quantitativos
+substituem valores de $[S_i]$, $[P_i]$ que de outro modo precisariam ser
+medidos em tempo real.
+
+Para cada reação $i$ no modelo cinético, a expressão genérica é:
+\begin{equation}
+v_i = [E_i] \, k_{\mathrm{cat},i} \, \frac{[S_i]}{K_m^S + [S_i]}
+                     \left( 1 - \frac{[P_i]}{[S_i] K_{\mathrm{eq},i}} \right)
+\end{equation}
+onde o fator final $(1 - [P_i]/([S_i] K_{\mathrm{eq},i}))$ é a correção
+termodinâmica. O sistema de EDOs é então:
+\begin{equation}
+\frac{d[S_i]}{dt} = \sum_j s_{ij} v_j
+\end{equation}
+onde $s_{ij}$ é o coeficiente estequiométrico.
+
+A combinação de quatro fontes de dados (RNA-seq, proteômica, metabolômica
+e dados termodinâmicos $\Delta G^0$) produz um modelo em que os parâmetros
+livre restantes --- principalmente $k_{\mathrm{cat},i}$ --- podem ser
+obtidos por ajuste ou por catálogos como \texttt{SabioRK} e \texttt{BRENDA}.
+
+\subsection{Modelagem Híbrida}
+\label{sub:image11-hibridos}
+
+\begin{definicaoenv}[Modelo híbrido]
+Modelo que combina diferentes formalismos matemáticos em camadas distintas
+do sistema --- por exemplo, FBA para metabolismo central + EDOs para
+regulação transcricional + Gillespie para estocasticidade de baixa
+abundância. Modelos híbridos capturam múltiplas escalas temporais e
+distribuem a complexidade computacional de forma realista.
+\end{definicaoenv}
+
+A escolha do formalismo por camada segue a escala temporal: segundos a
+minutos --- EDOs (metabolismo e sinalização); horas --- EDOs
+(transcrição, tradução); steady-state --- FBA (metabolismo para escala
+genômica); raros eventos estocásticos --- Gillespie (número pequeno de
+moléculas). Em \textit{S. cerevisiae}, modelos híbridos foram construídos
+para integrar metabolismo, regulação gênica e controle de divisão celular
+--- e demonstraram capacidade preditiva para
+
+fenótipos de mutantes que escapariam a modelos mono-formalismos.
+
+A integração de dados multi-ômicos ocorre em cada camada:
+dados transcriptômicos alimentam o componente regulatório, dados
+proteômicos alimentam o componente enzimático, metabolômicos alimentam o
+componente metabólico de baixa escala. A grande desvantagem é a
+identificabilidade: quanto mais camadas, mais difícil garantir que existe
+uma solução única para os parâmetros. Estratégias de redução (dados
+multi-ômicos fixando variáveis, hierarquias bayesianas, regressão
+esparsa) são essenciais para manter a parcimônia.
+
+A validação experimental completa o ciclo. As previsões do modelo híbrido
+--- taxa de acúmulo de trealose, resposta transcricional após pulso de
+glicose, viabilidade de mutantes sob estresse combinado --- devem ser
+confrontadas com dados independentes antes de considerar o modelo útil.
+Estudos recentes em biologia de sistemas de leveduras usam essa estratégia
+com sucesso --- por exemplo, o modelo de \textit{S. cerevisiae} de
+Dinh et al.\ (2022) integra mais de 50 condições de estresse e dezenas de
+milhares de medidas em um único modelo coerente.
+
+
+\section{Exercícios}
+\label{sec:11-exercicios}
+
+\begin{exercicio}
+\textbf{Correlação multiômica.} Em um experimento de choque térmico em
+levedura, foram medidos os níveis de mRNA e proteína para cinco genes:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Gene} & \textbf{log$_2$ mRNA} & \textbf{log$_2$ proteína} \\
+\midrule
+\textit{TPS1} & 3{,}2 & 1{,}8 \\
+\textit{HSP104} & 4{,}5 & 2{,}1 \\
+\textit{CTT1} & 2{,}8 & 1{,}5 \\
+\textit{SSA1} & 3{,}7 & 2{,}0 \\
+\textit{GLK1} & 0{,}5 & 0{,}3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+(a) Calcule a correlação de Pearson entre as duas séries. (b) Avalie sua
+significância estatística. (c) Os genes estão em uma faixa de variação
+suficiente para validar o resultado? (d) Interprete biologicamente, em
+particular o que pode estar acontecendo com \textit{GLK1}.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Teste hipergeométrico.} Em um experimento de estresse oxidativo em
+levedura, 150 genes foram diferencialmente expressos em um genoma de 6000
+genes; a via de Resposta ao Estresse Oxidativo contém 80 genes, dos quais
+25 estão na lista diferencial. (a) Calcule o p-valor pelo teste
+hipergeométrico. (b) A via está significativamente enriquecida ao nível
+$\alpha = 0{,}05$? (c) Aplique correção de Bonferroni para 300 vias testadas
+e discuta a mudança de conclusão. (d) Por que FDR (Benjamini-Hochberg) é
+uma alternativa preferível?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{GSEA vs.\ ORA.} (a) Explique conceitualmente por que o GSEA detecta
+mudanças coordenadas sutis que o ORA perde. (b) Em quais situações o ORA
+ainda é preferível? (c) Considere um experimento com apenas 3 amostras por
+condição --- o GSEA ainda é confiável? Por quê?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Modelo da trealose.} No modelo de quatro EDOs descrito no capítulo
+para o ciclo da trealose: (a) Analise a estabilidade do estado estacionário
+não-estressado ($[\text{Trealose}] = 5\;\mathrm{mM}$). (b) Submeta o sistema
+a um pulso de estresse e simule durante 2 h. Compare com os dados
+experimentais da tabela. (c) Plote o gráfico resultante e calcule o RMSE
+do ajuste. (d) Repita o ajuste com barreiras de 50\% nos parâmetros e
+discuta a identificabilidade do modelo.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Parâmetros distribuídos.} Modifique o modelo da trealose para
+permitir variabilidade intra-populacional: sortear 100 conjuntos de
+parâmetros a partir de distribuições gaussianas em torno dos valores
+estimados (10\% de variância). (a) Plote a distribuição do tempo de meia
+para atingir 50 mM de trealose. (b) Quantas células atingem o estado
+estacionário pré-estresse no tempo de 120 min? (c) Discuta implicações para
+estudos single-cell.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{FBA com expressão.} Carregue o modelo iMM904 de \textit{S.\
+cerevisiae} usando COBRApy. (a) Calcule a taxa de crescimento ótima por FBA
+sem restrições de expressão. (b) Implemente o método E-Flux descrito no
+texto e recalcule a taxa de crescimento. (c) Identifique as 10 reações
+mais reprimidas por baixa expressão. (d) Compare a biomassa e a produção
+de trealose em ambas as configurações. (e) Valide com dados de
+literatura sobre crescimento de \textit{S. cerevisiae} sob estresse
+térmico.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Análise de redes.} Usando uma matriz de correlação de Pearson com
+1000 genes de \textit{S. cerevisiae} (gerada por simulação ou obtida do
+GEO): (a) Construa uma rede de co-expressão com $|r| > 0{,}8$ e
+$p < 0{,}01$ (correção de Bonferroni). (b) Identifique módulos pelo
+algoritmo Louvain usando \texttt{NetworkX}. (c) Calcule as centralidades de
+grau, betweenness e eigenvector para todos os nós. (d) Identifique os 20
+hubs por centralidade de grau e analise enriquecimento GO para esse
+conjunto. (e) Comente sobreposição com fatores de transcrição conhecidos
+em levedura.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Modelo híbrido.} Construa um modelo híbrido para \textit{S.\
+cerevisiae} combinando: (i) regulação transcricional de três genes do
+ciclo da trealose (\textit{TPS1}, \textit{TPS2}, \textit{NTH1}) por ODEs;
+(ii) metabolismo central por FBA do modelo iMM904; (iii) acoplamento
+via restrições de expressão (modificação de bounds da reação TPS1_rxn
+proporcional a $[\textit{TPS1}]$). (a) Escreva o sistema de EDOs acoplado.
+(b) Implemente em Python. (c) Simule um pulso de choque térmico a 37°C
+durante 2 h e meça o crescimento e a produção de trealose. (d) Identifique
+predições não-triviais do modelo (acoplamento metabolização-tempo de
+formação de trealose).
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Projeto integrador.} Escolha um sistema biológico diferente do
+capítulo --- por exemplo, o sistema de defesa antioxidante em humanos ou a
+via de biossíntese de flavonoides em plantas --- e: (a) Formule um conjunto
+de hipóteses biológicas integrando o que se sabe por cada camadaômica;
+(b) projete um experimento multi-ômico apropriado; (c) construa um modelo
+matemático com 3--5 variáveis; (d) implemente o modelo em Python;
+(e) analise a sensibilidade dos parâmetros; (f) formule previsões falsificáveis
+sobre mutantes e drogas; (g) proponha uma estratégia de validação
+experimental completa.
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+\label{sec:11-bibliografia}
+
+A integração multi-ômica em biologia de sistemas tem três textos-fonte
+consolidados. \textit{Systems Biology: A Textbook} de Klipp, Herrmann,
+Liebermeister, Rother, Gilles, Wierling, Kowald e Lehrach (2ª edição,
+Wiley-VCH) é o tratamento mais pedagógico do ferramental --- cobre
+estequiometria, termodinâmica, cinética e integração multiômica com
+exemplos detalhados. \textit{Systems Biology: Constraint-based
+Reconstruction and Analysis} de Bernhard Palsson (Cambridge) é a referência
+para a abordagem GEM/FBA: estequiometria, espaços de soluções, integração
+com dados transcriptômicos (E-Flux, GIMME, iMAT). O artigo seminal de
+Ideker, Galitski e Hood (\textit{A new approach to decoding life: systems
+biology}, Annual Review of Genomics and Human Genetics, 2001) formulou
+a agenda do campo --- identificar módulos responsivos como unidades de
+organização biológica --- e permanece leitura introdutória recomendada.
+
+Para a frente computacional e clínica, o artigo de revisão de Hasin,
+Seldin e Lusis (\textit{Multi-omics approaches to disease}, Genome Biology,
+2017) sumariza o estado da arte até aquela data e oferece uma taxonomia
+útil para integração em doenças. Ritchie et al.\ (Nature Reviews Genetics,
+2015) discutem métodos de integração genética-ômica, com ênfase em modelos
+multi-ômicos de fenótipos complexos. Huang, Chaudhary e Lee (\textit{More is
+better: recent progress in multi-omics data integration methods}, Frontiers
+in Genetics, 2017) oferecem um panorama focando em MOFA e ferramentas
+relacionadas. Para enriquecimento de vias, o artigo clássico de
+Subramanian et al.\ (2005) introduzindo o GSEA é leitura obrigatória;
+GSEApy é a implementação Python recomendada. Para o cenário específico
+de integração em escala atlas --- quando se deseja comparar métodos
+de scRNA-seq ou scATAC-seq sobre dados com múltiplos lotes, laboratórios
+e condições ---, o benchmark de Luecken e
+colaboradores~\cite{luecken2022} oferece um protocolo padronizado
+(catorze métricas, três dimensões de avaliação) e uma recomendação
+operacional dos métodos com melhor desempenho em tarefas complexas.
+
+Os bancos de dados e ferramentas computacionais evoluem rapidamente.
+COBRApy (\url{https://opencobra.github.io/cobrapy/}) é o pacote padrão de
+Python para análise metabólica em escala genômica; NetworkX
+(\url{https://networkx.org}) é referência para análise de redes; Enrichr
+(\url{https://maayanlab.cloud/Enrichr/}) é uma plataforma web de análise
+de enriquecimento cobrindo uma centena de bibliotecas gênicas; STRING
+oferece redes de interação proteína-proteína curadas e complementares às
+redes inferidas dos dados; KEGG e Reactome são as duas referências de via
+mais usadas. Cursos de pós-graduação em bioinformática e biologia
+computacional --- MIT, EMBL-EBI, Coursera --- oferecem treinamentos
+regulares sobre essas ferramentas.
+
+Os livros complementares --- \textit{An Introduction to Systems Biology} de
+Uri Alon, \textit{A First Course in Systems Biology} de Eberhard Voit e
+\textit{Fundamentals of Systems Biology} de Markus Covert --- oferecem
+perspectivas pedagógicas distintas. Alon enfatiza os princípios de design;
+Voit detalha a formulação bioquímica dos modelos; Covert cobre a
+integração experimental e computacional.
+
+\begin{thebibliography}{99}
+\bibitem{klipp} Klipp E., Herrmann H., Liebermeister W., Rother K., Gilles
+E.D., Wierling C., Kowald A., Lehrach H. (2016). \textit{Systems Biology:
+A Textbook}, 2ª ed. Wiley-VCH, Weinheim.
+
+\bibitem{palsson} Palsson B.O. (2015). \textit{Systems Biology:
+Constraint-based Reconstruction and Analysis}. Cambridge University Press,
+Cambridge.
+
+\bibitem{ideker} Ideker T., Galitski T., Hood L. (2001). A new approach to
+decoding life: systems biology. \textit{Annual Review of Genomics and Human
+Genetics}, 2:343--372.
+
+\bibitem{hasin} Hasin Y., Seldin M., Lusis A. (2017). Multi-omics approaches
+to disease. \textit{Genome Biology}, 18:83.
+
+\bibitem{subramanian} Subramanian A., Tamayo P., Mootha V.K., Mukherjee S.,
+Ebert B.L., Gillette M.A., Paulovich A., Pomeroy S.L., Golub T.R., Lander
+E.S., Mesirov J.P. (2005). Gene set enrichment analysis: a
+knowledge-based approach for interpreting genome-wide expression profiles.
+\textit{Proceedings of the National Academy of Sciences USA}, 102:15545--15550.
+
+\bibitem{ritchie} Ritchie M.D., Holzinger E.R., Li R., Pendergrass S.A.,
+Kim D. (2015). Methods of integrating data to uncover genotype--phenotype
+interactions. \textit{Nature Reviews Genetics}, 16:85--97.
+
+\bibitem{huang} Huang S., Chaudhary K., Lee J.K. (2017). More is better:
+recent progress in multi-omics data integration methods. \textit{Frontiers
+in Genetics}, 8:84.
+
+\bibitem{alon} Alon U. (2019). \textit{An Introduction to Systems Biology:
+Design Principles of Biological Circuits}, 2ª ed. CRC Press, Boca Raton.
+
+\bibitem{voit} Voit E.O. (2017). \textit{A First Course in Systems Biology},
+2ª ed. Garland Science, Nova York.
+
+\bibitem{covert} Covert M.W. (2014). \textit{Fundamentals of Systems
+Biology}. CRC Press, Boca Raton.
+
+\bibitem{cavill} Cavill R., Jennen D., Kleinjans J., Briede J.J. (2016).
+Transcriptomic and metabolomic data integration. \textit{Briefings in
+Bioinformatics}, 17:891--901.
+
+\bibitem{pronk} Dijkgraaf J., Brown R., O'Neil J., Van Dijken J., Pronk J.T.,
+Geertsma Y.R. (2014). Metabolic engineering for trehalose accumulation in
+yeast. \textit{Applied and Environmental Microbiology}, 80:143--150.
+
+\bibitem{dinh} Dinh H.V., Niu W., Chen Y., Smith R.P., Ko A., Lu W., Chen K.,
+Sander C., Price N.D., Palsson B.O. (2022). An integrated multi-scale
+model of the yeast metabolic regulation network. \textit{Molecular Systems
+Biology}, 18:e10806.
+
+\bibitem{cobra} Ebrahim A., Lerman J.A., Palsson B.O., Hyduke D.R. (2013).
+COBRApy: constraints-based reconstruction and analysis for python. \textit{BMC
+Systems Biology}, 7:74. Disponível em \url{https://opencobra.github.io/cobrapy/}.
+
+\bibitem{enrichr} Kuleshov M.V., Jones M.R., Rouillard A.D., Fernandez N.F.,
+Duan Q., Wang Z., Koplev S., Jenkins S.L., Jagannathan K., Lachmann A.,
+McDermott M.G., Monteiro C.D., Gundersen G.W., Ma'ayan A. (2016). Enrichr:
+a comprehensive gene set enrichment analysis web server 2016 update.
+\textit{Nucleic Acids Research}, 44:W90--W97. Disponível em
+\url{https://maayanlab.cloud/Enrichr/}.
+
+\bibitem{gseapy} Subramanian A., Kuehn H., Gould J., Tamayo P., Mesirov J.P.
+(2007). GSEA-P: a desktop application for Gene Set Enrichment Analysis.
+\textit{Bioinformatics}, 23:3251. Disponível em
+\url{https://gseapy.readthedocs.io}.
+
+\bibitem{luecken2022} Luecken M.D., Büttner M., Chaichoompu K., Danese A.,
+Interlandi M., Mueller M.F., Strobl D.C., Zappia L., Dugas M.,
+Colomé-Tatché M., Theis F.J. (2022). Benchmarking atlas-level data
+integration in single-cell genomics. \textit{Nature Methods},
+19:41--50. Disponível em \url{https://doi.org/10.1038/s41592-021-01336-8}.
+\end{thebibliography}

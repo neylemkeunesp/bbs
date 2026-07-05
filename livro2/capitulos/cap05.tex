@@ -1,0 +1,780 @@
+\chapter{Estimação de Parâmetros}
+\label{cap:05}
+
+Modelos matemáticos de sistemas biológicos contêm parâmetros --- taxas de reação,
+constantes de afinidade, coeficientes de degradação, capacidades de transporte --- cujos
+valores devem ser determinados a partir de dados experimentais. Esse processo é chamado de
+\emph{estimação de parâmetros} e constitui um dos problemas centrais da biologia de
+sistemas quantitativa. Sem parâmetros adequados, mesmo o modelo estruturalmente correto
+produzirá previsões sem valor.
+
+O desafio fundamental é que estimar parâmetros é o inverso de simular: dado um modelo e
+parâmetros, simulação produz dados; dada uma trajetória de dados e um modelo, estimação
+produz parâmetros. O problema inverso é matematicamente mais difícil que o direto. É
+frequentemente \emph{mal-posto} no sentido de Hadamard: pode não ter solução única, pode ser
+sensível a perturbações nos dados, e pode ter múltiplos conjuntos de parâmetros que ajustam
+igualmente bem os dados observados. Compreender essas dificuldades é tão importante quanto
+conhecer os algoritmos de otimização.
+
+Este capítulo cobre os três pilares da estimação de parâmetros: a \emph{formulação
+matemática} do problema (como definir o que é ``ajuste adequado''), os \emph{algoritmos de
+otimização} (como encontrar os parâmetros que minimizam o desajuste), e a
+\emph{análise estatística} do ajuste (como quantificar incerteza, identificabilidade e
+capacidade preditiva do modelo).
+
+\section{O Problema Inverso}
+
+\begin{definicaoenv}[Estimação de Parâmetros]
+Dado um modelo matemático $\hat{y}(t; \boldsymbol{\theta})$ e um conjunto de observações
+experimentais $\{(t_i, y_i)\}_{i=1}^n$, o problema de estimação de parâmetros consiste em
+encontrar o vetor $\boldsymbol{\theta}^*$ que minimiza uma medida de discrepância entre as
+previsões do modelo e os dados:
+\begin{equation}
+\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}} J(\boldsymbol{\theta})
+\end{equation}
+onde $J(\boldsymbol{\theta})$ é a \emph{função objetivo} (ou função de custo).
+\end{definicaoenv}
+
+A diferença entre o problema direto e o inverso é pedagogicamente iluminadora. No problema
+direto, conhecemos os parâmetros --- por exemplo, $k_1 = 0.5$ e $k_2 = 0.1$ para o modelo
+$\dot{x} = k_1 - k_2 x$ --- e calculamos a trajetória $x(t)$ por integração numérica. O
+resultado é único e determinístico. No problema inverso, observamos $x(t)$ em pontos
+discretos e com ruído experimental, e devemos inferir $k_1$ e $k_2$. Esse processo é não
+único (múltiplos pares $(k_1, k_2)$ podem gerar trajetórias igualmente próximas dos dados),
+sensível ao ruído (pequenas perturbações nos dados podem causar grandes variações nos
+parâmetros estimados), e computacionalmente custoso (requer múltiplas simulações do modelo).
+
+Os principais desafios práticos na estimação de parâmetros em modelos biológicos são:
+(i) \emph{identificabilidade}: múltiplas combinações de parâmetros podem ajustar igualmente
+bem os dados; (ii) \emph{ruído experimental}: medições são sempre imprecisas, com erros que
+propagam para os parâmetros; (iii) \emph{dados escassos}: experimentos biológicos são caros
+e as séries temporais são curtas; (iv) \emph{mínimos locais}: a função objetivo é
+tipicamente não-convexa, com múltiplos mínimos locais que podem capturar algoritmos de
+otimização; (v) \emph{correlação}: parâmetros frequentemente aparecem como produtos ou
+razões no modelo, tornando impossível determiná-los individualmente.
+
+\section{Formulação da Função Objetivo}
+
+\subsection{Mínimos Quadrados Ordinários}
+
+A função objetivo mais comum é a \emph{soma dos quadrados dos resíduos} (SSE, do inglês
+\textit{sum of squared errors}), base do método de Mínimos Quadrados Ordinários (OLS):
+
+\begin{equation}
+J(\boldsymbol{\theta}) = \text{SSE}(\boldsymbol{\theta}) = \sum_{i=1}^{n} r_i^2 =
+\sum_{i=1}^{n} \left[y_i - \hat{y}_i(\boldsymbol{\theta})\right]^2
+\end{equation}
+
+onde $r_i = y_i - \hat{y}_i(\boldsymbol{\theta})$ é o \emph{resíduo} no ponto $i$ ---
+a diferença entre o dado observado e a previsão do modelo com os parâmetros atuais.
+A minimização de SSE é justificada estatisticamente quando os erros de medição são
+independentes e normalmente distribuídos com variância constante.
+
+O OLS tem solução analítica para modelos lineares (a fórmula de mínimos quadrados via
+álgebra linear), mas para modelos não-lineares --- como equações diferenciais ordinárias
+--- a minimização requer algoritmos iterativos.
+
+\subsection{Mínimos Quadrados Ponderados}
+
+Quando as observações têm diferentes níveis de incerteza, o método de \emph{Mínimos
+Quadrados Ponderados} (WLS) generaliza o OLS atribuindo a cada ponto um peso $w_i$
+inversamente proporcional à sua variância experimental:
+
+\begin{equation}
+J(\boldsymbol{\theta}) = \sum_{i=1}^{n} w_i \left[y_i - \hat{y}_i(\boldsymbol{\theta})\right]^2,
+\quad \text{tipicamente } w_i = \frac{1}{\sigma_i^2}
+\end{equation}
+
+Na cinética enzimática, por exemplo, medições a concentrações baixas de substrato tendem a
+ter maior erro relativo; nesse caso, pesos $w_i = 1/\hat{y}_i$ ou $w_i = 1/\hat{y}_i^2$
+são mais apropriados que pesos uniformes.
+
+\subsection{Máxima Verossimilhança}
+
+A abordagem de \emph{Máxima Verossimilhança} (MLE, do inglês \textit{Maximum Likelihood
+Estimation}) fornece a fundamentação estatística mais rigorosa para a estimação de
+parâmetros. Em vez de minimizar um erro, buscamos os parâmetros que maximizam a
+probabilidade de observar os dados que de fato observamos:
+
+\begin{equation}
+\boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}) =
+\arg\max_{\boldsymbol{\theta}} P(\text{dados} \mid \boldsymbol{\theta})
+\end{equation}
+
+Por conveniência numérica, trabalha-se com a \emph{log-verossimilhança}:
+$\ell(\boldsymbol{\theta}) = \ln \mathcal{L}(\boldsymbol{\theta}) = \sum_i \ln P(y_i \mid \boldsymbol{\theta})$.
+
+Quando os erros de medição são independentes e gaussianos com variância $\sigma^2$:
+
+\begin{equation}
+\ell(\boldsymbol{\theta}) = -\frac{n}{2}\ln(2\pi\sigma^2) -
+\frac{1}{2\sigma^2} \sum_{i=1}^{n}\left[y_i - \hat{y}_i(\boldsymbol{\theta})\right]^2
+\end{equation}
+
+Um resultado fundamental é que, sob essa hipótese de ruído gaussiano, maximizar
+$\ell(\boldsymbol{\theta})$ é matematicamente equivalente a minimizar o SSE. Ou seja:
+\emph{OLS é MLE para dados com ruído gaussiano}. Quando o ruído tem outra distribuição
+--- Poisson para dados de contagem, log-normal para concentrações biológicas ---
+a MLE produz funções objetivo diferentes do SSE.
+
+\subsection{Abordagem Bayesiana}
+
+A abordagem bayesiana trata os parâmetros não como valores fixos desconhecidos, mas como
+variáveis aleatórias com distribuições de probabilidade. O Teorema de Bayes conecta o
+conhecimento \emph{a priori} sobre os parâmetros ($P(\boldsymbol{\theta})$) com os dados
+observados para produzir uma distribuição \emph{posterior}:
+
+\begin{equation}
+P(\boldsymbol{\theta} \mid \text{dados}) = \frac{P(\text{dados} \mid \boldsymbol{\theta}) \cdot P(\boldsymbol{\theta})}{P(\text{dados})}
+\end{equation}
+
+O numerador é o produto da verossimilhança pelo prior; o denominador é uma constante de
+normalização. Em vez de um único ponto ótimo, a abordagem bayesiana produz uma distribuição
+completa sobre os parâmetros, quantificando incerteza de forma natural. Parâmetros bem
+determinados pelos dados terão posteriors estreitos; parâmetros mal identificados terão
+posteriors largos, herdando a distribuição do prior.
+
+A principal desvantagem é computacional: calcular a posterior analiticamente é geralmente
+impossível, exigindo métodos de amostragem como MCMC (\textit{Markov Chain Monte Carlo}).
+Para modelos biológicos com integrações de EDOs em cada avaliação, o custo pode ser
+proibitivo.
+
+
+\section{Busca em Grade}
+
+\begin{definicaoenv}[Busca em Grade]
+A busca em grade (\textit{grid search}) é o método mais simples de estimação de parâmetros:
+avalia sistematicamente a função objetivo em uma grade regular de valores de parâmetros,
+retornando o ponto com menor $J(\boldsymbol{\theta})$.
+\end{definicaoenv}
+
+O algoritmo é direto: (1) definir limites e resolução para cada parâmetro; (2) criar uma
+grade de $n_1 \times n_2 \times \cdots \times n_p$ pontos; (3) avaliar $J$ em cada nó;
+(4) selecionar o ponto com menor $J$. Sua principal virtude é a garantia de encontrar o
+mínimo global dentro da região explorada, desde que a grade seja suficientemente densa.
+
+A grande limitação é o custo computacional exponencial. Com 10 valores testados por
+parâmetro, 2 parâmetros requerem $10^2 = 100$ avaliações; 5 parâmetros requerem
+$10^5 = 100.000$; 10 parâmetros exigiriam $10^{10}$ avaliações --- impraticável.
+Esse crescimento exponencial com a dimensionalidade é chamado de \emph{maldição da
+dimensionalidade} e torna a busca em grade inaplicável para mais de 2 ou 3 parâmetros.
+Em prática, a busca em grade é útil para exploração inicial do espaço de parâmetros e
+para gerar estimativas iniciais para algoritmos mais sofisticados.
+
+\begin{lstlisting}[language=Python, caption=Busca em grade 2D para modelo exponencial]
+import numpy as np
+
+# Dados experimentais
+t_data = np.array([0, 1, 2, 3, 4, 5])
+y_data = np.array([10, 6.1, 3.7, 2.2, 1.4, 0.8])
+
+def sse_model(params, t, y):
+    a, b = params
+    return np.sum((y - a * np.exp(-b * t))**2)
+
+# Grade de busca: 20x20 pontos
+a_range = np.linspace(5, 15, 20)
+b_range = np.linspace(0.1, 1.0, 20)
+SSE_grid = np.array([[sse_model([a, b], t_data, y_data)
+                       for b in b_range] for a in a_range])
+
+# Encontrar minimo
+idx = np.unravel_index(SSE_grid.argmin(), SSE_grid.shape)
+a_best, b_best = a_range[idx[0]], b_range[idx[1]]
+print(f"Parametros otimos: a={a_best:.3f}, b={b_best:.3f}")
+print(f"SSE minimo: {SSE_grid[idx]:.4f}")
+\end{lstlisting}
+
+\section{Métodos de Gradiente}
+
+\subsection{Gradient Descent}
+
+Os \emph{métodos de gradiente} exploram a geometria local da função objetivo para navegar
+eficientemente em direção ao mínimo. O mais simples, \emph{gradient descent} (descida do
+gradiente), move iterativamente os parâmetros na direção oposta ao gradiente --- pois o
+gradiente aponta na direção de maior crescimento, e seu oposto aponta para a descida mais
+íngreme:
+
+\begin{equation}
+\boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} - \alpha \nabla J(\boldsymbol{\theta}^{(k)})
+\end{equation}
+
+O escalar $\alpha > 0$ é a \emph{taxa de aprendizado} (tamanho do passo). Sua escolha é
+crítica: $\alpha$ muito pequeno torna a convergência lenta; $\alpha$ muito grande causa
+oscilações ou divergência. Na prática, estratégias como \emph{line search} (otimizar
+$\alpha$ em cada iteração) ou taxas adaptativas (Adam, RMSprop) são preferíveis ao $\alpha$
+fixo.
+
+Quando o gradiente analítico não está disponível --- o que é comum em modelos definidos por
+EDOs --- usa-se aproximação por diferenças finitas:
+
+\begin{equation}
+\frac{\partial J}{\partial \theta_i} \approx \frac{J(\boldsymbol{\theta} + h \mathbf{e}_i) - J(\boldsymbol{\theta})}{h}
+\end{equation}
+
+onde $\mathbf{e}_i$ é o $i$-ésimo vetor canônico e $h \sim 10^{-5}$ é um incremento
+pequeno. A convergência é declarada quando $\|\nabla J\| < \epsilon_g$, ou quando a mudança
+nos parâmetros $\|\boldsymbol{\theta}^{(k+1)} - \boldsymbol{\theta}^{(k)}\| < \epsilon_\theta$,
+com valores típicos $\epsilon_g = \epsilon_\theta = 10^{-6}$.
+
+\subsection{Newton-Raphson e Gauss-Newton}
+
+O \emph{método de Newton-Raphson} usa informação de segunda ordem --- a \emph{matriz
+Hessiana} $\mathbf{H}$, com $H_{ij} = \partial^2 J / \partial \theta_i \partial \theta_j$
+--- para encontrar o mínimo mais rapidamente:
+
+\begin{equation}
+\boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} - \mathbf{H}^{-1}(\boldsymbol{\theta}^{(k)}) \nabla J(\boldsymbol{\theta}^{(k)})
+\end{equation}
+
+A convergência é quadrática perto do mínimo --- o número de dígitos corretos dobra a cada
+iteração --- mas calcular e inverter $\mathbf{H}$ é custoso ($O(p^3)$ para $p$ parâmetros)
+e o método pode divergir longe do mínimo.
+
+Para problemas de mínimos quadrados, o \emph{método de Gauss-Newton} oferece um compromisso
+elegante: aproxima a Hessiana pelo produto do \emph{Jacobiano} $\mathbf{J}$ dos resíduos
+consigo mesmo ($\mathbf{H} \approx \mathbf{J}^T \mathbf{J}$, onde $J_{ij} = \partial r_i / \partial \theta_j$),
+evitando o cálculo das derivadas de segunda ordem:
+
+\begin{equation}
+\boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} + (\mathbf{J}^T \mathbf{J})^{-1} \mathbf{J}^T \mathbf{r}
+\end{equation}
+
+\subsection{Levenberg-Marquardt}
+
+O algoritmo de \emph{Levenberg-Marquardt} (LM) é o método padrão para ajuste não-linear
+de curvas e é a base da função \texttt{scipy.optimize.curve\_fit}. Ele interpola
+adaptativamente entre Gauss-Newton (passos grandes, rápidos, perto do mínimo) e gradient
+descent (passos pequenos, robustos, longe do mínimo) por meio de um parâmetro de
+amortecimento $\lambda$:
+
+\begin{equation}
+\boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} + (\mathbf{J}^T \mathbf{J} + \lambda \mathbf{I})^{-1} \mathbf{J}^T \mathbf{r}
+\end{equation}
+
+Quando $\lambda \to 0$, recupera-se Gauss-Newton; quando $\lambda \to \infty$, o passo se
+torna um pequeno gradiente descendente. A estratégia adaptativa é simples: se um passo
+reduz $J$, aceitar e diminuir $\lambda$ (tornar mais agressivo); se $J$ aumenta, rejeitar e
+aumentar $\lambda$ (tornar mais conservador).
+
+\begin{lstlisting}[language=Python, caption=Ajuste de Michaelis-Menten via Levenberg-Marquardt]
+from scipy.optimize import curve_fit, least_squares
+import numpy as np
+
+def michaelis_menten(S, Vmax, Km):
+    return Vmax * S / (Km + S)
+
+# Dados experimentais de cinetica enzimatica
+S_data = np.array([0.1, 0.5, 1, 2, 5, 10, 20])   # mM
+v_data = np.array([0.3, 1.1, 1.8, 2.5, 3.3, 3.7, 3.9])  # umol/min
+
+# Ajuste via LM (curve_fit usa LM internamente)
+params, cov = curve_fit(michaelis_menten, S_data, v_data,
+                        p0=[4.0, 2.0])
+Vmax_fit, Km_fit = params
+std_errors = np.sqrt(np.diag(cov))
+
+print(f"Vmax = {Vmax_fit:.3f} +/- {std_errors[0]:.3f}")
+print(f"Km   = {Km_fit:.3f}  +/- {std_errors[1]:.3f}")
+
+# Residuos
+y_pred = michaelis_menten(S_data, *params)
+residuals = v_data - y_pred
+print(f"RMSE = {np.sqrt(np.mean(residuals**2)):.4f}")
+\end{lstlisting}
+
+
+\section{Algoritmos de Otimização Global}
+
+\subsection{O Problema dos Mínimos Locais}
+
+Os métodos de gradiente são eficientes quando a função objetivo é convexa ou quando se
+dispõe de uma boa estimativa inicial próxima do mínimo global. Em modelos biológicos reais,
+porém, $J(\boldsymbol{\theta})$ é frequentemente não-convexa, com múltiplos mínimos locais
+separados por barreiras altas. Um método local iniciado longe do ótimo global pode convergir
+para um mínimo local, retornando parâmetros biologicamente sem sentido.
+
+Algoritmos de otimização global contornam esse problema explorando mais amplamente o espaço
+de parâmetros, com o custo de avaliações adicionais da função objetivo. Uma estratégia
+híbrida --- DE (exploração global) seguido de LM (refinamento local) --- frequentemente
+combina o melhor de ambos os mundos.
+
+\subsection{Simulated Annealing}
+
+O \emph{simulated annealing} (SA) é inspirado no processo metalúrgico de recozimento:
+aquecer um metal a alta temperatura e resfriá-lo lentamente permite que os átomos escapem
+de configurações de alta energia para atingir o cristal de mínima energia. No contexto de
+otimização, a \emph{temperatura} $T$ controla a probabilidade de aceitar movimentos para
+soluções piores:
+
+\begin{equation}
+P(\text{aceitar}) = \begin{cases}
+1 & \text{se } \Delta J < 0 \\
+e^{-\Delta J / T} & \text{se } \Delta J \geq 0
+\end{cases}
+\end{equation}
+
+onde $\Delta J = J(\boldsymbol{\theta}_\text{novo}) - J(\boldsymbol{\theta}_\text{atual})$.
+A temperatura decresce segundo um cronograma $T_k = T_0 \alpha^k$, com $\alpha \in [0.8, 0.99]$.
+Em alta temperatura, a busca é amplamente exploratória; em baixa temperatura, converge para
+o mínimo local mais próximo.
+
+\subsection{Evolução Diferencial}
+
+A \emph{Evolução Diferencial} (DE) é atualmente o algoritmo global mais recomendado para
+estimação de parâmetros em biologia de sistemas. Para cada indivíduo $\boldsymbol{\theta}$
+da população, um candidato mutante $\mathbf{v}$ é criado combinando três indivíduos
+aleatórios $\mathbf{a}, \mathbf{b}, \mathbf{c}$:
+
+\begin{equation}
+\mathbf{v} = \mathbf{a} + F(\mathbf{b} - \mathbf{c})
+\end{equation}
+
+onde $F \in [0.5, 1.0]$ é o fator de escala de mutação. O candidato $\mathbf{u}$ é gerado
+por cruzamento com probabilidade $CR \in [0.5, 0.9]$, e substitui $\boldsymbol{\theta}$
+apenas se $J(\mathbf{u}) \leq J(\boldsymbol{\theta})$.
+
+\begin{lstlisting}[language=Python, caption=Otimizacao global com Differential Evolution]
+from scipy.optimize import differential_evolution
+import numpy as np
+
+# Dados experimentais
+t_data = np.array([0, 1, 2, 3, 4, 5])
+y_data = np.array([10, 6.1, 3.7, 2.2, 1.4, 0.8])
+
+def objective(params, t, y):
+    a, b = params
+    return np.sum((y - a * np.exp(-b * t))**2)
+
+# Limites para os parametros
+bounds = [(1, 20), (0.01, 2.0)]
+
+result = differential_evolution(
+    objective, bounds, args=(t_data, y_data),
+    strategy='best1bin', maxiter=1000, popsize=15,
+    tol=1e-7, mutation=(0.5, 1), recombination=0.7, seed=42
+)
+print(f"Parametros: a={result.x[0]:.3f}, b={result.x[1]:.3f}")
+print(f"SSE minimo: {result.fun:.6f}")
+
+# Refinamento local: abordagem hibrida DE + LM
+from scipy.optimize import least_squares
+res_lm = least_squares(
+    lambda p: y_data - p[0]*np.exp(-p[1]*t_data),
+    x0=result.x, method='lm'
+)
+print(f"Pos-refinamento: a={res_lm.x[0]:.4f}, b={res_lm.x[1]:.4f}")
+\end{lstlisting}
+
+\subsection{Particle Swarm Optimization}
+
+O \emph{Particle Swarm Optimization} (PSO) é inspirado no comportamento coletivo de
+cardumes de peixes. Cada partícula mantém uma posição $\mathbf{x}_i$ (parâmetros) e
+velocidade $\mathbf{v}_i$ no espaço de busca. A velocidade em cada iteração combina
+inércia, atração pela melhor posição histórica própria $\mathbf{p}_i$ e atração pela melhor
+posição global $\mathbf{g}$:
+
+\begin{align}
+\mathbf{v}_i^{(k+1)} &= w \mathbf{v}_i^{(k)} + c_1 r_1 (\mathbf{p}_i - \mathbf{x}_i^{(k)}) + c_2 r_2 (\mathbf{g} - \mathbf{x}_i^{(k)}) \\
+\mathbf{x}_i^{(k+1)} &= \mathbf{x}_i^{(k)} + \mathbf{v}_i^{(k+1)}
+\end{align}
+
+onde $w$ é o peso de inércia e $r_1$, $r_2$ são números aleatórios em $[0,1]$.
+
+A tabela a seguir compara os principais métodos de otimização para estimação de parâmetros:
+
+\begin{table}[h]
+\centering
+\caption{Comparacao de metodos de otimizacao}
+\label{tab:otimizacao}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Metodo} & \textbf{Escopo} & \textbf{Velocidade} & \textbf{Derivadas} & \textbf{Uso} \\
+\midrule
+Busca em grade & Global & Lenta & Nao & Exploracao inicial \\
+Levenberg-Marquardt & Local & Rapida & Jacobiano & Padrao nao-linear \\
+Simulated Annealing & Global & Lenta & Nao & Paisagens rugosas \\
+Evolucao Diferencial & Global & Moderada & Nao & Parametros continuos \\
+PSO & Global & Moderada & Nao & Convergencia rapida \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Análise de Identificabilidade}
+
+\subsection{Identificabilidade Estrutural}
+
+Antes de iniciar qualquer estimação, é fundamental perguntar: mesmo com dados perfeitos ---
+infinitos, sem ruído, medindo todas as variáveis de estado --- seria possível determinar
+os parâmetros do modelo de forma única? Essa questão define a \emph{identificabilidade
+estrutural}, uma propriedade do modelo em si, independente dos dados.
+
+\begin{definicaoenv}[Identificabilidade Estrutural]
+Um modelo é \emph{estruturalmente identificável} se, para dados perfeitos, existe uma
+correspondência bijetiva entre parâmetros e observações --- ou seja, dois conjuntos de
+parâmetros distintos produzem saídas distintas para qualquer condição inicial.
+\end{definicaoenv}
+
+Um exemplo elucidativo: o modelo $\dot{x} = k_1 - k_2 x$ tem dois parâmetros independentes,
+$k_1$ e $k_2$, que podem ser determinados univocamente a partir de $x(t)$ --- é
+estruturalmente identificável. Em contraste, o modelo $\dot{x} = (k_1 k_2) - k_2 x$
+pode ser reescrito como $\dot{x} = k_3 - k_2 x$ com $k_3 = k_1 k_2$: apenas o produto
+$k_3$ é identificável, não $k_1$ e $k_2$ separadamente. Esse modelo é \emph{estruturalmente
+não-identificável}: infinitos pares $(k_1, k_2)$ com o mesmo produto $k_1 k_2$ produzirão
+exatamente a mesma trajetória.
+
+A análise de identificabilidade estrutural pode ser feita algebricamente por eliminação de
+variáveis (baseada em bases de Gröbner) ou por ferramentas computacionais como DAISY,
+GenSSI e STRIKE-GOLDD.
+
+\subsection{Identificabilidade Prática}
+
+Mesmo que um modelo seja estruturalmente identificável, pode ser praticamente impossível
+determinar os parâmetros com precisão razoável a partir de dados reais, finitos e ruidosos.
+Isso define a \emph{identificabilidade prática}.
+
+As causas mais comuns de não-identificabilidade prática são: (i) dados insuficientes em
+quantidade ou qualidade para discriminar entre configurações de parâmetros; (ii) parâmetros
+\emph{correlacionados}, que aparecem sempre juntos nas previsões do modelo --- por exemplo,
+em $y \approx a(1 - bt)$ para $t$ pequeno, os parâmetros $a$ e $ab$ são correlacionados;
+(iii) baixa \emph{sensibilidade} de certas variáveis observadas a determinados parâmetros;
+e (iv) \emph{superparametrização} --- mais parâmetros do que necessário para descrever
+os dados disponíveis.
+
+\subsection{Matriz de Informação de Fisher}
+
+A \emph{Matriz de Informação de Fisher} (FIM) quantifica quanta informação os dados
+contêm sobre cada parâmetro e sobre as correlações entre pares de parâmetros:
+
+\begin{equation}
+\mathbf{F}_{ij} = \sum_{k=1}^{n} \frac{1}{\sigma_k^2} \frac{\partial \hat{y}_k}{\partial \theta_i} \frac{\partial \hat{y}_k}{\partial \theta_j}
+\end{equation}
+
+A inversa da FIM fornece o \emph{limite de Cramér-Rao}: a variância de qualquer estimador
+não-viesado dos parâmetros satisfaz $\text{Var}(\hat{\theta}_i) \geq (\mathbf{F}^{-1})_{ii}$.
+Portanto, $\mathbf{C} = \mathbf{F}^{-1}$ é uma estimativa da \emph{matriz de covariância}
+dos parâmetros. Um determinante $\det(\mathbf{F}) \approx 0$ indica não-identificabilidade
+--- a FIM é (quase) singular, e a covariância é (quase) infinita.
+
+\subsection{Intervalos de Confiança e Profile Likelihood}
+
+Para grandes amostras, os estimadores de mínimos quadrados seguem distribuição assintótica
+normal: $\hat{\boldsymbol{\theta}} \sim \mathcal{N}(\boldsymbol{\theta}^*, \mathbf{C})$.
+O intervalo de confiança de 95\% para o parâmetro $\theta_i$ é:
+
+\begin{equation}
+\theta_i^* \pm t_{n-p, 0.025} \sqrt{C_{ii}}
+\end{equation}
+
+onde $t_{n-p, 0.025}$ é o quantil da distribuição $t$ de Student com $n-p$ graus de
+liberdade. A diagonal $\sqrt{C_{ii}}$ fornece o erro padrão do parâmetro $\theta_i$, e os
+elementos fora da diagonal indicam correlações: $\rho_{ij} = C_{ij}/\sqrt{C_{ii} C_{jj}}$
+próximo de $\pm 1$ indica parâmetros altamente correlacionados.
+
+O \emph{profile likelihood} é um método mais robusto para calcular intervalos de confiança,
+especialmente quando os erros são não gaussianos ou a amostra é pequena. Para cada valor
+fixo $\theta_i = \theta_i^\dagger$, otimiza-se $J$ em relação a todos os outros parâmetros
+e registra-se o valor mínimo $J_\text{prof}(\theta_i^\dagger)$. O intervalo de confiança
+de 95\% é o conjunto de valores de $\theta_i$ para os quais
+$J_\text{prof}(\theta_i) \leq J_\text{min} + \chi^2_{1,0.95}/2 \approx J_\text{min} + 1.92$.
+Um profile com forma de parábola simétrica indica parâmetro bem identificável; um profile
+assintótico ou com dois mínimos indica não-identificabilidade.
+
+\begin{lstlisting}[language=Python, caption=Calculo de intervalos de confianca e correlacao]
+from scipy.optimize import curve_fit
+from scipy import stats
+import numpy as np
+
+S_data = np.array([0.1, 0.5, 1, 2, 5, 10, 20])
+v_data = np.array([0.3, 1.1, 1.8, 2.5, 3.3, 3.7, 3.9])
+
+def mm(S, Vmax, Km):
+    return Vmax * S / (Km + S)
+
+params, cov = curve_fit(mm, S_data, v_data, p0=[4.0, 2.0])
+std_errors = np.sqrt(np.diag(cov))
+
+# Intervalo de confianca 95%
+n, p = len(S_data), len(params)
+t_val = stats.t.ppf(0.975, df=n-p)
+ci = t_val * std_errors
+
+print("Parametro | Estimativa | IC 95%")
+names = ['Vmax', 'Km']
+for name, val, err in zip(names, params, ci):
+    print(f"{name:8s} = {val:.3f} +/- {err:.3f}")
+
+# Matriz de correlacao
+corr = cov / np.outer(std_errors, std_errors)
+print(f"\nCorrelacao Vmax-Km: {corr[0,1]:.3f}")
+if abs(corr[0,1]) > 0.9:
+    print("ALERTA: parametros altamente correlacionados!")
+\end{lstlisting}
+
+
+\section{Validação e Critérios de Seleção de Modelos}
+
+\subsection{Análise de Resíduos}
+
+Um bom ajuste não se limita a um valor pequeno de $J$: o padrão dos resíduos
+$r_i = y_i - \hat{y}_i$ é tão informativo quanto o próprio valor da função objetivo.
+Quando o modelo é adequado e os erros são realmente gaussianos, os resíduos devem ser:
+(i) distribuídos aleatoriamente em torno de zero, sem padrão sistemático; (ii) com
+variância aproximadamente constante (homocedasticidade); e (iii) aproximadamente normais,
+o que pode ser verificado por um gráfico quantil-quantil (Q-Q plot).
+
+Desvios desse padrão revelam problemas específicos. Resíduos com tendência curva indicam
+que o modelo não captura a forma funcional dos dados --- o modelo está \emph{mal
+especificado}. Resíduos com variância crescente com $\hat{y}$ (padrão de funil) indicam
+\emph{heterocedasticidade}, sugerindo que erros log-normais seriam mais adequados.
+Resíduos com autocorrelação temporal indicam que o modelo não captura a dinâmica
+completa do sistema.
+
+\subsection{Coeficiente de Determinação}
+
+O \emph{coeficiente de determinação} $R^2$ mede a fração da variância total dos dados
+que é explicada pelo modelo:
+
+\begin{equation}
+R^2 = 1 - \frac{\text{SS}_\text{res}}{\text{SS}_\text{tot}} = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
+\end{equation}
+
+Um $R^2$ próximo de 1 indica bom ajuste; próximo de 0 indica que o modelo não explica
+os dados melhor que a média. Porém, $R^2$ tem uma limitação séria: sempre aumenta ao
+adicionar parâmetros ao modelo, mesmo que esses parâmetros sejam irrelevantes. O
+$R^2$ \emph{ajustado} corrige esse viés penalizando a complexidade:
+
+\begin{equation}
+R^2_\text{adj} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
+\end{equation}
+
+onde $n$ é o número de observações e $p$ o número de parâmetros. O $R^2_\text{adj}$
+pode diminuir quando se adiciona parâmetros irrelevantes, tornando-o mais apropriado
+para comparação entre modelos.
+
+\subsection{Critérios de Informação: AIC e BIC}
+
+Quando há múltiplos modelos concorrentes com diferentes complexidades, é necessário
+um critério que equilibre qualidade de ajuste com parcimônia. O \emph{Critério de
+Informação de Akaike} (AIC) faz essa mediação baseado na teoria da informação:
+
+\begin{equation}
+\text{AIC} = 2p - 2\ln(\mathcal{L}) \approx n\ln\!\left(\frac{\text{SSE}}{n}\right) + 2p
+\end{equation}
+
+onde $p$ é o número de parâmetros e $\mathcal{L}$ é a máxima verossimilhança. O modelo
+com menor AIC é preferido. A penalidade $2p$ desencoraja modelos supercomplexos. Para
+amostras pequenas ($n/p < 40$), usa-se a versão corrigida AICc:
+
+\begin{equation}
+\text{AICc} = \text{AIC} + \frac{2p(p+1)}{n-p-1}
+\end{equation}
+
+O \emph{Critério de Informação Bayesiana} (BIC) penaliza a complexidade mais
+agressivamente, com $p\ln(n)$ em vez de $2p$:
+
+\begin{equation}
+\text{BIC} = p\ln(n) - 2\ln(\mathcal{L}) \approx n\ln\!\left(\frac{\text{SSE}}{n}\right) + p\ln(n)
+\end{equation}
+
+Para $n > 7$, o BIC favorece modelos mais simples que o AIC. A escolha entre AIC e BIC
+reflete objetivos diferentes: o AIC otimiza a capacidade preditiva em dados novos; o BIC
+tenta identificar o ``modelo verdadeiro'' subjacente. Na biologia de sistemas, onde dados
+são escassos e o ruído é alto, é boa prática reportar ambos os critérios. Uma diferença
+$\Delta\text{AIC} > 10$ entre dois modelos constitui evidência forte em favor do modelo
+com menor AIC.
+
+\subsection{Overfitting e Validação Cruzada}
+
+\emph{Overfitting} ocorre quando o modelo se ajusta ao ruído dos dados de treinamento ao
+invés de capturar o sinal real, resultando em excelente desempenho nos dados conhecidos mas
+péssimo desempenho em dados novos. Os sintomas clássicos são: $R^2$ de treinamento muito
+acima do $R^2$ de teste; intervalos de confiança excessivamente largos; e previsões fora
+do domínio dos dados que divergem rapidamente. O tradeoff viés-variância é a perspectiva
+teórica: modelos simples (poucos parâmetros) têm alto viés e baixa variância; modelos
+complexos têm baixo viés mas alta variância.
+
+A \emph{validação cruzada} $k$-fold (CV) avalia diretamente a capacidade preditiva do
+modelo sem dados não vistos. Os dados são divididos em $k$ subconjuntos (folds); para cada
+fold, o modelo é ajustado nos $k-1$ folds restantes e avaliado no fold reservado. O erro
+de CV é a média dos erros em todos os folds. Valores típicos são $k=5$ ou $k=10$; quando
+$k=n$, obtém-se a validação Leave-One-Out (LOO), mais custosa mas menos enviesada.
+
+\begin{lstlisting}[language=Python, caption=Metricas de ajuste e selecao de modelos]
+import numpy as np
+from scipy.optimize import curve_fit
+
+def calculate_metrics(y_true, y_pred, n_params):
+    n = len(y_true)
+    residuals = y_true - y_pred
+    sse = np.sum(residuals**2)
+    ss_tot = np.sum((y_true - np.mean(y_true))**2)
+
+    r2 = 1 - sse/ss_tot
+    r2_adj = 1 - (1-r2)*(n-1)/(n-n_params-1)
+    rmse = np.sqrt(sse/n)
+    aic = n*np.log(sse/n) + 2*n_params
+    bic = n*np.log(sse/n) + n_params*np.log(n)
+    aicc = aic + 2*n_params*(n_params+1)/(n-n_params-1)
+
+    return {'R2': r2, 'R2_adj': r2_adj, 'RMSE': rmse,
+            'AIC': aic, 'AICc': aicc, 'BIC': bic,
+            'residuals': residuals}
+
+# Comparar dois modelos: Michaelis-Menten vs Hill
+S_data = np.array([0.1, 0.5, 1, 2, 5, 10, 20])
+v_data = np.array([0.3, 1.1, 1.8, 2.5, 3.3, 3.7, 3.9])
+
+def mm(S, Vmax, Km):      return Vmax*S/(Km+S)
+def hill(S, Vmax, Km, n): return Vmax*S**n/(Km**n+S**n)
+
+p1, _ = curve_fit(mm,   S_data, v_data, p0=[4, 2])
+p2, _ = curve_fit(hill, S_data, v_data, p0=[4, 2, 1.5])
+
+m1 = calculate_metrics(v_data, mm(S_data, *p1), 2)
+m2 = calculate_metrics(v_data, hill(S_data, *p2), 3)
+
+print("Modelo MM (2 param): AICc={:.2f}, BIC={:.2f}".format(m1['AICc'], m1['BIC']))
+print("Modelo Hill (3 par): AICc={:.2f}, BIC={:.2f}".format(m2['AICc'], m2['BIC']))
+print("dAICc = {:.2f}".format(m2['AICc'] - m1['AICc']))
+\end{lstlisting}
+
+
+\section{Exercícios}
+
+\begin{exercicio}[Busca em Grade]
+Implemente busca em grade para ajustar o modelo de potência $y = a x^b$ aos dados abaixo.
+Use uma grade $20 \times 20$ com $a \in [1, 3]$ e $b \in [1.5, 2.5]$. Plote o mapa de
+contorno de SSE no espaço $(a, b)$ e identifique visualmente o mínimo. Compare o resultado
+com o obtido por \texttt{scipy.optimize.curve\_fit}.
+
+\begin{center}
+\begin{tabular}{c|cccccc}
+$x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+\hline
+$y$ & 2.1 & 8.3 & 18.2 & 32.5 & 50.1 & 72.3
+\end{tabular}
+\end{center}
+\end{exercicio}
+
+\begin{exercicio}[Gradient Descent]
+Implemente gradient descent manualmente para minimizar $J(\theta) = (\theta - 5)^2 + 3$,
+usando $\theta_0 = 0$ como ponto inicial. Teste quatro valores de taxa de aprendizado:
+$\alpha \in \{0.01, 0.1, 0.5, 1.0\}$. Para cada $\alpha$, plote a trajetória de $J$ ao
+longo das iterações e registre o número de iterações até convergência. Qual é o valor ideal?
+Explique o que acontece com $\alpha = 1.0$.
+\end{exercicio}
+
+\begin{exercicio}[Levenberg-Marquardt]
+Ajuste os parâmetros da equação de Michaelis-Menten $v = V_\text{max}[S]/(K_M + [S])$
+aos dados abaixo usando \texttt{scipy.optimize.curve\_fit} (algoritmo LM). Calcule os
+intervalos de confiança de 95\%, a matriz de correlação entre $V_\text{max}$ e $K_M$, e
+plote: (a) os dados com a curva ajustada; (b) o gráfico de resíduos vs. valores preditos.
+
+\begin{center}
+\begin{tabular}{c|ccccccc}
+$[S]$ (mM) & 0.1 & 0.5 & 1 & 2 & 5 & 10 & 20 \\
+\hline
+$v$ ($\mu$mol/min) & 0.3 & 1.1 & 1.8 & 2.5 & 3.3 & 3.7 & 3.9
+\end{tabular}
+\end{center}
+\end{exercicio}
+
+\begin{exercicio}[Differential Evolution]
+Repita o exercício anterior usando \texttt{scipy.optimize.differential\_evolution} com
+limites amplos $V_\text{max} \in [0.1, 10]$ e $K_M \in [0.1, 10]$. Em seguida, use
+o resultado do DE como estimativa inicial para LM (abordagem híbrida). Compare o tempo
+de execução e o SSE final dos três métodos: LM puro, DE puro e DE+LM.
+\end{exercicio}
+
+\begin{exercicio}[Crescimento Logístico]
+Gere dados sintéticos de crescimento bacteriano usando o modelo logístico
+$N(t) = K / \{1 + [(K/N_0) - 1] e^{-rt}\}$ com $N_0 = 1$, $r = 0.5$, $K = 100$,
+$t \in [0, 20]$ em 15 pontos equidistantes, adicionando ruído gaussiano de 5\%.
+(a) Estime $r$ e $K$ por três métodos diferentes. (b) Calcule o profile likelihood
+para cada parâmetro e plote o perfil vs. o limiar de confiança de 95\%.
+(c) Avalie identificabilidade: $r$ e $K$ são bem identificáveis nesses dados?
+\end{exercicio}
+
+\begin{exercicio}[Lotka-Volterra --- Projeto Integrador]
+Considere o sistema predador-presa de Lotka-Volterra:
+\begin{align*}
+\frac{dV}{dt} &= \alpha V - \beta V P \\
+\frac{dP}{dt} &= \delta \beta V P - \gamma P
+\end{align*}
+Gere dados sintéticos simulando o sistema com $\alpha = 1.0$, $\beta = 0.1$,
+$\delta = 0.75$, $\gamma = 1.5$, condições iniciais $V(0) = 10$, $P(0) = 5$,
+intervalo $[0, 30]$ com ruído gaussiano de 10\%.
+
+Em seguida: (a) formule a função SSE usando ambas as variáveis $V$ e $P$; (b) estime os
+quatro parâmetros por DE; (c) refine por LM; (d) calcule e interprete a matriz de
+correlação de Fisher; (e) calcule intervalos de confiança de 95\% e avalie quais
+parâmetros são bem identificáveis; (f) simule o modelo com os parâmetros estimados
+e compare com os dados originais.
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+
+O problema de estimação de parâmetros em modelos biológicos tem extensa literatura.
+Moles et al.\ (2003) \cite{moles2003} realizaram o primeiro estudo comparativo sistemático
+de algoritmos de otimização global para sistemas bioquímicos, concluindo que algoritmos
+evolutivos como DE são superiores aos métodos locais na maioria dos cenários. Raue et al.\
+(2009) \cite{raue2009} introduziram a análise de profile likelihood no contexto de sistemas
+biológicos, estabelecendo o método como padrão para análise de identificabilidade prática.
+
+Para a teoria de otimização numérica em geral, Nocedal e Wright \cite{nocedal2006} é a
+referência definitiva, cobrindo métodos de gradiente, Newton e quasi-Newton com rigor
+matemático. Press et al.\ \cite{press2007} (\textit{Numerical Recipes}) apresentam
+implementações práticas comentadas.
+
+O fenômeno de ``sloppy models'' --- modelos biológicos nos quais certas combinações de
+parâmetros são bem determinadas pelos dados enquanto outras são essencialmente
+inidentificáveis --- foi estudado por Gutenkunst et al.\ (2007) \cite{gutenkunst2007}.
+Esse trabalho sugere que a não-identificabilidade é uma característica ubíqua de modelos
+de sistemas biológicos, não uma exceção.
+
+Para seleção de modelos, Burnham e Anderson \cite{burnham2002} é a referência canônica
+sobre AIC e AICc, com vasta discussão sobre inferência multimodelo. Para abordagens
+bayesianas, o pacote PyMC (pymc.io) oferece uma implementação acessível de MCMC para
+modelos com integração de EDOs.
+
+\begin{thebibliography}{99}
+
+\bibitem{moles2003}
+Moles C.G., Mendes P., Banga J.R. (2003).
+Parameter estimation in biochemical pathways: a comparison of global optimization methods.
+\textit{Genome Research} \textbf{13}: 2467--2474.
+
+\bibitem{raue2009}
+Raue A. et al. (2009).
+Structural and practical identifiability analysis of partially observed dynamical models
+by exploiting the profile likelihood.
+\textit{Bioinformatics} \textbf{25}: 1923--1929.
+
+\bibitem{nocedal2006}
+Nocedal J., Wright S.J. (2006).
+\textit{Numerical Optimization}, 2ª ed.
+Springer.
+
+\bibitem{press2007}
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. (2007).
+\textit{Numerical Recipes: The Art of Scientific Computing}, 3ª ed.
+Cambridge University Press.
+
+\bibitem{gutenkunst2007}
+Gutenkunst R.N. et al. (2007).
+Universally sloppy parameter sensitivities in systems biology models.
+\textit{PLoS Computational Biology} \textbf{3}: e189.
+
+\bibitem{burnham2002}
+Burnham K.P., Anderson D.R. (2002).
+\textit{Model Selection and Multimodel Inference: A Practical Information-Theoretic Approach},
+2ª ed. Springer.
+
+\bibitem{voit2015}
+Voit E.O., Martens H.A., Omholt S.W. (2015).
+150 years of the mass action law.
+\textit{PLoS Computational Biology} \textbf{11}: e1004012.
+
+\end{thebibliography}

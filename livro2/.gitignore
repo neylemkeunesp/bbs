@@ -1,0 +1,21 @@
+# Livros: backups e artefatos de compilação
+*.auto
+*.partial
+*.bak
+*.aux
+*.log
+*.toc
+*.out
+*.idx
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.vrb
+*.snm
+*.nav
+test_cap*.pdf
+test_cap*.tex
+capitulos/*.aux
+capitulos/*.log
+capitulos/*.toc
+capitulos/*.out

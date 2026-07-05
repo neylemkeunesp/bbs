@@ -1,0 +1,282 @@
+\chapter{Sistemas Biológicos}
+\label{cap:01}
+
+A biologia moderna herdou do século~XX uma visão predominantemente reducionista: para entender
+um sistema vivo, decompunha-se em partes cada vez menores, isolavam-se os componentes e
+estudavam-se em detalhe. Essa estratégia produziu conquistas extraordinárias --- a estrutura
+do DNA, o código genético, as cascatas de sinalização celular. Mas ao mesmo tempo foi ficando
+claro que a soma das partes não reconstitui o todo. É desse reconhecimento que nasce a
+Biologia de Sistemas: a disciplina que estuda os organismos como sistemas integrados, onde
+as propriedades emergem das interações, e não dos elementos isolados.
+
+Este capítulo apresenta os componentes fundamentais que constituem os sistemas biológicos
+--- ácidos nucleicos, proteínas, lipídios, carboidratos --- e as principais estruturas
+celulares que os organizam. Mais do que um catálogo de moléculas, o objetivo é mostrar
+como esses componentes se articulam em redes funcionais que serão modeladas matematicamente
+nos capítulos seguintes.
+
+\section{O que são Sistemas Biológicos}
+
+\begin{definicaoenv}[Sistema Biológico]
+Um sistema biológico é uma rede complexa de componentes biologicamente relevantes que
+interagem entre si para realizar funções específicas. A compreensão de um sistema biológico
+exige não apenas o conhecimento dos componentes individuais, mas sobretudo a análise das
+interações que emergem entre eles.
+\end{definicaoenv}
+
+Os sistemas biológicos se distinguem de outros sistemas físico-químicos por quatro
+propriedades fundamentais. A primeira é a \textbf{complexidade hierárquica}: a vida se
+organiza em múltiplos níveis que se encaixam uns nos outros --- moléculas formam organelas,
+organelas compõem células, células constituem tecidos, tecidos integram órgãos, e assim
+por diante até o organismo completo e as populações. Cada nível possui propriedades próprias
+que não se reduzem ao nível inferior.
+
+A segunda propriedade é a \textbf{emergência}: o comportamento coletivo do sistema vai além
+do que qualquer componente isolado poderia exibir. A consciência emerge de neurônios
+individualmente incapazes de pensar; a homeostase de glicose emerge de células que
+individualmente secretam ou consomem açúcar; o batimento cardíaco emerge de cardiomiócitos
+que oscilam de forma coordenada. Compreender a emergência é uma das missões centrais da
+Biologia de Sistemas.
+
+A terceira propriedade é a \textbf{autorregulação}: os sistemas biológicos monitoram
+continuamente seu estado interno e ajustam seus parâmetros em resposta a perturbações
+externas. Essa capacidade de \emph{feedback} negativo --- que estabiliza o sistema em torno
+de um ponto de equilíbrio --- é o fundamento da homeostase e será formalizada matematicamente
+no Capítulo~4.
+
+A quarta propriedade é a \textbf{adaptabilidade}: ao contrário de máquinas projetadas para
+operar em condições fixas, os organismos evoluem e se adaptam a ambientes em mudança,
+tanto em escala de vida individual (plasticidade fenotípica) quanto em escala evolutiva.
+
+\section{Componentes Biológicos Fundamentais}
+
+A matéria viva é construída a partir de quatro classes de macromoléculas: ácidos nucleicos,
+proteínas, lipídios e carboidratos. Cada classe possui um papel estrutural e funcional
+distinto, mas todas interagem de modo integrado nos processos celulares.
+
+\subsection{Ácidos Nucleicos: DNA e RNA}
+
+O DNA (\emph{ácido desoxirribonucleico}) é o repositório da informação genética. Sua
+estrutura em dupla hélice, elucidada por Watson e Crick em 1953 com base nos dados de
+difração de raios-X de Rosalind Franklin, consiste em duas cadeias polinucleotídicas
+antiparalelas mantidas unidas por ligações de hidrogênio entre pares de bases complementares:
+adenina (A) pareia com timina (T) por duas ligações, e guanina (G) pareia com citosina (C)
+por três ligações. Essa assimetria energética --- G-C é mais estável que A-T --- tem
+consequências práticas para a desnaturação e a replicação do DNA.
+
+\begin{definicaoenv}[Nucleotídeo]
+A unidade básica do DNA é o nucleotídeo, composto por três elementos: uma base nitrogenada
+(purina ou pirimidina), o açúcar desoxirribose e um grupo fosfato. As purinas --- adenina
+e guanina --- possuem estrutura de anel duplo, enquanto as pirimidinas --- timina e
+citosina --- possuem anel simples. A composição química do nucleotídeo pode ser expressa
+como:
+\begin{equation}
+\text{Nucleotídeo} = \underbrace{\text{Base}}_{\text{Purinas/Pirimidinas}}
+                   + \underbrace{\text{Desoxirribose}}_{\text{Açúcar}}
+                   + \underbrace{\text{PO}_4^{3-}}_{\text{Fosfato}}
+\end{equation}
+\end{definicaoenv}
+
+A dupla hélice do DNA possui parâmetros estruturais precisos: diâmetro de aproximadamente
+2~nm, comprimento de 3,4~nm por volta completa, 10 pares de bases por volta e ângulo de
+rotação de 36° entre pares consecutivos. Essa geometria define o sulco maior e o sulco menor
+--- regiões de acesso diferencial para proteínas que leem a informação genética. A forma
+fisiológica predominante é a B-DNA; em condições de baixa hidratação, adota a forma A-DNA;
+e em sequências alternadas de purinas e pirimidinas pode ocorrer a rara forma Z-DNA, com
+hélice levogira.
+
+O RNA (\emph{ácido ribonucleico}) difere do DNA em três aspectos: utiliza ribose no lugar
+de desoxirribose, substitui a timina pela uracila (U) e é tipicamente de fita simples.
+Embora seja fita simples, o RNA pode formar estruturas secundárias e terciárias complexas
+por pareamento intramolecular --- hairpin loops, bulges, alças internas e pseudonós ---
+que são essenciais para suas funções catalíticas e regulatórias.
+
+As principais classes de RNA são o mRNA (mensageiro, que transporta a informação do DNA
+ao ribossomo), o tRNA (transportador, que carrega os aminoácidos durante a tradução) e o
+rRNA (ribossomal, componente estrutural e catalítico dos ribossomos). Além dessas classes
+clássicas, os RNAs regulatórios --- microRNAs, siRNAs e lncRNAs --- emergiram como
+componentes centrais dos sistemas de controle pós-transcricional, formando redes de
+regulação que serão tratadas no Capítulo~6.
+
+\subsection{Proteínas: Máquinas Moleculares}
+
+As proteínas são os principais executores das funções celulares. Construídas a partir de
+combinações dos 20 aminoácidos padrão codificados geneticamente, cada proteína dobra em
+uma estrutura tridimensional única que determina sua função. A organização estrutural das
+proteínas é descrita em quatro níveis hierárquicos.
+
+A \textbf{estrutura primária} é a sequência linear de aminoácidos ligados por ligações
+peptídicas. A formação de cada ligação peptídica libera uma molécula de água:
+\begin{equation}
+\text{AA}_1\text{-COOH} + \text{H-NH-AA}_2 \rightarrow \text{AA}_1\text{-CO-NH-AA}_2 + \text{H}_2\text{O}
+\end{equation}
+
+A \textbf{estrutura secundária} emerge do dobramento local da cadeia polipeptídica
+estabilizado por ligações de hidrogênio entre grupos C=O e N-H do esqueleto peptídico.
+Os dois elementos mais comuns são a $\alpha$-hélice --- hélice destrogira com 3,6 resíduos
+por volta, onde o grupo carbonila do resíduo $i$ faz ligação de hidrogênio com o grupo
+amino do resíduo $i+4$, com ângulos de Ramachandran $\phi \approx -60°$ e $\psi \approx -45°$
+--- e a folha-$\beta$, estrutura mais estendida onde as ligações de hidrogênio ocorrem entre
+fitas paralelas ou antiparalelas.
+
+A \textbf{estrutura terciária} é o arranjo tridimensional completo de uma cadeia polipeptídica,
+estabilizado por interações de longo alcance: ligações de hidrogênio, interações iônicas,
+forças hidrofóbicas e pontes dissulfeto entre resíduos de cisteína. A maioria das proteínas
+globulares esconde resíduos apolares no interior e expõe resíduos polares e carregados na
+superfície voltada ao solvente aquoso.
+
+A \textbf{estrutura quaternária} descreve a associação de múltiplas cadeias polipeptídicas
+(subunidades) em complexos funcionais. A hemoglobina, por exemplo, é um complexo
+$\alpha_2\beta_2$ no qual a cooperatividade entre as quatro subunidades permite a ligação
+alostérica de oxigênio --- um dos exemplos mais estudados de regulação de sistemas proteicos.
+
+\subsection{Metabolismo e Enzimas}
+
+\begin{definicaoenv}[Metabolismo]
+O metabolismo é o conjunto de reações químicas que ocorrem nas células para manter a vida.
+Divide-se em catabolismo --- reações que degradam moléculas e liberam energia --- e
+anabolismo --- reações que sintetizam moléculas complexas a partir de precursores simples,
+consumindo energia.
+\end{definicaoenv}
+
+As vias metabólicas centrais incluem a glicólise, o ciclo de Krebs e a fosforilação
+oxidativa. A glicólise converte uma molécula de glicose em dois piruvatos, com balanço
+líquido de dois ATP e dois NADH:
+\begin{equation}
+\text{Glicose} + 2\text{NAD}^+ + 2\text{ADP} + 2\text{P}_i
+\rightarrow 2\text{Piruvato} + 2\text{NADH} + 2\text{ATP} + 2\text{H}_2\text{O}
+\end{equation}
+
+As enzimas são proteínas que catalisam reações bioquímicas específicas sem serem consumidas.
+A cinética de Michaelis-Menten descreve a velocidade de reação em função da concentração
+de substrato:
+\begin{equation}
+v = \frac{V_{\max}[S]}{K_M + [S]}
+\end{equation}
+onde $V_{\max}$ é a velocidade máxima, $[S]$ é a concentração do substrato e $K_M$ é a
+constante de Michaelis --- a concentração de substrato para a qual $v = V_{\max}/2$.
+Quando $[S] \gg K_M$, a enzima opera em saturação; quando $[S] \ll K_M$, a velocidade é
+aproximadamente linear em $[S]$. Essa equação, derivada por Leonor Michaelis e Maud
+Menten em 1913, é a base quantitativa da enzimologia e será revisitada nos modelos de
+redes metabólicas do Capítulo~8.
+
+O código a seguir implementa e plota a equação de Michaelis-Menten em Python:
+\begin{lstlisting}[language=Python, caption=Simulação da cinética de Michaelis-Menten]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def michaelis_menten(S, Vmax, Km):
+    """Calcula velocidade pela equação de Michaelis-Menten."""
+    return (Vmax * S) / (Km + S)
+
+Vmax, Km = 100, 5          # umol/min e mM
+S = np.linspace(0, 50, 200)
+v = michaelis_menten(S, Vmax, Km)
+
+plt.plot(S, v, 'b-', linewidth=2, label='v(S)')
+plt.axhline(Vmax, color='r', linestyle='--', label=f'Vmax = {Vmax}')
+plt.axvline(Km,   color='g', linestyle='--', label=f'Km = {Km} mM')
+plt.xlabel('[S] (mM)'); plt.ylabel('v (μmol/min)')
+plt.legend(); plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\section{Organização Celular}
+
+A célula é a unidade fundamental da vida. Dois domínios principais de organização celular
+coexistem na biosfera: os \textbf{procariontes} --- bactérias e arqueas --- que não possuem
+núcleo delimitado por membrana, têm DNA circular e ribossomos 70S; e os
+\textbf{eucariontes} --- animais, plantas, fungos e protistas --- que possuem núcleo definido,
+DNA linear associado a histonas, organelas membranosas e ribossomos 80S.
+
+A compartimentalização da célula eucarionte em organelas é uma solução evolutiva para um
+problema de incompatibilidade bioquímica: a síntese e a degradação de ácidos graxos
+utilizam os mesmos intermediários, mas devem ocorrer em condições opostas --- síntese
+no citoplasma, degradação ($\beta$-oxidação) na mitocôndria. A separação física permite
+que ambos os processos coexistam sem interferência mútua.
+
+A mitocôndria merece atenção especial: é a principal responsável pela produção de ATP
+por fosforilação oxidativa, gerando aproximadamente 34 ATP a partir da cadeia de transporte
+de elétrons, somados aos 2 ATP da glicólise e 2 ATP do ciclo de Krebs, totalizando cerca
+de 38 ATP por molécula de glicose em condições ideais. O potencial eletroquímico iônico
+através da membrana mitocondrial interna obedece à equação de Nernst:
+\begin{equation}
+E_{ion} = \frac{RT}{zF}\ln\frac{[ion]_{ext}}{[ion]_{int}}
+         = \frac{58\,\text{mV}}{z}\log_{10}\frac{[ion]_{ext}}{[ion]_{int}}
+\end{equation}
+onde $R$ é a constante dos gases, $T$ a temperatura absoluta, $z$ a valência iônica e
+$F$ a constante de Faraday. Esse potencial transmembranar é a força motriz da síntese
+de ATP pela ATP sintase.
+
+\section{Integração: da Molécula ao Sistema}
+
+\begin{definicaoenv}[Biologia de Sistemas]
+A Biologia de Sistemas é o estudo de sistemas biológicos por meio da análise integrada
+de múltiplos níveis de organização --- genoma, transcriptoma, proteoma, metaboloma ---
+com o objetivo de compreender como as propriedades emergentes de organismos vivos surgem
+das interações entre seus componentes moleculares.
+\end{definicaoenv}
+
+O fluxo de informação biológica segue a lógica do Dogma Central: DNA é transcrito em
+RNA, que é traduzido em proteína, que catalisa reações que produzem metabólitos, que
+por sua vez influenciam a expressão gênica por mecanismos de feedback. Esse circuito
+não é unidirecional: proteínas reguladoras atuam sobre a transcrição do DNA; metabólitos
+ativam ou inibem enzimas por mecanismos alostéricos; RNAs não-codificantes modulam a
+estabilidade de outros RNAs. A célula é, portanto, um sistema de controle com múltiplas
+alças de retroalimentação --- exatamente o tipo de objeto que a Biologia de Sistemas
+está equipada para analisar.
+
+A abordagem reducionista --- estudar partes isoladas --- e a abordagem sistêmica ---
+estudar interações e comportamento emergente --- não são opostas, mas complementares.
+O sucesso da biologia molecular do século~XX gerou a matéria-prima; a Biologia de
+Sistemas fornece o enquadramento teórico para integrá-la em modelos preditivos.
+Nos capítulos seguintes, veremos como equações diferenciais, teoria de redes e
+algoritmos computacionais se transformam nas ferramentas centrais dessa integração.
+
+\section{Exercícios}
+
+\begin{exercicio}
+Descreva as quatro propriedades fundamentais dos sistemas biológicos --- complexidade
+hierárquica, emergência, autorregulação e adaptabilidade --- e dê um exemplo concreto
+de cada uma em sistemas celulares.
+\end{exercicio}
+
+\begin{exercicio}
+A constante de Michaelis $K_M$ de uma enzima é 2~mM para o substrato A e 20~mM para
+o substrato B. (a) Qual substrato tem maior afinidade pela enzima? (b) A concentração
+intracelular típica de A é 1~mM e de B é 40~mM. Para qual substrato a enzima opera
+mais próximo de $V_{\max}$?
+\end{exercicio}
+
+\begin{exercicio}
+Compare células procariontes e eucariontes quanto a: (a) organização do material genético,
+(b) presença de organelas, (c) tamanho típico e (d) exemplos de organismos. Por que
+a compartimentalização das eucariontes representa uma vantagem para processos metabólicos
+incompatíveis?
+\end{exercicio}
+
+\begin{exercicio}
+O Dogma Central da biologia molecular descreve o fluxo de informação DNA → RNA → Proteína.
+Cite dois exemplos de processos biológicos que representam exceções ou extensões a esse
+fluxo linear, e explique como eles modificam o panorama da regulação gênica.
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+
+A estrutura em dupla hélice do DNA foi publicada por Watson e Crick em 1953 na
+\textit{Nature} (\textit{A structure for deoxyribose nucleic acid}), um artigo de
+apenas uma página que revolucionou a biologia. A contribuição decisiva dos dados de
+difração de Rosalind Franklin é documentada em detalhe em Maddox (2002),
+\textit{Rosalind Franklin: The Dark Lady of DNA}.
+
+A cinética de Michaelis-Menten foi formulada originalmente em Michaelis e Menten (1913),
+\textit{Die Kinetik der Invertinwirkung}, \textit{Biochemische Zeitschrift}. A derivação
+moderna usando o estado de equilíbrio quasi-estacionário é atribuída a Briggs e Haldane
+(1925). Uma discussão rigorosa encontra-se em Segel (1988), \textit{On the validity of
+the steady state assumption of enzyme kinetics}.
+
+Para uma introdução abrangente à Biologia de Sistemas, recomenda-se Alon (2007),
+\textit{An Introduction to Systems Biology}, que cobre motifs de redes e princípios
+de design de redes biológicas. O livro de Klipp et al.\ (2009),
+\textit{Systems Biology: A Textbook}, oferece cobertura mais ampla dos aspectos
+computacionais e quantitativos. A perspectiva histórica é bem narrada em
+Noble (2006), \textit{The Music of Life: Biology Beyond Genes}.

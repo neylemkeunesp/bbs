@@ -1,0 +1,745 @@
+\chapter{A Matemática dos Sistemas Biológicos}
+\label{cap:04}
+
+A matemática é a linguagem com que a Biologia de Sistemas formula seus argumentos mais
+precisos. Enquanto a descrição verbal de um processo biológico pode ser ambígua, uma
+equação diferencial é inequívoca: especifica exatamente como as variáveis de estado
+evoluem no tempo, dado um conjunto de parâmetros e condições iniciais. Mas a matematização
+da biologia não é um exercício de formalismo vazio --- é uma ferramenta para prever,
+distinguir hipóteses e projetar experimentos.
+
+Este capítulo desenvolve as ferramentas matemáticas indispensáveis para a modelagem de
+sistemas dinâmicos biológicos. Começamos pelos modelos em tempo discreto --- o mapa
+logístico e as cadeias de Markov --- e avançamos para os sistemas de equações diferenciais
+ordinárias (EDOs), cobrindo retratos de fase, análise de estabilidade, bifurcações, ciclos
+limite e análise de sensibilidade. O fio condutor é sempre a pergunta biológica: como a
+topologia matemática de um sistema se relaciona com seu comportamento funcional?
+
+\section{Modelos Discretos e Recursivos}
+
+\begin{definicaoenv}[Sistema Dinâmico em Tempo Discreto]
+Um sistema dinâmico em tempo discreto é aquele em que o tempo avança em passos inteiros
+$t = 0, 1, 2, \ldots$ A dinâmica é descrita por uma relação de recorrência
+\begin{equation}
+  x_{t+1} = f(x_t),
+\end{equation}
+onde $f$ é uma função que mapeia o estado atual $x_t$ no estado do próximo instante.
+\end{definicaoenv}
+
+Muitos processos biológicos ocorrem naturalmente em etapas discretas: gerações
+não-sobrepostas de insetos sazonais, divisão celular sincronizada em culturas, ciclos de
+replicação viral, ou simplesmente coletas experimentais em pontos fixos de tempo. Para esses
+sistemas, a modelagem discreta é mais natural do que as equações diferenciais contínuas.
+
+\subsection{O Mapa Logístico e o Caos Determinístico}
+
+Em 1976, o ecologista Robert May publicou na \textit{Nature} um artigo que se tornaria
+clássico: ``\textit{Simple mathematical models with very complicated dynamics}''. May
+demonstrava que uma equação de uma única variável --- o mapa logístico --- era capaz de
+exibir um leque de comportamentos que ia da extinção ao equilíbrio estável, passando por
+oscilações periódicas e chegando ao caos determinístico. O mapa logístico é definido por
+\begin{equation}
+  x_{t+1} = r\, x_t(1 - x_t),
+\end{equation}
+onde $x_t \in [0,1]$ representa a densidade populacional normalizada e $r > 0$ é a taxa de
+crescimento intrínseca.
+
+O comportamento do sistema depende criticamente de $r$. Para $0 < r < 1$, a população se
+extingue: $x_t \to 0$. Para $1 < r < 3$, o sistema converge para o ponto fixo estável
+$x^* = 1 - 1/r$. Quando $r$ ultrapassa 3, emerge um ciclo estável de período~2. Aumentando
+$r$ além de aproximadamente 3{,}44, o período dobra novamente para~4, depois para~8, num
+processo de \emph{duplicação de período} (Feigenbaum, 1978) que conduz ao caos para
+$r > 3{,}57$. Na região caótica, trajetórias iniciadas em condições iniciais arbitrariamente
+próximas divergem exponencialmente --- sensibilidade às condições iniciais que Lorenz chamou
+de ``efeito borboleta''.
+
+A estabilidade de um ponto fixo $x^*$ (onde $f(x^*) = x^*$) é determinada pela derivada de
+$f$ nesse ponto. Expandindo em série de Taylor em torno de $x^*$, a perturbação
+$\xi_t = x_t - x^*$ evolui segundo
+\begin{equation}
+  \xi_{t+1} \approx f'(x^*)\,\xi_t
+  \quad\Rightarrow\quad
+  \xi_t \approx [f'(x^*)]^t\,\xi_0.
+\end{equation}
+O ponto fixo é \textbf{estável} se $|f'(x^*)| < 1$ e \textbf{instável} se $|f'(x^*)| > 1$.
+Para o ponto não-trivial $x^* = 1 - 1/r$, tem-se $f'(x^*) = 2 - r$, de modo que a
+estabilidade é garantida para $|2 - r| < 1$, ou seja, $1 < r < 3$.
+
+\begin{lstlisting}[language=Python, caption=Diagrama de bifurcacao do mapa logistico]
+import numpy as np
+import matplotlib.pyplot as plt
+
+r_vals = np.linspace(2.5, 4.0, 1000)
+x = 0.5 * np.ones(len(r_vals))
+
+for _ in range(500):          # transiente
+    x = r_vals * x * (1 - x)
+
+r_plot, x_plot = [], []
+for _ in range(200):          # regime permanente
+    x = r_vals * x * (1 - x)
+    r_plot.extend(r_vals)
+    x_plot.extend(x)
+
+plt.figure(figsize=(10, 5))
+plt.plot(r_plot, x_plot, ',k', alpha=0.2)
+plt.xlabel('r'); plt.ylabel('x*')
+plt.title('Diagrama de bifurcacao --- mapa logistico')
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\subsection{Processos Estocásticos e Cadeias de Markov}
+
+Nem todo processo biológico é determinístico. Quando o número de moléculas ou indivíduos é
+pequeno, as flutuações estocásticas tornam-se relevantes e podem alterar qualitativamente a
+dinâmica. Um framework natural para modelar esse regime é o das \emph{cadeias de Markov},
+nas quais o estado futuro do sistema depende apenas do estado presente --- a chamada
+\emph{propriedade de Markov} --- e não de toda a história passada.
+
+\begin{definicaoenv}[Cadeia de Markov em Tempo Discreto]
+Uma cadeia de Markov em tempo discreto é definida por um conjunto de estados
+$\{s_1, s_2, \ldots, s_n\}$ e por uma \emph{matriz de transição} $\mathbf{P}$, onde
+$P_{ij}$ é a probabilidade de transitar do estado $s_i$ para o estado $s_j$ num único passo.
+A distribuição de probabilidade dos estados evolui como
+\begin{equation}
+  \boldsymbol{\pi}_{t+1} = \mathbf{P}^T \boldsymbol{\pi}_t,
+\end{equation}
+onde $\boldsymbol{\pi}_t$ é o vetor de probabilidades no instante $t$.
+\end{definicaoenv}
+
+No limite de longo prazo, uma cadeia de Markov \emph{ergódica} (irredutível e aperiódica)
+converge para a \emph{distribuição estacionária} $\boldsymbol{\pi}^*$, que satisfaz
+$\boldsymbol{\pi}^* = \mathbf{P}^T \boldsymbol{\pi}^*$ --- ou seja, $\boldsymbol{\pi}^*$
+é o autovetor de $\mathbf{P}^T$ associado ao autovalor 1.
+
+Um exemplo biológico paradigmático é o modelo de \emph{canal iônico} de dois estados:
+Fechado ($F$) e Aberto ($A$). A matriz de transição é
+\begin{equation}
+  \mathbf{P} = \begin{bmatrix} 1 - \alpha & \alpha \\ \beta & 1 - \beta \end{bmatrix},
+\end{equation}
+onde $\alpha$ é a probabilidade de abertura por passo e $\beta$ a de fechamento. A
+distribuição estacionária é obtida resolvendo $\pi_F \alpha = \pi_A \beta$:
+\begin{equation}
+  \pi_A = \frac{\alpha}{\alpha + \beta}, \quad \pi_F = \frac{\beta}{\alpha + \beta}.
+\end{equation}
+Assim, a fração de canais abertos no equilíbrio é determinada apenas pela razão das taxas
+de abertura e fechamento --- resultado que conecta o nível molecular (transições individuais)
+ao nível macroscópico (condutância elétrica média da membrana).
+
+Em biologia, cadeias de Markov descrevem também transições entre estados conformacionais de
+proteínas, dinâmica de expressão gênica em células individuais, e modelos epidemiológicos
+estocásticos (SIR em populações finitas), nos quais a extinção estocástica do vírus pode
+ocorrer mesmo quando o modelo determinístico prevê persistência.
+
+
+\section{Sistemas de EDOs e Retratos de Fase}
+
+A transição dos modelos discretos para os contínuos é natural quando o número de
+indivíduos é grande e o tempo pode ser tratado como variável contínua. O
+\emph{sistema de equações diferenciais ordinárias} (EDOs) é a linguagem padrão para
+modelar a dinâmica contínua de sistemas biológicos:
+\begin{equation}
+  \frac{d\mathbf{x}}{dt} = \mathbf{f}(\mathbf{x},\, \boldsymbol{\theta}),
+\end{equation}
+onde $\mathbf{x}(t) \in \mathbb{R}^n$ é o vetor de variáveis de estado (concentrações,
+populações, potenciais elétricos) e $\boldsymbol{\theta}$ é o vetor de parâmetros.
+O lado direito $\mathbf{f}(\mathbf{x})$ define um \emph{campo vetorial} que associa a
+cada ponto do espaço de estados um vetor velocidade --- a direção e magnitude em que o
+sistema evolui instantaneamente.
+
+O \emph{retrato de fase} é a representação geométrica das trajetórias no espaço de
+estados, independentemente do tempo. Em sistemas bidimensionais, ele revela de forma
+imediata a natureza qualitativa da dinâmica --- convergência para equilíbrio, oscilações
+periódicas, trajetórias heteroclínicas --- sem exigir solução analítica das EDOs.
+
+As \emph{nulclinas} são curvas no espaço de fase onde uma derivada específica se anula:
+a \emph{$x$-nulclina} é o conjunto $\{\dot{x} = 0\}$ (onde o movimento é puramente
+vertical) e a \emph{$y$-nulclina} é o conjunto $\{\dot{y} = 0\}$ (movimento puramente
+horizontal). Os \emph{pontos de equilíbrio} --- onde $\mathbf{f}(\mathbf{x}^*) = \mathbf{0}$
+--- estão sempre nas interseções das nulclinas. Construir o retrato de fase exige: (1)
+calcular e plotar as nulclinas; (2) identificar equilíbrios; (3) desenhar o campo de
+direções em cada região; (4) integrar trajetórias numericamente.
+
+\subsection{O Sistema de Lotka-Volterra}
+
+O sistema predador-presa de Lotka-Volterra, proposto independentemente por Alfred Lotka
+(1920) e Vito Volterra (1926), é um dos modelos de EDOs mais estudados em biologia:
+\begin{align}
+  \frac{dx}{dt} &= \alpha x - \beta xy \\[4pt]
+  \frac{dy}{dt} &= \delta xy - \gamma y,
+\end{align}
+onde $x$ é a população de presas (crescimento intrínseco $\alpha$, predação $\beta$) e
+$y$ é a população de predadores (eficiência de conversão $\delta$, mortalidade $\gamma$).
+O sistema possui dois pontos de equilíbrio: a origem $(0,0)$ --- extinção de ambas as
+espécies --- e o ponto não-trivial $(x^*, y^*) = (\gamma/\delta,\, \alpha/\beta)$.
+
+A análise de estabilidade desse ponto de equilíbrio, via linearização (ver Seção~4.3),
+revela que os autovalores do jacobiano são puramente imaginários, indicando oscilações
+conservativas, não amortecidas. As trajetórias formam órbitas fechadas no plano de fase:
+as populações oscilam indefinidamente, sem convergir para um equilíbrio fixo nem divergir.
+Dados históricos de lince e lebre do Canadá (Elton e Nicholson, 1942) mostram oscilações
+qualitativamente consistentes com esse modelo.
+
+As nulclinas do sistema de Lotka-Volterra têm interpretação biológica clara: a
+$x$-nulclina $y = \alpha/\beta$ (linha horizontal) indica o número de predadores que
+mantém as presas em equilíbrio; a $y$-nulclina $x = \gamma/\delta$ (linha vertical)
+indica o número de presas necessário para manter os predadores em equilíbrio. Quando as
+presas estão abaixo desse limiar, os predadores declinam; acima, crescem.
+
+\begin{lstlisting}[language=Python, caption=Simulacao e retrato de fase do Lotka-Volterra]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def lotka_volterra(X, t, alpha, beta, delta, gamma):
+    x, y = X
+    dxdt = alpha*x - beta*x*y
+    dydt = delta*x*y - gamma*y
+    return [dxdt, dydt]
+
+alpha, beta, delta, gamma = 1.0, 0.5, 0.5, 1.0
+t = np.linspace(0, 50, 2000)
+
+# Multiplas condicoes iniciais
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+for x0, y0 in [(2, 1), (3, 1.5), (1.5, 0.5)]:
+    sol = odeint(lotka_volterra, [x0, y0], t, args=(alpha, beta, delta, gamma))
+    axes[0].plot(t, sol[:, 0], label=f'x(0)={x0}')
+    axes[0].plot(t, sol[:, 1], '--')
+    axes[1].plot(sol[:, 0], sol[:, 1])
+
+# Equilibrio
+axes[1].plot(gamma/delta, alpha/beta, 'ro', markersize=10, label='Equilibrio')
+axes[0].set_xlabel('Tempo'); axes[0].set_ylabel('Populacao')
+axes[1].set_xlabel('Presas (x)'); axes[1].set_ylabel('Predadores (y)')
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\section{Análise de Estabilidade}
+
+\subsection{Linearização e o Jacobiano}
+
+A estabilidade de um ponto de equilíbrio $\mathbf{x}^*$ é analisada por linearização. Seja
+$\boldsymbol{\xi} = \mathbf{x} - \mathbf{x}^*$ a perturbação em torno do equilíbrio. Para
+$\boldsymbol{\xi}$ pequeno, a dinâmica é aproximada pelo sistema linear
+\begin{equation}
+  \frac{d\boldsymbol{\xi}}{dt} \approx J(\mathbf{x}^*)\,\boldsymbol{\xi},
+\end{equation}
+onde $J$ é o \emph{jacobiano} de $\mathbf{f}$ avaliado no equilíbrio:
+$J_{ij} = \partial f_i / \partial x_j\big|_{\mathbf{x}^*}$.
+
+A estabilidade é determinada pelos autovalores $\lambda_k$ de $J$: o equilíbrio é
+\textbf{estável} se $\operatorname{Re}(\lambda_k) < 0$ para todo $k$, \textbf{instável}
+se ao menos um autovalor tem parte real positiva, e \textbf{marginalmente estável} (análise
+não-linear necessária) quando algum autovalor tem parte real nula.
+
+Para sistemas bidimensionais, a equação característica de $J$ se reduz a
+\begin{equation}
+  \lambda^2 - \operatorname{tr}(J)\,\lambda + \det(J) = 0,
+\end{equation}
+com soluções $\lambda = \frac{1}{2}\left[\operatorname{tr}(J) \pm \sqrt{\operatorname{tr}(J)^2 - 4\det(J)}\right]$.
+
+\subsection{Classificação dos Pontos de Equilíbrio}
+
+A natureza do ponto fixo em 2D é completamente determinada por dois escalares:
+$\tau = \operatorname{tr}(J)$ e $\Delta = \det(J)$. O diagrama $(\tau, \Delta)$
+organiza todos os tipos possíveis:
+
+\begin{itemize}
+\item Se $\Delta < 0$: os autovalores são reais com sinais opostos. O ponto é um
+  \textbf{ponto de sela} --- instável (um autovetor estável, um instável).
+
+\item Se $\Delta > 0$ e $\tau^2 > 4\Delta$: autovalores reais de mesmo sinal.
+  Se $\tau < 0$: \textbf{nó estável} (convergência exponencial, sem oscilações).
+  Se $\tau > 0$: \textbf{nó instável} (divergência exponencial).
+
+\item Se $\Delta > 0$ e $\tau^2 < 4\Delta$: autovalores complexos conjugados
+  $\lambda = \tau/2 \pm i\omega$, com $\omega = \sqrt{4\Delta - \tau^2}/2$.
+  Se $\tau < 0$: \textbf{espiral estável} (convergência oscilatória amortecida).
+  Se $\tau > 0$: \textbf{espiral instável} (divergência oscilatória).
+  Se $\tau = 0$: \textbf{centro} (órbitas fechadas conservativas).
+\end{itemize}
+
+Esse diagrama é uma ferramenta poderosa: basta calcular traço e determinante do jacobiano
+para classificar o equilíbrio sem resolver explicitamente os autovalores.
+
+\begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e autovalores com SymPy]
+import sympy as sp
+import numpy as np
+
+x, y = sp.symbols('x y')
+
+# Sistema de exemplo: Lotka-Volterra com capacidade de suporte
+alpha, beta, delta, gamma = 1.0, 0.5, 0.5, 1.0
+f1 = x*(1 - x/10 - 0.5*y)
+f2 = y*(-0.75 + 0.5*x)
+
+# Jacobiano simbolico
+J = sp.Matrix([[sp.diff(f1, x), sp.diff(f1, y)],
+               [sp.diff(f2, x), sp.diff(f2, y)]])
+
+# Encontrar equilibrios
+equilibrios = sp.solve([f1, f2], [x, y])
+print("Pontos de equilibrio:", equilibrios)
+
+# Analisar estabilidade em cada equilibrio
+for eq in equilibrios:
+    x_star, y_star = float(eq[0]), float(eq[1])
+    J_num = np.array(J.subs([(x, x_star), (y, y_star)])).astype(float)
+    autovalores = np.linalg.eigvals(J_num)
+    tau = np.trace(J_num)
+    det = np.linalg.det(J_num)
+    estavel = all(np.real(autovalores) < 0)
+    print(f"\nEq ({x_star:.2f}, {y_star:.2f}): tr={tau:.3f}, det={det:.3f}")
+    print(f"  Autovalores: {autovalores}")
+    print(f"  Estavel: {estavel}")
+\end{lstlisting}
+
+
+\section{Bifurcações}
+
+\begin{definicaoenv}[Bifurcação]
+Uma bifurcação é uma mudança qualitativa na dinâmica de um sistema quando um parâmetro de
+controle $\mu$ atravessa um valor crítico $\mu_c$. Novos equilíbrios aparecem ou
+desaparecem, equilíbrios existentes trocam de estabilidade, ou surgem novas estruturas
+dinâmicas como ciclos limite.
+\end{definicaoenv}
+
+As bifurcações são biologicamente fundamentais porque explicam transições abruptas ou
+graduais entre estados funcionais distintos: a diferenciação celular (transição entre dois
+fenótipos estáveis), o surgimento de ritmos circadianos (transição para oscilações), a
+bistabilidade de switches genéticos (dois estados atratores separados por uma separatriz),
+e o limiar de patologias (onde um estado saudável perde estabilidade).
+
+\subsection{Bifurcação Saddle-Node}
+
+A bifurcação saddle-node (ou \emph{fold}) é a forma mais comum de equilíbrios aparecerem
+ou desaparecerem. Sua forma normal é
+\begin{equation}
+  \frac{dx}{dt} = \mu + x^2.
+\end{equation}
+Para $\mu < 0$, o sistema tem dois equilíbrios: $x^* = -\sqrt{-\mu}$ (estável) e
+$x^* = +\sqrt{-\mu}$ (instável). Em $\mu = 0$, os dois equilíbrios colidem num único ponto
+semiestável. Para $\mu > 0$, nenhum equilíbrio existe e todas as trajetórias divergem.
+
+Na biologia, a bifurcação saddle-node aparece em modelos de \emph{bistabilidade}: circuitos
+com feedback positivo que podem existir em dois estados estáveis (``ligado'' e ``desligado'')
+separados por um limiar instável (ponto de sela). Uma perturbação suficientemente grande
+pode empurrar o sistema de um estado para o outro de forma irreversível --- o que se conhece
+como \emph{histerese}.
+
+\subsection{Bifurcação Transcrítica}
+
+A bifurcação transcrítica é característica de sistemas onde um estado trivial (como extinção
+populacional, $x^* = 0$) sempre existe. Sua forma normal é
+\begin{equation}
+  \frac{dx}{dt} = \mu x - x^2.
+\end{equation}
+Para $\mu < 0$, $x^* = 0$ é estável e $x^* = \mu$ é instável. Em $\mu = 0$, os dois
+ramos colidem e trocam de estabilidade: para $\mu > 0$, $x^* = 0$ torna-se instável e
+$x^* = \mu > 0$ é o novo equilíbrio estável. O modelo logístico de crescimento populacional
+exibe exatamente este comportamento: para $r < 1$ (recursos insuficientes), a extinção é o
+único equilíbrio estável; para $r > 1$, a população sobrevive num equilíbrio positivo.
+
+\subsection{Bifurcação Pitchfork}
+
+A bifurcação pitchfork ocorre em sistemas com simetria e produz splitting de equilíbrios.
+A forma supercrítica é
+\begin{equation}
+  \frac{dx}{dt} = \mu x - x^3.
+\end{equation}
+Para $\mu < 0$, apenas $x^* = 0$ existe (estável). Para $\mu > 0$, $x^* = 0$ torna-se
+instável e surgem dois novos equilíbrios estáveis $x^* = \pm\sqrt{\mu}$ --- uma transição
+suave e contínua. A forma subcrítica ($\dot{x} = \mu x + x^3$) produz comportamento
+oposto: para $\mu < 0$, dois equilíbrios instáveis flanqueiam $x^* = 0$ estável; quando
+$\mu > 0$, todos os equilíbrios desaparecem e o sistema diverge catastroficamente. A
+pitchfork subcrítica é relevante em modelos de diferenciação celular, onde pequenas
+perturbações podem induzir transições irreversíveis de estado.
+
+\subsection{Bifurcação de Hopf}
+
+A bifurcação de Hopf é o mecanismo gerador de oscilações biológicas. Um equilíbrio estável
+perde estabilidade quando um par de autovalores complexos conjugados $\lambda = \alpha(\mu) \pm i\omega(\mu)$
+atravessa o eixo imaginário: $\alpha(\mu_c) = 0$, com $d\alpha/d\mu|_{\mu_c} \neq 0$.
+
+Na bifurcação de Hopf \emph{supercrítica}, para $\mu > \mu_c$, surge um ciclo limite
+estável ao redor do equilíbrio (agora instável). A amplitude do ciclo cresce como
+$A \sim \sqrt{\mu - \mu_c}$ --- uma transição suave. Na bifurcação \emph{subcrítica}, um
+ciclo limite instável colapsa sobre o equilíbrio, que então perde estabilidade abruptamente.
+
+O oscilador circadiano, as oscilações de NF-$\kappa$B em resposta a LPS, e as oscilações
+glicolíticas são exemplos de sistemas biológicos que passam por bifurcações de Hopf quando
+parâmetros como taxas de síntese ou degradação são variados.
+
+\begin{lstlisting}[language=Python, caption=Diagrama de bifurcacao via varredura de parametro]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def hopf_normal(X, t, mu):
+    x, y = X
+    r2 = x**2 + y**2
+    dxdt = mu*x - y - x*r2
+    dydt = x + mu*y - y*r2
+    return [dxdt, dydt]
+
+t = np.linspace(0, 100, 5000)
+mu_values = np.linspace(-0.5, 1.0, 30)
+amplitudes = []
+
+for mu in mu_values:
+    sol = odeint(hopf_normal, [0.1, 0.1], t, args=(mu,))
+    # Amplitude no regime estacionario (ultimos 20%)
+    x_ss = sol[int(0.8*len(t)):, 0]
+    amplitudes.append(np.max(x_ss) - np.min(x_ss))
+
+plt.figure(figsize=(8, 5))
+plt.plot(mu_values, amplitudes, 'b-o', markersize=4)
+plt.axvline(0, color='r', linestyle='--', label='Bifurcacao de Hopf')
+plt.xlabel('Parametro mu'); plt.ylabel('Amplitude do ciclo')
+plt.title('Bifurcacao de Hopf supercritica')
+plt.legend(); plt.grid(True); plt.show()
+\end{lstlisting}
+
+\section{Oscilações e Ciclos Limite}
+
+\begin{definicaoenv}[Ciclo Limite]
+Um ciclo limite é uma órbita periódica \emph{isolada} no espaço de fase, para a qual
+trajetórias próximas convergem (ciclo limite \emph{estável}) ou divergem (ciclo limite
+\emph{instável}). Ao contrário do \emph{centro} do sistema linear conservativo --- onde
+órbitas formam uma família infinita dependente das condições iniciais --- o ciclo limite tem
+amplitude e período fixos, determinados pela não-linearidade do sistema.
+\end{definicaoenv}
+
+Ciclos limite são essenciais para modelar ritmos biológicos robustos: o relógio circadiano
+de uma célula continua a oscilar com período de $\sim$24 horas mesmo após perturbações de
+temperatura ou luz, porque o ciclo limite tem amplitude e período intrínsecos, independentes
+das condições iniciais.
+
+\subsection{O Teorema de Poincaré-Bendixson}
+
+Em sistemas bidimensionais, a existência de ciclos limite é garantida pelo teorema de
+Poincaré-Bendixson: se existe uma região limitada $R$, positivamente invariante (trajetórias
+não saem de $R$) e sem pontos de equilíbrio, então qualquer trajetória que permanece em $R$
+converge para um ciclo limite periódico. Este teorema é uma ferramenta poderosa para provar
+existência de oscilações sem encontrar a solução explícita. Ele também implica que
+\emph{caos não é possível em sistemas autônomos bidimensionais} --- para haver caos
+determinístico, são necessárias pelo menos três dimensões.
+
+\subsection{O Oscilador de Van der Pol}
+
+O oscilador de Van der Pol é o paradigma dos osciladores não-lineares com ciclo limite. Na
+forma de sistema de primeira ordem:
+\begin{align}
+  \frac{dx}{dt} &= y \\
+  \frac{dy}{dt} &= \mu(1 - x^2)y - x,
+\end{align}
+onde $\mu > 0$ controla a não-linearidade. Para $\mu$ pequeno, o oscilador é quase
+harmônico, com amplitude e frequência próximas de 1. Para $\mu$ grande, o sistema exibe
+\emph{oscilações de relaxação}: passa longos períodos em estados quase estáticos,
+interrompidos por transições rápidas --- o comportamento típico de osciladores biológicos
+com dinâmica rápido-lento, como o potencial de ação cardíaco.
+
+A análise de estabilidade da origem revela que o jacobiano avaliado em $(0,0)$ tem traço
+$\operatorname{tr}(J) = \mu > 0$ e $\det(J) = 1 > 0$, portanto a origem é sempre uma
+espiral instável para $\mu > 0$. A existência de um ciclo limite estável --- provável pelo
+teorema de Poincaré-Bendixson, aplicado a uma região anular adequada --- é o que garante
+que o sistema não diverge: as trajetórias se estabilizam no ciclo.
+
+\subsection{Osciladores Biológicos}
+
+Os sistemas biológicos possuem osciladores em todas as escalas de tempo. Os
+\emph{ritmos circadianos} operam com período de $\sim$24 horas e são gerados por loops de
+feedback transcricional negativo: a proteína PER inibe seu próprio gene, criando um atraso
+temporal que produz oscilações autossustentadas. As \emph{oscilações de cálcio} intracelular
+têm período de segundos a minutos e mediam sinalização em neurônios, células imunes e
+oócitos. As \emph{oscilações glicolíticas} em leveduras (período $\sim$5 min) são geradas
+pela ativação alostérica da fosfofrutoquinase (PFK) pelo ADP --- um loop de feedback
+positivo balanceado por consumo de ATP. O \emph{ciclo celular} coordena duplicação de DNA e
+divisão celular com período de horas, combinando ciclos limite (para a progressão periódica)
+com switches biestáveis (para as transições irreversíveis de ponto de controle).
+
+\begin{lstlisting}[language=Python, caption=Oscilador de Van der Pol e Goodwin]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+# Van der Pol
+def van_der_pol(X, t, mu):
+    x, y = X
+    return [y, mu*(1 - x**2)*y - x]
+
+# Oscilador de Goodwin (modelo de relogio biologico)
+def goodwin(X, t, n=4, k1=1, k2=1, k3=1):
+    x, y, z = X
+    return [
+        1/(1 + z**n) - k1*x,
+        x - k2*y,
+        y - k3*z
+    ]
+
+t = np.linspace(0, 50, 2000)
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+# Van der Pol para diferentes mu
+for i, mu in enumerate([0.5, 2.0]):
+    sol = odeint(van_der_pol, [0.1, 0.1], t, args=(mu,))
+    axes[0, i].plot(t, sol[:, 0])
+    axes[0, i].set_title(f'Van der Pol, mu={mu}')
+    axes[0, i].set_xlabel('Tempo'); axes[0, i].set_ylabel('x(t)')
+
+# Goodwin
+sol_gw = odeint(goodwin, [0.5, 0.5, 0.5], t)
+axes[1, 0].plot(t, sol_gw)
+axes[1, 0].set_title('Oscilador de Goodwin')
+axes[1, 0].legend(['x', 'y', 'z'])
+axes[1, 1].plot(sol_gw[:, 0], sol_gw[:, 2])
+axes[1, 1].set_title('Retrato de fase Goodwin (x vs z)')
+
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+
+\section{Análise de Sensibilidade}
+
+A análise de sensibilidade quantifica como as saídas do modelo respondem a variações nos
+parâmetros --- pergunta fundamental tanto para validação de modelos quanto para identificar
+alvos terapêuticos. A distinção central é entre análise \emph{local} (derivadas parciais
+num ponto nominal) e \emph{global} (exploração de todo o espaço paramétrico).
+
+\subsection{Sensibilidade Local}
+
+O \emph{coeficiente de sensibilidade local} de uma variável $x_i$ em relação a um
+parâmetro $\theta_j$ é a derivada parcial normalizada:
+\begin{equation}
+  S_{ij} = \frac{\partial \ln x_i}{\partial \ln \theta_j}
+           = \frac{\theta_j}{x_i}\,\frac{\partial x_i}{\partial \theta_j}.
+\end{equation}
+Um valor $S_{ij} = 2$ significa que um aumento de 1\% em $\theta_j$ produz um aumento de
+2\% em $x_i$. Coeficientes próximos de zero indicam parâmetros aos quais o modelo é
+robusto; valores grandes indicam vulnerabilidades ou, na perspectiva terapêutica, alvos de
+intervenção promissores.
+
+Para sistemas de EDOs, a sensibilidade é uma função do tempo $S_{ij}(t)$, que satisfaz a
+\emph{equação de sensibilidade} obtida diferenciando o sistema em relação a $\theta_j$:
+\begin{equation}
+  \frac{d}{dt}\!\left(\frac{\partial x_i}{\partial \theta_j}\right)
+  = \sum_k \frac{\partial f_i}{\partial x_k}\,\frac{\partial x_k}{\partial \theta_j}
+    + \frac{\partial f_i}{\partial \theta_j}.
+\end{equation}
+Em forma matricial, as equações de sensibilidade formam um sistema linear forçado que deve
+ser integrado \emph{juntamente} com o sistema original.
+
+\subsection{Sensibilidade Global: Índices de Sobol}
+
+Para incerteza paramétrica ampla, a \emph{análise de sensibilidade global} explora todo o
+espaço de parâmetros e decompõe a variância total da saída $Y$ em contribuições de cada
+parâmetro. Os \emph{índices de Sobol} quantificam isso:
+\begin{equation}
+  S_i = \frac{V[\mathbb{E}(Y|p_i)]}{V[Y]}, \quad
+  S_i^T = \frac{\mathbb{E}[V(Y|p_{\sim i})]}{V[Y]},
+\end{equation}
+onde $S_i$ é o índice de primeira ordem (efeito principal de $p_i$) e $S_i^T$ é o índice
+total (incluindo interações com outros parâmetros). A diferença $S_i^T - S_i$ mede a
+importância das interações de $p_i$ com outros parâmetros.
+
+A amostragem do espaço paramétrico emprega técnicas como \emph{Latin Hypercube Sampling}
+(LHS) --- que estratifica cada dimensão em $n$ intervalos iguais e amostra um ponto por
+intervalo, garantindo cobertura uniforme --- ou \emph{sequências de Sobol}, que são
+quasi-aleatórias e têm menor discrepância que amostragem de Monte Carlo puro.
+
+\begin{lstlisting}[language=Python, caption=Analise de sensibilidade local e global]
+import numpy as np
+from scipy.integrate import odeint
+
+# Sensibilidade local por perturbacao finita
+def calc_sens(param_name, delta=0.01):
+    def model(x, t, Vmax, Km, kdeg, S=8):
+        return (Vmax*S)/(Km+S) - kdeg*x
+    t = np.linspace(0, 50, 500)
+    p0 = {'Vmax': 10, 'Km': 5, 'kdeg': 0.5}
+    # Valor nominal
+    y0 = odeint(model, 0, t, args=(p0['Vmax'], p0['Km'], p0['kdeg']))[-1, 0]
+    # Valor perturbado
+    p1 = p0.copy(); p1[param_name] *= (1 + delta)
+    y1 = odeint(model, 0, t, args=(p1['Vmax'], p1['Km'], p1['kdeg']))[-1, 0]
+    return ((y1 - y0)/y0) / delta  # sensibilidade normalizada
+
+for p in ['Vmax', 'Km', 'kdeg']:
+    s = calc_sens(p)
+    print(f"S(x*, {p}) = {s:.3f}")
+
+# Analise global com SALib (instalar: pip install SALib)
+# from SALib.sample import saltelli
+# from SALib.analyze import sobol
+# problem = {'num_vars': 3, 'names': ['Vmax', 'Km', 'kdeg'],
+#            'bounds': [[5, 15], [2.5, 7.5], [0.25, 0.75]]}
+# param_values = saltelli.sample(problem, 1024)
+# Y = np.array([(V*8)/(k*(K+8)) for V, K, k in param_values])
+# Si = sobol.analyze(problem, Y)
+# print("Indices S1:", dict(zip(problem['names'], Si['S1'])))
+\end{lstlisting}
+
+
+\section{Exercícios}
+
+\begin{exercicio}
+Simule o mapa logístico $x_{t+1} = r\,x_t(1 - x_t)$ para $r \in \{2.5, 3.2, 3.5, 3.9\}$
+e $x_0 = 0.3$. (a) Plote as 100 primeiras iterações para cada valor de $r$. (b) Construa
+o diagrama de bifurcação para $r \in [2.5, 4.0]$. (c) Para $r = 3.9$, compare trajetórias
+iniciadas em $x_0 = 0.3$ e $x_0 = 0.30001$ --- quantas iterações são necessárias para
+que divirjam visivelmente? O que esse experimento demonstra sobre o caos determinístico?
+\end{exercicio}
+
+\begin{exercicio}
+Considere um canal iônico com taxa de abertura $\alpha = 0.3$ e taxa de fechamento
+$\beta = 0.7$ por passo de tempo. (a) Escreva a matriz de transição $\mathbf{P}$.
+(b) Calcule analiticamente a distribuição estacionária $\pi_A$ e $\pi_F$.
+(c) Simule a cadeia por 1000 passos a partir do estado Fechado e verifique que a
+fração de tempo em cada estado converge para a distribuição estacionária.
+\end{exercicio}
+
+\begin{exercicio}
+Para o sistema de Lotka-Volterra com $\alpha = 0.4$, $\beta = 0.02$, $\delta = 0.01$,
+$\gamma = 0.2$: (a) calcule o ponto de equilíbrio não-trivial $(x^*, y^*)$; (b) calcule
+o jacobiano nesse ponto e determine os autovalores; (c) classifique o equilíbrio no
+diagrama $(\tau, \Delta)$; (d) simule o sistema com \texttt{scipy.integrate.odeint} e
+plote o retrato de fase para três condições iniciais distintas.
+\end{exercicio}
+
+\begin{exercicio}
+Analise a estabilidade de todos os pontos de equilíbrio do sistema:
+\begin{align*}
+  \frac{dx}{dt} &= y \\
+  \frac{dy}{dt} &= -x - y + x^3
+\end{align*}
+Calcule o jacobiano em cada equilíbrio, determine os autovalores e classifique o tipo
+(nó, espiral, sela, centro). Esboce o retrato de fase qualitativamente.
+\end{exercicio}
+
+\begin{exercicio}
+Para a equação normal da bifurcação pitchfork supercrítica $\dot{x} = \mu x - x^3$:
+(a) encontre analiticamente todos os equilíbrios para $\mu < 0$, $\mu = 0$ e $\mu > 0$;
+(b) determine a estabilidade de cada equilíbrio via derivada de $f$; (c) construa
+computacionalmente o diagrama de bifurcação completo, desenhando ramos estáveis (linha
+sólida) e instáveis (tracejado).
+\end{exercicio}
+
+\begin{exercicio}
+Verifique numericamente a bifurcação de Hopf supercrítica no sistema:
+\begin{align*}
+  \frac{dx}{dt} &= \mu x - y - x(x^2 + y^2) \\
+  \frac{dy}{dt} &= x + \mu y - y(x^2 + y^2)
+\end{align*}
+Para cada valor $\mu \in \{-0.5, -0.1, 0.1, 0.5, 1.0\}$: simule o sistema por tempo
+suficiente, plote o retrato de fase e mida a amplitude do regime estacionário. Construa
+um gráfico de amplitude vs.\ $\mu$ e compare com a previsão teórica $A \sim \sqrt{\mu}$.
+\end{exercicio}
+
+\begin{exercicio}
+Implemente o oscilador de Van der Pol para $\mu \in \{0.1, 1, 5\}$ e: (a) compare as
+formas de onda $x(t)$ --- qual delas é mais próxima de um seno? qual apresenta
+oscilações de relaxação? (b) estime o período de oscilação em cada caso; (c) plote os
+retratos de fase e identifique o ciclo limite.
+\end{exercicio}
+
+\begin{exercicio}
+Implemente o oscilador de Goodwin com $n = 4$, $k_1 = k_2 = k_3 = 1$:
+\begin{align*}
+  \dot{x} &= \frac{1}{1+z^n} - k_1 x \\
+  \dot{y} &= x - k_2 y \\
+  \dot{z} &= y - k_3 z
+\end{align*}
+(a) Simule e verifique que o sistema exibe oscilações sustentadas. (b) Calcule os
+coeficientes de sensibilidade local $S_{A, n}$, $S_{A, k_1}$, $S_{A, k_2}$ da amplitude
+$A$ em relação a cada parâmetro. (c) Qual parâmetro controla mais fortemente a amplitude?
+E o período?
+\end{exercicio}
+
+\begin{exercicio}[Projeto Integrador]
+Escolha um modelo de rede regulatória bidimensional: o \emph{toggle switch} de Gardner
+et al.\ (2000) ou o \emph{repressilator} de Elowitz e Leibler (2000).
+(a) Implemente o modelo em Python. (b) Realize análise de estabilidade completa --- encontre
+todos os equilíbrios e classifique-os. (c) Identifique uma bifurcação variando um parâmetro
+chave (ex: força do feedback, taxa de degradação). (d) Conduza análise de sensibilidade
+global (índices de Sobol) para determinar quais parâmetros controlam mais fortemente o
+comportamento do sistema. (e) Interprete biologicamente: o que a topologia matemática
+revela sobre a função do circuito?
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+
+O artigo seminal de May (1976) \cite{may1976}, \textit{Simple mathematical models with very
+complicated dynamics}, publicado na \textit{Nature}, é leitura obrigatória e acessível ---
+introduziu o conceito de caos determinístico a uma audiência científica ampla. A constante
+de Feigenbaum e a universalidade da duplicação de período são detalhadas em Feigenbaum
+(1978) \cite{feigenbaum1978}.
+
+A teoria das bifurcações é tratada com rigor e clareza em Strogatz (2015)
+\cite{strogatz2015}, \textit{Nonlinear Dynamics and Chaos} --- o texto introdutório mais
+recomendado para biólogos com formação matemática básica. O livro de Murray (2002)
+\cite{murray2002}, \textit{Mathematical Biology}, cobre desde crescimento populacional até
+eletrofisiologia cardíaca. Keener e Sneyd (2009) \cite{keener2009}, \textit{Mathematical
+Physiology}, são a referência para aplicações biomédicas detalhadas.
+
+Para osciladores biológicos, Novák e Tyson (2008) \cite{novak2008} fornecem uma revisão
+exemplar dos princípios de design de osciladores bioquímicos. Tyson et al.\ (2003)
+\cite{tyson2003} analisam o ciclo celular como sistema dinâmico. O artigo de Ferrell (2012)
+\cite{ferrell2012} conecta bistabilidade e bifurcações ao conceito de ``paisagem epigenética
+de Waddington'', fundamental para biologia do desenvolvimento.
+
+A análise de sensibilidade global é detalhada em Saltelli et al.\ (2008)
+\cite{saltelli2008}, \textit{Global Sensitivity Analysis: The Primer}. A biblioteca SALib
+para Python implementa todos os métodos discutidos (github.com/SALib/SALib).
+
+\begin{thebibliography}{99}
+
+\bibitem{may1976}
+May R.M. (1976).
+Simple mathematical models with very complicated dynamics.
+\textit{Nature} \textbf{261}: 459--467.
+
+\bibitem{feigenbaum1978}
+Feigenbaum M.J. (1978).
+Quantitative universality for a class of nonlinear transformations.
+\textit{Journal of Statistical Physics} \textbf{19}: 25--52.
+
+\bibitem{strogatz2015}
+Strogatz S.H. (2015).
+\textit{Nonlinear Dynamics and Chaos: With Applications to Physics, Biology, Chemistry,
+and Engineering}, 2\textordfeminine\ ed.
+Westview Press.
+
+\bibitem{murray2002}
+Murray J.D. (2002).
+\textit{Mathematical Biology I: An Introduction}, 3\textordfeminine\ ed.
+Springer.
+
+\bibitem{keener2009}
+Keener J., Sneyd J. (2009).
+\textit{Mathematical Physiology}, 2\textordfeminine\ ed.
+Springer.
+
+\bibitem{novak2008}
+Novák B., Tyson J.J. (2008).
+Design principles of biochemical oscillators.
+\textit{Nature Reviews Molecular Cell Biology} \textbf{9}: 981--991.
+
+\bibitem{tyson2003}
+Tyson J.J., Chen K.C., Novák B. (2003).
+Sniffers, buzzers, toggles and blinkers: dynamics of regulatory and signaling pathways
+in the cell.
+\textit{Current Opinion in Cell Biology} \textbf{15}: 221--231.
+
+\bibitem{ferrell2012}
+Ferrell J.E. (2012).
+Bistability, bifurcations, and Waddington's epigenetic landscape.
+\textit{Current Biology} \textbf{22}: R458--R466.
+
+\bibitem{saltelli2008}
+Saltelli A. et al. (2008).
+\textit{Global Sensitivity Analysis: The Primer}.
+Wiley.
+
+\end{thebibliography}

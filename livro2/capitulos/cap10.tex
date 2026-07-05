@@ -1,0 +1,996 @@
+
+\chapter{Sistemas Populacionais}
+\label{cap:10}
+
+A célula isolada pode ser modelada em um único tubo de ensaio. A espécie
+distribuída em um lago, em uma floresta ou em uma metrópole, não. Assim que se
+transfere a lente da bioquímica para a ecologia, a entidade a ser estudada deixa
+de ser uma molécula e passa a ser uma \emph{população} --- um agregado de
+indivíduos que nascem, morrem, migram e interagem em ambientes heterogêneos. A
+descrição matemática dessa dinâmica é uma das áreas mais antigas e mais
+férteis da biologia teórica, com raízes que vão de Malthus (1798) ao trabalho
+contemporâneo em metapopulações e epidemiologia matemática.
+
+A pergunta central deste capítulo é simples de enunciar e difícil de responder:
+como variam as densidades de populações ao longo do tempo e do espaço, e como
+essa variação pode ser prevista, controlada ou restaurada? Para respondê-la,
+discutiremos cinco tipos de modelos, em ordem crescente de complexidade. Os
+modelos de \textbf{crescimento de uma única espécie} introduzirão as ferramentas
+fundamentais --- equações diferenciais ordinárias, equações de diferença,
+análise de estabilidade local. Os modelos de \textbf{interação entre espécies}
+mostrarão como predadores, presas, competidores e mutualistas se acoplam em
+sistemas dinâmicos. Os \textbf{modelos epidemiológicos} aplicarão as mesmas
+técnicas a doenças infecciosas, onde o indivíduo é a "espécie" e as
+transições são eventos (S $\to$ I $\to$ R) em vez de nascimentos e mortes. Por
+fim, a \textbf{dinâmica espacial} incorporará difusão, metapopulações e padrões
+de Turing --- fechando o capítulo com a observação de que a estrutura espacial
+é tão importante quanto a interação local.
+
+\section{Fundamentos da Dinâmica Populacional}
+\label{sec:10-fundamentos}
+
+\begin{definicaoenv}[Sistema Populacional]
+Sistema populacional é o conjunto de indivíduos de uma mesma espécie (ou de
+espécies interagentes) cuja densidade varia no tempo e no espaço em resposta a
+processos elementares de natalidade, mortalidade, migração e interação. A
+descrição matemática dessa variação é o objeto da ecologia teórica e da
+epidemiologia matemática.
+\end{definicaoenv}
+
+A escrita matemática mais simples para uma população $N(t)$ de uma única
+espécie é o balanço entre quatro processos demográficos:
+\begin{equation}
+\frac{dN}{dt} = \underbrace{b N}_{\text{nascimento}}
+               - \underbrace{d N}_{\text{morte}}
+               + \underbrace{I}_{\text{imigração}}
+               - \underbrace{E}_{\text{emigração}}
+\end{equation}
+onde $b$ e $d$ são taxas per capita e $I$, $E$ são taxas absolutas. Em
+contextos onde nascimento e morte são os únicos processos relevantes, $I = E$
+e a equação se reduz à forma malthusiana. Quando os recursos do ambiente são
+limitados, o termo de natalidade é modificado por uma função de saturação, e a
+equação adquire a forma logística. Estudaremos ambos os regimes a seguir.
+
+\subsection{Crescimento Exponencial: O Modelo de Malthus}
+\label{sub:image10-exponencial}
+
+O modelo mais simples possível de dinâmica populacional postula que a taxa de
+crescimento é proporcional ao tamanho da população:
+\begin{equation}
+\frac{dN}{dt} = r N
+\end{equation}
+
+O parâmetro $r = b - d$ é a \emph{taxa intrínseca de crescimento per capita} --- a
+diferença entre as taxas de natalidade e mortalidade, ambas expressas na
+mesma escala por indivíduo. A solução é imediata:
+\begin{equation}
+N(t) = N_0\, e^{rt}
+\end{equation}
+
+O modelo exponencial descreve com precisão surpreendente populações em regimes
+de baixa densidade, longe da capacidade de suporte do ambiente. Bactérias em
+meio fresco, populações de insetos durante surtos e processos tumorais
+estabelecidos obedecem a essa cinética durante a fase exponencial. O
+\emph{tempo de duplicação}, $t_d = \ln 2 / r$, é uma grandeza útil para
+diagnóstico: para a \textit{Escherichia coli} em condições ideais, $t_d \approx
+20$ min; para uma cultura de células humanas, $t_d \approx 24$ h; para a
+população humana global nas décadas de 1960--1970, $r \approx 0{,}02\;\mathrm{a}^{-1}$
+e $t_d \approx 35$ anos.
+
+O modelo exponencial também descreve \emph{decrescimento} quando $r < 0$.
+Populações em ambientes hostis --- como populações pequenas confinadas a
+\emph{habitats} degradados --- seguem decaimento exponencial. O destino do
+\emph{Panthera tigris altaica}, por exemplo, depende crucialmente de que $r$
+atinja valores positivos, o que requer ações integradas de proteção do
+\emph{habitat}, antipoaching e manejo genético.
+
+\subsection{Crescimento Logístico: Introduzindo a Capacidade de Suporte}
+\label{sub:image10-logistico}
+
+O modelo exponencial ignora que nenhum recurso é ilimitado. Em 1838, o
+matemático belga Pierre-François Verhulst propôs uma modificação simples ---
+introduzir um termo de inibição dependente da densidade, que reduz o
+crescimento à medida que a população se aproxima da \emph{capacidade de suporte}
+$K$ (a densidade máxima sustentável pelo ambiente):
+\begin{equation}
+\frac{dN}{dt} = r N\left(1 - \frac{N}{K}\right)
+\end{equation}
+
+A solução analítica é a clássica sigmoidal:
+\begin{equation}
+N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right)\, e^{-rt}}
+\end{equation}
+
+A densidade $N = K/2$ merece destaque: é o ponto de inflexão da sigmoidal e o
+ponto em que a taxa $dN/dt$ é máxima. Populações abaixo desse valor estão em
+fase de aceleração; acima dele, em fase de desaceleração. Modelos logísticos
+descrevem bem populações de protozoários em cultura fechada, crescimento
+tumoral em fase precoce (modelo de Gompertz, primo do logístico) e, com
+adaptações, populações de peixes em reservatórios.
+
+A implementação computacional do logístico é imediata usando integradores
+padrão. O trecho de código a seguir reproduz a curva sigmoidal clássica:
+
+\begin{lstlisting}[language=Python, caption=Modelo logistico]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def logistic(N, t, r, K):
+    return r * N * (1 - N/K)
+
+r, K, N0 = 0.8, 1000, 50
+t = np.linspace(0, 20, 500)
+N = odeint(logistic, N0, t, args=(r, K))
+
+plt.figure(figsize=(8, 5))
+plt.plot(t, N, 'b-', lw=2, label='N(t)')
+plt.axhline(y=K, color='r', ls='--', lw=2, label=f'K = {K}')
+plt.xlabel('Tempo'); plt.ylabel('Populacao')
+plt.title('Crescimento Logistico')
+plt.legend(); plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+\subsection{Efeito Allee: A Maldição das Populações Pequenas}
+\label{sub:image10-allee}
+
+Em muitas espécies --- especialmente vertebrados sociais --- densidades
+pequenas reduzem, em vez de aumentar, a taxa de crescimento per capita. As
+causas vão da dificuldade de encontrar parceiros sexuais à redução da defesa
+coletiva contra predadores. Warder Clyde Allee documentou este fenômeno na
+década de 1930, e a equação que o carrega é:
+\begin{equation}
+\frac{dN}{dt} = r N \left(1 - \frac{N}{K}\right) \left(\frac{N}{A} - 1\right)
+\end{equation}
+
+O parâmetro $A$, com $0 < A < K$, é a \emph{densidade crítica} de Allee --- a
+menor densidade compatível com crescimento populacional positivo. A equação
+admite três pontos de equilíbrio: $N^* = 0$ (extinção, estável), $N^* = A$
+(instável) e $N^* = K$ (estável). A interpretação é direta: uma população
+iniciada entre $0$ e $A$ colapsa irreversivelmente; apenas populações
+iniciadas acima de $A$ sobrevivem. O gráfico do crescimento em função de $N$
+cruza o eixo em três pontos, formando a "curva em J invertido" que é assinatura
+do efeito Allee forte.
+
+A implicação para a conservação é profunda. Populações pequenas estão
+inerentemente expostas a \emph{extinção por depopulação}: flutuações
+estocásticas podem levá-las abaixo do limiar $A$, de onde não há retorno.
+Programas bem-sucedidos de recuperação --- como o do \textit{Arabidopsis
+arenosa} na Suíça ou da águia-pescadora no Reino Unido --- exigem população
+inicial grande o suficiente para garantir densidade acima do limiar de Allee.
+
+\subsection{Modelos em Tempo Discreto: Ricker e Beverton-Holt}
+\label{sub:image10-discreto}
+
+As equações diferenciais descrevem populações com gerações que se sobrepõem.
+Quando as gerações são discretas --- insetos anuais, peixes em habitats
+sazonais, populações microbianas em ciclos sincronizados --- a equação natural é
+uma \emph{equação de diferença}. O modelo de Ricker é emblemático:
+\begin{equation}
+N_{t+1} = N_t\, e^{r\left(1 - \frac{N_t}{K}\right)}
+\end{equation}
+
+Apesar de sua forma inocente, o modelo de Ricker produz comportamento
+surpreendentemente rico: convergência monotônica para $K$ em baixos valores de
+$r$; oscilações amortecidas em valores intermediários; oscilações sustentadas;
+ciclos de período 2, 4, 8 ...; e caos para $r$ suficientemente alto (a partir
+de $r \approx 2{,}69$ para $K = 100$).
+
+O modelo alternativo é o de Beverton-Holt:
+\begin{equation}
+N_{t+1} = \frac{R\, N_t}{1 + (R - 1)\, N_t / K}
+\end{equation}
+onde $R$ é a taxa de reprodução líquida. Diferentemente do modelo de Ricker,
+o Beverton-Holt sempre converge monotonicamente a $K$ --- não exibe oscilações
+nem caos.
+
+A análise gráfica de sistemas discretos é feita no plano de fases
+$(N_t, N_{t+1})$ --- o chamado \emph{diagrama cobweb}. A população evolui
+seguindo o gráfico da função $f(N_t)$ e refletindo-se a cada iteração na
+linha de identidade $N_{t+1} = N_t$. Os pontos fixos são as interseções
+entre $f$ e a linha de identidade; sua estabilidade é dada pela derivada $|f'(N^*)| < 1$.
+
+O trecho de código a seguir ilustra o efeito dramático de $r$ sobre a
+dinâmica do modelo de Ricker:
+
+\begin{lstlisting}[language=Python, caption=Dinamica de Ricker para varios r]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def ricker(N, r, K):
+    return N * np.exp(r * (1 - N/K))
+
+K = 100
+N0 = 10
+t_max = 50
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+
+for i, r in enumerate([1.5, 2.0, 2.7]):
+    N = np.zeros(t_max); N[0] = N0
+    for t in range(t_max - 1):
+        N[t+1] = ricker(N[t], r, K)
+    axes[i].plot(N, 'b.-', ms=4)
+    axes[i].axhline(y=K, color='r', ls='--', label=f'K = {K}')
+    axes[i].set_xlabel('Geracao t'); axes[i].set_ylabel('N(t)')
+    axes[i].set_title(f'r = {r}')
+    axes[i].legend(); axes[i].grid(alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+
+\section{Interações entre Espécies}
+\label{sec:10-interacoes}
+
+A descrição de uma população isolada é apenas o ponto de partida. Na natureza,
+organismos de diferentes espécies interagem --- competem por alimento e espaço,
+predam ou são predados, cooperam ou parasitam. A classificação clássica
+dessas interações usa a notação de sinais: $(+)$ benéfico, $(-)$ prejudicial,
+$(0)$ neutro. Competição é $(-,-)$: ambas as espécies perdem. Predação e
+parasitismo são $(+,-)$. Mutualismo é $(+,+)$. Comensalismo é $(+,0)$ ---
+uma espécie se beneficia enquanto a outra é indiferente. Os modelos
+matemáticos destas interações generalizam os de uma única espécie, com a
+complexidade adicional de que múltiplos equilíbrios podem existir e sua
+estabilidade depende dos parâmetros relativos das espécies envolvidas.
+
+\subsection{Lotka-Volterra: A Dinâmica Predador-Presa}
+\label{sub:image10-lotka-volterra}
+
+O modelo mais antigo e influente de interação entre espécies foi formulado
+independentemente por Alfred Lotka (1925) e Vito Volterra (1926). Para um
+sistema com presas $V(t)$ e predadores $P(t)$ em interação, a hipótese central
+é que encontros seguem a lei de ação das massas (proporcionais a $VP$), e que
+a presença de presas beneficia o crescimento dos predadores proporcionalmente
+à taxa de encontro:
+\begin{align}
+\frac{dV}{dt} &= \alpha V - \beta V P \\
+\frac{dP}{dt} &= \delta \beta V P - \gamma P
+\end{align}
+
+O parâmetro $\alpha$ é a taxa intrínseca de crescimento das presas na ausência
+de predação; $\beta$ é a taxa de encontro/predação; $\delta$ é a eficiência
+com que presas consumidas convertem-se em novos predadores; e $\gamma$ é a
+taxa de mortalidade dos predadores.
+
+Análise. O sistema tem dois equilíbrios triviais --- $(0,0)$ e o que resulta
+em extinção de uma espécie --- e um equilíbrio não-trivial de coexistência:
+\begin{equation}
+V^* = \frac{\gamma}{\delta \beta}, \qquad P^* = \frac{\alpha}{\beta}
+\end{equation}
+
+O Jacobiano no equilíbrio tem traço zero e determinante positivo. Seus
+autovalores são puramente imaginários $\pm i \sqrt{\alpha \gamma}$, indicando
+que o equilíbrio é um \emph{centro} --- nem atrator nem repulsor. Trajetórias
+próximas formam órbitas fechadas ao redor do equilíbrio. A interpretação
+biológica é célebre: \emph{o sistema exibe oscilações perpétuas} cuja amplitude
+e período dependem das condições iniciais, mas não se amortecem. Limitando o
+modelo (introduzindo capacidade de suporte para as presas, predação
+dependente de densidade ou termo de inibição do predador) obtém-se ciclos
+limites estáveis --- que é o que se observa em sistemas reais como o clássico
+caso do \emph{Lynx canadensis} e da lebre-americana (\textit{Lepus americanus})
+registrado pelos dados de peles da Hudson Bay Company.
+
+\begin{lstlisting}[language=Python, caption=Sistema predador-presa de Lotka-Volterra]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def lotka_volterra(y, t, alpha, beta, delta, gamma):
+    V, P = y
+    return [alpha*V - beta*V*P,
+            delta*beta*V*P - gamma*P]
+
+alpha, beta, delta, gamma = 1.0, 0.1, 0.75, 1.5
+y0 = [40, 9]
+t = np.linspace(0, 50, 1000)
+sol = odeint(lotka_volterra, y0, t,
+             args=(alpha, beta, delta, gamma))
+
+V_eq, P_eq = gamma/(delta*beta), alpha/beta
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+axes[0].plot(t, sol[:, 0], 'b-', lw=2, label='Presas (V)')
+axes[0].plot(t, sol[:, 1], 'r-', lw=2, label='Predadores (P)')
+axes[0].set_xlabel('Tempo'); axes[0].set_ylabel('Densidade')
+axes[0].legend(); axes[0].grid(alpha=0.3)
+
+axes[1].plot(sol[:, 0], sol[:, 1], 'g-', lw=2)
+axes[1].plot(V_eq, P_eq, 'r*', ms=15, label='Equilibrio')
+axes[1].axhline(P_eq, ls='--', color='r', alpha=0.5, label='dV/dt=0')
+axes[1].axvline(V_eq, ls='--', color='b', alpha=0.5, label='dP/dt=0')
+axes[1].set_xlabel('Presas (V)'); axes[1].set_ylabel('Predadores (P)')
+axes[1].legend(); axes[1].grid(alpha=0.3)
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\subsection{Competição e o Princípio de Exclusão}
+\label{sub:image10-competicao}
+
+Lotka e Volterra, no mesmo estudo, propuseram o modelo de competição interespecífica:
+\begin{align}
+\frac{dN_1}{dt} &= r_1 N_1 \left(1 - \frac{N_1 + \alpha_{12} N_2}{K_1}\right) \\
+\frac{dN_2}{dt} &= r_2 N_2 \left(1 - \frac{N_2 + \alpha_{21} N_1}{K_2}\right)
+\end{align}
+
+O parâmetro $\alpha_{12}$ expressa o efeito de um indivíduo da espécie 2
+sobre a espécie 1, em unidades de "equivalentes" da espécie 1; $\alpha_{21}$
+é a grandeza simétrica. Os quatro regimes qualitativos possíveis são definidos
+por combinações das desigualdades entre $\alpha_{12} K_2$, $K_1$, $\alpha_{21}
+K_1$ e $K_2$:
+
+\begin{itemize}
+\item Se $K_1 > \alpha_{12} K_2$ e $K_2 > \alpha_{21} K_1$: coexistência
+  estável em equilíbrio interior.
+\item Se $K_1 > \alpha_{12} K_2$ e $K_2 < \alpha_{21} K_1$: espécie 1 vence.
+\item Se $K_1 < \alpha_{12} K_2$ e $K_2 > \alpha_{21} K_1$: espécie 2 vence.
+\item Se $K_1 < \alpha_{12} K_2$ e $K_2 < \alpha_{21} K_1$: o vencedor
+  depende das condições iniciais --- bistabilidade.
+\end{itemize}
+
+Este último caso é a base experimental do \emph{princípio da exclusão
+competitiva}, atribuído a Gause: duas espécies em competição por um único
+recurso limitante não podem coexistir indefinidamente. O famoso experimento
+de Gause (1934) com \textit{Paramecium aurelia} e \textit{Paramecium caudatum}
+em cultura com a mesma fonte alimentar mostrou exatamente o previsto --- uma
+espécie exterminava a outra. Hutchinson reinterpretou o resultado em termos de
+\emph{nicho ecológico}: a coexistência prolongada exige diferenciação de nicho
+(recurso, espaço, tempo).
+
+\subsection{Mutualismo e Simbiose}
+\label{sub:image10-mutualismo}
+
+Quando a interação é $(+,+)$, ambos os parceiros se beneficiam. O modelo
+canônico generaliza o logístico substituindo a capacidade de suporte fixa
+por uma função crescente da densidade do parceiro:
+\begin{align}
+\frac{dN_1}{dt} &= r_1 N_1 \left(1 - \frac{N_1}{K_1 + \alpha_{12} N_2}\right) \\
+\frac{dN_2}{dt} &= r_2 N_2 \left(1 - \frac{N_2}{K_2 + \alpha_{21} N_1}\right)
+\end{align}
+
+Os mutualismos \emph{facultativos} --- aqueles em que cada espécie pode
+sobreviver sozinha --- diferem dos mutualismos \emph{obrigatórios}, nos quais
+a sobrevivência individual depende de interações com a outra espécie. As
+micorrizas, que trocam carbono da planta por fósforo e nitrogênio do solo, são
+um caso quase obrigatório. A polinização por abelhas é tipicamente
+facultativa para as plantas (vento, aves e mariposas também polinizam), mas
+obrigatória para muitas culturas agrícolas --- fato que justifica programas
+de proteção de polinizadores em níveis mundiais.
+
+\subsection{Modelo de Nicholson-Bailey: Hospedeiro-Parasitóide}
+\label{sub:image10-nicholson-bailey}
+
+A interação entre hospedeiros e parasitóides (insetos cujas larvas se
+desenvolvem dentro de hospedeiros, eventualmente matando-os) é uma das
+aplicações mais elegantes de dinâmica discreta. O modelo de Nicholson-Bailey
+assume distribuição de Poisson para os ataques:
+\begin{align}
+H_{t+1} &= \lambda H_t e^{-a P_t} \\
+P_{t+1} &= c H_t \left(1 - e^{-a P_t}\right)
+\end{align}
+
+O termo exponencial $e^{-a P_t}$ é a fração de hospedeiros que escapa do
+parasitismo na geração $t$; $\lambda$ é a taxa de reprodução do hospedeiro;
+$a$ é a área de descoberta do parasitóide; $c$ é o número médio de parasitóides
+emergindo por hospedeiro parasitado. O modelo prevê que, na ausência de
+respostas funcionais ou numéricas, a interação é sempre instável --- o
+parasitóide superpredar seu hospedeiro, levando ambos à extinção. Mecanismos
+de regulação (dependência de densidade, refugos espaciais, alternância de
+gerações) são necessários para explicar a coexistência estável observada.
+
+Esse modelo é central no \emph{controle biológico de pragas}: a introdução
+controlada de parasitóides específicos (vespas do gênero \textit{Trichogramma}
+contra lagartas, por exemplo) é uma alternativa ambientalmente amigável a
+inseticidas químicos --- mas depende crucialmente do ajuste fino dos parâmetros
+do modelo à biologia da praga-alvo.
+
+
+\section{Modelos Epidemiológicos}
+\label{sec:10-epidemiologia}
+
+A epidemiologia matemática é, em certo sentido, uma aplicação particular de
+dinâmica populacional: em vez de espécies biológicas, as "espécies" são
+\emph{estados de saúde}, e os parâmetros de nascimento e morte são substituídos
+por transições entre compartimentos. Essa mudança de perspectiva, formalizada
+por Kermack e McKendrick em 1927, transformou a saúde pública: hoje,
+projeções de surtos e avaliação de estratégias de vacinação dependem
+inteiramente de modelos dessa classe.
+
+\subsection{Comportamentalização por Compartimentos}
+\label{sub:image10-sir}
+
+A abordagem padrão particiona a população em classes discretas segundo seu
+status em relação à doença:
+\begin{itemize}
+\item \textbf{S} (\emph{Susceptíveis}): indivíduos que podem ser infectados.
+\item \textbf{E} (\emph{Expostos}): infectados em período de incubação, ainda
+  não infecciosos.
+\item \textbf{I} (\emph{Infectados}): infectados e capazes de transmitir.
+\item \textbf{R} (\emph{Recuperados}): imunes por recuperação natural ou
+  vacinação.
+\item \textbf{D} (\emph{Mortos}): na versão que inclui mortalidade pela doença.
+\end{itemize}
+
+A passagem de um compartimento a outro é regida por taxas que dependem do
+contágio ($\beta$, mediado pelo contato infectante) e da recuperação ($\gamma$,
+inversa do período infeccioso). A transmissão segue a lei de ação das massas:
+o número de contatos infectantes por unidade de tempo é proporcional ao
+produto $S \cdot I$ e à densidade de encontros.
+
+\subsection{O Modelo SIR Clássico}
+\label{sub:image10-sir-classico}
+
+O modelo mais simples de uma doença conferindo imunidade permanente é o
+\emph{SIR}:
+\begin{align}
+\frac{dS}{dt} &= -\beta \frac{SI}{N} \\
+\frac{dI}{dt} &= \beta \frac{SI}{N} - \gamma I \\
+\frac{dR}{dt} &= \gamma I
+\end{align}
+
+onde $N = S + I + R$ é mantido constante (caso de doença com mortalidade
+desprezível em escala epidêmica). O parâmetro $\beta$ é a taxa de transmissão
+(contatos infectantes por unidade de tempo), e $\gamma$ é a taxa de
+recuperação. A escala natural de tempo é o período infeccioso médio, dado
+por $1/\gamma$.
+
+\subsection{Número Básico de Reprodução $R_0$}
+\label{sub:image10-R0}
+
+\begin{definicaoenv}[Número básico de reprodução $R_0$]
+$R_0$ é o número médio de infecções secundárias causadas por um único
+indivíduo infectado introduzido em uma população inteiramente suscetível.
+É o parâmetro mais importante da epidemiologia matemática: governa o limiar
+entre extinção e propagação da epidemia, e sintetiza o efeito combinado de
+transmissibilidade, frequência de contatos e duração da infecciosidade.
+\end{definicaoenv}
+
+Para o modelo SIR simples, $R_0$ é o produto de duas grandezas operacionais:
+\begin{equation}
+R_0 = \frac{\beta}{\gamma} = \underbrace{\beta}_{\text{contatos infectantes
+por unidade de tempo}} \times \underbrace{\frac{1}{\gamma}}_{\text{duração do
+período infeccioso}}
+\end{equation}
+
+O limiar epidêmico é exatamente $R_0 = 1$:
+\begin{itemize}
+\item $R_0 < 1$: a epidemia se extingue --- cada infectado gera em média
+  menos de um caso secundário.
+\item $R_0 = 1$: endemia estável --- o sistema se mantém em equilíbrio
+  exatamente limítrofe.
+\item $R_0 > 1$: epidemia se propaga.
+\end{itemize}
+
+Valores típicos de $R_0$ para doenças humanas ilustram a diversidade do
+problema: sarampo $R_0 \approx 12$--$18$, varíola $R_0 \approx 5$--$7$,
+rubéola $R_0 \approx 5$--$7$, pólio $R_0 \approx 5$--$7$, COVID-19 (variante
+original) $R_0 \approx 2$--$3$, influenza sazonal $R_0 \approx 1$--$2$,
+ebola $R_0 \approx 1{,}5$--$2{,}5$. Uma doença mais transmissível requer
+controle mais agressivo.
+
+\subsection{Threshold de Vacinação}
+\label{sub:image10-vaccination}
+
+A vacinação move indivíduos de $S$ para $R$ sem passar por $I$. Se uma fração
+$f$ da população é vacinada, a densidade efetiva de suscetíveis reduz-se pelo
+fator $(1 - f)$, e o parâmetro de controle efetivo torna-se
+$R_0^{\mathrm{eff}} = R_0(1 - f)$. Para evitar epidemia precisamos
+$R_0^{\mathrm{eff}} < 1$, donde:
+\begin{equation}
+f > 1 - \frac{1}{R_0}
+\end{equation}
+
+Para sarampo ($R_0 \approx 15$), $f > 0{,}93$ --- 93\% de cobertura. Esta é a
+exigência que torna a hesitação vacinal tão perigosa: a queda de 5\% na
+cobertura vacinal em algumas comunidades brasileiras nas últimas décadas já é
+suficiente para permitir surtos --- e os surtos aparecem.
+
+\begin{exemploenv}[Threshold do sarampo]
+O sarampo requer cobertura acima de 93\% para imunidade de rebanho. A
+queda global de cobertura para cerca de 80\% entre 2020 e 2022 --- durante a
+pandemia de COVID-19 --- criou o cenário ideal para o ressurgimento que
+ocorreu em 2023--2024, com surtos em vários continentes, incluindo o Brasil.
+\end{exemploenv}
+
+\subsection{Modelo SIS: Doenças sem Imunidade Duradoura}
+\label{sub:image10-sis}
+
+Nem todas as doenças conferem imunidade permanente. Resfriados comuns,
+infecções sexualmente transmissíveis como gonorreia e clamídia, e várias
+infecções intestinais reaparecem nos mesmos indivíduos após recuperação.
+Nesses casos, a população retorna de $I$ diretamente a $S$, em vez de a $R$:
+\begin{align}
+\frac{dS}{dt} &= -\beta \frac{SI}{N} + \gamma I \\
+\frac{dI}{dt} &= \beta \frac{SI}{N} - \gamma I
+\end{align}
+
+Quando $R_0 > 1$, o sistema atinge equilíbrio endêmico com $I^* = N(1 - 1/R_0)$
+e $S^* = N/R_0$. A doença persiste indefinidamente na população --- é o regime
+\emph{endêmico}, distinto do regime epidêmico transitório do SIR.
+
+\subsection{Modelo SEIR: Com Período de Incubação}
+\label{sub:image10-seir}
+
+Para doenças com período de incubação significativo --- Ebola, COVID-19,
+infecções por HIV, tuberculose --- o modelo SIR subestima a latência entre
+infecção e infecciosidade. O modelo \emph{SEIR} adiciona um compartimento
+explícito $E$ para "expostos não infecciosos":
+\begin{align}
+\frac{dS}{dt} &= -\beta \frac{SI}{N} \\
+\frac{dE}{dt} &= \beta \frac{SI}{N} - \sigma E \\
+\frac{dI}{dt} &= \sigma E - \gamma I \\
+\frac{dR}{dt} &= \gamma I
+\end{align}
+
+O parâmetro $\sigma$ é a taxa de progressão de $E$ para $I$ --- seu inverso
+é o período de incubação médio. Embora $R_0$ permaneça formalmente
+$R_0 = \beta/\gamma$, a \emph{dinâmica temporal} difere: a fase de propagação
+inicial é mais lenta (a doença tem que "esperar" a incubação), mas a curva
+de pico é similar. Em COVID-19, o modelo SEIR modificado com demografia,
+estrutura etária e intervenções não-farmacêuticas (distanciamento, máscaras,
+fechamento de escolas) foi a base das projeções que guiaram políticas
+sanitárias em 2020--2022.
+
+A implementação computacional do SIR ilustra como extrair medidas
+epidemiológicas básicas --- pico de infectados, tempo do pico, taxa de ataque
+final, limiar epidêmico --- da solução numérica do sistema:
+
+\begin{lstlisting}[language=Python, caption=Modelo SIR e sua analise]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+def sir_model(y, t, beta, gamma, N):
+    S, I, R = y
+    return [-beta*S*I/N,
+             beta*S*I/N - gamma*I,
+             gamma*I]
+
+N, beta, gamma = 10000, 0.5, 0.1
+R0 = beta/gamma
+I0, S0, R0_ini = 10, N - 10, 0
+t = np.linspace(0, 200, 1000)
+sol = odeint(sir_model, [S0, I0, R0_ini], t,
+             args=(beta, gamma, N))
+S, I, R = sol.T
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+axes[0].plot(t, S, 'b-', lw=2, label='Suscetiveis (S)')
+axes[0].plot(t, I, 'r-', lw=2, label='Infectados (I)')
+axes[0].plot(t, R, 'g-', lw=2, label='Recuperados (R)')
+axes[0].set_xlabel('Tempo (dias)'); axes[0].set_ylabel('Individuos')
+axes[0].set_title(f'Dinamica SIR ($R_0$ = {R0:.1f})')
+axes[0].legend(); axes[0].grid(alpha=0.3)
+
+peak_t = t[np.argmax(I)]
+axes[1].plot(S, I, 'purple', lw=2)
+axes[1].axvline(x=N/R0, color='red', ls='--',
+                label=f'S = N/R0 = {N/R0:.0f}')
+axes[1].set_xlabel('Suscetiveis (S)'); axes[1].set_ylabel('Infectados (I)')
+axes[1].set_title('Retrato de Fase'); axes[1].legend(); axes[1].grid(alpha=0.3)
+print(f"Pico: {I.max():.0f} individuos em t = {peak_t:.1f} dias")
+print(f"Taxa de ataque final: {R[-1]/N*100:.1f}%")
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+
+\section{Dinâmica Espacial de Populações}
+\label{sec:10-espaco}
+
+Os modelos até aqui descreveram populações espacialmente homogêneas --- a
+densidade $N(t)$ é a mesma em todos os pontos do ambiente. Na realidade,
+\emph{não existe o espaço médio}. Diferenças locais em disponibilidade de
+alimento, abrigo e refúgio contra predadores produzem gradientes espaciais
+que influenciam profundamente a dinâmica populacional. Esta seção introduz
+os modelos canônicos de dinâmica espacial: metapopulações e equações de
+reação-difusão, com destaque para ondas viajantes e padrões de Turing.
+
+\subsection{Metapopulações: O Modelo de Levins}
+\label{sub:image10-metapop}
+
+\begin{definicaoenv}[Metapopulação]
+Metapopulação é um conjunto de populações locais (chamadas \emph{patches})
+conectadas por dispersão, no qual cada população local pode sofrer extinção
+e ser recolonizada por imigrantes de outros patches. O conceito foi
+formalizado por Levins em 1969 a partir da observação de que habitats
+naturais são intrinsecamente fragmentados.
+\end{definicaoenv}
+
+O modelo de Levins trata uma \emph{fração} $p(t)$ dos patches como ocupada
+e a fração $(1 - p)$ como vazia. As transições são:
+\begin{itemize}
+\item \textbf{Colonização}: patches vazios são ocupados na taxa $c \cdot p(1 - p)$,
+  proporcional à fração ocupada (fonte de propágulos) e à fração vazia
+  (alvos disponíveis).
+\item \textbf{Extinção local}: patches ocupados são perdidos na taxa $e \cdot p$.
+\end{itemize}
+
+A equação resultante é simples e elegante:
+\begin{equation}
+\frac{dp}{dt} = c p (1 - p) - e p = p\,\bigl(c(1 - p) - e\bigr)
+\end{equation}
+
+O equilíbrio não-trivial $p^* = 1 - e/c$ é positivo (e portanto a
+metapopulação persiste) se e somente se $c > e$. A condição \emph{c $>$ e
+$}$ é uma das formulações mais elegantes em ecologia: a colonização deve
+superar a extinção local para que a metapopulação persista. Em sua ausência,
+a fração de habitats ocupados colapsa a zero.
+
+O modelo básico de Levins pode ser enriquecido de várias maneiras: patches
+heterogêneos (tamanho variável, qualidade diferente), \emph{corredores}
+ecológicos (conectividade entre fragmentos), efeito resgate (\emph{rescue effect},
+em que imigrantes reduzem a probabilidade de extinção local), e dinâmica
+intra-patch mais detalhada (cada patch seguindo seu próprio modelo de
+crescimento, com migração entre patches). A implementação com redes
+heterogêneas de patches é discutida na seção final.
+
+\subsection{Equações de Reação-Difusão: Fisher-KPP}
+\label{sub:image10-fisher-kpp}
+
+A próxima classe de modelos pressupõe um espaço contínuo e utiliza a equação
+de reação-difusão:
+\begin{equation}
+\frac{\partial N}{\partial t} = \underbrace{f(N)}_{\text{reação local}}
+                              + \underbrace{D \nabla^2 N}_{\text{dispersão}}
+\end{equation}
+
+onde $f(N)$ é a dinâmica local de crescimento (logística, por exemplo, ou uma
+forma qualquer) e $D$ é o coeficiente de difusão, que descreve o movimento
+browniano --- a versão mais simples de dispersão. Em 1D, o Laplaciano é a
+segunda derivada $\partial^2 N/\partial x^2$.
+
+A equação emblemática para invasões biológicas é a equação de
+\emph{Fisher-KPP}, que combina crescimento logístico com difusão:
+\begin{equation}
+\frac{\partial N}{\partial t} = r N \left(1 - \frac{N}{K}\right)
+                              + D \frac{\partial^2 N}{\partial x^2}
+\end{equation}
+
+Fisher (1937) e Kolmogorov-Petrovskii-Piskunov (1937) mostraram
+independentemente que essa equação admite soluções de \emph{onda viajante} ---
+perfis de densidade $N(x - ct)$ que se propagam com velocidade constante
+mantendo a forma. A velocidade mínima (selecionada pelas condições iniciais
+suaves) é:
+\begin{equation}
+c_{\min} = 2\sqrt{r D}
+\end{equation}
+
+A equação Fisher-KPP é um dos pilares da teoria de invasão. Foi aplicada
+com sucesso à propagação da lebre europeia (\textit{Oryctolagus
+cuniculagus}) na Austrália, à expansão de QTL de resistência a inseticidas
+em populações de \textit{Anopheles}, e à dinâmica de ondas em frentes de
+queimadas em ecossistemas secos.
+
+A simulação numérica da equação em 1D usa diferenças finitas centrais para o
+Laplaciano. Um trecho de código típico segue o formato abaixo:
+
+\begin{lstlisting}[language=Python, caption=Equacao de Fisher-KPP em 1D]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def fisher_kpp_1d(N, r, K, D, dx):
+    reaction  = r * N * (1 - N/K)
+    diffusion = np.zeros_like(N)
+    diffusion[1:-1] = D * (N[2:] - 2*N[1:-1] + N[:-2]) / dx**2
+    diffusion[0] = diffusion[-1] = 0  # Neumann: sem fluxo
+    return reaction + diffusion
+
+L = 50; nx = 200
+x = np.linspace(0, L, nx); dx = x[1] - x[0]
+r, K, D = 0.5, 1.0, 0.1
+
+N = np.zeros(nx)
+N[nx//4:nx//4+10] = K  # pulso inicial
+
+t_max, dt = 100, 0.01
+steps = int(t_max / dt)
+for _ in range(steps):
+    N += dt * fisher_kpp_1d(N, r, K, D, dx)
+
+plt.figure(figsize=(9, 4))
+plt.plot(x, N, 'b-', lw=2)
+plt.axhline(K, color='r', ls='--', label='K')
+plt.xlabel('x'); plt.ylabel('N'); plt.legend(); plt.grid(alpha=0.3)
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\subsection{Padrões de Turing: A Origem Química da Forma}
+\label{sub:image10-turing}
+
+Em 1952, Alan Turing publicou um dos artigos mais influentes da biologia
+teórica --- \emph{The Chemical Basis of Morphogenesis}. Nele, Turing mostrou
+que um sistema de duas espécies reagentes com difusão diferenciada pode
+desestabilizar espontaneamente o estado homogêneo, gerando padrões espaciais
+estacionários. Os ingredientes são dois: dois morfógenos --- um ativador (com
+curto alcance) e um inibidor (com longo alcance) --- e difusão mais rápida do
+inibidor do que do ativador:
+\begin{align}
+\frac{\partial u}{\partial t} &= f(u, v) + D_u \nabla^2 u \\
+\frac{\partial v}{\partial t} &= g(u, v) + D_v \nabla^2 v
+\end{align}
+
+A análise de estabilidade linear ao redor do equilíbrio homogêneo mostra que,
+embora o equilíbrio seja estável na ausência de difusão ($f$ e $g$ são
+estabilizantes), ele se torna instável quando $D_v \gg D_u$. A partir do
+estado homogêneo, o sistema evolui espontaneamente para padrões de manchas
+(\emph{spots}) ou listras. O comprimento de onda característico desses
+padrões é:
+\begin{equation}
+\lambda \sim 2\pi \sqrt{\frac{D_v}{\mu}}
+\end{equation}
+onde $\mu$ é a taxa de crescimento linearizada do modo mais instável.
+
+Biólogos foram lentos para abraçar a ideia, mas hoje há forte evidência de
+que padrões de Turing estão subjacentes à organização de estômatos em
+folhas, aos folículos de pena em aves e à pelagem de certos peixes e
+felinos. A matemática, aplicada a sistemas biológicos concretos, ajudou a
+transformar uma especulação teórica em um programa de pesquisa vivo.
+
+\subsection{Metapopulações em Rede}
+\label{sub:image10-metapop-network}
+
+A formalização mais geral trata a metapopulação como uma rede de patches em
+que cada um segue sua própria dinâmica local e as trocas migratórias entre
+patches vizinhos são mediadas por coeficientes de acoplamento. Para um patch
+$i$, a equação generalizada é:
+\begin{equation}
+\frac{d N_i}{dt} = f(N_i) + \sum_{j=1}^{n} m_{ij}\,(N_j - N_i)
+\end{equation}
+onde $m_{ij}$ é a taxa de migração entre o patch $j$ e o patch $i$, e
+$f(N_i)$ é a dinâmica local (por exemplo, logística).
+
+A topologia da rede determina o sincronismo da metapopulação: alta
+conectividade ($\sum_j m_{ij}$ grande) tende a sincronizar oscilações entre
+patches, \emph{aumentando} o risco de extinção global em sistemas com
+estabilização dependente de densidade; baixa conectividade gera dinâmicas
+independentes, com \emph{efeito de portfolio} análogo ao da diversificação em
+finanças. As topologias que têm recebido mais atenção teórica são grade
+regular, rede aleatória Erdős-Rényi, redes \emph{scale-free} e grafos do
+tipo mundo-pequeno --- cada uma com propriedades próprias de sincronização
+e vulnerabilidade.
+
+\begin{exemploenv}[Corredores ecológicos]
+A aplicação prática mais direta de metapopulações em rede é a conservação
+biológica em paisagens fragmentadas. Corredores ecológicos conectando
+fragmentos de habitat --- matas ciliares restauradas, sistemas de árvores
+pontilhando lavouras, passagens de fauna sobre rodovias --- são projetados
+para aumentar a conectividade efetiva $m_{ij}$ da metapopulação de uma
+espécie-alvo. Aumentos modestos de $m_{ij}$ em paisagens críticas para a
+mantença de predadores de topo (onças-pintadas, lobos-guará) podem ser
+decisivos para a sobrevivência populacional a longo prazo.
+\end{exemploenv}
+
+
+\section{Exercícios}
+\label{sec:10-exercicios}
+
+\begin{exercicio}
+\textbf{Crescimento logístico analítico.} Considere uma população seguindo o
+modelo logístico com $r = 0{,}6\;\mathrm{dia}^{-1}$ e $K = 5000$.
+Calcule (a) $N(10)$ quando $N(0) = 500$; (b) o tempo necessário para a
+população atingir 90\% de $K$; (c) a taxa máxima $dN/dt$ e a densidade em que
+ela ocorre.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Efeito Allee.} O modelo de Allee
+$\tfrac{dN}{dt} = rN(1 - N/K)(N/A - 1)$
+é considerado com $r = 0{,}5$, $K = 1000$, $A = 100$.
+(a) Identifique os pontos de equilíbrio e analise sua estabilidade local.
+(b) Implemente o modelo em Python e simule para $N(0) = 50$ e $N(0) = 150$.
+(c) Explique as implicações para programas de conservação que trabalham
+com populações pequenas.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Bifurcação no mapa de Ricker.} Implemente o modelo de Ricker e
+explore a transição de comportamento à medida que $r$ varia de 0 a 3.
+(a) Construa um diagrama de bifurcação plotando os valores de $N$ visitados
+em $t = 200$ (após descartar o transiente) como função de $r$.
+(b) Identifique o início de oscilações de período 2 e de comportamento
+caótico.
+(c) Compare com o mapa de Beverton-Holt no mesmo intervalo de $r$ ---
+quantitativamente, o que difere?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Análise do Lotka-Volterra.} Para o sistema predador-presa com
+$\alpha = 1{,}0$, $\beta = 0{,}1$, $\delta = 0{,}75$, $\gamma = 1{,}5$:
+(a) Encontre o equilíbrio não-trivial;
+(b) Calcule a Jacobiana no equilíbrio e seus autovalores;
+(c) Com base nos autovalores, argumente sobre o tipo de estabilidade;
+(d) Implemente em Python e plote séries temporais de $V(t)$ e $P(t)$ e o
+retrato de fase.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Competição interespecífica.} Implemente o sistema de competição de
+Lotka-Volterra em Python. (a) Simule os quatro cenários
+(uma espécie vence, outra vence, coexistência, exclusão dependente de CI)
+usando combinações adequadas de $K_1$, $K_2$, $\alpha_{12}$, $\alpha_{21}$.
+(b) Construa um retrato de fase com isoclinas para cada caso.
+(c) Adicione ruído gaussiano às derivadas e investigue como flutuações
+ambientais modificam o destino competitivo.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Modelo SIR e gestão de saúde.} Uma doença tem $\beta = 0{,}4\;\mathrm{dia}^{-1}$
+e $\gamma = 0{,}1\;\mathrm{dia}^{-1}$ em uma cidade de $N = 10^4$ habitantes.
+Inicialmente $I(0) = 20$. (a) Calcule $R_0$. (b) Simule 200 dias e
+identifique o pico de infectados e a data em que ocorre. (c) Estime a taxa
+de ataque final. (d) Determine a fração mínima de vacinação para prevenir a
+epidemia. (e) Repita os itens (b)-(d) para variantes com $\beta = 0{,}6$ e
+$\beta = 0{,}8$ e discuta o que muda em termos de política sanitária.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Modelo SEIR e período de incubação.} Modifique seu código SIR para
+incluir um compartimento $E$ com $\sigma = 0{,}2\;\mathrm{dia}^{-1}$
+(período médio de incubação de 5 dias). Mantenha $\beta = 0{,}5$ e $\gamma = 0{,}1$.
+(a) Compare o tempo do pico de infectados no SIR e no SEIR.
+(b) Verifique se o $R_0$ muda; explique por que sim ou por que não.
+(c) Investigue como o atraso entre exposição e infecciosidade altera a
+\emph{fase} da curva epidêmica.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Metapopulação de Levins.} O modelo de Levins
+$\tfrac{dp}{dt} = cp(1-p) - ep$
+descreve a dinâmica da fração de patches ocupados em uma paisagem. (a)
+Considere uma paisagem onde a colonização local ocorre a $c = 0{,}5\;\mathrm{ano}^{-1}$
+e a extinção local a $e = 0{,}1\;\mathrm{ano}^{-1}$. Qual a fração de equilíbrio
+ocupado? (b) Como esse equilíbrio se altera se uma rodovia interrompe $30\%$
+dos corredores ecológicos (reduzindo $c$ em $30\%$)? (c) Quaisquer que sejam
+os valores, a velocidade de retorno ao equilíbrio é proporcional a $(c-e)$.
+Discuta por que a velocidade de resposta da metapopulação a uma mudança de
+\emph{habitat} depende crucialmente da margem $c - e$.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Modelo de Nicholson-Bailey.} Implemente o sistema parasitóide-hospedeiro
+em Python. (a) Mostre que, com os parâmetros padrão
+$\lambda = 2$, $a = 0{,}02$, $c = 1$, a interação leva à extinção de ambas
+as espécies em poucas gerações, em concordância com a análise de estabilidade
+do modelo original. (b) Adicione uma resposta funcional do tipo II ao parasitóide
+(substitua o termo de encontro $a P_t$ por $a P_t / (1 + a h P_t)$ com
+$h = 0{,}5$). Discuta como esse ingrediente estabilizador pode levar à
+coexistência. (c) Encontre, por simulação, um par de parâmetros
+$(\lambda, a, c, h)$ que produz ciclos persistentes de hospedeiro e parasitóide.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Simulação de Fisher-KPP.} Implemente a equação de Fisher-KPP em 1D
+usando o esquema de diferenças finitas centrais. (a) Plote o perfil de $N(x)$
+em três instantes ($t = 0$, $50$, $100$) e meça a velocidade da onda
+viajando por ajuste linear do ponto de meia-altura. Compare com o valor
+analítico $c_{\min} = 2\sqrt{r D}$. (b) Repita a simulação para diferentes
+valores de $D$ e verifique a relação $c_{\min} \propto \sqrt{D}$.
+(c) Varie a condição inicial (em vez de um pulso compacto, use uma rampa
+suave) e discuta por que a velocidade converge para $c_{\min}$ quando a
+condição inicial é monótona.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Projeto integrador: dinâmica espacial de uma invasão biológica.}
+Considere um caso real --- fictício ou documentado --- de introdução de uma
+espécie invasora em uma paisagem fragmentada. (a) Formule um modelo
+matemático em 2D que combine crescimento logístico, difusão e efeitos de
+\emph{habitat} heterogêneo (representado por uma função $K(x,y)$ espacialmente
+variável). (b) Implemente em Python usando diferenças finitas em uma grade
+$100 \times 100$. (c) Plote mapas de densidade em função do tempo e identifique
+\emph{corredores} de invasão. (d) Proponha alterações no uso da terra que
+minimizem a taxa de avanço. (e) Compare seus resultados com observações
+empíricas de uma invasão real (\textit{Lantana camara} em cerrado, \textit{Brachypodium sylvaticum} em florestas de
+Washington, etc.).
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+\label{sec:10-bibliografia}
+
+A ecologia teórica clássica está consolidada em três livros texto de uso
+corrente. \textit{Mathematical Biology I: An Introduction} de James D. Murray
+(3ª edição, Springer) é o trabalho de referência unificado em inglês --- cobre
+desde modelos de uma única espécie até ondas viajantes, autômatos celulares e
+o problema da propagação do HIV. \textit{Mathematical Models in Biology} de Leah
+Edelstein-Keshet (SIAM) é mais acessível e bi-Centrado, com exemplos extensos
+de osciladores gênicos, propagação de ondas em meios excitáveis e dinâmica
+de populações. \textit{A Biologist's Guide to Mathematical Modeling in Ecology
+and Evolution} de Sarah Otto e Toby Day (Princeton) é indicado para leitores
+que preferem começar com questões biológicas e chegar gradualmente à matemática;
+inclui discussão profunda de modelos evolutivos, teoria de jogos e inferência
+em ecologia.
+
+A \emph{epidemiologia matemática} tem dois textos seminais que todo profissional
+de saúde pública deveria consultar. \textit{Infectious Diseases of Humans:
+Dynamics and Control} de Roy Anderson e Robert May (Oxford) é o livro de
+referência para modelagem de doenças infecciosas humanas --- formaliza o SIR
+e suas extensões, discute estruturação etária, redes de contato e a
+epidemiologia do HIV/AIDS. \textit{Modeling Infectious Diseases in Humans
+and Animals} de Matt Keeling e Pejman Rohani (Princeton) é mais moderno e
+computacionalmente orientado, com código em MATLAB e extensões para doenças
+zoonóticas. \textit{Mathematical Models in Population Biology and
+Epidemiology} de Fred Brauer e Carlos Castillo-Chávez é a apresentação mais
+sistemática disponível, ideal para quem quiser dominar o tratamento
+matemático completo.
+
+Para os tópicos avançados --- metapopulações, difusão, padrões de Turing ---
+são úteis \textit{An Illustrated Guide to Theoretical Ecology} de Ted Case, com
+ênfase em intuição e exemplos; \textit{Elements of Mathematical Ecology} de
+Mark Kot; e \textit{Resource Competition and Community Structure} de David
+Tilman, leitura indispensável para quem estuda ecologia de comunidades. Os
+artigos seminais --- Malthus (1798), Verhulst (1838), Lotka (1925),
+Volterra (1926), Nicholson e Bailey (1935), Levins (1969), Turing (1952),
+Fisher (1937), Kolmogorov et al.\ (1937), Kermack e McKendrick (1927) ---
+continuam recomendados para a formação do historiador da disciplina.
+
+Recursos computacionais incluem o pacote estatístico \texttt{EpiModel} (em R),
+amplamente usado em epidemiologia, e a ferramenta \texttt{PyDSTool} (Python)
+para análise de sistemas dinâmicos. \texttt{COPASI} é uma plataforma
+multiplataforma GUI para simulação e análise de modelos de sistemas
+biológicos, especialmente útil em cursos introdutórios.
+
+\begin{thebibliography}{99}
+\bibitem{murray} Murray J.D. (2002). \textit{Mathematical Biology I: An
+Introduction}, 3ª ed. Springer, Nova York.
+
+\bibitem{edelstein} Edelstein-Keshet L. (2005). \textit{Mathematical Models
+in Biology}. SIAM, Philadelphia.
+
+\bibitem{otto} Otto S.P., Day T. (2007). \textit{A Biologist's Guide to
+Mathematical Modeling in Ecology and Evolution}. Princeton University Press,
+Princeton.
+
+\bibitem{keeling} Keeling M.J., Rohani P. (2008). \textit{Modeling Infectious
+Diseases in Humans and Animals}. Princeton University Press, Princeton.
+
+\bibitem{anderson} Anderson R.M., May R.M. (1991). \textit{Infectious Diseases
+of Humans: Dynamics and Control}. Oxford University Press, Oxford.
+
+\bibitem{brauer} Brauer F., Castillo-Chavez C. (2012). \textit{Mathematical
+Models in Population Biology and Epidemiology}, 2ª ed. Springer, Nova York.
+
+\bibitem{kermack} Kermack W.O., McKendrick A.G. (1927). A contribution to the
+mathematical theory of epidemics. \textit{Proceedings of the Royal Society
+of London A}, 115:700--721.
+
+\bibitem{lotka} Lotka A.J. (1925). \textit{Elements of Physical Biology}.
+Williams \& Wilkins, Baltimore.
+
+\bibitem{volterra} Volterra V. (1926). Fluctuations in the abundance of a
+species considered mathematically. \textit{Nature}, 118:558--560.
+
+\bibitem{nicholson} Nicholson A.J., Bailey V.A. (1935). The balance of animal
+populations. \textit{Proceedings of the Zoological Society of London},
+1:551--598.
+
+\bibitem{levins} Levins R. (1969). Some demographic and genetic consequences
+of environmental heterogeneity for biological control. \textit{Bulletin of
+the Entomological Society of America}, 15:237--240.
+
+\bibitem{turing} Turing A.M. (1952). The chemical basis of morphogenesis.
+\textit{Philosophical Transactions of the Royal Society B}, 237:37--72.
+
+\bibitem{fisher} Fisher R.A. (1937). The wave of advance of advantageous
+genes. \textit{Annals of Eugenics}, 7:355--369.
+
+\bibitem{tilman} Tilman D. (1982). \textit{Resource Competition and Community
+Structure}. Princeton University Press, Princeton.
+
+\bibitem{kot} Kot M. (2001). \textit{Elements of Mathematical Ecology}.
+Cambridge University Press, Cambridge.
+
+\bibitem{case} Case T.J. (2000). \textit{An Illustrated Guide to Theoretical
+Ecology}. Oxford University Press, Oxford.
+
+\bibitem{epimodel} Jenness S., Goodreau S.M., Morris M. (2018). EpiModel: an
+R package for mathematical modeling of infectious disease over networks.
+\textit{Journal of Statistical Software}, 84:1--47. Disponível em
+\url{https://epimodel.org}.
+
+\bibitem{copasi} Hoops S., Sahle S., Gauges R., Lee C., Pahle J., Simus N.,
+Singhal M., Xu L., Mendes P., Kummer U. (2006). COPASI --- a COmplex PAthway
+SImulator. \textit{Bioinformatics}, 22:3067--3074. Disponível em
+\url{http://copasi.org}.
+\end{thebibliography}

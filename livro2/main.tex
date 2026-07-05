@@ -1,0 +1,173 @@
+\documentclass[12pt, a4paper, twoside, openright]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{geometry}
+\geometry{a4paper, inner=3.2cm, outer=2.8cm, top=2.8cm, bottom=2.8cm, headheight=15pt}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, shapes, positioning, calc,
+  decorations.pathreplacing, decorations.shapes, decorations.pathmorphing,
+  shadows, patterns, fit, matrix, backgrounds, automata, trees}
+\usepackage{chemfig}
+\usepackage{listings}
+\usepackage{booktabs, multirow, longtable, array}
+\usepackage{float, caption, subcaption, wrapfig}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true, linkcolor=azulescuro, citecolor=verdebio,
+            urlcolor=azulclaro, bookmarks=true]{hyperref}
+\usepackage{makeidx}
+\makeindex
+
+% Cores
+\definecolor{azulescuro}{RGB}{0, 51, 102}
+\definecolor{azulclaro}{RGB}{51, 153, 255}
+\definecolor{verdeacido}{RGB}{102, 204, 0}
+\definecolor{verdebio}{RGB}{0, 128, 64}
+\definecolor{verdeescuro}{RGB}{0, 100, 0}
+\definecolor{laranjacel}{RGB}{255, 153, 51}
+\definecolor{roxodna}{RGB}{153, 51, 255}
+\definecolor{cinzafundo}{RGB}{248, 248, 248}
+
+% Listagens
+\lstset{language=Python, basicstyle=\ttfamily\small,
+  keywordstyle=\color{azulescuro}\bfseries,
+  commentstyle=\color{verdebio}\itshape,
+  stringstyle=\color{laranjacel},
+  numbers=left, numberstyle=\tiny\color{gray},
+  stepnumber=1, numbersep=8pt,
+  backgroundcolor=\color{cinzafundo},
+  frame=single, rulecolor=\color{azulescuro!30},
+  tabsize=4, captionpos=b, breaklines=true,
+  xleftmargin=15pt, xrightmargin=10pt,
+  aboveskip=10pt, belowskip=10pt}
+\lstdefinestyle{Rstyle}{language=R,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{azulescuro}\bfseries,
+  commentstyle=\color{verdebio}\itshape,
+  stringstyle=\color{laranjacel}}
+\lstdefinestyle{MATLABstyle}{language=Matlab,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{azulescuro}\bfseries,
+  commentstyle=\color{verdebio}\itshape,
+  stringstyle=\color{laranjacel}}
+
+% Teoremas
+\theoremstyle{definition}
+\newtheorem{definicaoenv}{Defini\c{c}\~ao}[chapter]
+\newtheorem{exemploenumv}{Exemplo}[chapter]
+\newtheorem{exercicio}{Exerc\'icio}[chapter]
+\newtheorem{observacao}{Observa\c{c}\~ao}[chapter]
+\theoremstyle{plain}
+\newtheorem{teorema}{Teorema}[chapter]
+\newtheorem{lema}[teorema]{Lema}
+
+% Comandos
+\newcommand{\definicao}[2]{\begin{definicaoenv}[#1]#2\end{definicaoenv}}
+\newcommand{\exemplo}[2]{\begin{exemploenumv}[#1]#2\end{exemploenumv}}
+\newcommand{\importante}[1]{\begin{quote}\itshape #1\end{quote}}
+\newcommand{\destaque}[1]{\begin{equation*}#1\end{equation*}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\parcial}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\derivada}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\gene}[1]{\textit{#1}}
+\newcommand{\proteina}[1]{\textsc{#1}}
+\newcommand{\especie}[1]{\textit{#1}}
+
+% Cabecalho
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\itshape\leftmark}
+\fancyhead[RO]{\small\itshape\rightmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+\begin{document}
+
+% Capa
+\begin{titlepage}
+\begin{center}
+  \vspace*{3cm}
+  {\fontsize{34}{40}\selectfont\bfseries\color{azulescuro}
+    Bioinform\'atica\\[0.4em]
+    para Biologia\\[0.4em]
+    de Sistemas}\\[2.5cm]
+  {\LARGE\bfseries Ney Lemke}\\[0.8cm]
+  {\large Departamento de Biof\'isica e Farmacologia\\[0.2cm]
+    Instituto de Bioci\^encias de Botucatu\\[0.2cm]
+    Universidade Estadual Paulista --- UNESP}\\[2.5cm]
+  \color{azulescuro}\rule{0.5\textwidth}{1pt}\\[0.8cm]
+  {\large Botucatu, \the\year}
+\end{center}
+\end{titlepage}
+
+% Verso da capa
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\begin{minipage}{0.78\textwidth}
+{\small\textbf{Sobre este livro}
+
+Este livro re\'une o conte\'udo das notas de aula do curso
+\textit{Bioinform\'atica para Biologia de Sistemas},
+ministrado no Departamento de Biof\'isica e Farmacologia da UNESP.
+O material destina-se a estudantes de gradua\c{c}\~ao e p\'os-gradua\c{c}\~ao
+com interesse em modelagem matem\'atica, redes biol\'ogicas e an\'alise
+integrada de dados \^omicos.
+
+\medskip
+\textbf{Vers\~ao:} \today\\[0.2cm]
+\textbf{Licen\c{c}a:} Material did\'atico de uso acad\^emico.}
+\end{minipage}
+\end{center}
+\vspace*{\fill}
+\clearpage
+
+\frontmatter
+\chapter*{Pref\'acio}
+\addcontentsline{toc}{chapter}{Pref\'acio}
+\input{prefacio}
+\tableofcontents
+
+\mainmatter
+
+\part{Fundamentos}
+\include{capitulos/cap01}
+\include{capitulos/cap02}
+\include{capitulos/cap03}
+
+\part{Ferramentas Matem\'aticas}
+\include{capitulos/cap04}
+\include{capitulos/cap05}
+
+\part{Sistemas Biol\'ogicos}
+\include{capitulos/cap06}
+\include{capitulos/cap07}
+\include{capitulos/cap08}
+\include{capitulos/cap09}
+\include{capitulos/cap10}
+
+\part{Aplica\c{c}\~oes Avan\c{c}adas}
+\include{capitulos/cap11}
+\include{capitulos/cap12}
+\include{capitulos/cap13}
+\include{capitulos/cap14}
+\include{capitulos/cap15}
+
+\backmatter
+\printindex
+
+\end{document}

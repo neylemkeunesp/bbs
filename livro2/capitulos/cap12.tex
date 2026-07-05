@@ -1,0 +1,847 @@
+
+\chapter{Fisiologia Cardíaca}
+\label{cap:12}
+
+O coração humano bate cerca de cem mil vezes por dia, cerca de 2,5 bilhões
+de vezes em uma vida de setenta anos. Em cada ciclo, ele ejeta aproximadamente
+70~mililitros de sangue --- cinco litros por minuto em repouso, vinte e
+cinco em exercício máximo --- num trabalho contínuo que exige coordenação
+fina entre evento elétrico, mecânico e hemodinâmico. Mais do que uma bomba
+muscular, o coração é um sistema fisiológico \emph{auto-organizado}: a
+frequência cardíaca emerge das propriedades intrínsecas das células do nó
+sinoatrial, a contração ordenada depende da propagação elétrica pelo
+sistema de condução, e o débito adapta-se à demanda metabólica por vias
+autônomas e humorais. Nenhum desses fenômenos é trivial quando observado
+de perto; todos se tornaram quantitativamente acessíveis no momento em que
+a eletrofisiologia foi inscrita em equações diferenciais.
+
+Este capítulo atravessa esses temas --- eletrofisiologia do cardiomiócito,
+acoplamento excitação-contração, geração de força, propagação e arritmias
+--- com a intenção de mostrar como eles se compõem em um modelo integrado
+do coração como sistema. Antes de tratar dos modelos matemáticos em si,
+convém fixar a anatomia e a fisiologia de base.
+
+\section{Anatomia e Fisiologia Cardíaca}
+\label{sec:12-anatomia}
+
+\begin{definicaoenv}[Sistema Cardíaco]
+O sistema cardíaco é o sistema fisiológico que integra eletrofisiologia,
+mecânica, metabolismo e regulação autonômica para bombear sangue de modo
+contínuo e adaptativo. Compreende o coração (câmaras, valvas, sistema de
+condução), a vasculatura coronária que o irriga, e os mecanismos neuro-humorais
+que ajustam frequência e contratilidade às demandas do organismo.
+\end{definicaoenv}
+
+O coração humano é dividido em quatro câmaras. Os \emph{átrios} --- direito
+(AD) e esquerdo (AE) --- funcionam como câmaras de recepção: coletam o
+sangue que retorna (venoso no AD, arterial no AE, este sim após passagem
+pulmonar) e o transferem para os ventrículos durante a diástole. Os
+\emph{ventrículos} --- direito (VD) e esquerdo (VE) --- são câmaras de
+bombeamento: geram pressões suficientes para, respectivamente, propelir o
+sangue pela circulação pulmonar e pela circulação sistêmica. O VD opera
+contra pressões próximas a 25 mmHg; o VE, contra 120 mmHg --- diferença
+essa que torna a parede ventricular esquerda substancialmente mais espessa.
+
+O sangue passa por quatro valvas. As valvas \emph{atrioventriculares}
+(tricúspide entre AD e VD; mitral entre AE e VE) impedem refluxo durante
+a sístole ventricular. As valvas \emph{semilunares} (pulmonar na saída do
+VD; aórtica na saída do VE) fecham-se durante a diástole, impedindo que
+o sangue regurgite dos grandes vasos para os ventrículos. O eixo de
+fluxo é portanto unidirecional: AD $\to$ VD $\to$ artéria pulmonar
+$\to$ pulmões $\to$ AE $\to$ VE $\to$ aorta $\to$ tecidos $\to$ AD.
+
+\subsection{Ciclo Cardíaco}
+\label{sub:image12-ciclo}
+
+O ciclo cardíaco alterna dois grandes estados: a \emph{diástole}, em que os
+ventrículos relaxam e se enchem, e a \emph{sístole}, em que se contraem e
+ejéta o sangue. A diástole pode ser subdividida em enchimento passivo
+rápido (quando a valva atrioventricular recém-aberta permite a entrada
+do sangue armazenado nos átrios e veias pulmonares), diástase (enchimento
+lento) e sístole atrial (contração dos átrios que impulsiona o sangue
+final). A sístole ventricular subdivide-se em contração isovolumétrica
+(a pressão ventricular sobe com as valvas ainda fechadas, sem mudança de
+volume), ejeção (quando a pressão ultrapassa a das artérias, abrindo as
+valvas semilunares) e relaxamento isovolumétrico (as valvas fecham, a
+pressão cai com volume constante).
+
+A representação canônica dessa dinâmica é o \emph{loop} pressão-volume,
+um diagrama fechado que descreve em duas dimensões a relação instantânea
+entre pressão intraventricular e volume de sangue. Em frequências
+fisiológicas o ciclo completo dura cerca de 0,8~s --- diástole
+aproximadamente 0,5~s, sístole 0,3~s ---, com proporções que se ajustam
+automaticamente à frequência cardíaca.
+
+\subsection{Sistema de Condução Elétrica}
+\label{sub:image12-conducao}
+
+A capacidade do coração de contrair-se de modo coordenado depende de um
+sistema de condução dedicado, formado por células musculares
+especializadas com automatismo intrínseco e alta velocidade de propagação.
+
+O \emph{nó sinoatrial} (nó SA), localizado no topo do átrio direito, é o
+marca-passo natural do coração: as células que o compõem despolarizam
+espontaneamente na frequência de 60--100 batimentos por minuto. O
+\emph{nó atrioventricular} (nó AV), posicionado na junção entre átrios e
+ventrículos, introduz um atraso de condução da ordem de 0,1~s --- crucial
+para permitir o enchimento ventricular completo antes da contração. O
+\emph{feixe de His} e seus ramos (esquerdo e direito) conduzem rapidamente
+o impulso pelos septos; as \emph{fibras de Purkinje} finalmente distribuem
+a ativação pelo endocárdio ventricular, garantindo contração quase
+simultânea de toda a massa muscular.
+
+A velocidade de condução varia ao longo desse circuito por um fator
+superior a cem: 4~m/s nas fibras de Purkinje, 1--1,5~m/s no feixe de His,
+0,05~m/s no nó AV. Essa hierarquia é funcional: o atraso nodal AV é a
+chave mecânica do acoplamento temporal entre as câmaras.
+
+\subsection{Eletrocardiograma}
+\label{sub:image12-ecg}
+
+\begin{exemploenv}[Ondas do ECG e sua origem]
+A onda P registra a despolarização dos átrios; o complexo QRS registra a
+despolarização dos ventrículos; a onda T registra a repolarização
+ventricular (a repolarização atrial é mascarada pelo QRS e geralmente
+não é visível). Os intervalos PR (0,12--0,20~s) e QT (0,35--0,44~s)
+oferecem leituras quantitativas da condução: o PR mede o tempo entre o
+início da ativação atrial e o início da ativação ventricular --- reflete
+essencialmente o atraso nodal AV --- e o QT mede a duração total da
+ativação ventricular, incluindo platô e repolarização.
+\end{exemploenv}
+
+O ECG é, portanto, uma janela indireta para a eletrofisiologia subjacente.
+Anormalidades --- arritmias, distúrbios de condução, isquemia --- deixam
+assinaturas específicas: onda Q patológica em infarto antigo, supradesnivelamento
+do segmento ST em infarto agudo, prolongamento do intervalo QT em canalopatias
+congênitas ou adquiridas, complexos QRS alargados em bloqueios de ramo.
+
+\subsection{Circulação Coronariana}
+\label{sub:image12-coronarias}
+
+O coração depende de irrigação própria: as artérias coronárias --- direita
+(CD), descendente anterior esquerda (DAE) e circunflexa (Cx) --- distribuem
+sangue ao miocárdio a partir da raiz da aorta. O fluxo coronariano ocorre
+predominantemente durante a diástole, quando o relaxamento miocárdico
+permite a perfusão dos vasos intraparietais. A relação pressão-fluxo é
+descrita por
+\begin{equation}
+Q = \frac{\Delta P}{R_{\mathrm{cor}}}
+\end{equation}
+onde $Q$ é o fluxo (em torno de 250~mL/min em repouso), $\Delta P$ é o
+gradiente de pressão entre a aorta e o seio coronário, e $R_{\mathrm{cor}}$
+é a resistência do leito coronariano. O miocárdio extrai cerca de 75\% do
+oxigênio do sangue arterial --- uma das taxas mais altas do organismo --- e
+disso resulta uma \emph{reserva vasodilatadora limitada}: o aumento do
+consumo de O$_2$ depende predominantemente de fluxo, e não de maior
+extração.
+
+Isquemia surge sempre que a oferta de O$_2$ cai abaixo da demanda.
+Causas incluem estenose aterosclerótica fixa (angina estável), ruptura
+de placa com trombose (síndrome coronariana aguda), espasmo coronariano
+(angina vasoespástica de Prinzmetal) e aumento primário da demanda
+(taquicardia, hipertireoidismo). As consequências elétricas ---
+correntes de lesão representadas pelo supradesnivelamento ST --- acompanham
+o aparecimento dos sintomas dolorosos e definem, em conjunto com
+biomarcadores séricos, o diagnóstico clínico contemporâneo.
+
+
+\section{Eletrofisiologia do Cardiomiócito}
+\label{sec:12-eletrofisiologia}
+
+A unidade fundamental do coração é o cardiomiócito: célula alongada,
+nucleada centralmente, com mitocôndrias abundantes e retículo sarcoplasmático
+extenso. Sua característica elétrica mais notável é o potencial de ação
+ventricular, dramaticamente mais longo que o de uma fibra nervosa ---
+200 a 400~ms em vez de 1--2~ms --- e organizado em cinco fases que
+refletem a ação sequencial de diferentes correntes iônicas.
+
+\subsection{Potencial de Ação Cardíaco}
+\label{sub:image12-pa}
+
+O potencial de ação ventricular segue a sequência designada numericamente:
+
+\textbf{Fase 4} é o repouso. A célula mantém $V_m \approx -85$ mV graças
+à alta permeabilidade ao K$^+$ via corrente retificadora de entrada
+$I_{\mathrm{K1}}$. O potencial aproxima-se do potencial de equilíbrio de
+Nernst para o potássio ($E_K \approx -90$~mV).
+
+\textbf{Fase 0} é a despolarização rápida. O estímulo supralimiar abre
+canais de Na$^+$ voltagem-dependentes (Nav1.5), produzindo uma corrente
+de entrada massiva $I_{\mathrm{Na}}$ que eleva o $V_m$ para $+30$ mV em
+menos de 1~ms --- o upstroke do complexo QRS do ECG.
+
+\textbf{Fase 1} é a repolarização inicial. A rápida inativação dos
+canais de Na$^+$ e a abertura transitória de corrente de saída de
+K$^+$ ($I_{\mathrm{to}}$) produzem uma breve queda de $V_m$ para
+cerca de $+10$ mV.
+
+\textbf{Fase 2} é o platô, a característica distintiva do potencial
+cardíaco. A entrada de Ca$^{2+}$ via canais tipo L (Cav1.2) --- $I_{\mathrm{Ca},L}$
+--- é equilibrada pelas correntes retificadoras retardadas de K$^+$ --- $I_{\mathrm{Kr}}$
+(rápida, hERG) e $I_{\mathrm{Ks}}$ (lenta) --- produzindo um platô de
+cerca de 200~ms durante o qual o $V_m$ permanece próximo de 0~mV. Esse
+platô é a base elétrica do acoplamento excitação-contração discutido na
+seção seguinte.
+
+\textbf{Fase 3} é a repolarização final. À medida que os canais de
+Ca$^{2+}$ se inativam e as correntes de K$^+$ persistem, o balanço se
+inverte --- o $V_m$ cai rapidamente em direção a $E_K$.
+
+\subsection{Equação de Goldman-Hodgkin-Katz em Cardiomiócitos}
+\label{sub:image12-ghk}
+
+O potencial de repouso é descrito pela equação de Goldman-Hodgkin-Katz
+(GHK) para múltiplos íons:
+\begin{equation}
+V_m = \frac{RT}{F}\, \ln \!
+\left(\frac{P_K[\mathrm{K}^+]_o + P_{\mathrm{Na}}[\mathrm{Na}^+]_o
+                + P_{\mathrm{Cl}}[\mathrm{Cl}^-]_i}
+            {P_K[\mathrm{K}^+]_i + P_{\mathrm{Na}}[\mathrm{Na}^+]_i
+                + P_{\mathrm{Cl}}[\mathrm{Cl}^-]_o}\right)
+\end{equation}
+onde $P_X$ são as permeabilidades. Em condições fisiológicas, com
+permeabilidades relativas $P_K : P_{\mathrm{Na}} : P_{\mathrm{Cl}}
+\approx 1 : 0{,}04 : 0{,}45$, a GHK reduz-se aproximadamente à
+equação de Nernst para K$^+$, produzindo $V_m \approx -85$~mV. Alterações
+do potássio extracelular --- como a hipercalemia, em que $[\mathrm{K}^+]_o$
+chega a 7--8~mM em insuficiência renal --- despolarizam o repouso e
+contribuem para arritmias.
+
+\subsection{Formalismo de Hodgkin-Huxley}
+\label{sub:image12-hh}
+
+A descrição matemática do potencial de ação cardíaco herda do trabalho de
+Hodgkin e Huxley (1952) sobre o axônio gigante de lula, formalismo este
+que descreve cada canal iônico como gates probabilísticos. Cada corrente
+iônica é escrita como:
+\begin{equation}
+I_{\mathrm{ion}} = g_{\mathrm{ion}} \cdot (V_m - E_{\mathrm{ion}})
+\end{equation}
+onde a condutância é modulada por \emph{variáveis de gating}:
+\begin{equation}
+g_{\mathrm{ion}} = \bar{g}_{\mathrm{ion}} \cdot m^p \cdot h^q
+\end{equation}
+onde $m$ é a probabilidade de o gate de ativação estar aberto, $h$ a de
+inativação estar fechado (isto é, a corrente de porta rápida), e
+$p$, $q$ são coeficientes estequiométricos (no canal de Na$^+$,
+$p = 3$ e $q = 1$).
+
+As variáveis de gating seguem cinética de primeira ordem com parâmetros
+dependentes de voltagem:
+\begin{equation}
+\frac{dm}{dt} = \alpha_m(V)(1 - m) - \beta_m(V) m
+            = \frac{m_\infty(V) - m}{\tau_m(V)}
+\end{equation}
+onde $\alpha_m$ e $\beta_m$ são as taxas de transição, $m_\infty$ a
+probabilidade de equilíbrio e $\tau_m$ a constante de tempo. A corrente
+macroscópica em cardiomiócitos ventriculares reúne ~10--15 correntes
+diferentes, cada uma com sua própria combinação de gates --- totalizando
+mais de 30 variáveis de estado nos modelos modernos.
+
+\subsection{Canais Iônicos Principais}
+\label{sub:image12-canais}
+
+A corrente de sódio $I_{\mathrm{Na}}$ é mediada pelo canal Nav1.5
+codificado pelo gene \textit{SCN5A}. Sua ativação é rápida ($\tau \sim
+0{,}1$ ms) e a inativação é bifásica --- rápida ($\tau \sim 1$--$5$~ms)
+mais lenta ($\tau \sim 20$--$200$~ms). Mutações de ganho-de-função em
+\textit{SCN5A} produzem síndrome do QT longo tipo 3; mutações de
+perda-de-função, síndrome de Brugada.
+
+A corrente de cálcio tipo L $I_{\mathrm{Ca},L}$ atravessa o canal Cav1.2
+codificado por \textit{CACNA1C}. Sua ativação é mais lenta (com limiar
+em torno de -40~mV) e é dupla: gate de voltagem $d$ e gate de
+inativação $f$, este último também inativado pela própria elevação do
+Ca$^{2+}$ citosólico ($f_{\mathrm{Ca}}$) --- um mecanismo de
+auto-regulação fundamental para o acoplamento excitação-contração.
+
+As correntes de potássio são múltiplas. $I_{\mathrm{Kr}}$ (\emph{rapid
+delayed rectifier}, hERG/Kv11.1, codificado por \textit{KCNH2}) tem
+ativação rápida e inativação importante --- sua retificação interna
+significa que ela flui fortemente durante a Fase 2 e desaparece durante
+o platô. $I_{\mathrm{Ks}}$ (\emph{slow delayed rectifier}, KCNQ1/KCNE1,
+\textit{KCNQ1}/\textit{KCNE1}) ativa muito lentamente. $I_{\mathrm{K1}}$
+(retificadora interna, Kir2.1/\textit{KCNJ2}) mantém o repouso.
+A corrente $I_{\mathrm{to}}$ (transitória externa, Kv4.3) produz a
+Fase 1. Nos cardiomiócitos atriais há ainda $I_{\mathrm{Kur}}$ (ultra-rápida)
+e $I_{\mathrm{KACh}}$ (acetilcolina-ativada) --- a primeira é alvo de
+drogas contra fibrilação atrial; a segunda responde à estimulação vagal.
+
+\subsection{Período Refratário}
+\label{sub:image12-refrat}
+
+A inativação dos canais de Na$^+$ produz o \emph{período refratário
+efetivo} (ERP), intervalo durante o qual a célula não pode gerar um novo
+potencial de ação, mesmo sob estímulo forte --- é a base do
+\emph{período refratário absoluto}, de ~150--200~ms. À medida que os
+canais recuperam a disponibilidade, segue-se o \emph{período refratário
+relativo}, em que estímulo mais intenso consegue deflagrar um potencial
+de ação, mas com amplitude reduzida.
+
+O ERP cardíaco é maior do que o neuronal por mais de cem vezes --- duração
+que combina com a duração do ciclo cardíaco. Em frequências mais altas,
+o ERP é proporcionalmente mais curto, mas não o suficiente para acomodar
+mais ciclos: existe uma frequência máxima intrínseca.
+
+\section{Modelos Computacionais do Cardiomiócito}
+\label{sec:12-modelos}
+
+\subsection{Evolução Histórica dos Modelos}
+\label{sub:image12-modelos-hist}
+
+O primeiro modelo matemático especificamente cardíaco foi proposto por
+Denis Noble em 1962, baseando-se no formalismo de Hodgkin-Huxley para
+descrever as fibras de Purkinje (sistema de condução) com quatro correntes
+iônicas e seis variáveis de estado. O modelo foi pioneiro em mostrar que o
+formalismo HH era geral o suficiente para capturar o automatismo
+intrínseco --- ajustando a inclinação da Fase 4, o nó SA produzia
+disparos espontâneos.
+
+Beeler e Reuter (1977) introduziram o primeiro modelo ventricular
+mamífero, com dinâmica de Ca$^{2+}$ intracelular. Luo e Rudy
+elaboraram em duas etapas --- \emph{LR1} em 1991 e \emph{LR2} em 1994 ---
+incluindo retículo sarcoplasmático, bombas iônicas e o trocador
+Na$^+$/Ca$^{2+}$, conseguindo reproduzir acoplamento
+excitação-contração em escala submolecular. Em 2004, ten Tusscher e
+Panfilov publicaram um modelo ventricular humano com 12 correntes,
+incorporando dados de células epiteliais, M e endocárdicas --- distinção
+importante para capturar a gênese da onda T do ECG. Em 2011, O'Hara, Virág,
+Varró e Rudy publicaram uma reconstrução baseada em ~150 conjuntos de
+dados experimentais humanos, hoje o padrão em simulações clínicas.
+
+\subsection{Modelo Simplificado com Cinco Variáveis}
+\label{sub:image12-modelo-simples}
+
+Para finalidades didáticas, modelos com 5--8 variáveis de estado capturam
+as propriedades qualitativas do PA ventricular. O sistema de variáveis
+$V$, $m$, $h$, $d$, $f$, $x$ (potencial, gate rápido de Na$^+$ em
+ativação, gate rápido de Na$^+$ em inativação, ativação e inativação de
+Ca$^{2+}$, ativação de K$^+$) integra as EDOs:
+\begin{align}
+C_m \frac{dV}{dt} &= -(I_{\mathrm{Na}} + I_{\mathrm{Ca},L} + I_K)/C_m \\
+\frac{dm}{dt} &= (m_\infty(V) - m)/\tau_m \\
+\frac{dh}{dt} &= (h_\infty(V) - h)/\tau_h \\
+\frac{dd}{dt} &= (d_\infty(V) - d)/\tau_d \\
+\frac{df}{dt} &= (f_\infty(V) - f)/\tau_f \\
+\frac{dx}{dt} &= (x_\infty(V) - x)/\tau_x
+\end{align}
+onde as correntes seguem a forma $I_{\mathrm{ion}} = \bar{g}_{\mathrm{ion}}\, m^p h^q (V - E_{\mathrm{ion}})$.
+Estimações das constantes de tempo $\tau_m \approx 0{,}1$ ms, $\tau_h \approx 2$ ms,
+$\tau_d \approx 3$ ms, $\tau_f \approx 20$ ms, $\tau_x \approx 100$ ms
+capturam as ordens de grandeza das transições iônicas.
+
+A implementação reproduz a forma característica do PA ventricular em
+presença de um pulso de corrente supralimiar. O trecho de código a
+seguir é representativo:
+
+\begin{lstlisting}[language=Python, caption=PA ventricular simplificado (5 variaveis)]
+import numpy as np
+from scipy.integrate import odeint
+
+def cardiac_ap(y, t, I_stim):
+    V, m, h, d, f, x = y
+
+    # Condutancias maximas e potenciais reversos
+    gNa, gCa, gK = 23.0, 0.09, 0.282
+    ENa, ECa, EK = 50.0, 60.0, -85.0
+
+    # Estados estacionarios e time constants
+    m_inf = 1.0 / (1 + np.exp(-(V + 40) / 5))
+    h_inf = 1.0 / (1 + np.exp( (V + 65) / 7))
+    d_inf = 1.0 / (1 + np.exp(-(V + 10) / 6.24))
+    f_inf = 1.0 / (1 + np.exp( (V + 32) / 8))
+    x_inf = 1.0 / (1 + np.exp(-(V + 20) / 15))
+
+    tau_m, tau_h = 0.10, 2.0
+    tau_d, tau_f, tau_x = 3.0, 20.0, 100.0
+
+    INa = gNa * m**3 * h * (V - ENa)
+    ICa = gCa * d * f * (V - ECa)
+    IK  = gK  * x * (V - EK)
+    Cm  = 1.0  # uF/cm^2
+
+    dV   = -(INa + ICa + IK) / Cm + I_stim(t)
+    dmdt = (m_inf - m) / tau_m
+    dhdt = (h_inf - h) / tau_h
+    dddt = (d_inf - d) / tau_d
+    dfdt = (f_inf - f) / tau_f
+    dxdt = (x_inf - x) / tau_x
+
+    return [dV, dmdt, dhdt, dddt, dfdt, dxdt]
+
+# Protocolo: estimulo em t = 5 ms
+I_stim = lambda t: 50.0 if (4 <= t <= 5) else 0.0
+t = np.linspace(0, 500, 5001)
+y0 = [-85.0, 0.01, 0.99, 0.001, 0.99, 0.01]
+sol = odeint(cardiac_ap, y0, t, args=(I_stim,))
+
+# APD_90: tempo para o PA cair 90% entre pico e repouso
+V = sol[:, 0]
+peak_t = t[np.argmax(V)]
+APD_90 = t[np.argmax(V < (V[0] + 0.1 * (V.max() - V[0])))] - peak_t
+print(f"APD_90 estimado: {APD_90:.1f} ms")
+\end{lstlisting}
+
+Modelos progressivamente mais detalhados (Luo-Rudy I, LR2, ten Tusscher,
+O'Hara-Rudy) adicionam compartimentos --- citosol, retículo sarcoplasmático,
+sub-membrana --- e mecanismos auxiliares --- bombas SERCA, trocador
+NCX, correntes de fundo --- reproduzindo complexidade suficiente para
+predizer arritmias sob condições clínicas. A escolha do modelo depende
+da pergunta: para uma resposta qualitativa sobre o comportamento do
+PA, cinco variáveis bastam; para simular perturbações em canais
+cardíacos sob tratamento farmacológico, é necessário um modelo de
+escala humana.
+
+
+\section{Acoplamento Excitação-Contração}
+\label{sec:12-ec}
+
+A contração muscular cardíaca é desencadeada pelo potencial de ação por
+meio de uma cascata de eventos iniciada pelo Ca$^{2+}$ --- fenômeno cuja
+compreensão foi peça fundamental na cardiologia do século XX. O
+acoplamento excitação-contração (EC) pode ser descrito em dez etapas
+essenciais.
+
+\subsection{A Cascata do Cálcio}
+\label{sub:image12-cascata}
+
+Quando o potencial de ação despolariza a membrana, canais de Ca$^{2+}$
+tipo L (DHPR --- dihydropyridine receptors) abrem, gerando uma pequena
+corrente $I_{\mathrm{Ca},L}$ de entrada. Esse \emph{trigger calcium}
+--- embora insuficiente para desencadear a contração por si só ---
+ativa sensores locais nos receptores de rianodina (RyR2) do retículo
+sarcoplasmático (SR), fazendo-os liberar uma quantidade maciça de
+Ca$^{2+}$ armazenado. Esse processo, chamado \emph{calcium-induced
+calcium release} (CICR), realiza uma amplificação da ordem de dez vezes
+entre o sinal de gatilho (DHPR) e o sinal total (RyR).
+
+A concentração citosólica de Ca$^{2+}$ transita assim de cerca de
+$0{,}1\,\mu$M em diástole para $1$--$10\,\mu$M em sístole. O Ca$^{2+}$
+liga-se à troponina C, alterando a conformação do complexo
+troponina-tropomiosina e expondo os sítios de ligação da actina à
+miosina. A hidrólise de ATP pela cabeça da miosina gera o \emph{power
+stroke}, encurtando o sarcômero.
+
+A recaptação do Ca$^{2+}$ ao final da sístole cabe à bomba SERCA
+(sarco/endoplasmic reticulum Ca-ATPase), que retorna o íon ao SR contra
+gradiente, e ao trocador NCX (Na-Ca exchanger) da membrana plasmática,
+que remove Ca$^{2+}$ do citosol em troca de Na$^+$. O relaxamento
+subsequente é passivo em termos de energia química, mas o gradiente de
+Ca$^{2+}$ é restaurado a custo de ATP pela SERCA --- e é essa bomba, e não
+a miosina, que é o maior consumidor de ATP do ciclo cardíaco.
+
+\subsection{Modelo de Dois Compartimentos para Ca$^{2+}$}
+\label{sub:image12-ca-modelo}
+
+O sistema mínimo que captura a regulação do Ca$^{2+}$ intracelular
+envolve dois compartimentos --- citosol e SR --- cujas concentrações
+evoluem segundo:
+\begin{align}
+\frac{d[\mathrm{Ca}^{2+}]_i}{dt} &= J_{\mathrm{rel}} - J_{\mathrm{up}} + J_{\mathrm{leak}} + \frac{2I_{\mathrm{Ca},L} - I_{\mathrm{NCX}}}{F V_{\mathrm{cell}}} \\
+\frac{d[\mathrm{Ca}^{2+}]_{\mathrm{SR}}}{dt} &= J_{\mathrm{up}} - J_{\mathrm{rel}} - J_{\mathrm{leak}}
+\end{align}
+
+Os fluxos principais seguem cinética de Michaelis-Menten para
+$J_{\mathrm{up}}$, dependência de RyR para $J_{\mathrm{rel}}$ e diferença
+de concentrações para $J_{\mathrm{leak}}$. Em modelos completos (LR2,
+O'Hara-Rudy), buffers como troponina, calmodulina e calsequestrin são
+adicionados como variáveis suplementares, modificando a concentração
+livre que efetivamente regula a contração.
+
+A falha do CICR é a causa proximal de várias cardiopatias. Na
+\emph{insuficiência cardíaca sistólica}, a redução da amplitude do
+transitório de Ca$^{2+}$ enfraquece a contração. No \emph{dano por
+isquemia-reperfusão}, a sobrecarga de Ca$^{2+}$ no início da reperfusão
+gera contrações anômalas e arritmias. Nas canalopatias --- mutações em
+RyR2 --- o canal libera Ca$^{2+}$ espontaneamente fora do ciclo do PA,
+gerando \emph{afterdepolarizations} e taquicardias.
+
+\subsection{Geração de Força e Lei de Frank-Starling}
+\label{sub:image12-frank-starling}
+
+A força gerada pelo cardiomiócito depende cooperativamente do Ca$^{2+}$
+citosólico com coeficiente de Hill $n \approx 4$--$6$:
+\begin{equation}
+F = F_{\max} \cdot \frac{[\mathrm{Ca}^{2+}]_i^n}{K_d^n + [\mathrm{Ca}^{2+}]_i^n}\, g(L)
+\end{equation}
+
+A função $g(L)$ captura a relação comprimento-tensão --- a \emph{lei de
+Frank-Starling}, formulada por Otto Frank (1895) e Ernest Starling (1918):
+\begin{exemploenv}[Lei de Frank-Starling]
+A força de contração do ventrículo é proporcional ao comprimento inicial
+das fibras musculares cardíacas dentro da faixa fisiológica. Quando o
+retorno venoso aumenta e o enchimento diastólico é maior, o débito
+sistólico aumenta automaticamente --- sem necessidade de regulação
+nervosa ou humoral --- para acomodar o volume extra.
+\end{exemploenv}
+
+O mecanismo molecular reside na sensibilidade do complexo actina-miosina
+ao Ca$^{2+}$ dependente do comprimento do sarcômero. Sarcômeros
+distendidos (até o limite de ~$2{,}2\,\mu$m de sobreposição ótima)
+apresentam maior sensibilidade e recrutam mais pontes cruzadas.
+Sarcômeros demasiadamente distendidos (>2{,}4\,\mu$m) começam a perder
+sobreposição e a força cai.
+
+O modelo de dois fatores produz a curva característica: ramo ascendente
+até $L_0 \approx 2{,}0$--$2{,}2\,\mu$m, platô em uma faixa estreita,
+ramo descendente para comprimentos superiores a $2{,}4\,\mu$m. Em
+condições fisiológicas, o coração opera predominantemente na faixa de
+comprimento entre 1,9 e $2{,}2\,\mu$m --- sempre no ramo ascendente, com
+margem para ajuste.
+
+\begin{lstlisting}[language=Python, caption=Curva forca-comprimento (Frank-Starling)]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def contraction_force(Ca_i, SL, F_max=100.0, Ca_50=1.0, n_H=4):
+    # Forca em funcao de calcio intracelular e comprimento de sarcomero.
+    Ca_act = Ca_i**n_H / (Ca_50**n_H + Ca_i**n_H)
+    L0 = 2.0
+    if   SL < 1.6: length_dep = 0.0
+    elif SL < L0:  length_dep = (SL - 1.6) / (L0 - 1.6)
+    elif SL < 2.4: length_dep = 1.0
+    else:          length_dep = 1.0 - 0.5 * (SL - 2.4)
+    return F_max * Ca_act * length_dep
+
+Ca_range = np.linspace(0.05, 10, 100)
+SL_values = [1.8, 2.0, 2.2]
+
+plt.figure(figsize=(8, 5))
+for SL in SL_values:
+    F = [contraction_force(ca, SL) for ca in Ca_range]
+    plt.plot(Ca_range, F, lw=2, label=f'SL = {SL} um')
+plt.xlabel('[Ca2+]i (uM)')
+plt.ylabel('Forca (kPa)')
+plt.title('Curva comprimento-tensao (Frank-Starling)')
+plt.legend(); plt.grid(alpha=0.3); plt.tight_layout()
+plt.savefig('frank_starling.png', dpi=150)
+\end{lstlisting}
+
+
+\section{Propagação e Arritmias}
+\label{sec:12-propagacao}
+
+A propagação do potencial de ação pelo miocárdio segue a teoria do cabo
+(cardiac cable theory), generalização cardíaca da teoria do cabo neuronal.
+A equação fundamental para um tecido unidimensional é:
+\begin{equation}
+\frac{\partial V}{\partial t} = D \nabla^2 V - \frac{I_{\mathrm{ion}}}{C_m}
+\end{equation}
+onde $D$ é um coeficiente de difusão efetivo que depende da resistência
+do tecido e do gap junction, $\nabla^2$ o operador laplaciano e
+$I_{\mathrm{ion}}$ a corrente iônica local do cardiomiócito. A
+velocidade de propagação $\theta$ é dada aproximadamente por
+\begin{equation}
+\theta = \lambda \sqrt{2/\tau}
+\end{equation}
+onde $\lambda$ é a \emph{constante de comprimento espacial} (raiz da razão
+entre condutividade longitudinal e transversal) e $\tau$ é a constante de
+tempo da membrana. Em tecido atrial, $\theta$ alcança 0,5--1~m/s;
+em ventricular, 0,3--0,5~m/s; nas fibras de Purkinje, 4~m/s.
+
+\subsection{Mecanismos de Arritmias}
+\label{sub:image12-arrit}
+
+Três categorias de mecanismos geram arritmias. \textbf{(i)} Anormalidades
+de formação do impulso incluem automaticidade anômala (células
+auto-ritmícas fora do nó SA) e \emph{atividade deflagrada} --- pós-despolarizações
+precoces (EADs, durante a Fase 2 ou 3) ou tardias (DADs, após a
+repolarização), frequentemente associadas a mutações de canais ou a
+fármacos. \textbf{(ii)} Anormalidades de condução incluem bloqueio
+atrioventricular e bloqueios de ramo, com produção de ritmos de escape ou
+dessincronização mecânica. \textbf{(iii)} Reentrada é o mecanismo mais
+comum de taquiarritmias sustentadas, caracterizado por um circuito de
+condução com bloqueio unidirecional --- um tecido ainda em estado
+refratário em um sentido, mas capaz de conduzir no outro. Se a frente
+de onda ao redor do circuito encontrar tecido excitável ao completar a
+volta, persiste indefinidamente.
+
+O critério para reentrada envolve o \emph{comprimento de onda} $\lambda$,
+produto entre velocidade de propagação $\theta$ e período refratário
+efetivo (ERP):
+\begin{equation}
+\lambda = \theta \times \mathrm{ERP}
+\end{equation}
+A condição necessária é que o perímetro do circuito exceda $\lambda$ ---
+caso contrário, a frente encontra tecido em refratura ao retornar e é
+extinguida.
+
+\subsection{Fibrilação Atrial}
+\label{sub:image12-fa}
+
+A fibrilação atrial (FA) é a arritmia sustentada mais comum --- com
+prevalência de 1--2\% na população geral, ultrapassando 10\% em maiores
+de 80 anos. É caracterizada por ativação atrial caótica, com frequência
+de 400--600 batimentos por minuto e perda da contração atrial coordenada.
+Mecanismos invocados incluem triggers de focos ectópicos --- em sua
+maioria no interior das veias pulmonares --- e substrato estrutural com
+remodelamento atrial por fibrose.
+
+O fenômeno de \emph{AF begets AF} (FA gera mais FA) é uma observação
+experimental crucial: episódios prolongados de FA reduzem o APD atrial
+(por \emph{remodeling} --- inativação de $I_{\mathrm{Ca},L}$ e aumento
+de $I_{\mathrm{K1}}$) e promovem estabilidade da própria arritmia. A
+intervenção precoce --- cardioversão ou ablação --- é fundamental para
+prevenir a cronificação.
+
+Modelos computacionais de FA, especialmente os que incorporam rotores
+e múltiplas ondas, têm ajudado a guiar estratégias de ablação:
+identificação de alvos alvo (\emph{rotor ablation}), isolamento elétrico
+das veias pulmonares, e personalização de protocolos de acordo com
+parâmetros observados por imageamento cardíaco.
+
+\subsection{Fibrilação Ventricular e Morte Súbita}
+\label{sub:image12-fv}
+
+A fibrilação ventricular (FV) é a causa mais comum de morte súbita
+cardíaca. No ECG aparece como atividade irregular sem complexo QRS
+organizado; mecanicamente, nenhuma contração coordenada é produzida, o
+débito cardíaco cai a zero, e a lesão cerebral instala-se em segundos
+a minutos. A desfibrilação elétrica --- única terapia eficaz ---
+aplica uma corrente despolarizante massiva (200--360 J em adultos)
+através do miocárdio, esgotando os gradientes elétricos e permitindo a
+retomada do ritmo sinusal pelos marca-passos naturais.
+
+Os mecanismos da FV envolvem \emph{wavebreak} de ondas espirais --- rotores
+inicialmente estáveis fraturam-se em padrões espirais múltiplos,
+irregulares, de alta frequência. Modelos computacionais em malha
+tridimensional (Fenton-Karma, Aliev-Panfilov para tecidos; modelos celulares
+detalhados para nível fino) reproduzem o espalhamento caótico observado.
+
+\subsection{Síndrome do QT Longo}
+\label{sub:image12-lqts}
+
+A síndrome do QT longo (LQTS) descreve um conjunto de canalopatias com
+prolongamento do intervalo QT no ECG (acima de 440~ms em homens, 460~ms
+em mulheres). Três formas genéticas principais são tradicionalmente
+distinguidas:
+
+\begin{itemize}
+\item \textbf{LQT1} (mutação em KCNQ1): redução de $I_{\mathrm{Ks}}$, a corrente
+  de repolarização lenta. Gatilhos típicos são exercício físico,
+  especialmente natação.
+\item \textbf{LQT2} (mutação em KCNH2/hERG): redução de $I_{\mathrm{Kr}}$, com
+  surtos associados a estresse emocional, estímulos auditivos súbitos,
+  pós-parto.
+\item \textbf{LQT3} (mutação em SCN5A): ganho-de-função em $I_{\mathrm{Na}}$ ---
+  persistência da corrente de sódio mantém o platô. Eventos ocorrem em
+  repouso ou sono.
+\end{itemize}
+
+A LQTS pode também ser adquirida --- diversos medicamentos bloqueiam $I_{\mathrm{Kr}}$
+(em particular, antibióticos macrolídeos, antieméticos como ondansetrona,
+antipsicóticos como haloperidol) e prolongam o QT. O risco arrítmico --- na
+forma de \emph{torsades de pointes} --- motivou protocolos regulatórios
+que exigem teste in silico para qualquer nova droga. Os modelos de
+O'Hara-Rudy e ten Tusscher são usados rotineiramente para prever
+prolongamento QT a partir de perfis de bloqueio iônico.
+
+\begin{exemploenv}[Modulação da velocidade de propagação por drogas]
+Bloqueadores de canais de sódio (classe I da classificação Vaughan-Williams)
+reduzem o upstroke do PA ($dV/dt|_{max}$), com consequente redução da
+velocidade de propagação. Em casos extremos, a propagação falha em
+alcançar regiões distantes do miocárdio antes que elas se tornem
+refratárias, favorecendo bloqueios de condução. Bloqueadores de canais
+de potássio (classe III, como amiodarona) prolongam o APD e, via
+aumento do ERP, são geralmente antiarrítmicos. O balanço terapêutico
+entre condutância e refratariedade é a base da classificação
+antiarrítmica moderna.
+\end{exemploenv}
+
+\section{Exercícios}
+\label{sec:12-exercicios}
+
+\begin{exercicio}
+\textbf{Análise do potencial de ação.} Um PA ventricular tem as seguintes
+características: $V_{\mathrm{rest}} = -85$ mV, $V_{\mathrm{pico}} = +30$ mV,
+$\mathrm{APD}_{90} = 300$ ms. (a) Calcule a amplitude do PA. (b) Se a
+frequência cardíaca é 75 bpm, qual a porcentagem do ciclo em que a célula
+está refratária? (c) Como uma droga que bloqueia $I_{\mathrm{Kr}}$ afetaria
+o APD?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Equação de Nernst.} A 37°C, calcule o potencial de equilíbrio para
+Ca$^{2+}$ dados $[\mathrm{Ca}^{2+}]_o = 2$ mM e $[\mathrm{Ca}^{2+}]_i = 0{,}1\;\mu$M.
+Use a relação $E = (58/z) \log_{10}([X]_o/[X]_i)$ mV. O que isso implica
+sobre a magnitude da força eletromotriz disponível para entrada de
+Ca$^{2+}$ durante o platô?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Acoplamento excitação-contração.} Descreva em prosa o fluxograma
+completo do acoplamento EC, identificando os papéis de DHPR, RyR, SERCA
+e NCX. Em seguida, explique como uma redução de 50\% em $I_{\mathrm{Ca},L}$
+afetaria a contração e por que bloqueadores de canal de Ca$^{2+}$
+são efetivos no tratamento de hipertensão.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Comprimento de onda de reentrada.} Considere uma velocidade de
+condução $\theta = 0{,}5$ m/s e um ERP $= 250$ ms em tecido atrial
+em fibrilação atrial crônica. (a) Calcule o comprimento de onda
+$\lambda$. (b) Determine o perímetro mínimo de circuito para sustentar
+reentrada. (c) Como o remodelamento atrial (encurtamento de APD por
+redução de $I_{\mathrm{Ca},L}$ e aumento de $I_{\mathrm{K1}}$) afeta
+$\lambda$ e o limiar para reentrada?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Simulação do PA ventricular.} Implemente o modelo simplificado de
+cinco variáveis descrito no capítulo em Python. (a) Reproduza um PA em
+resposta a um pulso supra-limiar. (b) Calcule o APD$_{90}$. (c) Varie
+$g_{\mathrm{Kr}}$ em ±50\% e meça o efeito sobre APD$_{90}$: o resultado
+é consistente com a síndrome do QT longo?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Potencial de equilíbrio múltiplo.} A 37°C, calcule os potenciais
+de equilíbrio para K$^+$, Na$^+$ e Cl$^-$ a partir das concentrações da
+tabela do capítulo (use a equação GHK simplificada). Em seguida, explique
+por que a célula em repouso encontra-se essencialmente em $E_K$, com
+$V_m$ ligeiramente mais despolarizado.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Curva de Frank-Starling.} (a) Implemente em Python a função
+\texttt{contraction\_force} dada no texto. (b) Plote a força em função
+do Ca$^{2+}$ intracelular para três comprimentos de sarcômero (1,9; 2,0;
+2,1\,\mu$m). (c) Discuta como alterações da sensibilidade da miosina ao
+Ca$^{2+}$ (modeladas por variações do $K_d$) afetam a resposta.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Análise clínica.} Um paciente apresenta FC $= 180$ bpm, ritmo
+irregular, ausência de ondas P e complexo QRS estreito. (a) Qual o
+diagnóstico mais provável? (b) Explique o mecanismo eletrofisiológico.
+(c) Quais opções terapêuticas você consideraria e por quê?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Projeto integrador.} Escolha uma das arritmias discutidas
+(fibrilação atrial, fibrilação ventricular, LQT, síndrome de Brugada) e:
+(a) formule um modelo computacional simplificado (pode-se usar o modelo
+de FitzHugh-Nagumo ou um PA reduzido); (b) reproduza a arritmia por
+estimulação apropriada; (c) investigue o efeito de uma droga
+antiarrítmica; (d) proponha um protocolo de estimulação de baixa energia
+(defibrilação de baixa voltagem) com base na teoria de controle de
+rotores. A solução deve ser apresentada com texto, figuras e código
+documentado.
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+\label{sec:12-bibliografia}
+
+A eletrofisiologia cardíaca é o sistema fisiológico para o qual
+existe a correspondência mais estreita entre teoria matemática e
+experimento. \textit{Mathematical Physiology} de James Keener e James
+Sneyd (2ª edição, Springer) é a referência formal completa para
+eletrofisiologia iônica e cardíaca --- cobre Hodgkin-Huxley, modelos
+ventriculares e propagação em tecidos. \textit{Physiology of the Heart}
+de Arnold Katz (5ª edição, Lippincott) é o texto clássico para os
+aspectos fisiológicos com inclinação clínica.
+
+Os artigos seminais que definiram o campo incluem o de Denis Noble
+(1962) sobre o primeiro modelo de célula cardíaca em fibras de Purkinje
+(adaptando o modelo HH), o de Luo e Rudy (1991) sobre o LR1
+(introduzindo dinâmica de Ca$^{2+}$ em cardiomiócito ventricular), o de
+ten Tusscher e Panfilov (2006) sobre o modelo ventricular humano com
+heterogeneidade transmural, e o de O'Hara, Virág, Varró e Rudy (2011)
+sobre o modelo padrão atual baseado em dados humanos extensos.
+
+Para arritmias e clínica, \textit{Cardiac Electrophysiology: From Cell to
+Bedside} de Zipes e Jalife (6ª edição, Elsevier) é a referência
+abrangente para ligação com a prática. \textit{Cardiovascular Physiology
+Concepts} de Richard Klabunde (2ª edição, Lippincott) introduz
+eletrofisiologia com clareza de fisiologista. Para simulação computacional,
+\textit{Models of Cardiac Tissue Electrophysiology} de Clayton et al.\
+\textit{(Progress in Biophysics and Molecular Biology, 2011)} e
+\textit{Whole-Heart Modeling} de Trayanova (2011) são revisões
+esclarecedoras.
+
+Os recursos computacionais incluem o repositório CellML
+(\url{https://models.cellml.org/electrophysiology}), que distribui versões
+codificadas dos modelos Luo-Rudy, ten Tusscher, O'Hara-Rudy em SBML e
+CellML. O \emph{openCARP} (\url{https://opencarp.org}) é o software
+livre padrão para simulações eletrofisiológicas em tecidos 2D/3D. O
+PhysioNet (\url{https://physionet.org}) fornece bases de ECG anotadas
+essenciais para validação experimental. O \emph{Living Heart Project} da
+Dassault Systèmes (\url{https://www.3ds.com/simulia}) é referência em
+simulação multi-escala integrando eletromecânica.
+
+\begin{thebibliography}{99}
+\bibitem{keener} Keener J., Sneyd J. (2009). \textit{Mathematical
+Physiology II: Systems Physiology}, 2ª ed. Springer, Nova York.
+
+\bibitem{katz} Katz A.M. (2010). \textit{Physiology of the Heart}, 5ª
+ed. Lippincott Williams \& Wilkins, Filadelfia.
+
+\bibitem{noble} Noble D. (1962). A modification of the Hodgkin--Huxley
+equations applicable to Purkinje fibre action and pacemaker potentials.
+\textit{Journal of Physiology}, 160:317--352.
+
+\bibitem{beeler} Beeler G.W., Reuter H. (1977). Reconstruction of the
+action potential of ventricular myocardial fibres. \textit{Journal of
+Physiology}, 268:177--210.
+
+\bibitem{luo1} Luo C.H., Rudy Y. (1991). A model of the ventricular
+cardiac action potential: depolarization, repolarization, and their
+interaction. \textit{Circulation Research}, 68:1501--1526.
+
+\bibitem{luo2} Luo C.H., Rudy Y. (1994). A dynamic model of the cardiac
+ventricular action potential: II. Afterdepolarizations, triggered
+activity, and potentiation. \textit{Circulation Research}, 74:1097--1113.
+
+\bibitem{tentusscher} ten Tusscher K.H., Panfilov A.V. (2006).
+Alternans and spiral breakup in a human ventricular tissue model.
+\textit{American Journal of Physiology Heart and Circulatory
+Physiology}, 291:H1088--H1100.
+
+\bibitem{ohara} O'Hara T., Virág L., Varró A., Rudy Y. (2011). Simulation
+of the undiseased human cardiac ventricular action potential: model
+formulation and experimental validation. \textit{PLoS Computational
+Biology}, 7:e1002061.
+
+\bibitem{clayton} Clayton R.H., Bernus O., Cherry E.M., Dierckx H.,
+Fenton F.H., Mirabella L., Panfilov A.V., Sachse F.B., Seemann G.,
+Skarda E. (2011). Models of cardiac tissue electrophysiology: an
+overview. \textit{Progress in Biophysics and Molecular Biology},
+104:1--21.
+
+\bibitem{trayanova} Trayanova N.A. (2011). Whole-heart modeling:
+applications to cardiac arrhythmias and defibrillation. \textit{Circulation
+Research}, 109:478--491.
+
+\bibitem{zipes} Zipes D.P., Jalife J. (2013). \textit{Cardiac
+Electrophysiology: From Cell to Bedside}, 6ª ed. Elsevier, Filadelfia.
+
+\bibitem{klabunde} Klabunde R.E. (2011). \textit{Cardiovascular
+Physiology Concepts}, 2ª ed. Lippincott Williams \& Wilkins,
+Filadelfia.
+
+\bibitem{vaughan} Vaughan Williams E.M. (1984). A classification of
+antiarrhythmic actions reassessed after a decade of new drugs.
+\textit{Journal of Clinical Pharmacology}, 24:129--147.
+
+\bibitem{frank} Frank O. (1895). Zur Dynamik des Herzmuskels.
+\textit{Zeitschrift für Biologie}, 32:370--447.
+
+\bibitem{starling} Starling E.H. (1918). \textit{The Linacre Lecture on
+the Law of the Heart}. Longmans, Green and Co., Londres.
+
+\bibitem{cellml} Lloyd C.M., Lawson J.R., Hunter P.J., Nielsen P.F.
+(2008). The CellML model repository. \textit{Bioinformatics},
+24:2122--2123. Disponível em \url{https://models.cellml.org/electrophysiology}.
+
+\bibitem{opencarp} Plank G., Loewe A., Lilienkamp T., Prassl A.,
+Fischer C., Pezzuto N., Ravens U., Seemann G. (2021). The openCARP
+simulation environment for cardiac electrophysiology. \textit{Computer
+Methods and Programs in Biomedicine}, 208:106223. Disponível em
+\url{https://opencarp.org}.
+
+\bibitem{physionet} Goldberger A.L., Amaral L.A.N., Glass L., Hausdorff
+J.M., Ivanov P.C., Mark R.G., Mietus J.E., Moody G.B., Peng C.K.,
+Stanley H.E. (2000). PhysioBank, PhysioToolkit, and PhysioNet:
+components of a new research resource for complex physiologic signals.
+\textit{Circulation}, 101:e215--e220. Disponível em \url{https://physionet.org}.
+\end{thebibliography}
