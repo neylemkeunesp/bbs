@@ -129,3 +129,48 @@ A terceira frente emergente --- e talvez a mais transformadora para interpretaç
 
 A integração com scRNA-seq é direta: métodos como \emph{tanGRAM}, \emph{cell2location}, ou \emph{SpatialDWLS} descompactam sinais espaciais em abundâncias de tipos celulares por spot usando scRNA-seq como referência, gerando mapas de tecido com resolução celular preservando a arquitetura. Esses mapas espaciais estão se consolidando como ferramentas centrais em patologia digital e em medicina de precisão, especialmente em oncologia, onde a composição do microambiente tumoral --- proporção de células T efetivas versus exaustas, presença de fibroblastos, vascularização --- é preditiva de resposta a imunoterapia.
 
+
+
+\section{Inteligência Artificial Aplicada à Biologia de Sistemas}
+\label{sec:15-ia}
+
+Os últimos cinco anos --- 2020 a 2025 --- assistiram a uma transformação possivelmente sem precedentes na história da bioinformática e da biologia computacional: a emergência de modelos de aprendizado profundo em escala suficientemente grande para capturar relações complexas em dados biomoleculares, e a aplicação desses modelos a problemas --- predição de estrutura proteica, geração de moléculas, interpretação de variantes, integração de dados clínicos e ômicos em larga escala --- que pareciam, poucos anos antes, fora do alcance de métodos puramente estatísticos. A biologia de sistemas não foi mera espectadora dessa transformação --- em muitos casos, foi protagonista, com dados e problemas seus servindo como benchmarks e motores do desenvolvimento. Esta seção examina as principais frentes onde a intersecção entre IA e biologia de sistemas se materializa em resultados concretos, e algumas das tensões conceituais e metodológicas que emergem dessa convergência.
+
+O termo \emph{inteligência artificial} --- usado aqui em sentido amplo, cobrindo aprendizado de máquina supervisionado, não-supervisionado, profundo, e por reforço --- não é novo na biologia de sistemas. Os Capítulos~\ref{cap:4} e~\ref{cap:5} deste livro discutiram extensivamente métodos estatísticos e de aprendizado de máquina aplicados a redes gênicas e à estimação de parâmetros; a análise de redes discutida no Capítulo~\ref{cap:7} já empregava classificadores, redução de dimensionalidade, e clustering como ferramentas cotidianas. A novidade recente não é, portanto, o uso de IA em si, mas a \emph{escala}: modelos com centenas de milhões a trilhões de parâmetros --- treinados em dezenas de bilhões de sequências biológicas brutas --- que capturam padrões antes inacessíveis, e que podem ser reaproveitados (\emph{transferidos}) para novos problemas com poucos ajustes. Esses modelos --- chamados de \emph{foundation models} ou \emph{modelos de base} --- incluem os LLMs biomédicos (BioBERT, Med-PaLM, PubMedBERT), os modelos proteicos (ESM, AlphaFold, ProteinMPNN, RoseTTAFold), os modelos transcriptômicos (scGPT, GeneFormer, scVI), e os modelos de estrutura (AlphaFold 2/3, RoseTTAFold All-Atom). Cada um deles representa, em seu domínio específico, um salto qualitativo de capacidade preditiva e generalização.
+
+
+
+O exemplo paradigmático da nova geração de modelos é o AlphaFold 2 --- publicado por Jumper et al.\ em 2021 --- que, pela primeira vez, atingiu precisão experimental (mediana de RMSD \emph{backbone} de cerca de \SI{1.0}{\angstrom}) na predição de estruturas terciárias de proteínas a partir de sequência pura, no benchmark CASP14 (\emph{Critical Assessment of protein Structure Prediction}). O resultado não foi marginal: o método superou as equipes acadêmicas líderes por margens que, em comunicado dos organizadores, foram descritas como inviabilizando a competição aberta --- sucesso que motivou a abertura do banco de dados AlphaFold DB, hoje com mais de \num{200} milhões de estruturas preditas cobrindo virtualmente todos os organismos sequenced (UniProt). AlphaFold 2 --- e o sucessor AlphaFold 3 (2024), que estende a predição a complexos proteína-DNA-RNA-ligante-íons) --- usa uma arquitetura baseada em \emph{transformers} (\emph{attention}) operando sobre \emph{evoformer blocks} que iterativamente refinam representações da sequência e de pares de resíduos, e cuja saída é decodificada em geometria 3D via ``\emph{structure module}''. A capacidade do modelo de aprender relações evolutivas distantes e restrições estruturais locais sem conhecimento explícito de física molecular é, do ponto de vista conceitual, uma demonstração eloquente de que \emph{inductive biases} fracas, compensadas por dados massivos e arquitetura apropriada, podem atingir resultados antes reservados a métodos físicamente informados.
+
+
+
+O avanço para \emph{foundation models} em transcriptômica de célula única seguiu lógica similar. \emph{scGPT} (Cui et al., 2024) e \emph{GeneFormer} (Theodoris et al., 2023) treinam transformers sobre catálogos com \(\sim\)50 milhões de células humanas transcriptômicamente profiled, aprendendo representações de cada gene em um espaço latente que captura co-expressões e relações funcionais aprendidas em escala. Essas representações podem ser \emph{fine-tuned} --- com poucos dados específicos --- para tarefas como classificação de tipo celular, predição de resposta a perturbação, e imputação de expressão gênica em genes não-medidos --- frequentemente superando métodos especializados treinados \emph{do zero} na tarefa. A estratégia reproduz --- em escala transcriptômica --- o que BERT (2018) e GPT (2018--2024) viabilizaram em linguagem natural: pré-treino em corpus massivo, transferência para tarefas específicas com poucos exemplos.
+
+\exemplo{scGPT aplicado a perturbação genética}{Um exemplo concreto do poder desses modelos vem da predição de resposta a \emph{knockouts} gênicos. Em ensaios de CRISPRi em escala genômica (projetos como o DepMap, Perturb-seq), medir o efeito fenotípico de cada knockout --- individualmente --- custa dólares e semanas por experimento; cobrir os \(\sim\)20.000 genes humanos um a um permanece financeiramente proibitivo. scGPT --- treinado em catálogos transcriptômicos brutos --- pode \emph{prever} o transcriptoma resultante do knockout de um gene a partir de seu embedding latente e da embedding do gene knockout, oferecendo um ``oráculo computacional'' que orienta quais genes priorizar experimentalmente. Em validação contra dados DepMap, scGPT atinge correlações de Pearson \(\sim\)0.6--0.8 entre predição e medição para vários milhares de genes testados, e acurácia comparável a ensaios CRISPRi de moderada escala --- uma capacidade preditiva que, três anos atrás, exigiria pipelines especializados treinados exclusivamente para essa tarefa.}
+
+
+
+\importante{A transformação em curso não é apenas quantitativa --- ``mais dados, mais parâmetros, mais poder preditivo'' --- mas qualitativa: a natureza da relação entre modelo e fenômeno mudou. Os modelos estatísticos clássicos tratavam relações biológicas como aproximações lineares em espaços de baixa dimensão construídos por \emph{feature engineering} (genes diferenciais, componentes principais); os modelos pré-treinados aprendem representações internas que não correspondem a constructos humanos reconhecíveis, e que generalizam para tarefas e domínios não antecipados pelos projetistas. Isso traz benefícios enormes --- performance em tarefas imprevistas --- mas também custos: a interpretabilidade é menor, o custo computacional e energético de treinar modelos grandes é formidável, e a confiança epistêmica --- o que o modelo ``sabe'' versus ``alucina'' --- torna-se uma variável crítica, especialmente em aplicações médicas onde predições errôneas têm consequências clínicas.}
+
+\begin{table}[h]
+\centering
+\caption{Family summary of biomedical foundation models (selection).}
+\label{tab:15-ia-models}
+\begin{tabular}{llll}
+\hline
+\textbf{Model} & \textbf{Domain} & \textbf{Architecture} & \textbf{Training corpus} \\\\
+\hline
+AlphaFold 2/3 & protein structure & evoformer + IPA & PDB + sequence DB \\
+ESM-2 & protein language & transformer & UniRef \(\sim\)60M seqs \\
+RoseTTAFold2 & protein structure & SE(3)-equivariant & PDB + MSA \\
+ProteinMPNN & protein design & GNN + transformer & PDB \\
+scGPT & scRNA-seq & transformer & \(\sim\)50M cells \\
+GeneFormer & scRNA-seq & transformer & GenCorpus \(\sim\)30M cells \\
+BioBERT & biomedical text & transformer & PubMed \\
+Med-PaLM 2 & medical QA & transformer & MedQA, etc. \\
+\hline
+\end{tabular}
+\end{table}
+
+A integração desses modelos com arcabouços de biologia de sistemas --- algoritmos de redes, modelos de EDOs, frameworks de FBA --- é uma frente emergente. Os modelos servem como ``oráculos'' para predizer parâmetros (constantes de cinética, energias de ligação, eficiências catalíticas) que, anteriormente, vinham de ensaios laboratoriais lentos e custosos; o arcabouço mecanístico, por sua vez, impõe restrições de consistência (conservação de massa, termodinâmica, balanço estequiométrico) que melhoram a confiabilidade das predições do modelo. Essa simbiose --- \emph{modelos baseados em física + modelos baseados em dados} --- é provavelmente a direção dominante da disciplina nos próximos anos, e conecta-se diretamente à discussão da Seção~\ref{sec:15-multiescala} sobre integração de escalas e métodos.
+
