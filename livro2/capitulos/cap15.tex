@@ -14,3 +14,62 @@ A trajetória recente da disciplina pode ser sintetizada em quatro fases. Na pri
 
 Cinco tendências estruturais atravessam essas quatro fases e constituem os temas unificadores dos tópicos discutidos neste capítulo. A primeira é a integração crescente de múltiplas camadas ômicas --- um paciente, ou uma amostra experimental, é cada vez mais visto como um ponto em um espaço de alta dimensão cujas coordenadas incluem genoma, transcriptoma, proteoma, metaboloma, dados clínicos, dados de imagem, e até dados ambientais e comportamentais. A segunda é a resolução celular cada vez mais fina, com tecnologias espaciais preservando, além do tipo celular, a sua localização no tecido. A terceira é a modelagem multi-escala, integrando níveis de organização biológica em modelos coerentes. A quarta é o uso crescente de inteligência artificial para descoberta e predição, com aprendizado profundo --- em particular, arquiteturas de transformers e modelos de difusão --- substituindo, em muitas aplicações, métodos estatísticos clássicos. A quinta é a convergência com medicina personalizada e digital twins, em que os métodos da biologia de sistemas se traduzem em ferramentas clínicas concretas --- desde a estratificação molecular discutida no Capítulo~\ref{cap:13} até a previsão de resposta a tratamento individual.
 
+
+
+\section{Modelagem Multi-Escala em Biologia de Sistemas}
+\label{sec:15-multiescala}
+
+Sistemas biológicos são, por natureza, \emph{multi-escala}: cada fenômeno observável --- do dobramento de uma proteína à resposta imune sistêmica, da divisão celular à migração populacional de células durante o desenvolvimento embrionário --- emerge de processos que ocorrem em escalas temporais e espaciais que cobrem muitas ordens de grandeza. A modelagem computacional de sistemas biológicos tem, historicamente, se organizado por escala --- modelos de dinâmica molecular para processos em escala de angstrons e femtossegundos; modelos de EDOs para redes metabólicas e regulatórias em escala celular; modelos de elementos finitos para tecidos; modelos populacionais para ecologia e epidemiologia --- e cada subclasse desenvolveu seus próprios métodos, vocabulários, e comunidades científicas. Esse particionamento foi produtivo durante décadas, mas impôs uma limitação que se torna crescentemente visível: a maioria dos problemas biologicamente relevantes envolve acoplamentos entre escalas, e esses acoplamentos não podem ser ignorados sem perda de fidelidade. A \emph{modelagem multi-escala} (\emph{multi-scale modeling}, MSM) busca romper esse particionamento, integrando formalmente representações de processos em múltiplas escalas em um arcabouço computacional coerente.
+
+As escalas relevantes podem ser organizadas em uma hierarquia aproximada, cada uma com magnitudes características próprias:
+
+\begin{definicaoenv}[Escalas características em sistemas biológicos]
+\begin{itemize}
+  \item \emph{Escala atômica e quântica} (\num{e-10} m, \num{e-15}--\num{e-12} s): estrutura eletrônica, ligações químicas, reações elementares.
+  \item \emph{Escala molecular} (\num{e-9}--\num{e-7} m, \num{e-9}--\num{e-3} s): conformação de proteínas, ligação ligando--receptor, catálise enzimática, dobramento.
+  \item \emph{Escala mesoscópica} (\num{e-7}--\num{e-6} m, \num{e-3}--\num{e1} s): complexos macromoleculares, vesículas, organelas.
+  \item \emph{Escala celular} (\num{e-5} m, \num{e1}--\num{e3} s): redes de sinalização, regulação gênica, metabolismo intracelular.
+  \item \emph{Escala tecidual e de órgão} (\num{e-3}--\num{e-1} m, minutos a dias): diferenciação, morfogênese, função de órgão.
+  \item \emph{Escala organismo e populacional} (m a km, horas a anos): fisiologia sistêmica, resposta imune, ecologia, evolução.
+\end{itemize}
+A Tabela~\ref{tab:15-escalas} sintetiza os métodos computacionais mais usados em cada escala, com seus custos computacionais típicos.
+\end{definicaoenv}
+
+
+
+O acoplamento entre escalas é bidirecional, e essa bidirecionalidade é a fonte da dificuldade computacional e conceitual da MSM. De baixo para cima (\emph{bottom-up}), as propriedades emergentes em escalas maiores emergem de processos em escalas menores: a taxa de transcrição de um gene depende da disponibilidade de fatores de transcrição, que dependem de redes de sinalização, que dependem de abundância de receptores, que dependem de conformação proteica, que depende de estrutura tridimensional --- e assim por diante, até a biofísica da ligação proteína--DNA. De cima para baixo (\emph{top-down}), restrições em escalas maiores --- disponibilidade de nutrientes, sinais sistêmicos, pressão osmótica --- modulam os processos nas escalas menores, frequentemente por mecanismos regulatórios que ajustam a expressão gênica, o estado metabólico, ou a dinâmica de sinalização. Modelos que capturam apenas uma direção do acoplamento --- por exemplo, modelos puramente bottom-up que derivam comportamento celular a partir da biofísica molecular --- perdem a capacidade de representar feedbacks sistêmicos; modelos puramente top-down que tratam a célula como caixa-cinza perdem a capacidade de explicar mecanismos.
+
+A literatura identifica três grandes estratégias de MSM, cada uma com compromissos distintos entre fidelidade e custo computacional:
+
+\begin{enumerate}
+  \item \emph{Coupling hierárquico} (\emph{hierarchical coupling}): resolve-se cada escala sequencialmente, passando informação de uma escala para a outra em pontos específicos do tempo. Por exemplo, simulações de dinâmica molecular geram parâmetros para um modelo de cinética enzimática, que gera parâmetros para um modelo metabólico em escala genômica. É computacionalmente tratável, mas captura apenas um sentido do acoplamento em cada iteração.
+  \item \emph{Coupling concorrente} (\emph{concurrent coupling}): múltiplas escalas são resolvidas simultaneamente, com troca de informação em cada passo de tempo. Por exemplo, simulações de tecidos cardíacos que resolvem eletrofisiologia celular e propagação de onda em escala de órgão a cada milissegundo. Captura acoplamentos bidirecionais, mas o custo computacional frequentemente torna proibitiva a aplicação a sistemas grandes.
+  \item \emph{Coarse-graining}: variáveis em uma escala fina são \emph{agregadas} (\emph{coarse-grained}) em variáveis efetivas em escala maior, usando técnicas estatísticas (média, projeção, renormalização) ou aprendizado de máquina. A escala fina é amostrada extensivamente, e o resultado agregado é usado como lei constitutiva na escala maior. Permite capturar efeitos essenciais da escala fina com custo da escala maior.
+\end{enumerate}
+
+A escolha entre essas estratégias depende criticamente da pergunta biológica e da disponibilidade de dados. Para perguntas sobre dosagem de fármacos --- em que a heterogeneidade celular e a farmacocinética sistêmica dominam ---, estratégias concorrentes com coarse-graining molecular são frequentemente suficientes. Para perguntas sobre arritmias cardíacas --- em que a interação entre canais iônicos em escala molecular e propagação de onda em escala de órgão é causalmente crítica ---, o coupling concorrente é, em princípio, necessário, e a área permanece computacionalmente desafiadora mesmo com o poder computacional atual.
+
+
+
+\exemplo{Modelagem multi-escala do coração}{A eletrofisiologia cardíaca é um domínio onde a MSM se tornou não apenas uma aspiração teórica, mas uma ferramenta clínica em desenvolvimento. Em escala molecular, a abertura e o fechamento de canais iônicos (notavelmente os canais de sódio, cálcio, e potássio) são modelados por modelos de Markov com dezenas de estados, calibrados contra registros de patch-clamp. Em escala celular, esses canais determinam o potencial de ação --- descrito por modelos como o de Hodgkin--Huxley ajustado para cardiomiócitos (modelos de Luo--Rudy, O'Hara--Rudy, ten Tusscher). Em escala tecidual, a propagação do potencial de ação através de junções gap é descrita por equações de reação--difusão (o formalismo mono-domínio ou bi-domínio). Em escala de órgão, a propagação é influenciada pela geometria anatômica do coração, fibrose, e anisotropia do tecido. O projeto \emph{Virtual Heart} do congelado do ritmo cardíaco (de benefícios como o da iniciativa \emph{PhysioNet} e do consórcio \emph{Cardiac Physiome}) busca integrar essas escalas em um arcabouço coerente, com o objetivo final de simular arritmias específicas de paciente para guiar terapia. O custo computacional é formidável --- uma única simulação bidirecional que acopla estado de canal em escala molecular a propagação de órgão em escala de coração inteiro pode exigir semanas de supercomputador ---, mas os resultados preliminares sugerem que a abordagem é clinicamente preditiva para certos fenótipos.}
+
+\importante{A \emph{tyranny of scales} --- termo cunhado por Southern e colaboradores --- designa o problema de que toda simulação multi-escala é forçada a escolher entre \emph{cobertura} (capturar várias escalas) e \emph{resolução} (detalhar cada escala), porque o produto dessas duas quantidades é limitado pelo orçamento computacional. Um modelo que captura dez escalas com boa resolução em cada uma é, hoje, computacionalmente inviável para a maioria dos sistemas biologicamente relevantes. A MSM computa, portanto, em um regime de compromissos explícitos: cada aplicação define quais escalas e resoluções são suficientes para responder à pergunta em questão, e os modelos são construídos em torno dessas prioridades.}
+
+
+\begin{table}[h]
+\centering
+\caption{Métodos computacionais por escala em sistemas biológicos.}
+\label{tab:15-escalas}
+\begin{tabular}{lll}
+\hline
+\textbf{Escala} & \textbf{Método típico} & \textbf{Custo característico} \\ \hline
+Atômica / quântica & DFT, ab initio, QM/MM          & Alto (horas--dias por sistema) \\
+Molecular          & Dinâmica molecular, Monte Carlo & Muito alto (semanas) \\
+Mesoscópica        & DPD, lattice-Boltzmann         & Alto \\
+Celular            & EDOs/EDPs, redesbooleanas      & Médio \\
+Tecido / órgão     & FEM, agentes-based, reação-difusão & Médio--alto \\
+Organismo / população & ODE-PDE, equações diferencias,ABM & Médio \\
+\hline
+\end{tabular}
+\end{table}
+
