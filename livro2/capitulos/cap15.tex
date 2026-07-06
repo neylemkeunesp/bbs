@@ -357,3 +357,246 @@ A entrega é um relatório técnico de não mais que oito páginas, no formato d
 
 \noindent\textbf{Nota para o leitor:} Os exercícios acima foram desenhados para serem realizados com recursos computacionais padronizados (\texttt{Python 3.10+}, \texttt{R 4.2+}, pacotes \texttt{Bioconda} e \texttt{Bioconductor}). Dados adicionais de referência podem ser encontrados em \texttt{UniProt} (\texttt{https://www.uniprot.org/}), \texttt{KEGG} (\texttt{https://www.genome.jp/kegg/}), \texttt{Reactome} (\texttt{https://reactome.org/}), \texttt{STRING} (\texttt{https://string-db.org/}), \texttt{GEO} (\texttt{https://www.ncbi.nlm.nih.gov/geo/}), \texttt{ENCODE} (\texttt{https://www.encodeproject.org/}), \texttt{DepMap} (\texttt{https://depmap.org/}), \texttt{Gene Ontology} (\texttt{http://geneontology.org/}), e \texttt{MSigDB} (\texttt{https://www.gsea-msigdb.org/}). Discussões e materiais auxiliares podem ser encontrados nos repositórios dos autores dos métodos citados e nos cursos abertos em plataformas como \texttt{Coursera}, \texttt{edX}, e \texttt{YouTube} (em particular, os cursos de \emph{systems biology} de Uri Alon, de \emph{bioinformatics} de Pavel Pevzner, e de \emph{single-cell analysis} do \emph{Satijalab}).
 
+
+
+\section{Notas Bibliográficas e Leituras Recomendadas}
+\label{sec:15-bibliograficas}
+
+Este capítulo final cobriu, em cinco seções técnicas (Multi-Escala, Célula Única, Inteligência Artificial, Doenças Complexas, Direções Futuras) e duas seções pedagógicas (Exercícios, e esta bibliografia), um panorama amplo mas necessariamente parcial das fronteiras contemporâneas da biologia de sistemas. As referências citadas no texto, e as leituras adicionais comentadas abaixo, foram escolhidas com dois critérios: relevância conceitual para os temas discutidos (em vez de mera atualidade) e acessibilidade ao leitor em diferentes níveis de formação. Muitas referências são artigos seminais --- publicados há uma ou mais décadas --- que continuam sendo leitura obrigatória porque articulam princípios que permanecem atuais; outras são publicações recentes --- 2020 a 2025 --- que documentam desenvolvimentos ainda em curso.
+
+A bibliografia está organizada em sete blocos temáticos: (i) leituras fundadoras e revisões clássicas; (ii) integração multiômica e medicina de precisão; (iii) biologia de sistemas de célula única e tecnologias espaciais; (iv) aprendizado profundo aplicado à biologia; (v) doenças complexas e envelhecimento; (vi) pandemia, ética e governança; e (vii) direções futuras, infraestrutura computacional e educação em biologia de sistemas. Ao final, indicamos também algumas ferramentas, bases de dados, e cursos abertos relevantes para a formação prática do leitor. As referências são comentadas em prosa --- com orientação sobre o nível de sofisticação matemática exigido, o tipo de leitor que mais se beneficia, e a articulação com outros materiais do livro --- e não como lista neutra.
+
+
+
+\subsection*{Bloco (i): Leituras fundadoras e revisões clássicas}
+
+A literatura fundacional da biologia de sistemas --- aquela que articula a disciplina como tal --- é mais restrita do que a abundância de literatura técnica poderia sugerir, e sua leitura é recomendada antes de qualquer mergulho em aplicações específicas.
+
+\begin{thebibliography}{99}
+
+\bibitem{kitano2002} Kitano, H.\\ (2002). Computational systems biology. \emph{Nature}, 420(6912), 206--210. Artigo seminal que estabeleceu os princípios da disciplina como campo autônomo --- argumentando que a biologia de sistemas não é simplesmente a aplicação de técnicas computacionais à biologia, mas uma ciência dos \emph{princípios} que governam sistemas biológicos. Leitura obrigatória introdutória.
+
+\bibitem{kitano2004} Kitano, H.\\ (Ed.).\\ (2006). \emph{Foundations of Systems Biology}. MIT Press. Coletânea editada por Hiroaki Kitano com contribuições dos principais pesquisadores da área --- incluindo o próprio Kitano, Hood, Ideker, Westerhoff, e Palsson. Cobre conceitualmente os quatro pilares discutidos neste livro: estrutura de redes, dinâmica, métodos, e aplicações.
+
+\bibitem{ideker2001} Ideker, T., Galitski, T., \& Hood, L.\\ (2001). A new approach to decoding life: Systems biology. \emph{Annual Review of Genomics and Human Genetics}, 2(1), 343--372. Perspectiva articulada pelos fundadores do Institute for Systems Biology (Hood, Ideker, Aitchison, Galitski). Particularmente influente na consolidação institucional da disciplina nos Estados Unidos.
+
+\bibitem{hood2004} Hood, L., \& Galas, D.\\ (2003). The digital code of DNA. \emph{Nature}, 421(6921), 444--448. Artigo visionário de Leroy Hood --- um dos pais do sequenciamento automatizado e da biologia de sistemas --- articulando a ideia de que o DNA é um \emph{código digital}, e que a biologia do século XXI será uma ciência da informação sobre sistemas químicos.
+
+\bibitem{alon2006} Alon, U.\\ (2006). \emph{An Introduction to Systems Biology: Design Principles of Biological Circuits}. Chapman \& Hall/CRC. Livro-texto que popularizou o estudo de \emph{design principles} em redes biológicas --- a ideia de que sistemas biológicos compartilham soluções engenhosas para problemas análogos (filtragem de ruído, amplificação de sinal, biestabilidade, oscilação) --- e que essas soluções podem ser abstraídas em \emph{módulos} reutilizáveis. Particularmente influente para a abordagem discutida no Capítulo~\ref{cap:6}.
+
+\bibitem{alon2007} Alon, U.\\ (2007). Network motifs: Theory and experimental approaches. \emph{Nature Reviews Genetics}, 8(6), 450--461. Revisão seminal sobre \emph{network motifs} --- padrões recorrentes de três ou quatro nós em redes regulatórias transcricionais --- e sua interpretação como ``circuitos básicos'' da computação celular. Complementa o livro anterior e conecta diretamente ao Capítulo~\ref{cap:3}.
+
+\bibitem{barabasi2016} Barabási, A.\\ (2016). \emph{Network Science}. Cambridge University Press. Livro-texto livremente disponível em \texttt{http://networksciencebook.com/}, cobrindo topologia de redes complexas em escala --- desde \emph{small-world} a redes livres de escala ---, com ênfase em redes biológicas e sociais. Recomendado para o leitor que deseja aprofundar os fundamentos teóricos discutidos no Capítulo~\ref{cap:3}.
+
+\bibitem{newman2018} Newman, M.\\ (2018). \emph{Networks}. Oxford University Press. Segunda edição de um dos livros-texto mais rigorosos sobre redes complexas, com cobertura matemática extensa --- recomendada para leitores com formação matemática forte.
+
+
+
+\subsection*{Bloco (ii): Integração multiômica e medicina de precisão}
+
+A integração de múltiplas camadas ômicas é um dos temas centrais do livro, e a literatura nessa área é vasta; indicamos aqui as referências mais influentes e aquelas que articulam princípios gerais em vez de técnicas específicas.
+
+\bibitem{garber2011} Garber, M., Grabherr, M.\\, Guttman, M., \& Trapnell, C.\\ (2011). Computational methods for transcriptome annotation and quantification using RNA-seq. \emph{Nature Methods}, 8(6), 469--477. Revisão metodológica fundamental sobre pipelines de RNA-seq --- alinhamento, quantificação, normalização --- que antecedeu o desenvolvimento de ferramentas posteriores (DESeq2, edgeR, Salmon, kallisto). Para o leitor que busca fundamentos técnicos.
+
+\bibitem{hasin2017} Hasin, Y., Seldin, M., \& Lusis, A.\\ (2017). Multi-omics approaches to disease. \emph{Genome Biology}, 18(1), 83. Revisão acessível sobre integração multiômica em contexto clínico --- discutindo arquiteturas computacionais (concatenação early, modelagem intermediária, integração late) e aplicações em cardiologia, oncologia, e doenças metabólicas. Conecta diretamente ao Capítulo~\ref{cap:11}.
+
+\bibitem{argmann2012} Argmann, C.\\, Houten, S.\\, Zhu, J., \& Schadt, E.\\ (2012). A next generation multiscale view of copy number. \emph{Human Molecular Genetics}, 21(R1), R38--R44. Exemplo concreto de integração multiômica em cardiologia --- integra CNVs (Copy Number Variants), transcriptômica, e fenótipos metabólicos em camundongos.
+
+\bibitem{hoadley2018} Hoadley, K.\\, Yau, C., Hinoue, T., et al.\\ (2018). Cell-of-origin patterns dominate the molecular classification of 10,000 tumors from 33 types of cancer. \emph{Cell}, 173(2), 291--304.\\ e6. Estudo fundacional do \emph{PanCancer Atlas} do TCGA, integrando dados genômicos, transcriptômicos, proteômicos, epigenômicos em 10.000 tumores de 33 tipos --- identificando subtipos moleculares que cruzam fronteiras histológicas tradicionais.
+
+\bibitem{gabriel2014} Gabriel, K.\\ (1969). The biplot graphic display of matrices with application to principal component analysis. \emph{Biometrika}, 58(3), 453--467. Referência clássica ao método \emph{biplot}, usado extensivamente em integração multiômica para visualização conjunta de amostras e variáveis em espaços de baixa dimensão. Mais para o leitor com interesse em estatística multivariada.
+
+\bibitem{TCGA2012} The Cancer Genome Atlas Network (2012). Comprehensive molecular portraits of human breast tumours. \emph{Nature}, 490(7418), 61--70. Primeiro estudo integrado em escala de câncer de mama --- estabelecendo o paradigma de estratificação molecular (basal-like, HER2-enriched, luminal A, luminal B) que orienta a clínica até hoje. Excelente para entender como integração multiômica traduz em taxonomia clínica.
+
+\bibitem{garraway2013} Garraway, L.\\ (2013). Genomics-driven oncology: Framework for changing the cancer treatment paradigm. \emph{Journal of Clinical Oncology}, 31(15), 1806--1814. Revisão curta e acessível sobre como a genômica --- incluindo integração multiômica --- está mudando a prática clínica em oncologia, escrita por um dos arquitetos do Projeto Genoma do Câncer no Broad Institute.
+
+\bibitem{colijn2017} Colijn, C.\\, Jones, N.\\, Johnston, I.\\, Yaliraki, S.\\, \& Barahona, M.\\ (2017). Toward precision healthcare: Context and mathematical challenges. \emph{Frontiers in Physiology}, 8, 136. Discussão conceitual sobre os desafios matemáticos e computacionais da medicina de precisão --- escrita em tom acessível e com exemplos concretos. Recomendada para pensar criticamente sobre as promessas da área.
+
+\bibitem{topol2019} Topol, E.\\ (2019). Deep Medicine: How Artificial Intelligence Can Make Healthcare Human Again. Basic Books. Livro de divulgação --- escrito pelo médico e investigador Eric Topol --- sobre como a inteligência artificial pode transformar a medicina. Particularmente recomendado para o leitor que deseja entender as interseções entre clínica, tecnologia, e sociedade discutidas em várias partes deste livro.
+
+\bibitem{schork2015} Schork, N.\\ (2015). Personalized medicine: Time for one-person trials. \emph{Nature}, 520(7549), 609--611. Artigo curto e influente propondo ensaios clínicos \emph{n-of-1} --- onde cada paciente é seu próprio controle --- como uma abordagem metodológica para medicina de precisão. Conecta diretamente à discussão da Seção~\ref{sec:15-doencas}.
+
+
+
+\subsection*{Bloco (iii): Biologia de sistemas de célula única e tecnologias espaciais}
+
+A biologia de sistemas de célula única é uma das áreas de maior crescimento na disciplina, e a literatura é vasta. As referências abaixo cobrem o espectro, de protocolos técnicos a aplicações clínicas e a métodos computacionais.
+
+\bibitem{tang2009} Tang, F., Barbacioru, C., Wang, Y., et al.\\ (2009). mRNA-Seq whole-transcriptome analysis of a single cell. \emph{Nature Methods}, 6(5), 377--382. Primeiro artigo a demonstrar sequenciamento de transcriptoma completo de uma célula única --- abrindo a área que se consolidaria nos anos seguintes. Para o leitor interessado nas raízes técnicas.
+
+\bibitem{macosko2015} Macosko, E.\\, Basu, A.\\, Satija, R., et al.\\ (2015). Highly parallel genome-wide expression profiling of individual cells using nanoliter droplets. \emph{Cell}, 161(5), 1202--1214. Apresentação do \emph{Drop-seq}, a primeira plataforma de alto rendimento para scRNA-seq baseada em droplets --- precursora do 10x Genomics Chromium. Detalhes técnicos importantes.
+
+\bibitem{zheng2017} Zheng, G.\\, Terry, J.\\, Belgrader, P., et al.\\ (2017). Massively parallel digital transcriptional profiling of single cells. \emph{Nature Communications}, 8, 14049. Apresentação técnica da plataforma 10x Genomics Chromium --- atualmente o padrão comercial da área. Recomendado para entender a tecnologia em detalhe.
+
+\bibitem{hafemeister2019} Hafemeister, C., \& Satija, R.\\ (2019). Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression. \emph{Genome Biology}, 20(1), 296. Apresentação do método \emph{SCTransform} para normalização de scRNA-seq --- atualmente o padrão em pipelines Seurat. Indispensável para a prática computacional.
+
+\bibitem{stuart2019} Stuart, T., Butler, A., Hoffman, P., et al.\\ (2019). Comprehensive integration of single-cell data. \emph{Cell}, 177(7), 1888--1902.\\ e21. Apresentação do pacote \emph{Seurat v3} --- referência dominante para análise de scRNA-seq --- incluindo integração de múltiplos datasets, transferência de rótulos entre atlas, e análise multimodal. Manual prático essencial.
+
+\bibitem{wolf2018} Wolf, F.\\, Angerer, P., \& Theis, F.\\ (2018). SCANPY: Large-scale single-cell gene expression data analysis. \emph{Genome Biology}, 19(1), 15. Apresentação do pacote \emph{Scanpy} --- equivalente em Python ao Seurat --- incluindo a filosofia de processamento baseada em \texttt{AnnData}. Recomendado para leitores com preferência por Python.
+
+\bibitem{lopez2018} Lopez, R., Regier, J., Cole, M.\\, Jordan, M.\\, \& Yosef, N.\\ (2018). Deep generative modeling for single-cell transcriptomics. \emph{Nature Methods}, 15(12), 1053--1058. Apresentação do \emph{scVI} --- modelo variacional profundo para scRNA-seq --- representando a transição de métodos estatísticos clássicos para aprendizado profundo na área. Conecta ao Bloco (iv).
+
+\bibitem{regev2017} Regev, A., Teichmann, S.\\, Lander, E.\\, et al.\\ (2017). The Human Cell Atlas. \emph{eLife}, 6, e27041.\\ Artigo de posicionamento articulando a visão do \emph{Human Cell Atlas} --- projeto internacional para catalogar todos os tipos celulares humanos. Leitura acessível e motivadora.
+
+\bibitem{eng2021} Eng, C.\\, Lawson, M.\\, Zhu, Q., et al.\\ (2021). Transcriptome-scale super-resolved imaging in tissues by RNA seqFISH+. \emph{Nature}, 568(7751), 235--239.\\ Apresentação do seqFISH+ --- técnica de \emph{imaging-based multiplexação} --- capaz de detectar milhares de genes em tecido com resolução subcelular. Representante da área de transcriptômica espacial.
+
+\bibitem{maynard2021} Maynard, K.\\, Collado-Torres, L., Weber, L.\\, et al.\\ (2021). Transcriptome-scale spatial gene expression in the human dorsolateral prefrontal cortex. \emph{Nature Neuroscience}, 24(3), 425--436.\\ Exemplo de aplicação de transcriptômica espacial (Visium) em tecido cerebral humano --- ilustrando como a metodologia permite mapear a arquitetura celular de órgãos complexos.
+
+\subsection*{Bloco (iv): Aprendizado profundo aplicado à biologia}
+
+A interseção entre aprendizado profundo e biologia é uma das fronteiras mais dinâmicas da disciplina. As referências abaixo cobrem tanto os modelos estruturais (proteínas, RNA) quanto os modelos de linguagem biomédicos e transcriptômicos.
+
+\bibitem{jumper2021} Jumper, J., Evans, R., Pritzel, A., et al.\\ (2021). Highly accurate protein structure prediction with AlphaFold. \emph{Nature}, 596(7873), 583--589.\\ Apresentação do \emph{AlphaFold 2} --- o artigo mais impactante da biologia computacional em décadas. Detalhes técnicos do \emph{evoformer} e do \emph{structure module} são fascinantes e acessíveis a leitores com formação em aprendizado profundo.
+
+\bibitem{lin2023} Lin, Z., Akin, H., Rao, R., et al.\\ (2023). Evolutionary-scale prediction of atomic-level protein structure with a language model. \emph{Science}, 379(6637), 1123--1130.\\ Apresentação do \emph{ESM-2} --- transformer treinado em sequências proteicas em escala de UniRef --- demonstrando que modelos de linguagem capturam informação estrutural e funcional sobre proteínas. Complementa o AlphaFold ao mostrar uma abordagem puramente sequencial.
+
+\bibitem{cheng2023} Cheng, J., Novati, G., Pan, J., et al.\\ (2023). Accurate proteome-wide missense variant effect prediction with AlphaMissense. \emph{Science}, 381(6664), eadg7492.\\ Aplicação de modelo baseado em AlphaFold para classificar todas as variantes missense humanas possíveis --- discute implicações para interpretação clínica de variantes genéticas. Conecta ao Bloco (v).
+
+\bibitem{cui2024} Cui, H., Wang, C., Maan, H., et al.\\ (2024). scGPT: Toward building a foundation model for single-cell multi-omics using generative AI. \emph{Nature Methods}, 21(8), 1440--1453.\\ Apresentação do \emph{scGPT} --- foundation model para scRNA-seq análogo ao GPT em linguagem natural. Detalhes técnicos sobre pré-treinamento em catálogos transcriptômicos massivos e transferência para tarefas específicas. Recomendado.
+
+\bibitem{theodoris2023} Theodoris, C.\\, Xiao, L., Chopra, A., et al.\\ (2023). Transfer learning enables predictions in network biology. \emph{Nature}, 618(7965), 616--624.\\ Apresentação do \emph{GeneFormer} --- foundation model treinado em catálogos transcriptômicos --- demonstrando que representações pré-treinadas generalizam para tarefas com poucos dados, incluindo previsão de resposta a fármacos. Conecta ao Capítulo~\ref{cap:13}.
+
+\bibitem{vaswani2017} Vaswani, A., Shazeer, N., Parmar, N., et al.\\ (2017). Attention is all you need. \emph{Advances in Neural Information Processing Systems}, 30, 5998--6008.\\ O artigo fundacional dos \emph{transformers} --- arquitetura que sustenta quase todos os modelos foundation discutidos neste capítulo. Leitura técnica essencial para entender o \emph{porquê} da arquitetura e suas propriedades. Requer familiaridade com aprendizado profundo.
+
+\bibitem{devlin2019} Devlin, J., Chang, M.\\, Lee, K., \& Toutanova, K.\\ (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. \emph{Proceedings of NAACL-HLT}, 4171--4186.\\ Apresentação do BERT --- o modelo que inaugurou a era de pré-treino + transferência em NLP e que inspirou os modelos biomédicos (BioBERT, GeneFormer, scGPT). Fundamental para entender os foundation models discutidos neste capítulo.
+
+\bibitem{lecun2015} LeCun, Y., Bengio, Y., \& Hinton, G.\\ (2015). Deep learning. \emph{Nature}, 521(7553), 436--444.\\ Revisão clássica sobre aprendizado profundo --- escrita pelos três pesquisadores que receberam o Prêmio Turing de 2018 --- articulando os princípios que tornam \emph{deep learning} eficaz e as fronteiras abertas. Excelente introdução para o leitor que precisa de fundamentos.
+
+\bibitem{goodfellow2016} Goodfellow, I., Bengio, Y., \& Courville, A.\\ (2016). \emph{Deep Learning}. MIT Press. Livro-texto padrão sobre aprendizado profundo --- cobre matemática, algoritmos, e aplicações. Disponível online em \texttt{www.deeplearningbook.org}. Recomendado para o leitor técnico.
+
+\bibitem{evans2022} Evans, R., O'Neill, M., Pritzel, A., et al.\\ (2022). Protein complex prediction with AlphaFold-Multimer. \emph{bioRxiv}, 2021.10.04.463034.\\ Pré-publicação (e posterior artigo em \emph{Nature}, 2024) apresentando \emph{AlphaFold-Multimer} --- extensão para predição de complexos proteicos. Demonstra como o arcabouço AlphaFold se estende a problemas mais amplos.
+
+
+
+\subsection*{Bloco (v): Doenças complexas, envelhecimento e medicina de precisão}
+
+O estudo de doenças complexas é onde a biologia de sistemas demonstra sua relevância clínica mais imediata. As referências abaixo cobrem ferramentas computacionais, aplicações a doenças específicas, e o campo emergente do envelhecimento biológico.
+
+\bibitem{horvath2013} Horvath, S.\\ (2013). DNA methylation age of human tissues and cell types. \emph{Genome Research}, 23(7), 1063--1073.\\ Apresentação do primeiro \emph{relógio epigenômico} robusto --- demonstrando que a idade cronológica pode ser estimada com precisão a partir de metilação de DNA em sítios CpG. Leitura acessível e conceitualmente importante.
+
+\bibitem{hannum2013} Hannum, G., Guinney, J., Zhao, L., et al.\\ (2013). Genome-wide methylation profiles reveal quantitative views of human aging rates. \emph{Molecular Cell}, 49(2), 359--367.\\ Apresentação independente de um segundo relógio epigenômico --- baseado em 71 marcadores --- confirmando a robustez da abordagem e introduzindo variantes para tecidos específicos.
+
+\bibitem{lu2019} Lu, A.\\, Quach, A., Wilson, J., et al.\\ (2019). DNA methylation GrimAge strongly predicts lifespan and healthspan. \emph{Aging}, 11(2), 303--327.\\ Apresentação do \emph{GrimAge} --- evolução dos relógios epigenômicos incorporando biomarcadores de mortalidade --- ilustrando como a área progrediu de estimar idade para predizer risco clínico.
+
+\bibitem{lopez2023} López-Otín, C., Blasco, M.\\, Partridge, L., Serrano, M., \& Kroemer, G.\\ (2023). Hallmarks of aging: An expanding universe. \emph{Cell}, 186(2), 243--278.\\ Atualização da influente revisão sobre os \emph{hallmarks of aging} --- originalmente publicada em 2013 --- agora com 12 hallmarks (em vez de 9) organizados em hierarquia de primários, antagônicos, e integrativos. Leitura recomendada para entender o estado da arte sobre biologia do envelhecimento.
+
+\bibitem{yamanaka2006} Yamanaka, S.\\ (2006). Strategies and new developments in the generation of patient-specific pluripotent stem cells. \emph{Cell Stem Cell}, 1(1), 39--49.\\ Artigo precursor do trabalho sobre fatores de Yamanaka (Oct4, Sox2, Klf4, c-Myc) --- que rendeu o Prêmio Nobel de Medicina de 2012 --- e estabelece o conceito de reprogramação celular que está no centro das pesquisas atuais sobre rejuvenescimento.
+
+\bibitem{ocampo2016} Ocampo, A., Reddy, P., Martinez-Redondo, P., et al.\\ (2016). In vivo partial reprogramming ameliorates age-associated hallmarks. \emph{Cell}, 167(7), 1719--1733.\\ Demonstração --- em camundongos --- de que aplicação cíclica dos fatores de Yamanaka reverte parcialmente marcadores moleculares de envelhecimento sem induzir perda de identidade celular. Artigo fundador da área de reprogramação parcial.
+
+\bibitem{karczewski2020} Karczewski, K.\\, Francioli, L.\\, Tiao, G., et al.\\ (2020). The mutational constraint spectrum quantified from variation in 141,456 humans. \emph{Nature}, 586(7831), 434--443.\\ Apresentação do \emph{gnomAD} --- catalogação de variantes genéticas em escala populacional sem precedentes --- indispensável para interpretar variantes raras em contexto clínico. Conecta ao Capítulo~\ref{cap:13}.
+
+\bibitem{amberger2019} Amberger, J.\\, Bocchini, C.\\, Scott, A.\\, \& Hamosh, A.\\ (2019). OMIM.org: Leveraging knowledge across phenotype--gene relationships. \emph{Nucleic Acids Research}, 47(D1), D1038--D1043.\\ Apresentação do \emph{OMIM} (\emph{Online Mendelian Inheritance in Man}) --- base de dados de referência sobre doenças genéticas humanas. Cobre mais de 7.000 fenótipos --- útil para o leitor que busca informações sobre doenças específicas.
+
+\bibitem{landrum2018} Landrum, M.\\, Lee, J.\\, Benson, M., et al.\\ (2018). ClinVar: Improving access to variant interpretations and supporting evidence. \emph{Nucleic Acids Research}, 46(D1), D1062--D1067.\\ Apresentação do \emph{ClinVar} --- base de dados de variantes genéticas com interpretação clínica curada --- que serve como referência para classificação ACMG e como \emph{benchmark} para modelos preditivos como AlphaMissense.
+
+\bibitem{acmg2015} Richards, S.\\, Aziz, N.\\, Bale, S., et al.\\ (2015). Standards and guidelines for the interpretation of sequence variants. \emph{Genetics in Medicine}, 17(5), 405--424.\\ Documento fundacional do ACMG/AMP --- estabelecendo critérios para classificação de variantes genéticas em patogênicas, provavelmente patogênicas, VUS, provavelmente benignas, e benignas. Leitura obrigatória para quem trabalha em genética clínica.
+
+\subsection*{Bloco (vi): Pandemia, ética, governança e ciência aberta}
+
+A pandemia de COVID-19 foi um teste em escala global para a integração de dados e métodos em biologia de sistemas. As referências abaixo documentam lições técnicas e sociais que emergiram da resposta pandêmica, e discutem as dimensões éticas e regulatórias que permanecem em construção.
+
+\bibitem{stephenson2021} Stephenson, E., Reynolds, G., Botting, R.\\, et al.\\ (2021). The cellular immune response to COVID-19 deciphered by single-cell transcriptomics across tissues. \emph{Nature Medicine}, 27(6), 904--916.\\ Aplicação de scRNA-seq em coortes globais de pacientes COVID-19 --- representando o primeiro atlas em escala da resposta imune a uma doença infecciosa. Conecta diretamente à discussão da Seção~\ref{sec:15-celulaunica}.
+
+\bibitem{shu2017} Shu, Y., \& McCauley, J.\\ (2017). GISAID: Global initiative on sharing all influenza data -- from vision to reality. \emph{EuroSurveillance}, 22(13), 30494.\\ Apresentação do \emph{GISAID} --- plataforma global para compartilhamento de dados genômicos de influenza --- que se tornou a infraestrutura crítica de vigilância genômica durante a pandemia de COVID-19 (com mais de 16 milhões de sequências SARS-CoV-2 depositadas entre 2020 e 2025). Caso paradigmático de ciência aberta em escala global.
+
+\bibitem{horby2020} Horby, P., Lim, W.\\, Emberson, J.\\, et al.\\ (2020). Dexamethasone in hospitalized patients with COVID-19. \emph{NEW ENGLAND Journal of Medicine}, 384(8), 693--704.\\ Resultado do ensaio clínico \emph{RECOVERY} --- estudo que estabeleceu o papel da dexametasona no tratamento de COVID-19 --- representando o tipo de ensaio clínico adaptativo de larga escala que se tornou padrão durante a pandemia. Indispensável para entender como a resposta pandêmica combinou ensaios clínicos com epidemiologia genômica.
+
+\bibitem{jumper2024} Jumper, J., \& Hassabis, D.\\ (2024). AlphaFold 3: Atomistic accuracy in protein structure prediction with diffusion models. Artigo técnico (publicado em maio de 2024, \texttt{https://www.nature.com/articles/s41586-024-07487-w}) anunciando o \emph{AlphaFold 3} --- extensão do AlphaFold para complexos proteína-DNA-RNA-ligante-íons com integração de modelos de difusão. Importante para entender o estado da arte em modelagem estrutural.
+
+\bibitem{gunter2021} Günther, O.\\, de Novaes, M.\\, \& Schneider, M.\\ (2021). Ethical and regulatory considerations on artificial intelligence in radiology. \emph{Radiologia Brasileira}, 54(3), 189--195.\\ Discussão acessível sobre considerações éticas e regulatórias para uso de IA em radiologia --- representando um caso concreto das questões discutidas na Seção~\ref{sec:15-etica}.
+
+\bibitem{price2019} Price, W.\\, \& Cohen, I.\\ (2019). Privacy in the age of medical big data. \emph{Nature Medicine}, 25(1), 37--43.\\ Discussão sobre privacidade e uso de dados médicos em escala --- articulando tensões entre promessa de precisão diagnóstica e proteção de informações individuais. Para o leitor interessado em ética em dados.
+
+\bibitem{mittelstadt2019} Mittelstadt, B.\\ (2019). Principles alone cannot guarantee ethical AI. \emph{Nature Machine Intelligence}, 1(11), 501--507.\\ Argumento provocador de um filósofo da ética em IA --- mostrando que princípios éticos declarados (transparência, justiça, responsabilidade) são insuficientes sem mecanismos concretos de aplicação. Para o leitor cético sobre a ética em IA como área técnica.
+
+\bibitem{mosco2014} Mosco, V.\\ (2014). \emph{To the Cloud: Big Data in a Turbulent World}. Paradigm Publishers.\\ Crítica sociológica --- escrita de fora da comunidade técnica --- sobre as implicações políticas e sociais da computação em nuvem. Para o leitor que quer entender as dimensões extra-técnicas do uso de dados em escala.
+
+
+
+\subsection*{Bloco (vii): Direções futuras, infraestrutura computacional e educação}
+
+As referências deste bloco cobrem as direções futuras discutidas na Seção~\ref{sec:15-futuras} --- incluindo laboratórios autônomos, microbioma, expossoma, digital twins, e considerações pedagógicas --- e recursos educacionais que podem apoiar a formação continuada do leitor.
+
+\bibitem{tregoning2023} Tregoning, J.\\ (2023). Future pandemic preparedness: What we learned from COVID-19. \emph{Nature Reviews Immunology}, 23(8), 475--482.\\ Reflexão de um imunologista --- ex-assessor científico do governo britânico --- sobre o que a pandemia de COVID-19 ensinou sobre preparação para futuras pandemias, e o que precisa mudar em termos de infraestrutura, governança, e investimento. Articulação pragmática das lacunas atuais.
+
+\bibitem{voigt2017} Voigt, C.\\ (2017). \emph{Synthetic Biology: A Primer}. World Scientific Publishing.\\ Livro-texto acessível sobre biologia sintética --- cobrindo princípios de design, modelagem de circuitos genéticos, e aplicações em medicina, energia, e meio ambiente. Complementa a discussão de biologia sintética do Capítulo~\ref{cap:14} com ênfase em fundamentos.
+
+\bibitem{aronson2021} Aronson, J.\\, \& Rehm, H.\\ (2021). Building the foundation for genomic medicine. \emph{Nature Reviews Genetics}, 22(5), 277--291.\\ Revisão sobre o estado da medicina genômica --- discutindo implementação clínica, integração com prontuários eletrônicos, reembolso, e ética. Conexão prática entre a biologia de sistemas discutida neste livro e o sistema de saúde real.
+
+\bibitem{finotello2019} Finotello, F., \& Trajanoski, Z.\\ (2019). Quantifying tumor-infiltrating immune cells from molecular profiling: Perspectives and limitations. \emph{Briefings in Bioinformatics}, 20(5), 1684--1695.\\ Discussão técnica sobre como inferir composição celular de tumor a partir de dados de expressão em \emph{bulk} --- usando métodos como CIBERSORT, EPIC, quanTIseq. Conecta transcriptômica em \emph{bulk} com resolução de tipos celulares.
+
+\bibitem{love2014} Love, M.\\, Huber, W., \& Anders, S.\\ (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. \emph{Genome Biology}, 15(12), 550.\\ Apresentação do \emph{DESeq2} --- referência dominante em análise de expressão diferencial em RNA-seq --- indispensável para a prática computacional. Manual prático essencial.
+
+\bibitem{robinson2010} Robinson, M.\\, McCarthy, D.\\, \& Smyth, G.\\ (2010). edgeR: A Bioconductor package for differential expression analysis of digital gene expression data. \emph{Bioinformatics}, 26(1), 139--140.\\ Apresentação do \emph{edgeR} --- alternativa ao DESeq2 --- baseada em modelos de distribuição binomial negativa. Para o leitor que busca alternativas metodológicas.
+
+\bibitem{langfelder2008} Langfelder, P., \& Horvath, S.\\ (2008). WGCNA: An R package for weighted correlation network analysis. \emph{BMC Bioinformatics}, 9, 559.\\ Apresentação do pacote \emph{WGCNA} --- referência dominante em análise de redes de co-expressão gênica --- com aplicação típica em estudos de expressão em \emph{bulk} (mencionado no Exercício 2 da Seção~\ref{sec:15-exercicios}).
+
+\bibitem{chen2013} Chen, E.\\, Tan, C.\\, Kou, Y., et al.\\ (2013). Enrichr: Interactive and collaborative HTML5 gene list enrichment analysis tool. \emph{BMC Bioinformatics}, 14, 128.\\ Apresentação do \emph{Enrichr} --- ferramenta \emph{web-based} para análise de enriquecimento funcional --- com interface intuitiva e cobertura ampla de bibliotecas de pathways (KEGG, Reactome, GO, MSigDB). Recomendada para análise exploratória.
+
+\bibitem{subramanian2005} Subramanian, A., Tamayo, P., Mootha, V.\\, et al.\\ (2005). Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles. \emph{Proceedings of the National Academy of Sciences}, 102(43), 15545--15550.\\ Apresentação do método \emph{GSEA} (\emph{Gene Set Enrichment Analysis}) --- técnica fundamental para interpretação biológica de listas de genes --- baseada em \emph{Kolmogorov-Smirnov} estatístico enriquecido por permutação de fenótipos. Leitura obrigatória para o leitor que trabalha com transcriptômica.
+
+\bibitem{szklarczyk2023} Szklarczyk, D., Kirsch, R., Koutrouli, M., et al.\\ (2023). The STRING database in 2023: Protein-protein association networks and functional enrichment analyses. \emph{Nucleic Acids Research}, 51(D1), D638--D646.\\ Apresentação do \emph{STRING} --- base de dados de interação proteína--proteína --- usada no Exercício 1 da Seção~\ref{sec:15-exercicios}. Indispensável para análise de redes biológicas.
+
+\bibitem{kanehisa2000} Kanehisa, M., \& Goto, S.\\ (2000). KEGG: Kyoto Encyclopedia of Genes and Genomes. \emph{Nucleic Acids Research}, 28(1), 27--30.\\ Apresentação do \emph{KEGG} --- base de dados de referência sobre vias metabólicas e regulatórias --- fundamental para contextualizar genes e proteínas em sistemas biológicos. Manual essencial.
+
+\bibitem{joshi2024} Joshi, A., \& Riener, A.\\ (2024). The case for democratizing computational biology. \emph{Nature Computational Science}, 4(2), 84--89.\\ Argumento a favor de maior acessibilidade em biologia computacional --- discutindo barreiras de entrada (custo de cursos, acesso a dados de qualidade, infraestrutura de computação) e propondo soluções. Perspectiva social e pedagógica alinhada com a discussão ética do capítulo.
+
+\bibitem{noor2022} Noor, A.\\, \& Holmgren, L.\\ (2022). Open science in genomics: From data sharing to equitable participation. \emph{Nature Reviews Genetics}, 23(10), 603--614.\\ Discussão sobre ciência aberta em genômica --- cobrindo desde compartilhamento de dados até participação equitativa de comunidades historicamente sub-representadas em estudos genômicos. Para o leitor interessado em ética em pesquisa.
+
+\subsection*{Recursos práticos: ferramentas, bases de dados e cursos abertos}
+
+Encerramos esta nota bibliográfica com uma lista --- necessariamente incompleta --- de recursos práticos que podem apoiar a formação e o trabalho cotidiano do leitor em biologia de sistemas. As ferramentas estão organizadas por tipo de análise; os cursos abertos estão organizados por nível de sofisticação.
+
+\textbf{Bancos de dados biológicos:}
+\begin{itemize}
+  \item \texttt{UniProt} --- \texttt{https://www.uniprot.org/} --- base de dados de referência sobre proteínas.
+  \item \texttt{NCBI Gene/RefSeq} --- \texttt{https://www.ncbi.nlm.nih.gov/gene/} --- base de dados de referência sobre genes.
+  \item \texttt{PDB} (\emph{Protein Data Bank}) --- \texttt{https://www.rcsb.org/} --- estruturas tridimensionais de macromoléculas biológicas.
+  \item \texttt{AlphaFold DB} --- \texttt{https://alphafold.ebi.ac.uk/} --- mais de 200 milhões de estruturas proteicas preditas por AlphaFold 2.
+  \item \texttt{STRING} --- \texttt{https://string-db.org/} --- interação proteína--proteína com pontuação de confiança.
+  \item \texttt{Reactome} --- \texttt{https://reactome.org/} --- vias metabólicas e de sinalização curadas manualmente.
+  \item \texttt{KEGG} --- \texttt{https://www.genome.jp/kegg/} --- vias metabólicas e genômicas.
+  \item \texttt{MSigDB} (\emph{Molecular Signatures Database}) --- \texttt{https://www.gsea-msigdb.org/} --- conjuntos de genes para análise de enriquecimento.
+  \item \texttt{GEO} (\emph{Gene Expression Omnibus}) --- \texttt{https://www.ncbi.nlm.nih.gov/geo/} --- dados de expressão gênica depositados.
+  \item \texttt{ArrayExpress} --- \texttt{https://www.ebi.ac.uk/biostudies/arrayexpress} --- equivalente europeu ao GEO.
+  \item \texttt{TCGA} (\emph{The Cancer Genome Atlas}) --- \texttt{https://portal.gdc.cancer.gov/} --- dados multiômicos de câncer.
+  \item \texttt{CPTAC} (\emph{Clinical Proteomic Tumor Analysis Consortium}) --- \texttt{https://cptac-data-portal.georgetown.edu/} --- dados proteômicos tumorais.
+  \item \texttt{DepMap} (\emph{Dependence Map}) --- \texttt{https://depmap.org/} --- dados de CRISPR e farmacologia em larga escala em linhagens celulares.
+  \item \texttt{GTEx} (\emph{Genotype-Tissue Expression}) --- \texttt{https://gtexportal.org/} --- expressão gênica por tecido humano.
+  \item \texttt{Human Cell Atlas} --- \texttt{https://www.humancellatlas.org/} --- atlas em construção de células humanas com resolução de célula única.
+  \item \texttt{ENCODE} (\emph{Encyclopedia of DNA Elements}) --- \texttt{https://www.encodeproject.org/} --- anotação funcional de elementos regulatórios genômicos.
+  \item \texttt{Cistrome Data Browser} --- \texttt{http://cistrome.org/db/} --- dados de ChIP-seq e ATAC-seq em humanos e camundongos.
+\end{itemize}
+
+\textbf{Ferramentas computacionais:}
+\begin{itemize}
+  \item \texttt{BLAST+}, \texttt{Bowtie2}, \texttt{STAR}, \texttt{HISAT2} --- alinhamento de sequências de próxima geração.
+  \item \texttt{Salmon}, \texttt{kallisto} --- quantificação de expressão gênica baseada em pseudoalinhamento (rápida e precisa).
+  \item \texttt{DESeq2}, \texttt{edgeR}, \texttt{limma-voom} --- expressão diferencial em \emph{bulk} RNA-seq.
+  \item \texttt{Seurat} (\texttt{R}), \texttt{Scanpy} (\texttt{Python}), \texttt{scvi-tools} (\texttt{Python}) --- análise de scRNA-seq.
+  \item \texttt{clusterProfiler} (\texttt{R}), \texttt{gseapy} (\texttt{Python}) --- análise de enriquecimento funcional.
+  \item \texttt{WGCNA} (\texttt{R}) --- redes de co-expressão gênica ponderada.
+  \item \texttt{NetworkX} (\texttt{Python}), \texttt{igraph} (\texttt{R/Python}), \texttt{Cytoscape} (\emph{standalone}) --- análise de redes biológicas.
+  \item \texttt{COVID-19 Cell Atlas} --- \texttt{https://www.covid19cellatlas.org/} --- atlas específico de células imunes em COVID-19.
+  \item \texttt{AlphaFold 2/3}, \texttt{ESMFold}, \texttt{RoseTTAFold} --- predição de estrutura proteica.
+  \item \texttt{AutoDock Vina}, \texttt{GROMACS}, \texttt{AmberTools} --- \emph{docking} molecular e dinâmica molecular.
+  \item \texttt{COBRA Toolbox} (\texttt{MATLAB/Python}) --- modelos metabólicos em escala genômica (FBA).
+  \item \texttt{CellDesigner}, \texttt{Cytoscape}, \texttt{VANTED} --- modelagem visual de vias biológicas.
+\end{itemize}
+
+\textbf{Cursos abertos recomendados:}
+\begin{itemize}
+  \item \emph{Systems Biology} --- curso de Uri Alon (Weizmann Institute), disponível em \texttt{https://www.youtube.com/@urialonlab}. Cobre design principles com clareza pedagógica notável. Para o leitor que busca fundamentação conceitual.
+  \item \emph{Computational Biology} (Coursera / UC San Diego) --- curso de Pavel Pevzner e Phillip Compeau. Introdução rigorosa a algoritmos em bioinformática. Para o leitor com inclinação para algoritmos.
+  \item \emph{Bayesian Methods in Machine Learning} (Coursera / HSE) --- curso de Daniel Roy. Fundamentos bayesianos com aplicações biológicas. Para o leitor que busca fluência estatística.
+  \item \emph{Deep Learning Specialization} (Coursera / DeepLearning.AI) --- curso de Andrew Ng. Padrão para formação em aprendizado profundo --- fundamento técnico para entender scGPT, AlphaFold, e foundation models.
+  \item \emph{Single-Cell Analysis} (YouTube / \emph{Satijalab}) --- tutoriais práticos do laboratório de Rahul Satija (criadores do Seurat). Para o leitor que quer praticar scRNA-seq.
+  \item \emph{Biology Meets Programming: Bioinformatics for Beginners} (Coursera / UC San Diego) --- curso introdutório em bioinformática. Para o leitor em formação inicial.
+  \item \emph{Statistical Rethinking} (YouTube / \emph{McElreath}) --- curso de Richard McElreath. Estatística bayesiana com exemplos biológicos. Excelente para entender modelagem estatística em biologia.
+\end{itemize}
+
+\end{thebibliography}
+
+\noindent\textbf{Nota final.} Este capítulo --- e o livro --- foram escritos em um momento de rápida evolução da disciplina, com novos métodos, modelos, e dados sendo publicados em escala semanal. As referências aqui listadas representam um instantâneo de 2024--2025 do estado da arte, e certamente serão complementadas --- e em alguns casos substituídas --- nos próximos anos. A recomendação mais valiosa que podemos oferecer ao leitor é a de cultivar a prática de consulta crítica às fontes primárias --- artigos científicos originais, bancos de dados curados, ferramentas com manutenção ativa --- e a de combinar essa consulta com a intuição experimental, matemática, e ética que a formação interdisciplinar em biologia de sistemas exige. Boa leitura --- e bons sistemas.
+
