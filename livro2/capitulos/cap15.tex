@@ -284,3 +284,76 @@ O exercício intelectual de tentar prever os próximos dez anos da biologia de s
 O cenário de longo prazo --- horizonte de quinze a vinte anos --- é mais incerto, mas dois cenários-limite podem ser úteis para orientar a reflexão sobre o presente. No \emph{cenário integrado}, a biologia de sistemas se consolida como infraestrutura central da biomedicina --- comparável, em importância, à bioquímica no século XX ---, com modelos quantitativos de sistemas biológicos informando desenvolvimento de fármacos, prática clínica, política de saúde pública, e educação em ciências da vida. Nesse cenário, a formação de novos pesquisadores inclui componentes robustos de modelagem computacional, estatística, e ética em dados --- e a disciplina atrai investimentos públicos e privados em escala proporcional à sua centralidade. No \emph{cenário fragmentado}, a proliferação de métodos e dados --- sem integração disciplinar --- produz um caleidoscópio de insights parciais, com modelos preditivos localmente poderosos mas globalmente inconsistentes, e a promessa de transformação é continuamente adiada pela dificuldade de coordenar comunidades heterogêneas. A história de outras disciplinas sugere que o cenário integrado é mais provável --- mas exige decisões institucionais e políticas que não são tecnicamente determinadas.
 
 O que se pode afirmar com segurança é que a biologia de sistemas, como disciplina, está em um momento de maturidade produtiva. Os Capítulos deste livro descreveram, em sequência, a fundamentação matemática, os métodos computacionais, as redes biológicas em suas múltiplas modalidades, e as aplicações em medicina, engenharia, e síntese. O presente capítulo procurou estender esse mapeamento para as fronteiras onde a disciplina está agora --- e onde estará nos próximos anos. O convite final ao leitor é duplo: aplicar os métodos discutidos --- em pesquisa, em ensino, em prática clínica ou industrial --- com o rigor e a criatividade que eles merecem; e contribuir para que a disciplina evolua de forma ética, equitativa, e aberta --- como a ciência que a biologia do século XXI exige.
+
+
+\section{Exercícios}
+\label{sec:15-exercicios}
+
+Este capítulo final --- e o livro como um todo --- encerra com uma série de exercícios progressivos que atravessam, de forma integrada, os principais temas discutidos ao longo dos capítulos anteriores. Os exercícios não são estanques: cada um referencia técnicas, modelos, ou dados introduzidos em capítulos específicos, e o leitor é convidado a reconhecer as conexões, a mobilizar ferramentas discutidas em diferentes partes do livro, e a refletir sobre como a integração de métodos é parte constitutiva da prática contemporânea da biologia de sistemas. Os exercícios variam em dificuldade, de uma a quatro estrelas (\(\star\) a \(\star\star\star\star\)), e em modalidade --- alguns podem ser resolvidos analiticamente com lápis e papel, outros requerem programação em \texttt{Python} ou \texttt{R}, e outros ainda envolvem acesso a bases de dados públicas ou simulação computacional.
+
+\begin{exercicio}[\(\star\)] Considere a rede de interação proteína--proteína do \emph{Saccharomyces cerevisiae} (levedura de padeiro) disponível em \texttt{STRING} (\texttt{https://string-db.org/}) com nível de confiança médio (\texttt{medium confidence}, \texttt{score} \(\geq 0.4\)). 
+\begin{itemize}
+  \item[(a)] Baixe a rede e construa um grafo não-direcionado ponderado usando as bibliotecas \texttt{NetworkX} (\texttt{Python}) ou \texttt{igraph} (\texttt{R}).
+  \item[(b)] Calcule três métricas de centralidade para cada nó: \emph{degree centrality}, \emph{betweenness centrality}, e \emph{closeness centrality}. Identifique os dez genes mais centrais em cada métrica.
+  \item[(c)] Os três rankings coincidem? Justifique, em termos da estrutura topológica da rede, por que centralidade de grau e centralidade de intermediação tendem a correlacionar --- mas nem sempre coincidem --- em redes biológicas reais.
+  \item[(d)] Compare os rankings com a lista de genes \emph{essenciais} de levedura (disponível no \texttt{Saccharomyces Genome Database}, \texttt{SGD}). Qual métrica de centralidade melhor prediz essencialidade? Interprete o resultado à luz da discussão do Capítulo~\ref{cap:7} sobre redes de lethality.
+\end{itemize}
+Sugestão de ferramentas: \texttt{NetworkX} para grafos; \texttt{matplotlib} ou \texttt{seaborn} para visualização; \texttt{SciPy} para estatísticas. Discuta os resultados em não mais que duas páginas, incluindo ao menos uma figura da rede com os hubs coloridos por centralidade.
+\end{exercicio}
+
+
+
+\begin{exercicio}[\(\star\star\)] Considere um conjunto de dados de expressão gênica em \emph{bulk} de tecido hepático de camundongos, comparando camundongos wild-type e camundongos knock-out para um fator de transcrição \texttt{X} (n=10 por grupo, dados disponíveis no \texttt{GEO} sob accession \texttt{GSE12345}).
+\begin{itemize}
+  \item[(a)] Realize a análise de expressão diferencial usando \texttt{DESeq2} (\texttt{R}) ou \texttt{pydeseq2} (\texttt{Python}). Identifique os genes diferencialmente expressos (DEGs) com \texttt{FDR} \(< 0.05\) e \(|\log_2 FC| > 1\). Quantos DEGs você encontrou? Há mais up-regulated ou down-regulated no knock-out?
+  \item[(b)] Aplique \emph{Weighted Gene Co-expression Network Analysis} (WGCNA) aos dados normalizados. Construa a matriz de adjacência usando uma potência \emph{soft} apropriada (escolha usando o critério \emph{scale-free topology fit}), detecte módulos por \emph{clustering} hierárquico com \emph{dynamic tree cut}, e identifique os \emph{module eigengenes} (primeira componente principal de cada módulo).
+  \item[(c)] Para cada módulo, teste associação entre o \emph{eigengene} e o genótipo (WT vs KO). Identifique módulos significativamente associados (\(p < 0.05\) após correção de Bonferroni).
+  \item[(d)] Para os três módulos mais significativamente associados, faça análise de enriquecimento funcional usando \texttt{clusterProfiler} (\texttt{R}) ou \texttt{gseapy} (\texttt{Python}), testando categorias \texttt{GO Biological Process}, \texttt{KEGG}, e \texttt{Reactome}. Os módulos refletem processos biologicamente coerentes? Como os resultados se relacionam com a função conhecida do fator \texttt{X} (suponha que seja \texttt{HNF4\(\alpha\)}, um regulador mestre da diferenciação hepática)?
+  \item[(e)] Identifique os genes com maior \emph{module membership} (\(|kME| > 0.8\)) e maior \emph{gene significance} (\(|GS| > 0.2\)) no módulo mais fortemente associado ao genótipo. Esses genes são candidatos a alvos diretos do fator \texttt{X}? Justifique usando dados públicos de \emph{ChIP-seq} de \texttt{HNF4\(\alpha\)} disponíveis no \texttt{ENCODE} ou \texttt{Cistrome Data Browser}.
+\end{itemize}
+Discuta o pipeline em não mais que quatro páginas, com figuras ilustrativas (\emph{heatmap} de expressão, dendograma de módulos, \emph{enrichment plot}). Comentários sobre escolhas metodológicas (potência \emph{soft}, número mínimo de genes por módulo, correção para múltiplos testes) devem ser explícitos.
+\end{exercicio}
+
+
+
+\begin{exercicio}[\(\star\star\star\)] Considere a rede regulatória gênica do ciclo celular da levedura descrita por Li et al.\\ em 2004 --- um modelo com 11 nós (genes) e 30 arestas representando regulação transcricional. A regra de atualização booleana para cada gene \(i\) é:
+\[
+x_i(t+1) = \begin{cases} 1 & \text{se } \sum_{j \in \text{Ativadores}(i)} w_{ij} x_j(t) > \sum_{k \in \text{Inibidores}(i)} |w_{ik}| x_k(t) \\ 0 & \text{caso contrário} \end{cases}
+\]
+onde \(w_{ij}\) são pesos \(\in \{-1, +1\}\). Os 11 genes são: \texttt{Cln1}, \texttt{Cln2}, \texttt{Cln3}, \texttt{Cdc28}, \texttt{SBF}, \texttt{MBF}, \texttt{Clb5}, \texttt{Clb6}, \texttt{Cdc20}, \texttt{Cdh1}, \texttt{Sic1}.
+
+\begin{itemize}
+  \item[(a)] Implemente o modelo booleano em \texttt{Python} ou \texttt{R}. Simule a partir de cada um dos \(2^{11} = 2048\) estados iniciais possíveis (síncrono: todos os genes atualizam simultaneamente em cada passo). Identifique todos os atratores --- ciclos periódicos ou pontos fixos --- e reporte o comprimento de cada um.
+  \item[(b)] Compare os atratores encontrados com os \emph{estados celulares} biologicamente interpretáveis que o modelo se destina a representar: \texttt{G1} (estado quiescente), \texttt{S} (fase de síntese de DNA), \texttt{G2} (pré-divisão), \texttt{M} (mitose), e \texttt{postM} (pós-mitose, retorno a G1). O modelo captura a ciclicidade do ciclo celular?
+  \item[(c)] Para cada atrator, calcule o \emph{bacia de atração}: o conjunto de estados iniciais que convergem ao atrator sob a dinâmica do modelo. Plote as bacias como frações do espaço de estados. Há um atrator dominante? Como esse resultado se relaciona com a hipótese de que o programa transcricional do ciclo celular é \emph{canalizado}?
+  \item[(d)] Simule \emph{knockouts} individuais: remova cada gene (force \(x_i = 0\)) e identifique os atratores restantes. Há genes cuja remoção \emph{elimina} atratores correspondentes a fases específicas? Como esses resultados se comparam com dados experimentais de knockouts em levedura?
+  \item[(e)] Implemente uma versão \emph{assíncrona} do modelo (uma variante comum: em cada passo, escolhe-se aleatoriamente um nó para atualizar). Os atratores são preservados? Há atratores novos? Discuta como a escolha de esquema de atualização (síncrono vs.\ assíncrono) influencia a interpretação de modelos booleanos de redes biológicas.
+\end{itemize}
+Discuta os resultados em não mais que cinco páginas, com pelo menos uma figura do diagrama de transição de estados, da estrutura de bacias, e de uma comparação qualitativa entre simulação e dados experimentais. Comentários sobre o significado biológico dos atratores --- em particular, a relação com a hipótese de \emph{Waddington epigenetic landscape} discutida no Capítulo~\ref{cap:6} --- devem ser explícitos.
+\end{exercicio}
+
+
+
+\begin{exercicio}[\(\star\star\star\star\)] Este exercício integrador combina dados de múltiplas camadas ômicas --- genômica, transcriptômica, proteômica, metabolômica --- em uma análise conjunta de amostras de tumor pancreático ductal (\emph{pancreatic ductal adenocarcinoma}, PDAC), com o objetivo de identificar subtipos moleculares com significado clínico.
+
+Os dados estão disponíveis publicamente via o \emph{Cancer Genome Atlas} (TCGA-PAAD) e o \emph{Clinical Proteomic Tumor Analysis Consortium} (CPTAC-PDAC). Acesse-os via \texttt{GDC Data Portal} (\texttt{https://portal.gdc.cancer.gov/}) e \texttt{UALCAN} (\texttt{https://ualcan.path.uab.edu/}). Você precisará de:
+\begin{itemize}
+  \item Dados de expressão gênica em \emph{bulk} (\texttt{RNA-seq}, n=185 amostras tumorais + n=4 normais adjacentes).
+  \item Dados de expressão proteica (\texttt{LC-MS/MS shotgun proteomics}, subcoorte de n=140).
+  \item Dados de mutação (\texttt{whole-exome sequencing}, variantes somáticas em genes drivers pancreáticos: \texttt{KRAS}, \texttt{TP53}, \texttt{SMAD4}, \texttt{CDKN2A}).
+  \item Dados clínico-patológicos (sobrevida, estadiamento, resposta a quimioterapia).
+\end{itemize}
+
+\begin{itemize}
+  \item[(a)] Realize pré-processamento específico para cada camada: \texttt{DESeq2} (RNA-seq), normalização \texttt{vsn} ou \texttt{median-centering} (proteômica), anotação com \texttt{VEP} ou \texttt{ANNOVAR} (mutações). Documente cada passo.
+  \item[(b)] Aplique análise integrada multiômica usando \texttt{MOFA} (\emph{Multi-Omics Factor Analysis}) ou \texttt{DIABLO} (\emph{mixOmics}) para identificar fatores latentes compartilhados entre as camadas. Determine o número ótimo de fatores usando métricas de variância explicada.
+  \item[(c)] Para o fator mais associado a desfecho clínico (sobrevida global, \(p\)-valor do teste log-rank estratificando pacientes em tercis do fator), interprete biologicamente: que genes, proteínas, e mutações mais contribuem para o fator? Esses elementos estão enriquecidos em vias biológicas específicas (\texttt{Reactome}, \texttt{Hallmark gene sets} do \texttt{MSigDB})?
+  \item[(d)] Construa um modelo preditivo de sobrevida em 24 meses combinando dados clínicos, ômicos, e fatores latentes. Use \emph{cross-validation} estratificada (k=5 folds) e reporte \texttt{AUC-ROC} e intervalo de confiança por \emph{bootstrap}. Compare um modelo clínico-only (idade, sexo, estadiamento) com um modelo clínico+ômico. Quanto ganho preditivo os dados ômicos oferecem?
+  \item[(e)] Compare os subtipos identificados com a classificação de \emph{Bailey et al.\\} (2016): \emph{squamous}, \emph{pancréatique progenitorique}, \emph{immunogenic}, e \emph{ADEX} (anomalously differentiated exocrine). Há correspondência? Sua classificação integrada difere? Discuta as implicações clínicas e biológicas de eventuais diferenças.
+  \item[(f)] Identifique \emph{drug repurposing candidates} usando a abordagem de conectividade invertida discutida no Capítulo~\ref{cap:13}: correlacione o \emph{signature} gênico de cada subtipo com perfis de perturbação genética do \texttt{LINCS L1000}, e identifique compostos cujas direções de efeito revertem o signature de pior prognóstico.
+\end{itemize}
+A entrega é um relatório técnico de não mais que oito páginas, no formato de uma \emph{short communication}, com Introdução, Métodos, Resultados (com figuras: \emph{heatmap} integrado, \emph{survival curves}, \emph{drug-target network}), e Discussão. O relatório deve demonstrar domínio conceitual dos métodos usados, capacidade de interpretação biológica, e consciência das limitações das abordagens integradas --- em particular, o problema de \emph{batch effects} entre plataformas, a questão de tamanhos amostrais desbalanceados entre camadas (n=185 RNA-seq vs n=140 proteômica), e o risco de \emph{overfitting} em modelos com muitos preditores.
+\end{exercicio}
+
+\noindent\textbf{Nota para o leitor:} Os exercícios acima foram desenhados para serem realizados com recursos computacionais padronizados (\texttt{Python 3.10+}, \texttt{R 4.2+}, pacotes \texttt{Bioconda} e \texttt{Bioconductor}). Dados adicionais de referência podem ser encontrados em \texttt{UniProt} (\texttt{https://www.uniprot.org/}), \texttt{KEGG} (\texttt{https://www.genome.jp/kegg/}), \texttt{Reactome} (\texttt{https://reactome.org/}), \texttt{STRING} (\texttt{https://string-db.org/}), \texttt{GEO} (\texttt{https://www.ncbi.nlm.nih.gov/geo/}), \texttt{ENCODE} (\texttt{https://www.encodeproject.org/}), \texttt{DepMap} (\texttt{https://depmap.org/}), \texttt{Gene Ontology} (\texttt{http://geneontology.org/}), e \texttt{MSigDB} (\texttt{https://www.gsea-msigdb.org/}). Discussões e materiais auxiliares podem ser encontrados nos repositórios dos autores dos métodos citados e nos cursos abertos em plataformas como \texttt{Coursera}, \texttt{edX}, e \texttt{YouTube} (em particular, os cursos de \emph{systems biology} de Uri Alon, de \emph{bioinformatics} de Pavel Pevzner, e de \emph{single-cell analysis} do \emph{Satijalab}).
+
