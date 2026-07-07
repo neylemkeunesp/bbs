@@ -51,6 +51,29 @@ celular} transmitem informação de receptores de membrana ao núcleo por meio d
 fosforilação, frequentemente envolvendo amplificação e integração de sinais de múltiplas
 fontes.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % 6 nós em círculo
+    \foreach \i in {1,...,6} {
+        \node[circle, draw, fill=azulclaro!30, minimum size=0.7cm] (n\i) at ({60*\i}:2) {\i};
+    }
+    % Arestas circulares
+    \draw[thick, azulescuro] (n1) -- (n2);
+    \draw[thick, azulescuro] (n2) -- (n3);
+    \draw[thick, azulescuro] (n3) -- (n4);
+    \draw[thick, azulescuro] (n4) -- (n5);
+    \draw[thick, azulescuro] (n5) -- (n6);
+    \draw[thick, azulescuro] (n6) -- (n1);
+    % Cordas (3 arestas verdes)
+    \draw[thick, verdeacido] (n1) -- (n4);
+    \draw[thick, verdeacido] (n2) -- (n5);
+    \draw[thick, verdeacido] (n3) -- (n6);
+\end{tikzpicture}
+\caption{Exemplo de grafo com 6 vértices e 9 arestas. As arestas em azul formam um ciclo de comprimento 6, e as três arestas em verde conectam pares de vértices opostos. Esse grafo é uma \emph{grafoil} --- uma estrutura usada em teoria de redes para ilustrar propriedades topológicas como ciclos, conectividade e diâmetro.}
+\label{fig:03-grafo-exemplo}
+\end{figure}
+
 
 \section{Fundamentos de Teoria dos Grafos}
 
@@ -248,6 +271,26 @@ conexões seja local. Redes de neurônios, redes metabólicas e redes de coexpre
 foram identificadas como small-world, o que implica eficiência de comunicação com
 baixo custo de cabeamento.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    % Anel regular de 8 nós
+    \foreach \i in {1,...,8} {
+        \node[circle, draw, fill=azulclaro!30, minimum size=0.7cm] (n\i) at ({45*\i-45}:1.5) {\i};
+    }
+    % Conexões do anel
+    \foreach \i [evaluate=\i as \j using {int(mod(\i,8)+1)}] in {1,...,8} {
+        \draw[thick] (n\i) -- (n\j);
+    }
+    % Atalhos (reconexões) - verde tracejado
+    \draw[thick, verdeacido, dashed] (n1) -- (n5);
+    \draw[thick, verdeacido, dashed] (n3) -- (n7);
+    \node[above, font=\small] at (0, 2.3) {Small-world: anel + atalhos};
+\end{tikzpicture}
+\caption{Construção do modelo de Watts--Strogatz para redes small-world. Parte-se de um anel regular onde cada nó se conecta aos $k$ vizinhos mais próximos (linhas pretas). Em seguida, com probabilidade $p \in [0, 1]$, cada aresta é ``reconectada'' a um nó aleatório --- no exemplo, duas reconexões (linhas verdes tracejadas) criam atalhos que reduzem drasticamente o comprimento médio de caminho $L$ sem destruir o alto agrupamento local $C$.}
+\label{fig:03-smallworld}
+\end{figure}
+
 \subsection{Redes Livre de Escala e o Modelo de Barabási-Albert}
 
 O mecanismo gerador das redes livre de escala foi proposto por Barabási e Albert
@@ -262,6 +305,34 @@ mais conexões, com probabilidade proporcional ao grau $k_i$:
 O princípio é coloquialmente conhecido como ``rico fica mais rico'': hubs atraem
 desproporcionalmente mais conexões ao longo do crescimento da rede. O resultado é
 uma distribuição de graus do tipo $P(k) \sim k^{-3}$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+    % Painel esquerdo: rede aleatória (Poisson)
+    \begin{scope}[xshift=0cm]
+        \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
+        \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$P(k)$};
+        \draw[thick, azulescuro, line width=1.2pt, smooth] plot coordinates {
+            (0.5,0.1) (1,1) (1.5,2.5) (2,2.8) (2.5,2) (3,0.8) (3.5,0.2)
+        };
+        \draw[dashed, gray] (2,0) -- (2,2.8);
+        \node[below, font=\footnotesize] at (2,-0.1) {$\langle k \rangle$};
+        \node[above, font=\small] at (2, 3) {Aleatória (Erdős--Rényi)};
+    \end{scope}
+
+    % Painel direito: rede scale-free (power law)
+    \begin{scope}[xshift=5.5cm]
+        \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
+        \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$P(k)$};
+        \draw[thick, verdeacido, line width=1.2pt, domain=0.7:3.8, smooth]
+            plot (\x, {3/\x});
+        \node[above, font=\small] at (2, 3) {Scale-free (Barabási--Albert)};
+    \end{scope}
+\end{tikzpicture}
+\caption{Distribuição de graus $P(k)$ comparada entre redes aleatórias e livres de escala. (Esquerda) Redes de Erdős--Rényi seguem uma distribuição de Poisson centrada em $\langle k \rangle$ --- a maioria dos nós tem grau próximo da média. (Direita) Redes de Barabási--Albert seguem uma lei de potência $P(k) \sim k^{-\gamma}$, característica de hubs raros mas dominantes.}
+\label{fig:03-degrees}
+\end{figure}
 
 Do ponto de vista biológico, hubs têm implicações profundas. Em redes de interação
 proteica, hubs são evolutivamente conservados, frequentemente essenciais para a
@@ -314,6 +385,40 @@ $X$ não ativa $Z$, mas sinal sustentado sim. O \emph{feedback positivo} entre d
 componentes cria biestabilidade --- o sistema pode ser mantido em dois estados
 alternativos, funcionando como memória celular. O \emph{feedback negativo} produz
 homeostase e pode gerar oscilações, como nos relógios circadianos.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Feed-forward loop
+    \node[font=\small\bfseries, azulescuro] at (0,0.3) {Feed-forward Loop};
+    \node[circle, draw, fill=azulclaro!30] (A1) at (0,-0.8) {X};
+    \node[circle, draw, fill=azulclaro!30] (B1) at (-1,-2.2) {Y};
+    \node[circle, draw, fill=azulclaro!30] (C1) at (1,-2.2) {Z};
+    \draw[->, thick] (A1) -- (B1);
+    \draw[->, thick] (A1) -- (C1);
+    \draw[->, thick] (B1) -- (C1);
+
+    % Bi-fan
+    \node[font=\small\bfseries, verdeescuro] at (4.5,0.3) {Bi-fan};
+    \node[circle, draw, fill=verdeacido!30] (A2) at (3.8,-0.8) {X};
+    \node[circle, draw, fill=verdeacido!30] (B2) at (5.2,-0.8) {Y};
+    \node[circle, draw, fill=verdeacido!30] (C2) at (3.8,-2.2) {Z};
+    \node[circle, draw, fill=verdeacido!30] (D2) at (5.2,-2.2) {W};
+    \draw[->, thick] (A2) -- (C2);
+    \draw[->, thick] (A2) -- (D2);
+    \draw[->, thick] (B2) -- (C2);
+    \draw[->, thick] (B2) -- (D2);
+
+    % Feedback loop
+    \node[font=\small\bfseries, laranjacel] at (8.5,0.3) {Feedback Loop};
+    \node[circle, draw, fill=laranjacel!30] (A3) at (7.8,-1.5) {X};
+    \node[circle, draw, fill=laranjacel!30] (B3) at (9.2,-1.5) {Y};
+    \draw[->, thick, bend left=30] (A3) to (B3);
+    \draw[->, thick, bend left=30] (B3) to (A3);
+\end{tikzpicture}
+\caption{Três motivos de rede recorrentes em redes biológicas. \emph{Feed-forward loop} (esquerda): três nós em cascata --- $X$ regula $Y$ e $Z$, e $Y$ também regula $Z$; atua como filtro de ruído e detector de persistência. \emph{Bi-fan} (centro): dois reguladores que controlam independentemente dois alvos --- função de integração de sinais. \emph{Feedback loop} (direita): dois nós com regulação mútua --- produz biestabilidade (feedback positivo) ou homeostase (feedback negativo).}
+\label{fig:03-motifs}
+\end{figure}
 
 
 \section{Redes Biológicas}
@@ -407,6 +512,26 @@ genético: hierarquia regulatória, em que poucos TFs ``mestres'' controlam a ex
 centenas de genes-alvo; modularidade, com módulos de genes coexpressos em condições
 específicas; e motivos regulatórios como o FFL.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85,
+    gene/.style={rectangle, draw, fill=azulclaro!30, rounded corners, minimum width=1cm},
+    tf/.style={ellipse, draw, fill=roxodna!30, minimum width=1cm}]
+    % TFs
+    \node[tf] (TF1) at (0,2) {TF1};
+    \node[tf] (TF2) at (2.5,2) {TF2};
+    % Genes-alvo
+    \node[gene] (G1) at (0,0) {G-A};
+    \node[gene] (G2) at (2.5,0) {G-B};
+    % Regulações
+    \draw[->, thick, verdeacido] (TF1) -- (G1) node[midway, left, font=\small] {$+$};
+    \draw[->, thick, red] (TF1) -- (G2) node[midway, right, font=\small] {$-$};
+    \draw[->, thick, verdeacido] (TF2) -- (G2) node[midway, right, font=\small] {$+$};
+\end{tikzpicture}
+\caption{Exemplo de rede regulatória gênica (GRN). Os fatores de transcrição TF1 e TF2 (elipses roxas) regulam dois genes-alvo G-A e G-B (retângulos azuis). Setas verdes indicam ativação ($+$), setas vermelhas indicam repressão ($-$). A topologia --- neste caso, um TF que simultaneamente ativa um gene e reprime outro --- é a base da lógica combinatória do controle gênico.}
+\label{fig:03-grn}
+\end{figure}
+
 A base de dados \textbf{RegulonDB} compila a GRN de \textit{Escherichia coli} em
 maior profundidade experimental de qualquer organismo, sendo referência para estudos
 mecanísticos. Para humanos, o consórcio \textbf{ENCODE} mapeou elementos regulatórios
@@ -421,6 +546,25 @@ sequencial, amplificando o sinal e integrando múltiplos inputs. A via MAPK, por
 passa por RAS $\to$ RAF $\to$ MEK $\to$ ERK, com cada passo amplificando e modularizando
 a resposta. O \emph{cross-talk} entre vias --- conexões laterais entre cascatas diferentes
 --- adiciona uma camada de complexidade e permite respostas contexto-específicas.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, node distance=1cm,
+    protein/.style={rectangle, draw, fill=azulclaro!30, rounded corners, minimum width=1.8cm, minimum height=0.7cm}]
+    \node[protein] (R) at (0,3) {Receptor};
+    \node[protein, below=of R] (K1) {Quinase 1};
+    \node[protein, below=of K1] (K2) {Quinase 2};
+    \node[protein, below=of K2] (TF) {TF};
+    \node[left=0.8cm of R, fill=laranjacel!50, circle, minimum size=0.7cm] (L) {L};
+    \draw[->, thick] (L) -- (R);
+    \draw[->, thick] (R) -- (K1);
+    \draw[->, thick] (K1) -- (K2) node[midway, right, font=\footnotesize] {P};
+    \draw[->, thick] (K2) -- (TF) node[midway, right, font=\footnotesize] {P};
+    \node[below=0.5cm of TF, font=\small] {$\Downarrow$ Núcleo};
+\end{tikzpicture}
+\caption{Cascata canônica de sinalização celular. Um ligante extracelular (L, laranja) liga-se a um receptor de membrana (R), que ativa uma cascata sequencial de quinases (K1, K2) por fosforilação (P), culminando na ativação de um fator de transcrição (TF). Cada passo da cascata amplifica o sinal --- tipicamente 10 a 100 vezes --- convertendo um pequeno número de eventos de ligação em uma resposta transcricional robusta no núcleo.}
+\label{fig:03-sinalizacao}
+\end{figure}
 
 As bases de dados \textbf{KEGG Pathway}, \textbf{Reactome} e \textbf{SignaLink} cobrem
 redes de sinalização, com representações que incluem a direcionalidade e a natureza
