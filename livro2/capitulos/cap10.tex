@@ -49,7 +49,28 @@ onde $b$ e $d$ são taxas per capita e $I$, $E$ são taxas absolutas. Em
 contextos onde nascimento e morte são os únicos processos relevantes, $I = E$
 e a equação se reduz à forma malthusiana. Quando os recursos do ambiente são
 limitados, o termo de natalidade é modificado por uma função de saturação, e a
-equação adquire a forma logística. Estudaremos ambos os regimes a seguir.
+equação adquire a forma logística. Estudaremos ambos os regimes a seguir. A
+Figura~\ref{fig:10-processos-fundamentais} ilustra esquematicamente os quatro
+processos elementares que governam a variação de uma população.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=2cm, scale=0.9, transform shape]
+    \node[draw, circle, fill=azulclaro!30, minimum size=2cm] (pop) {População $N(t)$};
+
+    \node[above=1.5cm of pop, fill=verdeacido!30, rounded corners] (nasc) {Nascimentos: $b N$};
+    \node[below=1.5cm of pop, fill=red!30, rounded corners] (morte) {Mortes: $d N$};
+    \node[left=2cm of pop, fill=laranjacel!30, rounded corners] (imig) {Imigração: $I$};
+    \node[right=2cm of pop, fill=roxodna!30, rounded corners] (emig) {Emigração: $E$};
+
+    \draw[->, thick, verdeacido, line width=2pt] (nasc) -- (pop);
+    \draw[->, thick, red, line width=2pt] (pop) -- (morte);
+    \draw[->, thick, laranjacel, line width=2pt] (imig) -- (pop);
+    \draw[->, thick, roxodna, line width=2pt] (pop) -- (emig);
+\end{tikzpicture}
+\caption{Os quatro processos demográficos elementares que governam a variação de uma população: natalidade, mortalidade, imigração e emigração. A combinação desses fluxos é sumarizada pela equação diferencial de balanço populacional.}
+\label{fig:10-processos-fundamentais}
+\end{figure}
 
 \subsection{Crescimento Exponencial: O Modelo de Malthus}
 \label{sub:image10-exponencial}
@@ -82,7 +103,25 @@ Populações em ambientes hostis --- como populações pequenas confinadas a
 \emph{habitats} degradados --- seguem decaimento exponencial. O destino do
 \emph{Panthera tigris altaica}, por exemplo, depende crucialmente de que $r$
 atinja valores positivos, o que requer ações integradas de proteção do
-\emph{habitat}, antipoaching e manejo genético.
+\emph{habitat}, antipoaching e manejo genético. A Figura~\ref{fig:10-exponencial}
+ilustra os dois regimes --- crescimento ($r>0$) e declínio ($r<0$) --- a partir
+da solução analítica $N(t) = N_0 e^{rt}$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,4) node[above] {$N$};
+    \draw[thick, azulescuro, domain=0:4.5, smooth, samples=100]
+        plot (\x, {0.5*exp(0.6*\x)});
+    \node[azulescuro] at (3.5,3.5) {$r > 0$};
+    \draw[thick, red, domain=0:4.5, smooth, samples=100]
+        plot (\x, {3*exp(-0.4*\x)});
+    \node[red] at (3,0.5) {$r < 0$};
+\end{tikzpicture}
+\caption{Crescimento exponencial. A solução $N(t) = N_0 e^{rt}$ descreve expansão irrestrita quando $r>0$ (curva azul) e declínio exponencial quando $r<0$ (curva vermelha). O modelo malthusiano é válido em regimes de baixa densidade, longe da capacidade de suporte.}
+\label{fig:10-exponencial}
+\end{figure}
 
 \subsection{Crescimento Logístico: Introduzindo a Capacidade de Suporte}
 \label{sub:image10-logistico}
@@ -133,6 +172,21 @@ plt.tight_layout()
 plt.show()
 \end{lstlisting}
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,4) node[above] {$N$};
+    \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
+        plot (\x, {3/(1+9*exp(-1.5*\x))});
+    \draw[dashed, verdeacido, thick] (0,3) -- (5,3) node[right, font=\small] {$K$};
+    \draw[dashed, red] (0,1.5) -- (5,1.5) node[right, font=\tiny] {$K/2$};
+    \fill[red] (1.5,1.5) circle (2pt);
+\end{tikzpicture}
+\caption{Crescimento logístico de Verhulst. A solução sigmoidal $N(t) = K/(1 + ((K-N_0)/N_0) e^{-rt})$ satura no valor $K$ (linha verde, capacidade de suporte) e apresenta ponto de inflexão em $K/2$ (linha vermelha), onde a taxa $dN/dt$ é máxima.}
+\label{fig:10-logistico}
+\end{figure}
+
 \subsection{Efeito Allee: A Maldição das Populações Pequenas}
 \label{sub:image10-allee}
 
@@ -160,6 +214,28 @@ estocásticas podem levá-las abaixo do limiar $A$, de onde não há retorno.
 Programas bem-sucedidos de recuperação --- como o do \textit{Arabidopsis
 arenosa} na Suíça ou da águia-pescadora no Reino Unido --- exigem população
 inicial grande o suficiente para garantir densidade acima do limiar de Allee.
+A Figura~\ref{fig:10-allee} ilustra o gráfico de $dN/dt$ em função de $N$, no
+qual se observam os três equilíbrios --- $0$ (extinção, estável), $A$ (Allee,
+instável) e $K$ (suporte, estável) --- característicos do efeito Allee forte.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    \draw[->] (0,0) -- (5,0) node[right] {$N$};
+    \draw[->] (0,-2) -- (0,2) node[above] {$\frac{dN}{dt}$};
+    \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
+        plot (\x, {0.8*\x*(4.5-\x)*(\x-1.2)/5});
+    \draw[dashed] (1.2,-2) -- (1.2,2);
+    \draw[dashed] (4.5,-2) -- (4.5,2);
+    \node[below, font=\tiny] at (1.2,0) {$A$};
+    \node[below, font=\tiny] at (4.5,0) {$K$};
+    \fill[red] (0,0) circle (2pt);
+    \fill[white, draw=black] (1.2,0) circle (2pt);
+    \fill[red] (4.5,0) circle (2pt);
+\end{tikzpicture}
+\caption{Curva $dN/dt$ vs.\ $N$ no modelo de Allee. A função cúbica apresenta três zeros: $N^*=0$ (extinção, estável, ponto vermelho preenchido), $N^*=A$ (Allee, instável, círculo vazado) e $N^*=K$ (capacidade de suporte, estável). Populações iniciadas entre $0$ e $A$ colapsam irreversivelmente para a extinção.}
+\label{fig:10-allee}
+\end{figure}
 
 \subsection{Modelos em Tempo Discreto: Ricker e Beverton-Holt}
 \label{sub:image10-discreto}
@@ -221,6 +297,36 @@ plt.tight_layout()
 plt.show()
 \end{lstlisting}
 
+A análise gráfica de mapas discretos no plano $(N_t, N_{t+1})$ --- o chamado
+\emph{diagrama cobweb} --- é uma ferramenta poderosa para visualizar a
+convergência ao equilíbrio (ou a emergência de oscilações/caos). A
+Figura~\ref{fig:10-ricker-cobweb} mostra a construção do cobweb para o mapa
+de Ricker com $r=1{,}8$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (5,0) node[right] {$N_t$};
+    \draw[->] (0,0) -- (0,5) node[above] {$N_{t+1}$};
+
+    % Linha identidade
+    \draw[dashed, gray] (0,0) -- (5,5);
+
+    % Funcao de Ricker
+    \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
+        plot (\x, {\x*exp(1.8*(1-\x/3.5))});
+
+    % Equilibrio
+    \fill[red] (3.5,3.5) circle (2pt);
+
+    % Cobweb
+    \draw[verdeacido, thick] (0.5,0.5) -- (0.5,1.2) -- (1.2,1.2) -- (1.2,2.3) -- (2.3,2.3) -- (2.3,3.2) -- (3.2,3.2) -- (3.2,3.5);
+
+    \node[below] at (3.5,-0.2) {$K$};
+\end{tikzpicture}
+\caption{Diagrama cobweb para o mapa de Ricker $N_{t+1} = N_t \exp\!\left[r(1-N_t/K)\right]$ com $r=1{,}8$. A curva azulescura é o mapa; a linha tracejada é a identidade $N_{t+1}=N_t$; a curva verde mostra a trajetória iterativa convergindo ao equilíbrio $K$.}
+\label{fig:10-ricker-cobweb}
+\end{figure}
 
 \section{Interações entre Espécies}
 \label{sec:10-interacoes}
@@ -271,7 +377,33 @@ modelo (introduzindo capacidade de suporte para as presas, predação
 dependente de densidade ou termo de inibição do predador) obtém-se ciclos
 limites estáveis --- que é o que se observa em sistemas reais como o clássico
 caso do \emph{Lynx canadensis} e da lebre-americana (\textit{Lepus americanus})
-registrado pelos dados de peles da Hudson Bay Company.
+registrado pelos dados de peles da Hudson Bay Company. A
+Figura~\ref{fig:10-lv-fase} apresenta o retrato de fase do sistema: as
+isoclinas $V^* = \gamma/(\delta\beta)$ (vertical azul) e $P^* = \alpha/\beta$
+(horizontal vermelha) se cruzam no equilíbrio de coexistência, em torno do
+qual as trajetórias formam órbitas fechadas --- assinatura do caráter
+conservativo do sistema.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (5,0) node[right] {$V$};
+    \draw[->] (0,0) -- (0,4) node[above] {$P$};
+
+    % Isoclinas
+    \draw[thick, blue] (2,0) -- (2,4) node[above, font=\small] {$\frac{dP}{dt}=0$};
+    \draw[thick, red] (0,2.5) -- (5,2.5) node[right, font=\small] {$\frac{dV}{dt}=0$};
+
+    % Equilibrio
+    \fill[verdeacido] (2,2.5) circle (3pt) node[above right] {$(V^*, P^*)$};
+
+    % Trajetoria
+    \draw[verdeacido, thick, ->, domain=0:360, smooth, samples=100]
+        plot ({2 + 1.2*cos(\x)}, {2.5 + 0.8*sin(\x)});
+\end{tikzpicture}
+\caption{Retrato de fase do sistema de Lotka-Volterra. A isoclina azul (vertical, $V = \gamma/(\delta\beta)$) é onde $dP/dt = 0$; a vermelha (horizontal, $P = \alpha/\beta$) é onde $dV/dt = 0$. O equilíbrio não-trivial $(V^*, P^*)$ no cruzamento é um centro: trajetórias vizinhas formam órbitas fechadas (curva verde), refletindo oscilações neutras.}
+\label{fig:10-lv-fase}
+\end{figure}
 
 \begin{lstlisting}[language=Python, caption=Sistema predador-presa de Lotka-Volterra]
 import numpy as np
@@ -306,6 +438,43 @@ axes[1].legend(); axes[1].grid(alpha=0.3)
 plt.tight_layout(); plt.show()
 \end{lstlisting}
 
+A Figura~\ref{fig:10-lv-campo} complementa o retrato de fase mostrando o
+campo vetorial completo --- com setas cinzas indicando a direção do fluxo
+em cada ponto do plano de fases --- e duas órbitas fechadas de diferentes
+amplitudes. Note como as setas circulam ao redor do equilíbrio, sem nunca
+convergir para ele: a conservação Hamiltoniana do modelo LV impede o
+amortecimento das oscilações.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    \draw[->] (0,0) -- (6,0) node[right] {Presas ($V$)};
+    \draw[->] (0,0) -- (0,5) node[above] {Predadores ($P)$};
+
+    % Isoclinas
+    \draw[dashed, red, thick] (0,2.5) -- (6,2.5);
+    \draw[dashed, blue, thick] (3,0) -- (3,5);
+
+    % Trajetorias
+    \draw[verdeacido, very thick, ->, domain=0:350, smooth, samples=100]
+        plot ({3 + 2*cos(\x)}, {2.5 + 1.5*sin(\x)});
+    \draw[verdeacido, thick, ->, domain=0:350, smooth, samples=100]
+        plot ({3 + 1*cos(\x)}, {2.5 + 0.75*sin(\x)});
+
+    % Equilibrio
+    \fill[red] (3,2.5) circle (3pt) node[above right, font=\small] {$(V^*, P^*)$};
+
+    % Campo vetorial (simplificado)
+    \foreach \x in {1,2,4,5} {
+        \foreach \y in {1,2,3,4} {
+            \draw[->, gray, thin] (\x,\y) -- +({0.15*(\x - 0.1*\x*\y)}, {0.15*(0.05*\x*\y - \y)});
+        }
+    }
+\end{tikzpicture}
+\caption{Retrato de fase completo de Lotka-Volterra, com campo vetorial (setas cinzas) e duas órbitas fechadas (verde-escuro e verde) ao redor do equilíbrio $(V^*, P^*)$. As isoclinas pontilhadas vermelha e azul dividem o plano nos quatro setores de sinal de $(dV/dt, dP/dt)$.}
+\label{fig:10-lv-campo}
+\end{figure}
+
 \subsection{Competição e o Princípio de Exclusão}
 \label{sub:image10-competicao}
 
@@ -337,7 +506,38 @@ de Gause (1934) com \textit{Paramecium aurelia} e \textit{Paramecium caudatum}
 em cultura com a mesma fonte alimentar mostrou exatamente o previsto --- uma
 espécie exterminava a outra. Hutchinson reinterpretou o resultado em termos de
 \emph{nicho ecológico}: a coexistência prolongada exige diferenciação de nicho
-(recurso, espaço, tempo).
+(recurso, espaço, tempo). A Figura~\ref{fig:10-competicao} ilustra dois
+regimes qualitativos: à esquerda, a coexistência estável (isoclinas se
+cruzando no interior do primeiro quadrante); à direita, a exclusão da
+espécie 2 (isoclina da espécie 1 acima da da espécie 2, com equilíbrio
+interior instável).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    % Coexistencia
+    \begin{scope}
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$N_1$};
+        \draw[->] (0,0) -- (0,3) node[above, font=\tiny] {$N_2$};
+        \draw[thick, blue] (2.5,0) -- (0,2);
+        \draw[thick, red] (2,0) -- (0,2.5);
+        \fill[verdeacido] (1.2,1.2) circle (2pt);
+        \node[below, font=\tiny] at (1.5,-0.3) {Coexistência};
+    \end{scope}
+
+    % Sp 1 vence
+    \begin{scope}[xshift=4cm]
+        \draw[->] (0,0) -- (3,0) node[right, font=\tiny] {$N_1$};
+        \draw[->] (0,0) -- (0,3) node[above, font=\tiny] {$N_2$};
+        \draw[thick, blue] (2.5,0) -- (0,1.5);
+        \draw[thick, red] (1.5,0) -- (0,2.5);
+        \fill[verdeacido] (2.5,0) circle (2pt);
+        \node[below, font=\tiny] at (1.5,-0.3) {Sp. 1 vence};
+    \end{scope}
+\end{tikzpicture}
+\caption{Retratos de fase do modelo de competição de Lotka-Volterra. \textbf{Esquerda:} coexistência estável --- as isoclinas se cruzam no interior do primeiro quadrante em um equilíbrio interior estável. \textbf{Direita:} exclusão da espécie 2 --- a isoclina de $N_1$ está acima da de $N_2$ no eixo $N_1$, e o equilíbrio de coexistência é instável; a espécie 1 invade todo o domínio.}
+\label{fig:10-competicao}
+\end{figure}
 
 \subsection{Mutualismo e Simbiose}
 \label{sub:image10-mutualismo}
