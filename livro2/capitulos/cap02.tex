@@ -39,6 +39,41 @@ retorna-se ao sistema para validação. Os dados experimentais refinam o modelo,
 que gera novas predições, que guiam novos experimentos. Esse ciclo iterativo é a
 essência da abordagem quantitativa em biologia.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    auto,
+    box/.style={
+        rectangle,
+        draw=azulescuro,
+        thick,
+        fill=azulclaro!15,
+        text width=2.4cm,
+        text centered,
+        minimum height=1.2cm
+    },
+    arrow/.style={
+        ->,
+        thick,
+        azulescuro
+    }
+]
+
+    \node[box] (bio) {Sistema Biológico};
+    \node[box, right=2cm of bio] (modelo) {Modelo Matemático};
+    \node[box, below=1.5cm of modelo] (analise) {Análise Computacional};
+    \node[box, left=2cm of analise] (pred) {Previsões\\Hipóteses};
+
+    \draw[arrow] (bio) -- node[above, font=\footnotesize] {Abstração} (modelo);
+    \draw[arrow] (modelo) -- node[right, font=\footnotesize] {Simulação} (analise);
+    \draw[arrow] (analise) -- node[below, font=\footnotesize] {Interpretação} (pred);
+    \draw[arrow] (pred) -- node[left, font=\footnotesize] {Validação} (bio);
+
+\end{tikzpicture}
+\caption{Ciclo iterativo da modelagem matemática em biologia. A abstração do sistema biológico produz um modelo formal, que é submetido a análise computacional para gerar previsões testáveis. As previsões são validadas experimentalmente, e discrepâncias refinam o modelo --- reiniciando o ciclo. Este processo iterativo é a estrutura operacional padrão da abordagem quantitativa em biologia de sistemas.}
+\label{fig:02-ciclo}
+\end{figure}
+
 \section{Tipos de Modelos}
 
 Os modelos matemáticos podem ser classificados segundo vários critérios, cada um
@@ -145,8 +180,31 @@ analítica tem forma sigmoidal:
   N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)},
 \end{equation}
 com ponto de inflexão em $N = K/2$ --- onde a taxa de crescimento $dN/dt$ é máxima.
-Esse comportamento em S é ubíquo em biologia: crescimento de colônias bacterianas,
-difusão de inovações tecnológicas, proliferação tumoral em estágio inicial.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    \draw[->, thick] (0,0) -- (5.5,0) node[right, font=\small] {$t$};
+    \draw[->, thick] (0,0) -- (0,4.2) node[above, font=\small] {$N$};
+
+    % Curva sigmoidal logística
+    \draw[thick, azulescuro, line width=1.2pt, domain=0:5, smooth, samples=100]
+        plot (\x, {3/(1+2*exp(-1.5*\x))});
+
+    % Linha da capacidade de suporte
+    \draw[dashed, verdeacido] (0,3) -- (5.3,3) node[right, font=\footnotesize] {$K$};
+
+    % Ponto de inflexão
+    \fill[red] (1.5, 1.5) circle (1.5pt);
+    \node[above right, font=\footnotesize, red] at (1.5, 1.5) {$K/2$};
+\end{tikzpicture}
+\caption{Curva de crescimento logístico $N(t)$ em função do tempo. A solução analítica tem forma sigmoidal que parte de $N(0)$ e satura assintoticamente em $K$ (capacidade de suporte). O ponto de inflexão $N = K/2$ marca o instante de máxima taxa de crescimento.}
+\label{fig:02-logistico}
+\end{figure}
+
+Esse comportamento em S é ubíquo em biologia: crescimento de colônias bacterianas, difusão de inovações tecnológicas, proliferação tumoral em estágio inicial.
+
+\subsection{Sistemas de EDOs: O Modelo Predador-Presa}
 
 O seguinte código resolve e visualiza o modelo logístico usando o integrador
 \texttt{odeint} do SciPy:
@@ -200,6 +258,28 @@ análise do jacobiano nesse ponto revela autovalores puramente imaginários, ind
 que as trajetórias são órbitas fechadas no plano de fase --- oscilações periódicas
 conservativas, confirmadas qualitativamente pelos dados de Volterra.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    \draw[->, thick] (0,0) -- (4.5,0) node[right, font=\small] {$V$};
+    \draw[->, thick] (0,0) -- (0,4.5) node[above, font=\small] {$P$};
+
+    % Trajetória em espiral amortecida convergindo ao equilíbrio
+    \draw[thick, verdeacido, line width=1.2pt, domain=0:720, samples=200, smooth]
+        plot ({2 + 1.5*cos(\x)/(1+\x/360)},
+              {2 + 1.5*sin(\x)/(1+\x/360)});
+
+    % Ponto de equilíbrio
+    \fill[red] (2,2) circle (2.5pt) node[right, font=\footnotesize] {Equilíbrio $(V^*, P^*)$};
+
+    % Eixos labels
+    \node[below, font=\small] at (2,-0.3) {Presas};
+    \node[left, font=\small, rotate=90] at (-0.4,2) {Predadores};
+\end{tikzpicture}
+\caption{Retrato de fase do sistema de Lotka--Volterra. A trajetória forma uma órbita fechada ao redor do equilíbrio não-trivial $(V^*, P^*)$ --- as populações de presas e predadores oscilam perpetuamente em ciclos defasados, sem convergir nem divergir. Esse comportamento é característico de sistemas conservativosHamiltonianos, e foi a primeira explicação matemática para os ciclos populacionais observados por Volterra nas pescas do Adriático.}
+\label{fig:02-lotka}
+\end{figure}
+
 \begin{lstlisting}[language=Python, caption=Sistema predador-presa de Lotka-Volterra]
 from scipy.integrate import odeint
 import numpy as np, matplotlib.pyplot as plt
@@ -249,6 +329,39 @@ No equilíbrio trivial $N^* = 0$, tem-se $J = r > 0$ --- instável. No equilíbr
 não-trivial $N^* = K$, tem-se $J = -r < 0$ --- estável. A população converge,
 portanto, para a capacidade de suporte, independentemente da condição inicial
 (desde que $N_0 > 0$).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % Painel estável
+    \begin{scope}[xshift=0cm]
+        \draw[->, thick] (-0.5,0) -- (2.5,0) node[right, font=\small] {$x$};
+        \draw[->, thick] (0,-1.3) -- (0,1.5) node[above, font=\small] {$\dot{x}$};
+        \draw[thick, azulescuro, smooth, domain=-0.3:2.3]
+            plot (\x, {1.3 - 1.2*(\x-1)*(\x-1)});
+        \fill[verdeacido] (1,0) circle (2pt);
+        \node[below, font=\small, verdeacido] at (1,-0.1) {Estável};
+        \draw[->, thick, red] (0.5,0.4) -- (1,0.05);
+        \draw[->, thick, red] (1.5,0.4) -- (1,0.05);
+        \node[below, font=\footnotesize] at (1,-0.7) {$\mathrm{Re}(\lambda) < 0$};
+    \end{scope}
+
+    % Painel instável
+    \begin{scope}[xshift=6cm]
+        \draw[->, thick] (-0.5,0) -- (2.5,0) node[right, font=\small] {$x$};
+        \draw[->, thick] (0,-1.3) -- (0,1.5) node[above, font=\small] {$\dot{x}$};
+        \draw[thick, azulescuro, smooth, domain=-0.3:2.3]
+            plot (\x, {-1.3 + 1.2*(\x-1)*(\x-1)});
+        \fill[red] (1,0) circle (2pt);
+        \node[below, font=\small, red] at (1,-0.1) {Instável};
+        \draw[->, thick, red] (0.5,-0.4) -- (1,-0.05);
+        \draw[->, thick, red] (1.5,-0.4) -- (1,-0.05);
+        \node[below, font=\footnotesize] at (1,-0.7) {$\mathrm{Re}(\lambda) > 0$};
+    \end{scope}
+\end{tikzpicture}
+\caption{Classificação de pontos de equilíbrio unidimensionais pelo sinal de $\dot{x}$ nas vizinhanças. (Esquerda) Equilíbrio \textbf{estável}: $\dot{x} > 0$ à esquerda e $\dot{x} < 0$ à direita --- perturbações convergem. (Direita) Equilíbrio \textbf{instável}: $\dot{x} < 0$ à esquerda e $\dot{x} > 0$ à direita --- perturbações divergem. A classificação se estende a sistemas de dimensão $n$ pelos autovalores da jacobiana.}
+\label{fig:02-estabilidade}
+\end{figure}
 
 \section{Métodos Numéricos}
 
@@ -336,6 +449,50 @@ A quarta é a \textbf{quantificação de incerteza}: reportar não apenas os val
 ótimos dos parâmetros, mas também seus intervalos de confiança, e propagar essa
 incerteza para as predições. Modelos que apresentam predições pontuais sem
 incerteza transmitem uma confiança que raramente é justificada.
+
+\subsection*{Estudo de caso: reptation do DNA}
+
+Para encerrar o capítulo com um exemplo que ilustra a transição entre modelos
+determinísticos e estocásticos, considere o problema da difusão de uma molécula
+de DNA em um gel de eletroforese. A técnica de \emph{gel electrophoresis} --- um
+dos pilares da biologia molecular do século XX --- separa fragmentos de DNA por
+tamanho: fragmentos menores migram mais rápido que fragmentos maiores, porque
+encontram menos resistência ao atravessar a malha polimérica do gel.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+    % Obstáculos do gel (pontos cinza)
+    \foreach \x/\y in {0.5/0.5, 1.5/1.5, 2.5/0.8, 3.5/1.8, 0.8/2.5, 2.0/2.8, 3.2/0.3, 1.2/3.2, 3.8/2.5} {
+        \fill[gray!50] (\x, \y) circle (4pt);
+    }
+    % Cadeia de DNA serpenteando
+    \draw[thick, azulescuro, line width=1.5pt, rounded corners=4pt]
+        (0,1.0) .. controls (0.5,0.9) and (1.0,1.3) ..
+        (1.5,1.1) .. controls (2.0,0.9) and (2.5,1.5) ..
+        (3.0,1.4) .. controls (3.5,1.3) and (3.8,1.8) .. (4.0,1.6);
+    % Setas de movimento
+    \draw[->, very thick, verdeacido] (3.8,1.7) -- (4.5,1.55);
+    \draw[->, very thick, red]        (0.2,1.05) -- (-0.5,1.1);
+    % Labels
+    \node[font=\footnotesize, azulescuro] at (2.0, 0.2) {DNA};
+    \node[font=\footnotesize, gray]       at (3.5, 3.3) {gel};
+\end{tikzpicture}
+\caption{Modelo de \emph{reptation} do DNA em gel de eletroforese. A cadeia polimérica (azul) atravessa a malha porosa do gel (pontos cinza), e seu movimento é descrito como uma caminhada aleatória unidimensional ao longo do próprio eixo do tubo topológico que ela define. O coeficiente de difusão efetivo decresce com o quadrado do comprimento da cadeia --- $D \propto 1/N^2$ --- explicando por que fragmentos maiores migram substancialmente mais devagar.}
+\label{fig:02-reptation}
+\end{figure}
+
+O modelo de \emph{reptation}, introduzido por Pierre-Gilles de Gennes em 1971
+(premiado com o Nobel de Física em 1991), representa o DNA como uma cadeia
+flexível confinada em um ``tubo'' topológico definido pelos obstáculos do gel. O
+movimento é descrito como uma caminhada aleatória unidimensional ao longo do
+eixo do próprio tubo: cada extremidade da cadeia avança ou recua com probabilidade
+$1/2$ a cada passo de tempo $\tau$, adicionando ou removendo um segmento. O
+coeficiente de difusão efetivo em três dimensões escala como $D \propto D_c/N^2$
+onde $N$ é o número de segmentos e $D_c = b^2/(2\tau)$ é o coeficiente curvilinear
+--- essa dependência com $N^2$ é a base teórica da separação de fragmentos de DNA
+por tamanho na eletroforese em gel, e foi verificada experimentalmente com
+precisão notável.
 
 \section{Exercícios}
 
