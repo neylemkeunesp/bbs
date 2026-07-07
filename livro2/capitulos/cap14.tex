@@ -15,6 +15,26 @@ A biologia sintética é frequentemente caracterizada pela aplicação de cinco 
 
 Esses princípios sustentam um ciclo de desenvolvimento iterativo que se tornou a estrutura operacional padrão da biologia sintética contemporânea: o ciclo \emph{Design-Build-Test-Learn} (DBTL). No estágio de \emph{Design}, o engenheiro conceitua o sistema desejado, escolhe as partes a serem utilizadas, especifica os parâmetros-alvo e constrói modelos matemáticos que preveem o comportamento do sistema. No estágio de \emph{Build}, as partes especificadas são sintetizadas e montadas em construtos de DNA, que são subsequentemente introduzidos em células hospedeiras por transformação, transfecção ou integração cromossomal. No estágio de \emph{Test}, o comportamento do sistema construído é medido experimentalmente --- tipicamente por meio de técnicas como citometria de fluxo, sequenciamento de RNA, espectroscopia de fluorescência e ensaios bioquímicos específicos. No estágio de \emph{Learn}, os dados experimentais são comparados às previsões do modelo, discrepâncias são identificadas, e os parâmetros do modelo são ajustados --- alimentando o próximo ciclo de Design com informação refinada. O ciclo é tipicamente repetido dezenas a centenas de vezes para um único projeto, e a integração entre as etapas computacionais e experimentais é hoje viabilizada por plataformas automatizadas de \emph{cloud labs} e por pipelines de software que conectam diretamente o modelo à síntese de DNA.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=3cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, text width=2.2cm, text centered, rounded corners, minimum height=1.2cm}]
+
+    \node[box, fill=roxodna!20] (design) {DESIGN\\Modelar\\Projetar};
+    \node[box, fill=verdeacido!20, right of=design] (build) {BUILD\\Construir\\Sintetizar};
+    \node[box, fill=laranjacel!20, below of=build] (test) {TEST\\Testar\\Medir};
+    \node[box, fill=azulclaro!30, left of=test] (learn) {LEARN\\Analisar\\Aprender};
+
+    \draw[->, thick, azulescuro, line width=1.5pt] (design) -- (build);
+    \draw[->, thick, azulescuro, line width=1.5pt] (build) -- (test);
+    \draw[->, thick, azulescuro, line width=1.5pt] (test) -- (learn);
+    \draw[->, thick, azulescuro, line width=1.5pt] (learn) -- (design);
+
+\end{tikzpicture}
+\caption{Ciclo \emph{Design-Build-Test-Learn} (DBTL). Cada etapa alimenta a seguinte em uma iteração fechada que refina progressivamente o sistema biológico engenheirado à medida que dados experimentais informam o modelo computacional.}
+\label{fig:14-dbtl}
+\end{figure}
+
 As aplicações da biologia sintética já abrangem um espectro amplo de domínios. Em \emph{biocombustíveis}, cepas de leveduras e de cianobactérias são engenheiradas para converter açúcares ou CO$_2$ em etanol, butanol, isoprenóides e outros hidrocarbonetos de forma mais eficiente que as vias naturais. Em \emph{fármacos}, a produção de compostos complexos como a artemisinina --- princípio ativo da principal terapêutica antimalárica --- foi transferida com sucesso de plantas de baixo rendimento para leveduras de alta produtividade, reduzindo o custo do tratamento em mais de noventa por cento. Em \emph{biossensores}, circuitos sintéticos são projetados para detectar poluentes (arsênio em água, metais pesados no solo), metabólitos de interesse clínico (glicose em diabéticos, marcadores tumorais), ou agentes de ameaça biológica. Em \emph{biomateriais}, bactérias engenheiradas secretam polímeros com propriedades mecânicas programadas (poli-hidroxialcanoatos, seda de aranha recombinante). Em \emph{terapia celular}, células T são modificadas com receptores sintéticos (CAR-T) para reconhecer e eliminar células tumorais, conforme discutido no Capítulo~\ref{cap:13}. E em \emph{biorremediação}, microrganismos engenheirados degradam poluentes persistentes, de hidrocarbonetos aromáticos a plásticos de cadeia longa.
 
 Esses desenvolvimentos não ocorrem no vácuo ético ou regulatório. A biologia sintética opera com organismos geneticamente modificados (OGMs), e a maior parte do trabalho experimental é conduzida em laboratórios classificados segundo níveis de biossegurança (BSL-1 a BSL-4), que especificam as condições de contenção física necessárias em função do risco dos organismos manipulados. BSL-1 aplica-se a organismos não-patogênicos (a levedura \textit{Saccharomyces cerevisiae} engenheirada, por exemplo); BSL-2 a organismos de risco moderado (várias cepas de \textit{Escherichia coli}); BSL-3 a patógenos sérios (o bacilo da tuberculose); e BSL-4 a patógenos de alto risco e sem tratamento eficaz disponível (vírus Ebola, vírus Marburg). O trabalho em biologia sintética é também regulado por protocolos internacionais --- como o Protocolo de Cartagena sobre Biossegurança --- e por códigos de conduta institucional, sendo o comitê de segurança da competição iGEM uma referência importante para práticas responsáveis em nível de graduação. Questões adicionais --- uso dual de resultados de pesquisa, potencial de bioterrorismo, propriedade intelectual sobre organismos engenheirados, impacto ecológico de liberações ambientais, equidade no acesso aos benefícios da tecnologia --- constituem uma agenda ética e política que extrapola os limites da disciplina técnica, mas que nenhuma discussão responsável da biologia sintética pode ignorar.
@@ -31,6 +51,32 @@ O paralelo entre a engenharia biológica e a engenharia clássica --- eletrônic
 
 Os quatro componentes básicos de um construto gênico expresso em uma célula bacteriana correspondem, cada um deles, a uma função molecular bem definida e a uma interface padronizada com os componentes adjacentes. O \emph{promotor} é a região do DNA reconhecida pela RNA polimerase que inicia a transcrição --- corresponde, no vocabulário da eletrônica, a uma fonte de sinal de entrada cuja intensidade é determinada pela sequência do promotor e pela disponibilidade de fatores de transcrição. Promotores são classificados em constitutivos (expressão contínua em condições fisiológicas) e induzíveis (expressão modulada por uma molécula indutora, como IPTG ou arabinose). O sítio de ligação ao ribossomo (\emph{RBS}, do inglês \emph{Ribosome Binding Site}) é a sequência de RNA que recruta o ribossomo para iniciar a tradução --- corresponde a um módulo de ganho ajustável, cuja eficiência depende da sequência e do contexto local. A sequência codificadora (\emph{CDS}, do inglês \emph{Coding Sequence}) é a região de DNA que codifica a proteína de interesse --- o módulo funcional propriamente dito. O terminador é a região do DNA que sinaliza o fim da transcrição --- corresponde a uma porta lógica de saída, garantindo que o RNA mensageiro produzido tenha extensão definida. A montagem em série desses quatro módulos --- promotor, RBS, CDS, terminador --- forma um \emph{construto gênico funcional} capaz de produzir uma proteína específica em uma célula hospedeira.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    % Promotor
+    \draw[->, thick, verdeacido, line width=2pt] (0,0) -- (1,0);
+    \node[below, font=\small] at (0.5,-0.1) {Promotor};
+
+    % RBS
+    \draw[thick, roxodna, fill=roxodna!30] (1.2,0) circle (0.15);
+    \node[below, font=\small] at (1.2,-0.35) {RBS};
+
+    % CDS
+    \draw[->, thick, azulescuro, line width=2pt] (1.5,0) -- (3.5,0);
+    \node[below, font=\small] at (2.5,-0.1) {Gene (CDS)};
+
+    % Terminador
+    \draw[thick, laranjacel, line width=3pt] (3.7,-0.25) -- (3.7,0.25);
+    \node[below, font=\small] at (3.7,-0.4) {Term.};
+
+    % Expressão
+    \draw[->, thick, red, dashed] (2.5,0.5) -- (2.5,1.2) node[above, font=\small] {Proteína};
+\end{tikzpicture}
+\caption{Esquema de um construto gênico funcional padrão. Os quatro módulos --- promotor, RBS, CDS e terminador --- são montados em série sobre o DNA, formando uma unidade transcricional que produz uma proteína específica. Cada módulo tem interfaces moleculares padronizadas que permitem sua intercambiabilidade em projetos de engenharia.}
+\label{fig:14-construto}
+\end{figure}
+
 \begin{definicao}{BioBrick}
 Um BioBrick é uma sequência de DNA com estrutura padronizada de modo que possa ser combinada com outros BioBricks por meio de protocolos de montagem enzimática ou recombinacional, sem necessidade de redesenho individual das interfaces entre componentes. A padronização estabelece que cada BioBrick é flanqueado por sítios de restrição específicos --- tipicamente \emph{Eco}RI e \emph{Xho}I na extremidade 5' e \emph{Spe}I e \emph{Bam}HI na extremidade 3' ---, de modo que a combinação de dois BioBricks produza uma nova sequência também flanqueada pelos mesmos sítios. Essa propriedade --- \emph{clausura sob montagem} --- garante que BioBricks podem ser combinados iterativamente para construir sistemas de complexidade crescente.
 \end{definicao}
@@ -46,6 +92,30 @@ O Registry of Standard Biological Parts é o repositório público de BioBricks 
 \end{definicao}
 
 A caracterização de partes biológicas --- a medição quantitativa de suas propriedades funcionais --- é uma área tão crítica quanto frequentemente subestimada. A força de um promotor, por exemplo, não é uma propriedade intrínseca fixa: depende do contexto cromossomal, do estado fisiológico da célula hospedeira, da composição do meio de cultura e da disponibilidade de fatores de transcrição. A métrica padronizada PoPS (\emph{Polymerase Per Second}, polimerases por segundo) busca capturar a atividade transcricional de um promotor em um valor único independente do contexto, mas medições de PoPS realizadas em diferentes laboratórios ou cepas são frequentemente inconsistentes, e a própria definição operacional de PoPS permanece em evolução. De modo análogo, a eficiência de um RBS --- medida pela taxa de iniciação de tradução por unidade de tempo --- depende da estrutura secundária local do mRNA e da competição por ribossomos na célula, e ferramentas computacionais como o RBS Calculator de Salis tentam prevê-la a partir da sequência. A curva dose-resposta de um promotor induzível --- relação entre concentração do indutor e nível de expressão --- tipicamente exibe formato sigmoidal característico da equação de Hill, com parâmetros EC$_{50}$ (concentração de indutor que produz metade da expressão máxima) e coeficiente de Hill $n$ (cooperatividade), e o ajuste experimental dessa curva é a base da caracterização de sistemas de expressão indutível.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    % Eixos
+    \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$[\text{Indutor}]$};
+    \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {Expressão};
+
+    % Curva dose-resposta (Hill)
+    \draw[thick, verdeacido, line width=1.5pt, domain=0:3.8, samples=100] plot (\x, {2.5/(1+exp(-2*(\x-1.5)))});
+
+    % Parâmetros
+    \draw[dashed, gray] (0,1.25) -- (1.5,1.25) -- (1.5,0);
+    \node[left, font=\footnotesize] at (-0.05,1.25) {$V_{1/2}$};
+    \node[below, font=\footnotesize] at (1.5,-0.05) {EC$_{50}$};
+    \draw[dashed, gray] (0,2.5) -- (4,2.5);
+    \node[left, font=\footnotesize] at (-0.05,2.5) {$V_{\max}$};
+
+    % Ponto EC50
+    \fill[blue] (1.5,1.25) circle (2pt);
+\end{tikzpicture}
+\caption{Curva dose-resposta sigmoidal característica de um promotor induzível. A expressão do gene-alvo varia com a concentração do indutor seguindo uma sigmoide de Hill, com o parâmetro EC$_{50}$ marcando a concentração de indutor em que se atinge metade da expressão máxima $V_{\max}$. O coeficiente de Hill $n$ (igual a 2 no exemplo) controla a inclinação da sigmoide.}
+\label{fig:14-hill}
+\end{figure}
 
 A combinação de padronização, caracterização e ferramentas computacionais estabelece, em conjunto, as condições para que a biologia sintética se desenvolva como uma disciplina cumulativa --- isto é, na qual resultados obtidos em um laboratório possam ser reutilizados, combinados e estendidos por outros laboratórios, sem necessidade de revalidar tudo do zero. O Registry iGEM é, nesse sentido, um repositório público deprimível para a disciplina, comparável aos repositórios de componentes eletrônicos ou de bibliotecas de código aberto. Sua manutenção, expansão e curadoria são, por isso, tarefas coletivas da comunidade de biologia sintética, com importância estratégica para o desenvolvimento da disciplina como um todo.
 
@@ -84,6 +154,33 @@ A modelagem matemática do toggle switch descreve a evolução temporal das conc
 onde $\alpha_1$ e $\alpha_2$ são as taxas máximas de produção de $u$ e $v$, e $\beta$ e $\gamma$ são os coeficientes de Hill das repressões, que medem o grau de cooperatividade --- um coeficiente de Hill maior do que um indica que a repressão não é puramente hiperbólica, e traduz, no nível molecular, a ligação de múltiplas subunidades do repressor ao operador. As concentrações no estado estacionário satisfazem as equações algébricas $u = \alpha_1/(1+v^\beta)$ e $v = \alpha_2/(1+u^\gamma)$, que definem as \emph{nullclines} do sistema no plano $(u,v)$ --- curvas sobre as quais $\mathrm{d}u/\mathrm{d}t = 0$ e $\mathrm{d}v/\mathrm{d}t = 0$, respectivamente. As interseções das nullclines são os pontos de equilíbrio do sistema, e sua estabilidade depende dos autovalores da matriz jacobiana avaliada em cada ponto.
 
 A análise do sistema revela que, dependendo dos parâmetros, ele pode ter um único ponto de equilíbrio estável --- quando uma das repressões é fraca --- ou três pontos de equilíbrio --- quando as duas repressões são suficientemente fortes. Dos três, dois são estáveis (correspondendo aos dois estados de memória do circuito) e um é instável (separatriz entre as duas bacias de atração). A condição matemática para existência de três pontos de equilíbrio --- e, portanto, de bistabilidade --- pode ser expressa em forma compacta como
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    \draw[->] (0,0) -- (4.2,0) node[right, font=\small] {$u$};
+    \draw[->] (0,0) -- (0,4.2) node[above, font=\small] {$v$};
+
+    % Nullclines
+    \draw[thick, verdeacido, domain=0:3.8, samples=100] plot (\x, {3/(1+\x^2)});
+    \draw[thick, laranjacel, domain=0:3.8, samples=100] plot ({3/(1+\x^2)}, \x);
+
+    % Pontos de equilíbrio
+    \fill[blue] (0.5,2.8) circle (2.5pt) node[above right, font=\footnotesize] {Estável};
+    \fill[red] (1.5,1.5) circle (2.5pt) node[above right, font=\footnotesize] {Instável};
+    \fill[blue] (2.8,0.5) circle (2.5pt) node[above right, font=\footnotesize] {Estável};
+
+    % Trajetórias
+    \draw[->, thick, gray, dashed] (0.3,1.5) -- (0.4,2.5);
+    \draw[->, thick, gray, dashed] (2.5,1.5) -- (2.6,0.7);
+
+    \node[below, font=\small] at (2,-0.3) {Repressor A};
+    \node[left, font=\small, rotate=90] at (-0.6,2) {Repressor B};
+\end{tikzpicture}
+\caption{Retrato de fase do toggle switch de Gardner--Cantor--Collins. As duas curvas representam as \emph{nullclines} --- loci onde $\mathrm{d}u/\mathrm{d}t = 0$ (verde) e $\mathrm{d}v/\mathrm{d}t = 0$ (laranja) --- e suas três interseções são os pontos de equilíbrio do sistema. Os dois pontos em azul são estáveis (correspondendo aos dois estados de memória) e o ponto em vermelho é o equilíbrio instável que separa suas bacias de atração. Setas cinza indicam trajetórias que convergem para cada estado estável.}
+\label{fig:14-toggle}
+\end{figure}
+
 \begin{equation*}
 \alpha_1 \alpha_2 > (\beta + 1)(\gamma + 1),
 \end{equation*}
@@ -94,6 +191,26 @@ A interpretação dinâmica da bistabilidade é direta: dependendo do estado ini
 
 
 O repressilator de Elowitz e Leibler (2000) é o segundo circuito paradigmático da biologia sintética, e o primeiro oscilador genético sintético robusto. Sua topologia é uma rede de repressão cíclica composta por três genes --- identificados no trabalho original como \textit{lacI}, \textit{tetR} e \textit{cI} ---, na qual cada gene reprime o seguinte em uma cadeia fechada: \textit{lacI} reprime \textit{tetR}, \textit{tetR} reprime \textit{cI}, e \textit{cI} reprime \textit{lacI}, completando o ciclo. Quando as repressões são suficientemente fortes e os parâmetros de degradação obedecem a certas relações, o sistema oscila espontaneamente em regime permanente: as concentrações das três proteínas apresentam perfis temporais aproximadamente senoidais, defasados entre si de aproximadamente um terço do período. A demonstração experimental do repressilator --- feita em \textit{Escherichia coli} com GFP como repórter --- produziu o primeiro registro visualizado de oscilação genética sintética, com períodos da ordem de duas a três horas e amplitudes detectáveis por microscopia de fluorescência.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Três genes em círculo
+    \node[draw, circle, fill=verdeacido!30, minimum size=1.2cm] (lacI) at (90:2) {\textit{lacI}};
+    \node[draw, circle, fill=laranjacel!30, minimum size=1.2cm] (tetR) at (210:2) {\textit{tetR}};
+    \node[draw, circle, fill=roxodna!30, minimum size=1.2cm] (cI) at (330:2) {\textit{cI}};
+
+    % Repressão circular
+    \draw[-|, thick, red, line width=1.5pt] (lacI) to[bend right=20] (tetR);
+    \draw[-|, thick, red, line width=1.5pt] (tetR) to[bend right=20] (cI);
+    \draw[-|, thick, red, line width=1.5pt] (cI) to[bend right=20] (lacI);
+
+    % Centro
+    \node[font=\small] at (0,0) {Ciclo de\\repressão};
+\end{tikzpicture}
+\caption{Topologia do repressilator de Elowitz--Leibler. Três repressores transcricionais --- \textit{lacI}, \textit{tetR}, \textit{cI} --- organizam-se em uma cadeia cíclica de repressão onde cada gene reprime o próximo, fechando o anel. A combinação de repressão forte e degradação assimétrica produz oscilações espontâneas sustentadas.}
+\label{fig:14-repressilator}
+\end{figure}
 
 \begin{definicao}{Repressilator}
 O repressilator é o circuito sintético composto por três genes em uma cadeia de repressão cíclica --- gene 1 reprime gene 2, gene 2 reprime gene 3, gene 3 reprime gene 1 ---, projetado para produzir oscilações espontâneas sustentadas nas concentrações das três proteínas correspondentes. As oscilações emergem da estrutura topológica do circuito --- um ciclo negativo de comprimento ímpar ---, em conjunto com parâmetros cinéticos apropriados (repressão forte, com coeficientes de Hill elevados, e taxas de degradação desequilibradas entre mRNA e proteína).
@@ -146,6 +263,43 @@ A engenharia metabólica é a disciplina que aplica técnicas de DNA recombinant
 Três estratégias elementares dominam o repertório da engenharia metabólica. A primeira, chamada \emph{superexpressão} (\emph{overexpression}), consiste em aumentar a expressão de enzimas limitantes da via pela substituição do promotor nativo por um promotor forte, ou pela introdução de múltiplas cópias do gene correspondente, frequentemente após otimização de códons para a maquinaria de tradução do organismo hospedeiro. A segunda, \emph{deleção gênica} (\emph{gene knockout}), visa eliminar reações ou vias competidoras que consomem o precursor desejado ou produzem subprodutos indesejáveis. As técnicas para deleção são variadas --- recombinação homóloga clássica, sistemas de recombinação site-specific como Cre/lox e FLP/FRT, e mais recentemente CRISPR-Cas9, que se tornou o método padrão pela combinação de simplicidade, eficiência e baixo custo. A terceira estratégia, \emph{expressão heteróloga}, consiste em introduzir em um organismo hospedeiro genes de outra espécie --- ou mesmo de um domínio da vida diferente ---, permitindo a produção de compostos que a maquinaria nativa do hospedeiro não consegue sintetizar.
 
 A combinação dessas três estratégias é tipicamente organizada em uma estrutura chamada \emph{push-pull-block} (literalmente, ``empurrar-puxar-bloquear''), que nomeia as três ações sobre uma via sequencial $S \rightarrow I \rightarrow P$. O \emph{push} --- etapa de empuxo --- consiste em superexpressar a enzima que converte $S$ em $I$, aumentando o fluxo que entra na via. O \emph{pull} --- etapa de puxão --- consiste em superexpressar a enzima que converte $I$ em $P$, acelerando a remoção do intermediário $I$ e, por consequência, aliviando qualquer toxicidade associada ao acúmulo desse intermediário. O \emph{block} --- etapa de bloqueio --- consiste em deletar genes que desviam $I$ para vias competidoras, garantindo que o máximo possível de $I$ flua para a produção de $P$. A combinação das três ações desloca o equilíbrio de fluxos na direção desejada, e é a base conceitual sobre a qual otimizações iterativas --- com medições experimentais e ajustes dos níveis de superexpressão --- são conduzidas até que o rendimento do produto atinja o alvo desejado.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, node distance=2cm]
+    % Substrato
+    \node[draw, circle, fill=azulclaro!30, minimum size=1cm] (S) at (0,0) {$S$};
+
+    % Intermediário
+    \node[draw, circle, fill=verdeacido!30, minimum size=1cm] (I) at (3,0) {$I$};
+
+    % Produto
+    \node[draw, circle, fill=laranjacel!30, minimum size=1cm] (P) at (6,0) {$P$};
+
+    % Via competidora
+    \node[draw, circle, fill=gray!30, minimum size=0.8cm] (X) at (3,-2) {$X$};
+
+    % Setas principais
+    \draw[->, thick, verdeacido, line width=2pt] (S) -- (I) node[midway, above, font=\small] {PUSH};
+    \draw[->, thick, laranjacel, line width=2pt] (I) -- (P) node[midway, above, font=\small] {PULL};
+
+    % Via competidora
+    \draw[->, thick, gray] (I) -- (X);
+    \draw[red, line width=3pt] (2.75,-0.85) -- (3.25,-1.35);
+    \draw[red, line width=3pt] (3.25,-0.85) -- (2.75,-1.35);
+
+    % Labels
+    \node[above, font=\small] at (1.5,0.5) {Superexpressão};
+    \node[above, font=\small] at (4.5,0.5) {Superexpressão};
+    \node[below, font=\small] at (3,-2.5) {Knockout};
+
+    \node[below, font=\footnotesize] at (0,-0.7) {Substrato};
+    \node[below, font=\footnotesize] at (3,-0.7) {Intermediário};
+    \node[below, font=\footnotesize] at (6,-0.7) {Produto alvo};
+\end{tikzpicture}
+\caption{Estratégia \emph{push-pull-block} em engenharia metabólica. O substrato $S$ é convertido em intermediário $I$, e este em produto $P$. As três ações elementares --- \emph{push} (superexpressão da enzima $S \to I$), \emph{pull} (superexpressão da enzima $I \to P$) e \emph{block} (knockout da via competidora $I \to X$) --- deslocam o fluxo de matéria na direção desejada e reduzem o desvio para subprodutos.}
+\label{fig:14-pushpull}
+\end{figure}
 
 O balanceamento de cofatores é uma dimensão frequentemente subestimada, mas crítica, do projeto de vias metabólicas engenheiradas. As reações celulares não ocorrem isoladas: muitas requerem NADH ou NADPH como doadores de elétrons, ATP como fonte de energia, e outros cofatores (acetil-CoA, S-adenosilmetionina, tetrahidrofolato) em quantidades estequiométricas precisas. A disponibilidade desses cofatores depende do estado metabólico global da célula --- que muda durante o crescimento, em resposta a estresses, e em diferentes fases do ciclo de fermentação ---, e vias engenheiradas que ignoram essas restrições rapidamente se tornam limitadas por deficits de cofatores. Estratégias de engenharia de cofatores incluem a modificação da especificidade de enzimas para alternar entre NADH e NADPH, a superexpressão de transidrogenases que interconvertem essas duas formas, e o redirecionamento de vias centrais (como a via das pentoses-fosfato) para aumentar a produção de NADPH. Em sistemas de produção em escala industrial, o balanceamento de cofatores é frequentemente o gargalo que limita a produtividade final, mais do que a simples superexpressão das enzimas da via sintética.
 

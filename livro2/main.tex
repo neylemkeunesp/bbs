@@ -73,6 +73,13 @@
 \newcommand{\definicao}[2]{\begin{definicaoenv}[#1]#2\end{definicaoenv}}
 \newcommand{\exemplo}[2]{\begin{exemploenumv}[#1]#2\end{exemploenumv}}
 \newcommand{\importante}[1]{\begin{quote}\itshape #1\end{quote}}
+
+% Shim de compatibilidade com macros Beamer (para portar TikZ dos slides)
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\newenvironment{block}[1]{\begin{tcolorbox}[colback=azulclaro!10,colframe=azulescuro,title=#1,fonttitle=\bfseries,breakable]}{\end{tcolorbox}}
+\newenvironment{alertblock}[1]{\begin{tcolorbox}[colback=red!10,colframe=red!80!black,title=#1,fonttitle=\bfseries,breakable]}{\end{tcolorbox}}
+\newenvironment{exampleblock}[1]{\begin{tcolorbox}[colback=verdeacido!10,colframe=verdeacido!80!black,title=#1,fonttitle=\bfseries,breakable]}{\end{tcolorbox}}
 \newcommand{\destaque}[1]{\begin{equation*}#1\end{equation*}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
