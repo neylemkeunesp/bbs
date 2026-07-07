@@ -504,7 +504,31 @@ de ação, mas com amplitude reduzida.
 O ERP cardíaco é maior do que o neuronal por mais de cem vezes --- duração
 que combina com a duração do ciclo cardíaco. Em frequências mais altas,
 o ERP é proporcionalmente mais curto, mas não o suficiente para acomodar
-mais ciclos: existe uma frequência máxima intrínseca.
+mais ciclos: existe uma frequência máxima intrínseca. A
+Figura~\ref{fig:12-refrat} ilustra o conceito: o primeiro PA
+(curva azulescura) é seguido de um período refratário efetivo (ERP)
+sombreado em vermelho, durante o qual nenhum estímulo --- por mais
+intenso que seja --- consegue deflagrar um novo PA. A parte final do
+ERP corresponde ao período refratário relativo, em que estímulo
+supra-limiar consegue gerar PA de menor amplitude.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    % AP
+    \draw[->] (0,0) -- (6,0) node[right, font=\tiny] {Tempo};
+    \draw[->] (0,-0.5) -- (0,3.5) node[above, font=\tiny] {V$_m$};
+
+    % First AP
+    \draw[thick, azulescuro] (0.5,0) -- (1,3) -- (1.3,2.5) -- (3,2.4) -- (3.5,0) -- (4.5,0);
+
+    % Refractory periods
+    \fill[red!20, opacity=0.5] (0.5,0) rectangle (3.5,3.5);
+    \node[font=\tiny] at (2,1.7) {Período Refratário};
+\end{tikzpicture}
+\caption{Período refratário efetivo (ERP). Após o término de um potencial de ação (curva azulescura), a célula entra em estado refratário (região sombreada em vermelho) durante o qual não consegue gerar novo PA --- é a base do \emph{período refratário absoluto} ($\sim 150$--$200$ ms). Após este período, segue-se o \emph{período refratário relativo}, em que estímulo mais intenso consegue deflagrar um PA de amplitude reduzida. O ERP é a base da frequência máxima intrínseca do coração.}
+\label{fig:12-refrat}
+\end{figure}
 
 \section{Modelos Computacionais do Cardiomiócito}
 \label{sec:12-modelos}
@@ -613,8 +637,55 @@ predizer arritmias sob condições clínicas. A escolha do modelo depende
 da pergunta: para uma resposta qualitativa sobre o comportamento do
 PA, cinco variáveis bastam; para simular perturbações em canais
 cardíacos sob tratamento farmacológico, é necessário um modelo de
-escala humana.
+escala humana. A Figura~\ref{fig:12-celula-sr} ilustra a
+arquitetura mínima do cardiomiócito para modelagem do acoplamento
+excitação-contração: o \textbf{sarcolema} (membrana plasmática) com
+canais de $\mathrm{Ca}^{2+}$ tipo L ($I_{\mathrm{Ca},L}$), e o
+\textbf{retículo sarcoplasmático (SR)} que armazena e libera
+$\mathrm{Ca}^{2+}$ via receptores de rianodina (RyR).
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.6]
+    % Cell membrane
+    \draw[thick] (0,0) rectangle (4,3);
+    \node[above] at (2,3) {\tiny Sarcolema};
+
+    % SR
+    \draw[thick, roxodna] (0.5,0.5) rectangle (3.5,2.5);
+    \node at (2,1.5) {\tiny SR};
+
+    % Ca fluxes
+    \draw[->, thick, red] (0.2,2) -- node[left, font=\tiny] {I$_{Ca,L}$} (0.2,1);
+    \draw[->, thick, verdeacido] (2,0.5) -- node[below, font=\tiny] {Uptake} (2,0.2);
+    \draw[->, thick, azulclaro] (2,2.5) -- node[above, font=\tiny] {Release} (2,2.8);
+\end{tikzpicture}
+\caption{Diagrama simplificado do cardiomiócito mostrando os dois compartimentos principais para modelagem do $\mathrm{Ca}^{2+}$: o \textbf{sarcolema} (membrana externa) com canais de $\mathrm{Ca}^{2+}$ tipo L ($I_{\mathrm{Ca},L}$ --- entrada de $\mathrm{Ca}^{2+}$), e o \textbf{retículo sarcoplasmático (SR)} que armazena e libera $\mathrm{Ca}^{2+}$ via RyR (\emph{release}). A recaptação para o SR (\emph{uptake}) é mediada pela bomba SERCA. A integração desses fluxos determina a concentração citosólica de $\mathrm{Ca}^{2+}$ que, por sua vez, controla a contração.}
+\label{fig:12-celula-sr}
+\end{figure}
+
+A Figura~\ref{fig:12-tradeoff} ilustra o trade-off fundamental em
+modelagem cardíaca: o realismo (e o custo computacional) cresce
+assintoticamente com a complexidade do modelo, mas há retornos
+decrescentes --- a partir de certo ponto, adicionar mais variáveis não
+melhora substancialmente a capacidade preditiva. Modelos de cinco
+variáveis capturam o PA qualitativo; modelos de trinta ou mais
+(O'Hara-Rudy) capturam arritmias e resposta a fármacos.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Axes
+    \draw[->] (0,0) -- (8,0) node[right] {Complexidade};
+    \draw[->] (0,0) -- (0,5) node[above] {Realismo/Custo};
+
+    % Curve for realism
+    \draw[thick, verdeacido, domain=0:7, samples=100]
+        plot (\x, {3.5*(1-exp(-\x/2))}) node[right] {\tiny Realismo};
+\end{tikzpicture}
+\caption{Trade-off entre complexidade do modelo e realismo/custo computacional. A curva verde --- assintótica --- mostra que adicionar variáveis além de certo ponto ($\sim 15$--$20$ variáveis) traz retornos decrescentes em realismo preditivo. O eixo vertical é compartilhado: o mesmo gráfico ilustra tanto o ganho em capacidade de reproduzir fenômenos quanto o custo computacional em FLOPS. A escolha de modelo é ditada pela pergunta: pesquisa qualitativa --- cinco variáveis bastam; previsão quantitativa em escala clínica --- modelos humanos detalhados.}
+\label{fig:12-tradeoff}
+\end{figure}
 
 \section{Acoplamento Excitação-Contração}
 \label{sec:12-ec}
@@ -651,7 +722,37 @@ gradiente, e ao trocador NCX (Na-Ca exchanger) da membrana plasmática,
 que remove Ca$^{2+}$ do citosol em troca de Na$^+$. O relaxamento
 subsequente é passivo em termos de energia química, mas o gradiente de
 Ca$^{2+}$ é restaurado a custo de ATP pela SERCA --- e é essa bomba, e não
-a miosina, que é o maior consumidor de ATP do ciclo cardíaco.
+a miosina, que é o maior consumidor de ATP do ciclo cardíaco. A
+Figura~\ref{fig:12-ttub-rsr} ilustra a arquitetura molecular do
+acoplamento: o \textbf{T-túbulo} (invaginação do sarcolema) traz o
+sinal elétrico para o interior da célula; o canal \textbf{DHPR}
+(receptor de dihidropiridina, \emph{L-type Ca channel}) no T-túbulo
+detecta a despolarização e abre; o \textbf{RyR} (receptor de rianodina)
+na membrana do SR é ativado mecanicamente pelo DHPR e libera
+$\mathrm{Ca}^{2+}$ armazenado --- o CICR.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    % T-tubule and SR
+    \draw[thick] (0,0) -- (4,0) node[right, font=\tiny] {T-tubule};
+    \draw[thick, roxodna] (0,-2) -- (4,-2) node[right, font=\tiny] {SR};
+
+    % DHPR (L-type Ca channel)
+    \draw[thick, fill=laranjacel!50] (1.5,-0.3) rectangle (1.8,0.3);
+    \node[above, font=\tiny] at (1.65,0.5) {DHPR};
+
+    % RyR
+    \draw[thick, fill=azulclaro!50] (1.5,-1.7) rectangle (1.8,-2.3);
+    \node[below, font=\tiny] at (1.65,-2.5) {RyR};
+
+    % Arrow for Ca release
+    \draw[->, thick, red] (1.65,-1.6) -- (1.65,-0.4);
+    \node[right, font=\tiny, red] at (1.8,-1) {Ca$^{2+}$};
+\end{tikzpicture}
+\caption{Acoplamento molecular DHPR-RyR no cardiomiócito. O \textbf{T-túbulo} (acima) é uma invaginação do sarcolema que leva o sinal elétrico para o interior da célula; o \textbf{DHPR} (receptor de dihidropiridina, \emph{L-type Ca channel}) é o sensor de voltagem que detecta a despolarização. O \textbf{RyR} (receptor de rianodina) é o canal de liberação de $\mathrm{Ca}^{2+}$ do retículo sarcoplasmático (abaixo). A seta vermelha indica o fluxo de $\mathrm{Ca}^{2+}$ --- primeiro entrando via DHPR (trigger calcium), depois amplificado pela liberação via RyR (CICR, \emph{calcium-induced calcium release}). A proximidade de $\sim 12$ nm entre DHPR e RyR é crucial para a eficiência do acoplamento.}
+\label{fig:12-ttub-rsr}
+\end{figure}
 
 \subsection{Modelo de Dois Compartimentos para Ca$^{2+}$}
 \label{sub:image12-ca-modelo}
@@ -677,7 +778,28 @@ transitório de Ca$^{2+}$ enfraquece a contração. No \emph{dano por
 isquemia-reperfusão}, a sobrecarga de Ca$^{2+}$ no início da reperfusão
 gera contrações anômalas e arritmias. Nas canalopatias --- mutações em
 RyR2 --- o canal libera Ca$^{2+}$ espontaneamente fora do ciclo do PA,
-gerando \emph{afterdepolarizations} e taquicardias.
+gerando \emph{afterdepolarizations} e taquicardias. A
+Figura~\ref{fig:12-sarcomero} ilustra a organização molecular do
+sarcômero: o filamento \textbf{fino} (actina, verde) e o filamento
+\textbf{grosso} (miosina, roxo) interdigitados, com as cabeças de
+miosina projetando-se em direção aos sítios de ligação da actina. A
+hidrólise de ATP nas cabeças de miosina gera o \emph{power stroke}
+que desliza os filamentos --- o encurtamento do sarcômero.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.6]
+    % Thin filament (actin)
+    \draw[thick, verdeacido] (0,2) -- (5,2);
+    \node[above, font=\tiny] at (2.5,2) {Actina};
+
+    % Thick filament (myosin)
+    \draw[thick, roxodna] (0,0) -- (5,0);
+    \node[below, font=\tiny] at (2.5,0) {Miosina};
+\end{tikzpicture}
+\caption{Esquema simplificado do sarcômero --- unidade contrátil do cardiomiócito. Os filamentos \textbf{finos} de actina (acima, verde) e os filamentos \textbf{grossos} de miosina (abaixo, roxo) estão interdigitados. As cabeças de miosina projetam-se do filamento grosso em direção aos sítios de ligação da actina no filamento fino. A ligação actina-miosina --- disparada pelo $\mathrm{Ca}^{2+}$ ligado à troponina C --- e a hidrólise de ATP subsequente produzem o \emph{power stroke}, deslocando os filamentos e encurtando o sarcômero.}
+\label{fig:12-sarcomero}
+\end{figure}
 
 \subsection{Geração de Força e Lei de Frank-Starling}
 \label{sub:image12-frank-starling}
@@ -740,6 +862,35 @@ plt.legend(); plt.grid(alpha=0.3); plt.tight_layout()
 plt.savefig('frank_starling.png', dpi=150)
 \end{lstlisting}
 
+A Figura~\ref{fig:12-frank-starling} apresenta a curva clássica de
+Frank-Starling --- força ativa em função do comprimento do sarcômero.
+O \emph{ramo ascendente} (até $L_0 \approx 2{,}0$--$2{,}2\,\mu$m)
+reflete o aumento de sobreposição actina-miosina; o \emph{platô} em
+uma faixa estreita, a sobreposição ótima; o \emph{ramo descendente}
+(acima de $2{,}4\,\mu$m) reflete a perda de sobreposição. Em
+condições fisiológicas, o coração opera predominantemente no ramo
+ascendente, com margem para ajuste por pré-carga.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Force-length curve
+    \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {Comprimento (L/L$_0$)};
+    \draw[->] (0,0) -- (0,4) node[above, font=\tiny] {Força};
+
+    % Ascending limb
+    \draw[thick, azulescuro, domain=0.8:2, samples=50]
+        plot (\x, {2.5*(\x-0.8)});
+
+    % Plateau
+    \draw[thick, verdescuro] (2,3) -- (2.4,3);
+
+    % Descending limb
+    \draw[thick, rojascuro] (2.4,3) -- (3,0);
+\end{tikzpicture}
+\caption{Curva clássica de Frank-Starling --- força ativa em função do comprimento do sarcômero. O \textbf{ramo ascendente} (azulescuro, $L < L_0$) reflete o aumento de sobreposição actina-miosina --- quanto mais distendido o sarcômero, mais pontes cruzadas se formam. O \textbf{platô} (verde-escuro, $L \approx L_0$ a $1{,}2 L_0$) marca a sobreposição ótima. O \textbf{ramo descendente} (vermelho, $L > 1{,}2 L_0$) reflete a perda de sobreposição e queda de força. A lei de Frank-Starling --- \emph{a força é proporcional ao comprimento inicial} --- explica o aumento automático do débito sistólico em resposta a aumento de pré-carga.}
+\label{fig:12-frank-starling}
+\end{figure}
 
 \section{Propagação e Arritmias}
 \label{sec:12-propagacao}
@@ -787,7 +938,25 @@ efetivo (ERP):
 \end{equation}
 A condição necessária é que o perímetro do circuito exceda $\lambda$ ---
 caso contrário, a frente encontra tecido em refratura ao retornar e é
-extinguida.
+extinguida. A Figura~\ref{fig:12-reentry} ilustra o circuito de
+reentrada: uma onda espiral gira em torno de um obstáculo central,
+com bloqueio unidirecional --- o tecido é refratário na direção
+retrógrada mas excitável na direção anterógrada, permitindo a
+persistência indefinida da frente de onda.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Reentry circuit
+    \draw[ultra thick, azulescuro] (0,0) circle (1.5);
+
+    % Obstacle
+    \draw[fill=gray!50] (0,0) circle (0.5);
+    \node at (0,0) {\tiny Obstáculo};
+\end{tikzpicture}
+\caption{Circuito de reentrada em uma região com obstáculo central (região cinza). A frente de onda (azul) gira em torno do obstáculo, formando uma espiral. A condição para sustentação é que o comprimento de onda $\lambda = \theta \times \mathrm{ERP}$ seja menor que o perímetro do circuito --- caso contrário, a frente encontra tecido em refratura ao retornar e é extinta. O bloqueio unidirecional é a chave: o tecido é refratário em uma direção, excitável na outra, permitindo a reentrada.}
+\label{fig:12-reentry}
+\end{figure}
 
 \subsection{Fibrilação Atrial}
 \label{sub:image12-fa}
@@ -805,7 +974,29 @@ experimental crucial: episódios prolongados de FA reduzem o APD atrial
 (por \emph{remodeling} --- inativação de $I_{\mathrm{Ca},L}$ e aumento
 de $I_{\mathrm{K1}}$) e promovem estabilidade da própria arritmia. A
 intervenção precoce --- cardioversão ou ablação --- é fundamental para
-prevenir a cronificação.
+prevenir a cronificação. A Figura~\ref{fig:12-fibrilacao}
+ilustra o padrão de ativação caótica: múltiplas espirais (rotores)
+coexistem no tecido atrial, com frentes de onda fragmentadas e
+dessincronizadas --- a assinatura eletrofisiológica da fibrilação
+atrial.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    % Chaotic activation
+    \draw[thick] (0,0) rectangle (4,4);
+
+    % Multiple spirals
+    \foreach \x/\y in {1/1, 2.5/3, 3.5/1.5} {
+        \draw[ultra thick, red, ->] (\x,\y)
+            .. controls ++(0.3,0.3) and ++(-0.3,0.3) .. ++( 0,0.5)
+            .. controls ++(0.3,0) and ++(0.3,0.3) .. ++(0.5,0)
+            .. controls ++(0,-0.3) and ++(0.3,-0.3) .. ++(0,-0.5);
+    }
+\end{tikzpicture}
+\caption{Ativação caótica característica de fibrilação atrial. Múltiplas espirais (rotores) --- três representadas no exemplo --- coexistem no tecido, com frentes de onda fragmentadas e colidindo umas com as outras. Esta é a assinatura eletrofisiológica da FA, distinguindo-a de taquiarritmias organizadas (que mantêm um único circuito de reentrada). A complexidade espacial e temporal --- $\sim 400$--$600$ batimentos por minuto --- impede contração atrial coordenada.}
+\label{fig:12-fibrilacao}
+\end{figure}
 
 Modelos computacionais de FA, especialmente os que incorporam rotores
 e múltiplas ondas, têm ajudado a guiar estratégias de ablação:
@@ -857,7 +1048,31 @@ antipsicóticos como haloperidol) e prolongam o QT. O risco arrítmico --- na
 forma de \emph{torsades de pointes} --- motivou protocolos regulatórios
 que exigem teste in silico para qualquer nova droga. Os modelos de
 O'Hara-Rudy e ten Tusscher são usados rotineiramente para prever
-prolongamento QT a partir de perfis de bloqueio iônico.
+prolongamento QT a partir de perfis de bloqueio iônico. A
+Figura~\ref{fig:12-lqts} compara o potencial de ação normal (verde)
+com o PA na síndrome do QT longo (vermelho), este com uma
+\emph{early afterdepolarization} (EAD) durante a Fase 2 --- uma
+segunda despolarização que pode deflagrar \emph{torsades de
+pointes} e fibrilação ventricular.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.6]
+    % Normal AP
+    \draw[thick, verdeacido] (0,0) -- (0.5,0) -- (0.7,2.5) -- (1,2.3) -- (2.5,2.2) -- (3,0) -- (4,0);
+    \node[left, font=\tiny] at (0,1.2) {Normal};
+
+    % LQTS AP with EAD
+    \begin{scope}[yshift=-1.5cm]
+        \draw[thick, red] (0,0) -- (0.5,0) -- (0.7,2.5) -- (1,2.3) -- (3,2.2);
+        % EAD
+        \draw[thick, red] (2,2.2) -- (2.2,2.7) -- (2.4,2.2);
+    \end{scope}
+    \node[left, font=\tiny] at (0,-0.3) {LQTS};
+\end{tikzpicture}
+\caption{Comparação entre o potencial de ação normal (curva verde, topo) e o PA na síndrome do QT longo (curva vermelha, abaixo). Na LQTS, o prolongamento do platô e a inativação heterogênea de $I_{\mathrm{Kr}}$ (ou $I_{\mathrm{Ks}}$) permitem o reaparecimento transitório de corrente de entrada --- tipicamente $I_{\mathrm{Ca},L}$ reativado --- que gera uma \emph{early afterdepolarization} (EAD, segundo pico em forma de corcunda na curva vermelha). A EAD pode atingir o limiar de disparo e deflagrar \emph{torsades de pointes}, que pode degenerar em fibrilação ventricular.}
+\label{fig:12-lqts}
+\end{figure}
 
 \begin{exemploenv}[Modulação da velocidade de propagação por drogas]
 Bloqueadores de canais de sódio (classe I da classificação Vaughan-Williams)
