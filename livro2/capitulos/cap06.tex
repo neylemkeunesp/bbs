@@ -34,6 +34,41 @@ dogma: sabe-se hoje que o RNA pode regular outros RNAs (via miRNA e siRNA), que 
 proteínas prions propagam informação estrutural sem envolvimento do DNA, e que a epigenética
 transmite informação hereditária por modificações que não alteram a sequência nucleotídica.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, text width=2.4cm,
+                text centered, rounded corners, minimum height=0.9cm, font=\large}
+]
+
+    \node[box, fill=roxodna!30]    (dna)  at (0,0)   {\textbf{DNA}};
+    \node[box, fill=laranjacel!30] (rna)  at (5.2,0)  {\textbf{RNA}};
+    \node[box, fill=verdeacido!30] (prot) at (10.4,0) {\textbf{Proteína}};
+
+    % Replicação (loop)
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (dna) to[out=120, in=60, looseness=6]
+        node[pos=0.5, above=8mm, font=\normalsize\bfseries, color=azulescuro]
+            {Replicação}
+        (dna);
+
+    % Transcrição
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (dna) -- (rna)
+        node[midway, above=4mm, font=\normalsize\bfseries, color=azulescuro]
+            {Transcrição};
+
+    % Tradução
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (rna) -- (prot)
+        node[midway, above=4mm, font=\normalsize\bfseries, color=azulescuro]
+            {Tradução};
+
+\end{tikzpicture}
+\caption{Dogma central da biologia molecular, formulado por Crick em 1958. O fluxo canônico de informação genética vai do DNA ao RNA por \emph{transcrição}, e do RNA à proteína por \emph{tradução}. A \emph{replicação} do DNA é o mecanismo que permite a transmissão fiel da informação genética ao longo das gerações. Exceções notáveis --- como a transcrição reversa em retrovírus --- não invalidam o dogma, mas o complementam.}
+\label{fig:06-dogma}
+\end{figure}
+
 Nesse contexto, a palavra ``gene'' ganhou múltiplas definições ao longo do século XX. A
 definição operacional mais útil para a Biologia de Sistemas é:
 
@@ -121,6 +156,43 @@ sua conformação e reduzindo sua afinidade pelo operador. O repressor se dissoc
 transcrição ocorre. A regulação positiva pelo CAP (\textit{catabolite activator protein})
 garante que o operon lac só seja fortemente ativado na ausência de glicose (a fonte de
 carbono preferida), via aumento dos níveis intracelulares de AMPc.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\small}]
+    % Linha de DNA
+    \draw[thick] (0,0) -- (10,0);
+
+    % Promotor
+    \fill[roxodna!50] (0.5,-0.3) rectangle (1.5,0.3);
+    \node[above, font=\small] at (1,0.3) {P};
+
+    % Operador
+    \fill[red!50] (1.7,-0.3) rectangle (2.7,0.3);
+    \node[above, font=\small] at (2.2,0.3) {O};
+
+    % Genes
+    \fill[verdeacido!50] (3.2,-0.3) rectangle (4.7,0.3);
+    \node[above, font=\small] at (3.95,0.3) {\textit{lacZ}};
+    \fill[verdeacido!50] (5.2,-0.3) rectangle (6.7,0.3);
+    \node[above, font=\small] at (5.95,0.3) {\textit{lacY}};
+    \fill[verdeacido!50] (7.2,-0.3) rectangle (8.7,0.3);
+    \node[above, font=\small] at (7.95,0.3) {\textit{lacA}};
+
+    % Repressor bloqueando
+    \node[draw, circle, fill=yellow!50, minimum size=0.6cm, font=\footnotesize] at (2.2,-1.5) {LacI};
+    \draw[->, very thick, red] (2.2,-1.1) -- (2.2,-0.4);
+
+    % Lactose
+    \node[draw, circle, fill=azulclaro!50, minimum size=0.6cm, font=\footnotesize] at (0.5,-1.5) {Lac};
+    \draw[->, dashed, azulescuro] (0.9,-1.5) -- (1.7,-1.5);
+
+    % Status
+    \node[below, font=\small, red!70!black] at (5,-2.3) {Sem lactose: LacI bloqueia o operador (OFF)};
+\end{tikzpicture}
+\caption{Operon \textit{lac} de \textit{Escherichia coli} no estado reprimido. O repressor LacI (amarelo) liga-se ao operador (O, vermelho), impedindo fisicamente a transcrição dos genes estruturais \textit{lacZ}, \textit{lacY}, \textit{lacA} pela RNA polimerase. A lactose (azul) --- quando presente --- liga-se a LacI e induz a dissociação do repressor, permitindo a transcrição.}
+\label{fig:06-operon}
+\end{figure}
 
 \subsection{Regulação Transcricional em Eucariotos}
 
