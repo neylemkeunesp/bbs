@@ -634,7 +634,25 @@ onde $N = S + I + R$ é mantido constante (caso de doença com mortalidade
 desprezível em escala epidêmica). O parâmetro $\beta$ é a taxa de transmissão
 (contatos infectantes por unidade de tempo), e $\gamma$ é a taxa de
 recuperação. A escala natural de tempo é o período infeccioso médio, dado
-por $1/\gamma$.
+por $1/\gamma$. A Figura~\ref{fig:10-sir} apresenta o esquema
+compartimental do modelo SIR clássico: três caixas --- $S$, $I$, $R$ ---
+conectadas por fluxos de transmissão $\beta SI/N$ e de recuperação $\gamma I$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=2.5cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, minimum width=1.5cm, minimum height=1cm, rounded corners}]
+
+    \node[box, fill=verdeacido!20] (S) {$S$};
+    \node[box, fill=red!20, right of=S] (I) {$I$};
+    \node[box, fill=azulescuro!20, right of=I] (R) {$R$};
+
+    \draw[->, thick, line width=2pt] (S) -- node[above] {$\beta SI/N$} (I);
+    \draw[->, thick, line width=2pt] (I) -- node[above] {$\gamma I$} (R);
+\end{tikzpicture}
+\caption{Esquema compartimental do modelo SIR. Os três compartimentos --- suscetíveis ($S$), infectados ($I$) e recuperados ($R$) --- são conectados por dois fluxos: a transmissão $\beta SI/N$ (proporcional ao contato infectante) e a recuperação $\gamma I$ (proporcional ao número de infectados). A população total $N = S + I + R$ é mantida constante.}
+\label{fig:10-sir}
+\end{figure}
 
 \subsection{Número Básico de Reprodução $R_0$}
 \label{sub:image10-R0}
@@ -685,7 +703,34 @@ f > 1 - \frac{1}{R_0}
 Para sarampo ($R_0 \approx 15$), $f > 0{,}93$ --- 93\% de cobertura. Esta é a
 exigência que torna a hesitação vacinal tão perigosa: a queda de 5\% na
 cobertura vacinal em algumas comunidades brasileiras nas últimas décadas já é
-suficiente para permitir surtos --- e os surtos aparecem.
+suficiente para permitir surtos --- e os surtos aparecem. A
+Figura~\ref{fig:10-vaccination} ilustra a fração $f$ de indivíduos que
+precisam ser vacinados para conter a epidemia em função de $R_0$: quanto
+maior a transmissibilidade, maior a zona de controle (região hachurada em
+amarelo) exigida.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    \draw[->] (0,0) -- (7,0) node[right] {$R_0$};
+    \draw[->] (0,0) -- (0,4) node[above] {$f$ (\%)};
+
+    \draw[thick, azulescuro, domain=1:6.5, smooth, samples=100]
+        plot (\x, {3*(1 - 1/\x)});
+
+    \draw[dashed] (1,0) -- (1,4);
+    \node[below] at (1,0) {1};
+
+    \foreach \x/\label in {2/50\%, 3/67\%, 4/75\%, 5/80\%} {
+        \fill[red] (\x, {3*(1-1/\x)}) circle (2pt);
+        \node[right, font=\tiny] at (\x, {3*(1-1/\x)}) {\label};
+    }
+
+    \node[fill=yellow!30, rounded corners, font=\small] at (4,0.8) {Zona de controle};
+\end{tikzpicture}
+\caption{Curva de cobertura vacinal mínima $f = 1 - 1/R_0$ em função do número básico de reprodução $R_0$. Para $R_0 = 2$, basta vacinar 50\% da população; para $R_0 = 5$ (rubéola, pólio), a exigência sobe para 80\%; para $R_0 \geq 15$ (sarampo), ultrapassa 93\%. A região hachurada em amarelo indica a zona de controle efetivo, onde a cobertura vacinal é suficiente para bloquear a propagação epidêmica.}
+\label{fig:10-vaccination}
+\end{figure}
 
 \begin{exemploenv}[Threshold do sarampo]
 O sarampo requer cobertura acima de 93\% para imunidade de rebanho. A
@@ -708,7 +753,26 @@ Nesses casos, a população retorna de $I$ diretamente a $S$, em vez de a $R$:
 
 Quando $R_0 > 1$, o sistema atinge equilíbrio endêmico com $I^* = N(1 - 1/R_0)$
 e $S^* = N/R_0$. A doença persiste indefinidamente na população --- é o regime
-\emph{endêmico}, distinto do regime epidêmico transitório do SIR.
+\emph{endêmico}, distinto do regime epidêmico transitório do SIR. A
+Figura~\ref{fig:10-sis} mostra o esquema compartimental do modelo SIS: dois
+compartimentos ($S$ e $I$) conectados por dois fluxos em sentidos opostos
+(transmissão $\beta SI/N$ e recuperação $\gamma I$), sem imunidade
+permanente.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=3cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, minimum width=1.5cm, minimum height=1cm, rounded corners}]
+
+    \node[box, fill=verdeacido!20] (S) {$S$};
+    \node[box, fill=red!20, right of=S] (I) {$I$};
+
+    \draw[->, thick, line width=2pt, bend left=20] (S) to node[above] {$\beta SI/N$} (I);
+    \draw[->, thick, line width=2pt, bend left=20] (I) to node[below] {$\gamma I$} (S);
+\end{tikzpicture}
+\caption{Esquema compartimental do modelo SIS. Diferentemente do SIR, não há compartimento de recuperados: indivíduos infectados retornam diretamente a suscetíveis após a cura, na taxa $\gamma$. Esse modelo descreve doenças sem imunidade duradoura --- resfriados comuns, ISTs, várias infecções intestinais ---, que apresentam equilíbrio endêmico estável quando $R_0 > 1$.}
+\label{fig:10-sis}
+\end{figure}
 
 \subsection{Modelo SEIR: Com Período de Incubação}
 \label{sub:image10-seir}
@@ -731,7 +795,28 @@ inicial é mais lenta (a doença tem que "esperar" a incubação), mas a curva
 de pico é similar. Em COVID-19, o modelo SEIR modificado com demografia,
 estrutura etária e intervenções não-farmacêuticas (distanciamento, máscaras,
 fechamento de escolas) foi a base das projeções que guiaram políticas
-sanitárias em 2020--2022.
+sanitárias em 2020--2022. A Figura~\ref{fig:10-seir} mostra o esquema
+compartimental do modelo SEIR: o compartimento adicional $E$ (expostos não
+infecciosos) entre $S$ e $I$ representa o período de incubação, com taxa de
+progressão $\sigma$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, fill=azulclaro!20, minimum width=1.2cm, minimum height=0.8cm, rounded corners, font=\small}]
+
+    \node[box, fill=verdeacido!20] (S) {$S$};
+    \node[box, fill=yellow!30, right of=S] (E) {$E$};
+    \node[box, fill=red!20, right of=E] (I) {$I$};
+    \node[box, fill=azulescuro!20, right of=I] (R) {$R$};
+
+    \draw[->, thick] (S) -- node[above, font=\tiny] {$\beta SI/N$} (E);
+    \draw[->, thick] (E) -- node[above, font=\tiny] {$\sigma E$} (I);
+    \draw[->, thick] (I) -- node[above, font=\tiny] {$\gamma I$} (R);
+\end{tikzpicture}
+\caption{Esquema compartimental do modelo SEIR. O compartimento $E$ (expostos) representa indivíduos que foram infectados mas ainda não são infecciosos --- estão no período de incubação, com duração média $1/\sigma$. Essa latência desacelera a fase inicial da epidemia (a doença precisa \emph{esperar} a incubação) mas não altera o valor de $R_0$ no limite assintótico.}
+\label{fig:10-seir}
+\end{figure}
 
 A implementação computacional do SIR ilustra como extrair medidas
 epidemiológicas básicas --- pico de infectados, tempo do pico, taxa de ataque
@@ -816,7 +901,34 @@ O equilíbrio não-trivial $p^* = 1 - e/c$ é positivo (e portanto a
 metapopulação persiste) se e somente se $c > e$. A condição \emph{c $>$ e
 $}$ é uma das formulações mais elegantes em ecologia: a colonização deve
 superar a extinção local para que a metapopulação persista. Em sua ausência,
-a fração de habitats ocupados colapsa a zero.
+a fração de habitats ocupados colapsa a zero. A Figura~\ref{fig:10-metapop}
+ilustra esquematicamente a estrutura espacial subjacente: seis patches
+distribuídos no espaço, alguns ocupados (verde) e outros vazios (cinza),
+com setas indicando a dispersão de indivíduos entre eles.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Patches
+    \foreach \x/\y/\occupied in {0/0/1, 2/0/0, 1/1.5/1, 3/1.5/1, 0.5/3/0, 2.5/3/1} {
+        \ifnum\occupied=1
+            \fill[verdeacido!50] (\x,\y) circle (0.4);
+        \else
+            \draw[thick, gray] (\x,\y) circle (0.4);
+        \fi
+    }
+
+    % Dispersao (setas)
+    \draw[->, thick, azulescuro] (0.3,0.3) -- (0.8,1.2);
+    \draw[->, thick, azulescuro] (1.2,1.8) -- (2.2,1.8);
+    \draw[->, thick, azulescuro] (3,2) -- (2.6,2.7);
+
+    \node[below, font=\small] at (1.5,-0.5) {Ocupados: verde};
+    \node[below, font=\small] at (1.5,-1) {Vazios: cinza};
+\end{tikzpicture}
+\caption{Esquema de uma metapopulação: seis patches distribuídos no espaço, dos quais quatro estão ocupados (verde) e dois vazios (cinza). As setas azulescuras indicam eventos de dispersão --- migração de indivíduos de um patch ocupado para outro patch, permitindo colonização. A fração de patches ocupados $p(t)$ evolui segundo a dinâmica de Levins: colonização na taxa $c\,p(1-p)$ e extinção local na taxa $e\,p$.}
+\label{fig:10-metapop}
+\end{figure}
 
 O modelo básico de Levins pode ser enriquecido de várias maneiras: patches
 heterogêneos (tamanho variável, qualidade diferente), \emph{corredores}
@@ -856,6 +968,36 @@ suaves) é:
 \begin{equation}
 c_{\min} = 2\sqrt{r D}
 \end{equation}
+
+A Figura~\ref{fig:10-fkpp} ilustra o perfil característico de uma onda
+viajante em dois instantes ($t_1$ e $t_2$): a frente de invasão se desloca
+com velocidade $c_{\min} = \Delta x / \Delta t$ sem deformação apreciável,
+saturando na capacidade de suporte $K$ atrás da frente.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    \draw[->] (0,0) -- (8,0) node[right] {$x$};
+    \draw[->] (0,0) -- (0,3) node[above] {$N$};
+
+    % Onda em t1
+    \draw[thick, blue, domain=0:7, smooth, samples=100]
+        plot (\x, {2.5/(1+exp(-2*(\x-2)))});
+    \node[blue] at (1,2.5) {$t_1$};
+
+    % Onda em t2
+    \draw[thick, red, domain=0:7, smooth, samples=100]
+        plot (\x, {2.5/(1+exp(-2*(\x-4)))});
+    \node[red] at (3,2.5) {$t_2$};
+
+    % Velocidade
+    \draw[<->, thick, verdeacido] (2,0.3) -- (4,0.3) node[midway, below] {$c \Delta t$};
+
+    \draw[dashed] (0,2.5) -- (8,2.5) node[right, font=\tiny] {$K$};
+\end{tikzpicture}
+\caption{Onda viajante na equação de Fisher-KPP. A curva azul mostra o perfil $N(x)$ em um instante $t_1$; a curva vermelha mostra o mesmo perfil em um instante posterior $t_2$, deslocado de $\Delta x = c\Delta t$ para a direita. A frente sigmoidal se propaga com velocidade $c_{\min} = 2\sqrt{rD}$ (analítica), preservando a forma --- propriedade característica de soluções de onda viajante em equações de reação-difusão.}
+\label{fig:10-fkpp}
+\end{figure}
 
 A equação Fisher-KPP é um dos pilares da teoria de invasão. Foi aplicada
 com sucesso à propagação da lebre europeia (\textit{Oryctolagus
@@ -926,7 +1068,32 @@ Biólogos foram lentos para abraçar a ideia, mas hoje há forte evidência de
 que padrões de Turing estão subjacentes à organização de estômatos em
 folhas, aos folículos de pena em aves e à pelagem de certos peixes e
 felinos. A matemática, aplicada a sistemas biológicos concretos, ajudou a
-transformar uma especulação teórica em um programa de pesquisa vivo.
+transformar uma especulação teórica em um programa de pesquisa vivo. A
+Figura~\ref{fig:10-turing} ilustra um padrão estacionário típico: manchas
+alternadas de alta (azul) e baixa (laranja) concentração de um morfógeno,
+com comprimento de onda característico $\lambda \sim 2\pi\sqrt{D_v/\mu}$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    % Simulacao simplificada de padroes
+    \foreach \x in {0,1,...,6} {
+        \foreach \y in {0,1,...,4} {
+            \pgfmathsetmacro{\val}{sin(60*\x + 45)*sin(60*\y + 30)}
+            \pgfmathparse{\val > 0 ? 1 : 0}
+            \ifnum\pgfmathresult=1
+                \fill[azulescuro, opacity=\val] (\x*0.6, \y*0.6) circle (0.25);
+            \else
+                \pgfmathsetmacro{\absval}{-\val}
+                \fill[laranjacel, opacity=\absval] (\x*0.6, \y*0.6) circle (0.25);
+            \fi
+        }
+    }
+    \node[below, font=\small] at (2,-0.5) {Padrão de manchas};
+\end{tikzpicture}
+\caption{Padrão de Turing do tipo \emph{spots}. A grade $7 \times 5$ mostra a distribuição estacionária de um morfógeno após relaxação do estado homogêneo inical: as concentrações altas (azul, intensidade proporcional a $\sin(60x+45)\sin(60y+30)$) e baixas (laranja) se alternam com comprimento de onda característico $\lambda$. Esse tipo de padrão, previsto por Turing em 1952, é hoje usado para explicar a organização de estômatos em folhas, folículos de pena em aves e padrões de pigmentação.}
+\label{fig:10-turing}
+\end{figure}
 
 \subsection{Metapopulações em Rede}
 \label{sub:image10-metapop-network}
@@ -949,7 +1116,35 @@ independentes, com \emph{efeito de portfolio} análogo ao da diversificação em
 finanças. As topologias que têm recebido mais atenção teórica são grade
 regular, rede aleatória Erdős-Rényi, redes \emph{scale-free} e grafos do
 tipo mundo-pequeno --- cada uma com propriedades próprias de sincronização
-e vulnerabilidade.
+e vulnerabilidade. A Figura~\ref{fig:10-metapop-network} ilustra
+esquematicamente uma rede de patches: cinco populações locais ($N_1$ a
+$N_5$) conectadas por acoplamentos migratórios (setas duplas) --- alguns
+patches centrais (e.g., $N_2$ e $N_4$) com grau de conectividade maior,
+outros periféricos com grau menor.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9,
+    patch/.style={circle, draw, fill=azulclaro!30, minimum size=0.8cm, font=\small}]
+
+    \node[patch] (1) at (0,2) {$N_1$};
+    \node[patch] (2) at (2,2) {$N_2$};
+    \node[patch] (3) at (1,0) {$N_3$};
+    \node[patch] (4) at (3,0) {$N_4$};
+    \node[patch] (5) at (4,2) {$N_5$};
+
+    \draw[<->, thick] (1) -- (2);
+    \draw[<->, thick] (2) -- (3);
+    \draw[<->, thick] (3) -- (4);
+    \draw[<->, thick] (2) -- (4);
+    \draw[<->, thick] (2) -- (5);
+    \draw[<->, thick] (4) -- (5);
+
+    \node[below, font=\small] at (2,-1) {Rede de patches};
+\end{tikzpicture}
+\caption{Representação esquemática de uma metapopulação em rede. Cinco patches ($N_1$ a $N_5$) estão conectados por acoplamentos migratórios bilaterais (setas duplas). A topologia não é homogênea: patches centrais como $N_2$ e $N_4$ têm mais conexões, exercendo papel de \emph{hubs} na dispersão. A estrutura do grafo determina propriedades coletivas --- sincronismo, persistência, vulnerabilidade a extinção em cascata --- que são objeto da ecologia espacial moderna.}
+\label{fig:10-metapop-network}
+\end{figure}
 
 \begin{exemploenv}[Corredores ecológicos]
 A aplicação prática mais direta de metapopulações em rede é a conservação
