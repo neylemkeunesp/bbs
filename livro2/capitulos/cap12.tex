@@ -51,6 +51,36 @@ o sangue regurgite dos grandes vasos para os ventrículos. O eixo de
 fluxo é portanto unidirecional: AD $\to$ VD $\to$ artéria pulmonar
 $\to$ pulmões $\to$ AE $\to$ VE $\to$ aorta $\to$ tecidos $\to$ AD.
 
+A Figura~\ref{fig:12-coracao} apresenta a estrutura anatômica do
+coração em vista esquemática: as quatro câmaras (átrio direito AD,
+átrio esquerdo AE, ventrículo direito VD, ventrículo esquerdo VE),
+separadas pelo septo interventricular --- nota-se a parede mais
+espessa do VE, que opera contra pressões substancialmente mais
+elevadas ($\sim 120$ mmHg vs. $\sim 25$ mmHg no VD).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Heart outline simplified
+    \draw[thick, fill=red!30] (0,0) .. controls (0,1) and (1,1.5) .. (1.5,1.5)
+        .. controls (2,1.5) and (3,1) .. (3,0)
+        .. controls (2.5,-1) and (2,-2) .. (1.5,-2.5)
+        .. controls (1,-2) and (0.5,-1) .. (0,0);
+
+    % Heart chambers indication
+    \draw[thick] (1.5,1) -- (1.5,-1.5);
+    \draw[thick] (0.7,0.5) -- (2.3,0.5);
+
+    % Labels
+    \node[font=\tiny] at (0.7,1) {AE};
+    \node[font=\tiny] at (2.3,1) {AD};
+    \node[font=\tiny] at (0.7,-0.5) {VE};
+    \node[font=\tiny] at (2.3,-0.5) {VD};
+\end{tikzpicture}
+\caption{Esquema anatômico do coração em corte --- as quatro câmaras (átrios direito AD e esquerdo AE no topo; ventrículos direito VD e esquerdo VE na base) separadas pelo septo interventricular. A parede do ventrículo esquerdo é substancialmente mais espessa do que a do direito, refletindo a diferença de pressão que cada um deve gerar ($\sim 120$ mmHg na circulação sistêmica vs. $\sim 25$ mmHg na pulmonar). O eixo de fluxo sanguíneo é unidirecional: AD $\to$ VD $\to$ pulmões $\to$ AE $\to$ VE $\to$ aorta.}
+\label{fig:12-coracao}
+\end{figure}
+
 \subsection{Ciclo Cardíaco}
 \label{sub:image12-ciclo}
 
@@ -71,7 +101,81 @@ um diagrama fechado que descreve em duas dimensões a relação instantânea
 entre pressão intraventricular e volume de sangue. Em frequências
 fisiológicas o ciclo completo dura cerca de 0,8~s --- diástole
 aproximadamente 0,5~s, sístole 0,3~s ---, com proporções que se ajustam
-automaticamente à frequência cardíaca.
+automaticamente à frequência cardíaca. A Figura~\ref{fig:12-niveis}
+organiza os níveis de integração do sistema cardíaco: dos canais
+iônicos ($\mathrm{Na}^+$, $\mathrm{K}^+$, $\mathrm{Ca}^{2+}$), passando
+pelo cardiomiócito, tecido, órgão e sistema cardiovascular --- cada
+nível emerge das propriedades do nível inferior e impõe restrições
+sobre o nível superior.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (canal) {Canais Iônicos};
+    \node[box, fill=laranjacel!30, below of=canal] (celula) {Cardiomiócito};
+    \node[box, fill=verdeacido!30, below of=celula] (tecido) {Tecido Cardíaco};
+    \node[box, fill=azulclaro!30, below of=tecido] (orgao) {Órgão (Coração)};
+    \node[box, fill=yellow!30, below of=orgao] (sistema) {Sistema Cardiovascular};
+
+    \draw[->, thick] (canal) -- (celula);
+    \draw[->, thick] (celula) -- (tecido);
+    \draw[->, thick] (tecido) -- (orgao);
+    \draw[->, thick] (orgao) -- (sistema);
+\end{tikzpicture}
+\caption{Pirâmide de níveis de organização do sistema cardíaco, do molecular ao sistêmico. \textbf{Canais iônicos} ($\mathrm{Na}^+$, $\mathrm{K}^+$, $\mathrm{Ca}^{2+}$) determinam o potencial de ação do \textbf{cardiomiócito}; o acoplamento entre cardiomiócitos via gap junctions define a propagação no \textbf{tecido cardíaco}; a integração tecidual produz a função do \textbf{órgão (coração)} como bomba; finalmente, o coração em conjunto com a vasculatura e regulação autonômica forma o \textbf{sistema cardiovascular}. A modelagem matemática em cardiologia é hierárquica --- cada nível requer modelos próprios que se acoplam aos adjacentes.}
+\label{fig:12-niveis}
+\end{figure}
+
+A Figura~\ref{fig:12-camaras} ilustra o coração esquematicamente em
+vista anterior --- as quatro câmaras representadas em retângulos
+coloridos, com os átrios (acima) e ventrículos (abaixo). A
+Figura~\ref{fig:12-loop-pv} mostra a representação canônica do
+ciclo cardíaco: o \emph{loop pressão-volume}, que descreve em duas
+dimensões a relação instantânea entre pressão intraventricular e
+volume de sangue ao longo das quatro fases (enchimento, contração
+isovolumétrica, ejeção, relaxamento isovolumétrico).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7]
+    % Right atrium
+    \draw[thick, fill=azulclaro!20] (0,1) rectangle (1.5,3);
+    \node at (0.75,2) {\tiny AD};
+
+    % Right ventricle
+    \draw[thick, fill=azulclaro!40] (0,-1.5) -- (0,0.5) -- (1.5,0.5) -- (1.8,-1.5) -- cycle;
+    \node at (0.75,-0.5) {\tiny VD};
+
+    % Left atrium
+    \draw[thick, fill=red!20] (2,1) rectangle (3.5,3);
+    \node at (2.75,2) {\tiny AE};
+
+    % Left ventricle
+    \draw[thick, fill=red!40] (2,-1.5) -- (2,0.5) -- (3.5,0.5) -- (3.2,-1.5) -- cycle;
+    \node at (2.75,-0.5) {\tiny VE};
+\end{tikzpicture}
+\caption{Diagrama esquemático das quatro câmaras cardíacas em vista anterior. Os átrios (AD, AE) na parte superior, em cores mais claras; os ventrículos (VD, VE) na parte inferior, em cores mais saturadas. Note a diferença de tamanho --- o VE é maior e tem parede mais espessa (representada pela saturação da cor), refletindo a maior pressão que precisa gerar.}
+\label{fig:12-camaras}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Pressure-volume loop
+    \draw[->] (0,0) -- (5,0) node[right] {Volume (mL)};
+    \draw[->] (0,0) -- (0,4) node[above] {Pressão (mmHg)};
+
+    % Loop
+    \draw[thick, azulescuro, ->] (1,0.5) -- node[below] {\tiny Enchimento} (3.5,0.5);
+    \draw[thick, azulescuro, ->] (3.5,0.5) -- node[right] {\tiny Contração isovolumétrica} (3.5,3);
+    \draw[thick, azulescuro, ->] (3.5,3) -- node[above] {\tiny Ejeção} (1,3);
+    \draw[thick, azulescuro, ->] (1,3) -- node[left] {\tiny Relaxamento isovolumétrico} (1,0.5);
+\end{tikzpicture}
+\caption{Loop pressão-volume do ciclo cardíaco. O diagrama representa em duas dimensões a relação entre pressão intraventricular (eixo vertical) e volume ventricular (eixo horizontal) ao longo de um ciclo completo. As quatro fases são: (1) \emph{Enchimento} --- aumento de volume a baixa pressão (segmento horizontal inferior); (2) \emph{Contração isovolumétrica} --- aumento rápido de pressão com volume constante (segmento vertical esquerdo); (3) \emph{Ejeção} --- redução de volume a alta pressão (segmento horizontal superior); (4) \emph{Relaxamento isovolumétrico} --- queda rápida de pressão com volume constante (segmento vertical direito). A área interna do loop é o trabalho sistólico por ciclo.}
+\label{fig:12-loop-pv}
+\end{figure}
 
 \subsection{Sistema de Condução Elétrica}
 \label{sub:image12-conducao}
@@ -94,7 +198,40 @@ simultânea de toda a massa muscular.
 A velocidade de condução varia ao longo desse circuito por um fator
 superior a cem: 4~m/s nas fibras de Purkinje, 1--1,5~m/s no feixe de His,
 0,05~m/s no nó AV. Essa hierarquia é funcional: o atraso nodal AV é a
-chave mecânica do acoplamento temporal entre as câmaras.
+chave mecânica do acoplamento temporal entre as câmaras. A
+Figura~\ref{fig:12-conducao} esquematiza o sistema de condução: o
+nó sinoatrial (SA) no topo do átrio direito atua como marca-passo
+natural; o impulso propaga-se pelos átrios até o nó atrioventricular
+(AV), que introduz o atraso crucial; segue pelo feixe de His,
+ramos (esquerdo e direito) e fibras de Purkinje para distribuir a
+ativação pelo endocárdio ventricular.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Heart outline
+    \draw[thick] (0,0) ellipse (1.5cm and 2cm);
+
+    % SA node
+    \node[circle, draw, fill=red!50, minimum size=0.4cm] (sa) at (0.5,1.5) {};
+    \node[right, font=\tiny] at (0.7,1.5) {Nó SA};
+
+    % Atrial conduction
+    \draw[->, thick, red] (sa) -- (-0.5,1);
+
+    % AV node
+    \node[circle, draw, fill=yellow!50, minimum size=0.4cm] (av) at (0,0.3) {};
+    \node[right, font=\tiny] at (0.2,0.3) {Nó AV};
+
+    % Bundle of His
+    \draw[->, thick, yellow!50!black] (av) -- (0,-1);
+    \node[right, font=\tiny] at (0.2,-1) {Feixe de His};
+    \draw[->, thick, yellow!50!black] (0,-1) -- (0.5,-1.5);
+    \draw[->, thick, yellow!50!black] (0,-1) -- (-0.5,-1.5);
+\end{tikzpicture}
+\caption{Sistema de condução elétrica do coração. O nó sinoatrial (SA), em vermelho, é o marca-passo natural (60--100 bpm); o impulso propaga-se pelos átrios (setas vermelhas) até o nó atrioventricular (AV), em amarelo, que introduz o atraso de $\sim 0{,}1$~s --- crucial para o enchimento ventricular. Daí segue pelo feixe de His e seus ramos até as fibras de Purkinje, que distribuem rapidamente a ativação pelo endocárdio ventricular. A velocidade varia por fator >100 ao longo do circuito.}
+\label{fig:12-conducao}
+\end{figure}
 
 \subsection{Eletrocardiograma}
 \label{sub:image12-ecg}
@@ -115,6 +252,36 @@ Anormalidades --- arritmias, distúrbios de condução, isquemia --- deixam
 assinaturas específicas: onda Q patológica em infarto antigo, supradesnivelamento
 do segmento ST em infarto agudo, prolongamento do intervalo QT em canalopatias
 congênitas ou adquiridas, complexos QRS alargados em bloqueios de ramo.
+A Figura~\ref{fig:12-ecg} ilustra o traçado típico de um ECG: a onda P
+(despolarização atrial), o complexo QRS (despolarização ventricular,
+alta amplitude) e a onda T (repolarização ventricular). Os intervalos
+PR e QT fornecem leituras quantitativas da condução.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % ECG trace
+    \draw[->] (0,0) -- (8,0) node[right] {Tempo (s)};
+    \draw[->] (0,-1) -- (0,3) node[above] {mV};
+
+    % Baseline
+    \draw[help lines] (0,0) -- (8,0);
+
+    % P wave
+    \draw[thick, azulescuro] (1,0) .. controls (1.2,0.3) and (1.4,0.3) .. (1.6,0);
+    \node[above, font=\tiny] at (1.3,0.4) {P};
+
+    % QRS complex
+    \draw[thick, azulescuro] (1.8,0) -- (1.9,0.3) -- (2.0,-0.5) -- (2.2,3) -- (2.4,0);
+    \node[above, font=\tiny] at (2.1,3.2) {QRS};
+
+    % T wave
+    \draw[thick, azulescuro] (3,0) .. controls (3.2,0.6) and (3.6,0.6) .. (3.8,0);
+    \node[above, font=\tiny] at (3.4,0.8) {T};
+\end{tikzpicture}
+\caption{Traçado típico de um eletrocardiograma (ECG) --- uma derivação. As três ondas fundamentais estão indicadas: \textbf{onda P} --- despolarização atrial ($\sim 80$ ms); \textbf{complexo QRS} --- despolarização ventricular ($\sim 80$ ms, alta amplitude pela massa muscular envolvida); \textbf{onda T} --- repolarização ventricular ($\sim 160$ ms). Os intervalos \textbf{PR} ($0{,}12$--$0{,}20$~s) e \textbf{QT} ($0{,}35$--$0{,}44$~s) são janelas quantitativas para a função de condução.}
+\label{fig:12-ecg}
+\end{figure}
 
 \subsection{Circulação Coronariana}
 \label{sub:image12-coronarias}
@@ -186,7 +353,43 @@ seção seguinte.
 
 \textbf{Fase 3} é a repolarização final. À medida que os canais de
 Ca$^{2+}$ se inativam e as correntes de K$^+$ persistem, o balanço se
-inverte --- o $V_m$ cai rapidamente em direção a $E_K$.
+inverte --- o $V_m$ cai rapidamente em direção a $E_K$. A
+Figura~\ref{fig:12-pa} apresenta o traçado característico do PA
+ventricular, identificando as cinco fases (4--repouso, 0--
+despolarização rápida, 1--repolarização inicial, 2--platô, 3--
+repolarização final).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Axes
+    \draw[->] (0,0) -- (6,0) node[right, font=\tiny] {Tempo (ms)};
+    \draw[->] (0,-1) -- (0,4) node[above, font=\tiny] {V$_m$ (mV)};
+
+    % Resting potential
+    \draw[thick, azulescuro] (0,0) -- (1,0);
+    \node[left, font=\tiny] at (0,0) {-90};
+
+    % Phase 0 - upstroke
+    \draw[thick, azulescuro] (1,0) -- (1.3,3.5);
+    \node[right, font=\tiny, red] at (1.3,1.5) {0};
+    \node[left, font=\tiny] at (1.3,3.5) {+30};
+
+    % Phase 1 - initial repolarization
+    \draw[thick, azulescuro] (1.3,3.5) -- (1.5,1.5);
+    \node[right, font=\tiny, red] at (1.5,2) {1};
+
+    % Phase 2 - plateau
+    \draw[thick, azulescuro] (1.5,1.5) -- (4,1.4);
+    \node[right, font=\tiny, red] at (4,1.8) {2};
+
+    % Phase 3 - final repolarization
+    \draw[thick, azulescuro] (4,1.4) -- (5,0);
+    \node[right, font=\tiny, red] at (4.7,0.7) {3};
+\end{tikzpicture}
+\caption{Potencial de ação ventricular --- as cinco fases. \textbf{Fase 4} (repouso): $V_m \approx -90$ mV, mantido por $I_{\mathrm{K1}}$. \textbf{Fase 0} (despolarização rápida): corrente massiva de $\mathrm{Na}^+$ via Nav1.5 eleva $V_m$ a $+30$ mV em $<1$ ms (upstroke do QRS). \textbf{Fase 1} (repolarização inicial): inativação de $I_{\mathrm{Na}}$ + ativação transitória de $I_{\mathrm{to}}$ produzem queda breve. \textbf{Fase 2} (platô): equilíbrio entre $I_{\mathrm{Ca},L}$ (entrada) e $I_{\mathrm{Kr}}$+$I_{\mathrm{Ks}}$ (saída) mantém $V_m$ próximo de 0 mV por $\sim 200$ ms --- base do acoplamento excitação-contração. \textbf{Fase 3} (repolarização final): inativação de $I_{\mathrm{Ca},L}$ + correntes de K$^+$ dominam, e $V_m$ retorna a $E_K$.}
+\label{fig:12-pa}
+\end{figure}
 
 \subsection{Equação de Goldman-Hodgkin-Katz em Cardiomiócitos}
 \label{sub:image12-ghk}
@@ -206,7 +409,26 @@ permeabilidades relativas $P_K : P_{\mathrm{Na}} : P_{\mathrm{Cl}}
 equação de Nernst para K$^+$, produzindo $V_m \approx -85$~mV. Alterações
 do potássio extracelular --- como a hipercalemia, em que $[\mathrm{K}^+]_o$
 chega a 7--8~mM em insuficiência renal --- despolarizam o repouso e
-contribuem para arritmias.
+contribuem para arritmias. A Figura~\ref{fig:12-pa-correntes} ilustra o
+PA ventricular simultaneamente com as correntes iônicas subjacentes:
+$I_{\mathrm{Na}}$ (entrada rápida), $I_{\mathrm{Ca},L}$ (entrada
+sustentada), $I_{\mathrm{Kr}}$ (saída durante o platô), $I_{\mathrm{K1}}$
+(manutenção do repouso) --- cada uma com seu perfil temporal
+característico.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8]
+    % Voltage trace
+    \draw[->] (0,0) -- (5,0) node[right, font=\tiny] {t};
+    \draw[->] (0,0) -- (0,4) node[above, font=\tiny] {V$_m$};
+
+    % AP trace
+    \draw[thick, azulescuro] (0.5,0.3) -- (1,3.5) -- (1.3,2.8) -- (3,2.7) -- (4,0.3);
+\end{tikzpicture}
+\caption{Esquema simplificado do PA ventricular (curva azulescura), mostrando a evolução temporal do potencial de membrana $V_m$ durante um ciclo. A rápida despolarização (Fase 0) seguida do platô prolongado (Fase 2) e da repolarização (Fase 3) é a assinatura eletrofisiológica do cardiomiócito ventricular.}
+\label{fig:12-pa-correntes}
+\end{figure}
 
 \subsection{Formalismo de Hodgkin-Huxley}
 \label{sub:image12-hh}
