@@ -64,6 +64,47 @@ adenina (A) pareia com timina (T) por duas ligações, e guanina (G) pareia com 
 por três ligações. Essa assimetria energética --- G-C é mais estável que A-T --- tem
 consequências práticas para a desnaturação e a replicação do DNA.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % Pares de bases (A-T em roxo, G-C em verde)
+    \foreach \y/\lbl/\col in {
+        0.2/A-T/roxodna,
+        0.7/G-C/verdeacido,
+        1.2/T-A/roxodna,
+        1.7/C-G/verdeacido,
+        2.2/A-T/roxodna,
+        2.7/G-C/verdeacido,
+        3.2/T-A/roxodna,
+        3.7/C-G/verdeacido} {
+
+        \pgfmathsetmacro{\x}{1.2*sin(\y*100)}
+        \pgfmathsetmacro{\xopp}{1.2*sin(\y*100+180)}
+
+        % Linha de ligação (par de bases)
+        \draw[thick, \col] (\x, \y) -- (\xopp, \y);
+        \fill[\col] (\x, \y) circle (1.5pt);
+        \fill[\col] (\xopp, \y) circle (1.5pt);
+    }
+
+    % Backbones açúcar-fosfato
+    \draw[line width=2pt, azulescuro, smooth, samples=50, domain=0:4.0] plot ({1.2*sin(\x*100)}, {\x});
+    \draw[line width=2pt, laranjacel, smooth, samples=50, domain=0:4.0] plot ({1.2*sin(\x*100 + 180)}, {\x});
+
+    % Direções 5'/3'
+    \node[font=\tiny\bfseries, left] at ({1.2*sin(0*100)}, 0) {5'};
+    \node[font=\tiny\bfseries, right] at ({1.2*sin(0*100 + 180)}, 0) {3'};
+    \node[font=\tiny\bfseries, left] at ({1.2*sin(4.0*100)}, 4.0) {3'};
+    \node[font=\tiny\bfseries, right] at ({1.2*sin(4.0*100 + 180)}, 4.0) {5'};
+
+    % Legendas dos pares
+    \node[draw=roxodna, fill=roxodna!10, rounded corners, font=\tiny, align=left] at (2.8, 3.2) {\textbf{A - T}};
+    \node[draw=verdeacido, fill=verdeacido!10, rounded corners, font=\tiny, align=left] at (2.8, 1.2) {\textbf{G - C}};
+\end{tikzpicture}
+\caption{Esquema da dupla hélice do DNA. As duas cadeias antiparalelas (azul e laranja, com indicação das extremidades 5'/3') formam um esqueleto açúcar-fosfato, mantido coeso por ligações de hidrogênio entre pares de bases complementares --- adenina--timina (A--T, em roxo, duas ligações) e guanina--citosina (G--C, em verde, três ligações). A assimetria energética entre os dois tipos de par --- G--C é mais estável que A--T --- tem consequências importantes para a temperatura de fusão e a especificidade de ligação de proteínas.}
+\label{fig:01-dna}
+\end{figure}
+
 \begin{definicaoenv}[Nucleotídeo]
 A unidade básica do DNA é o nucleotídeo, composto por três elementos: uma base nitrogenada
 (purina ou pirimidina), o açúcar desoxirribose e um grupo fosfato. As purinas --- adenina
@@ -90,6 +131,79 @@ de desoxirribose, substitui a timina pela uracila (U) e é tipicamente de fita s
 Embora seja fita simples, o RNA pode formar estruturas secundárias e terciárias complexas
 por pareamento intramolecular --- hairpin loops, bulges, alças internas e pseudonós ---
 que são essenciais para suas funções catalíticas e regulatórias.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85,
+    nuc/.style={circle, draw=white, fill=azulclaro!80, inner sep=1.5pt},
+    backbone/.style={thick, laranjacel},
+    pair/.style={thick, roxodna!80}]
+
+    % --- HAIRPIN LOOP ---
+    \begin{scope}[xshift=0cm]
+        % Backbone (stem)
+        \draw[backbone] (0,0) -- (0,2);
+        \draw[backbone] (1,0) -- (1,2);
+
+        % Loop
+        \draw[backbone] (0,2) .. controls (-0.5,3.5) and (1.5,3.5) .. (1,2);
+
+        % Nucleotídeos no stem
+        \foreach \y [count=\i] in {0.0, 0.4, 0.8, 1.2, 1.6, 2.0} {
+            \node[nuc] (l\i) at (0,\y) {};
+            \node[nuc] (r\i) at (1,\y) {};
+            \draw[pair] (l\i) -- (r\i);
+        }
+
+        % Nucleotídeos no loop
+        \node[nuc, fill=verdeacido!80] at (-0.2, 2.6) {};
+        \node[nuc, fill=verdeacido!80] at (0.2, 3.1) {};
+        \node[nuc, fill=verdeacido!80] at (0.8, 3.1) {};
+        \node[nuc, fill=verdeacido!80] at (1.2, 2.6) {};
+
+        \node[left, font=\tiny] at (0,-0.2) {5'};
+        \node[right, font=\tiny] at (1,-0.2) {3'};
+        \node[above, font=\small, text=azulescuro] at (0.5, 3.6) {\textbf{Hairpin}};
+    \end{scope}
+
+    % --- BULGE LOOP ---
+    \begin{scope}[xshift=3.5cm]
+        % Stem base
+        \draw[backbone] (0,0) -- (0,1.2);
+        \draw[backbone] (1,0) -- (1,1.2);
+
+        % Stem topo
+        \draw[backbone] (0,2) -- (0,3);
+        \draw[backbone] (1,2) -- (1,3);
+
+        % Bulge
+        \draw[backbone] (0,1.2) .. controls (-0.8,1.6) .. (0,2);
+        \draw[backbone] (1,1.2) -- (1,2);
+
+        % Pares base
+        \foreach \y [count=\i] in {0.0, 0.4, 0.8, 1.2} {
+            \node[nuc] (bl\i) at (0,\y) {};
+            \node[nuc] (br\i) at (1,\y) {};
+            \draw[pair] (bl\i) -- (br\i);
+        }
+
+        % Pares topo
+        \foreach \y [count=\i] in {2.0, 2.4, 2.8} {
+            \node[nuc] (tl\i) at (0,\y) {};
+            \node[nuc] (tr\i) at (1,\y) {};
+            \draw[pair] (tl\i) -- (tr\i);
+        }
+
+        % Nucleotídeos do bulge
+        \node[nuc, fill=laranjacel!90!red] at (-0.4, 1.4) {};
+        \node[nuc, fill=laranjacel!90!red] at (-0.4, 1.8) {};
+
+        \node[above, font=\small, text=azulescuro] at (0.5, 3.2) {\textbf{Bulge}};
+    \end{scope}
+\end{tikzpicture}
+\caption{Exemplos de estrutura secundária do RNA. \emph{Hairpin} (esquerda): uma mesma fita se dobra sobre si mesma, formando uma haste de pares de bases complementares (A--U, G--C) coroada por um loop apical de nucleotídeos não pareados. \emph{Bulge} (direita): uma interrupção unilateral na haste, onde alguns nucleotídeos ficam expostos de um dos lados. Esses motivos estruturais são fundamentais para a função catalítica de ribozimas, o reconhecimento molecular por proteínas, e o design de RNAs regulatórios sintéticos.}
+\label{fig:01-rna}
+\end{figure}
 
 As principais classes de RNA são o mRNA (mensageiro, que transporta a informação do DNA
 ao ribossomo), o tRNA (transportador, que carrega os aminoácidos durante a tradução) e o
@@ -224,6 +338,57 @@ ativam ou inibem enzimas por mecanismos alostéricos; RNAs não-codificantes mod
 estabilidade de outros RNAs. A célula é, portanto, um sistema de controle com múltiplas
 alças de retroalimentação --- exatamente o tipo de objeto que a Biologia de Sistemas
 está equipada para analisar.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=2.2cm,
+    scale=0.7,
+    transform shape,
+    >=latex,
+    every node/.style={align=center},
+    concept/.style={
+        circle,
+        draw=white,
+        line width=1.5pt,
+        minimum size=2.4cm,
+        font=\bfseries\sffamily,
+        text=white,
+        inner sep=2pt
+    },
+    arrow_label/.style={
+        font=\footnotesize\bfseries\sffamily,
+        color=gray!40!black,
+        auto
+    }
+]
+    % Nós principais
+    \node[concept, fill=roxodna!90] (dna) {DNA};
+    \node[concept, fill=laranjacel!90, right=of dna] (rna) {RNA};
+    \node[concept, fill=verdeacido!90, right=of rna] (prot) {Proteína};
+    \node[concept, fill=azulclaro!90, below=of prot] (met) {Metabólito};
+    \node[concept, fill=yellow!90, text=black!80, below=of rna] (cel) {Célula};
+
+    % Fluxo principal
+    \draw[->, line width=2.5pt, color=gray!30] (dna) -- (rna);
+    \draw[->, line width=2.5pt, color=gray!30] (rna) -- (prot);
+    \draw[->, line width=2.5pt, color=gray!30] (prot) -- (met);
+    \draw[->, line width=2.5pt, color=gray!30] (met) -- (cel);
+
+    % Retroalimentações
+    \draw[->, line width=1.5pt, color=roxodna!80!black, dashed] (prot) to[bend right=55]
+         node[arrow_label, above, sloped] {Regulação} (dna);
+
+    \draw[->, line width=1.5pt, color=azulclaro!80!black, dashed] (met) to[bend left=45]
+         node[arrow_label, below right] {Feedback} (prot);
+
+    % Saída fenotípica
+    \draw[->, line width=3pt, color=black!70] (cel) -- ++(-3,-2)
+         node[below, font=\bfseries\large\sffamily] {Fenótipo};
+\end{tikzpicture}
+\caption{Visão integrada dos sistemas biológicos: o dogma central e suas retroalimentações. O fluxo principal de informação (setas cinzas) --- DNA $\to$ RNA $\to$ Proteína $\to$ Metabólito $\to$ Célula --- é pontuado por alças de retroalimentação: proteínas reguladoras (fatores de transcrição) atuam sobre a expressão gênica no DNA, enquanto metabólitos modulam a atividade enzimática por alosteria. O fenótipo celular emerge da integração de todo o sistema.}
+\label{fig:01-integracao}
+\end{figure}
 
 A abordagem reducionista --- estudar partes isoladas --- e a abordagem sistêmica ---
 estudar interações e comportamento emergente --- não são opostas, mas complementares.
