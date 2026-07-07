@@ -208,6 +208,33 @@ fixo.
 Quando o gradiente analítico não está disponível --- o que é comum em modelos definidos por
 EDOs --- usa-se aproximação por diferenças finitas:
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+    % Eixos
+    \draw[->, thick] (0,0) -- (6,0) node[right, font=\small] {$\theta$};
+    \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$J$};
+
+    % Função objetivo (parábola)
+    \draw[thick, azulescuro, line width=1.2pt, domain=0.3:5.7, samples=100, smooth]
+        plot (\x, {0.3*(\x-2.7)^2 + 0.4});
+
+    % Iterações do gradient descent (4 passos)
+    \foreach \x/\y in {4.5/1.4, 3.8/0.96, 3.3/0.7, 3.0/0.55} {
+        \fill[red] (\x,\y) circle (1.8pt);
+        \draw[->, very thick, verdeacido] (\x,\y) -- +(-0.45,-0.30);
+    }
+    \fill[red] (2.7,0.4) circle (2pt);
+    \node[below right, font=\footnotesize, red] at (2.7,0.4) {Mínimo};
+    \node[above, font=\footnotesize, red] at (4.5,1.4) {Início};
+
+    % Curva tracejada final
+    \draw[densely dotted, gray] (2.7,0) -- (2.7,3.2);
+\end{tikzpicture}
+\caption{Convergência iterativa do \emph{gradient descent}. A partir de um ponto inicial $\theta^{(0)}$ (vermelho, à direita), cada iteração desloca os parâmetros na direção oposta ao gradiente (setas verdes), com tamanho de passo proporcional à magnitude do gradiente e à taxa de aprendizado $\alpha$. A sequência de pontos converge assintoticamente ao mínimo da função objetivo $J(\theta)$ --- aqui, em $\theta^* \approx 2{,}7$.}
+\label{fig:05-gradient}
+\end{figure}
+
 \begin{equation}
 \frac{\partial J}{\partial \theta_i} \approx \frac{J(\boldsymbol{\theta} + h \mathbf{e}_i) - J(\boldsymbol{\theta})}{h}
 \end{equation}
