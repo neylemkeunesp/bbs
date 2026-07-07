@@ -16,6 +16,22 @@ computacionalmente distribuições de fluxo em redes de escala genômica; e modo
 de fluxo como representação estrutural do espaço de soluções possíveis. Encerramos com
 a metabolômica e sua integração com os demais níveis ômicos.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=2.5cm, scale=0.95, transform shape]
+    \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] (nut) {Nutrientes};
+    \node[draw, circle, fill=azulclaro!30, text width=2cm, align=center, right=of nut] (met) {Metabolismo};
+    \node[draw, circle, fill=verdeacido!30, text width=1.5cm, align=center, above right=1cm and 1.5cm of met] (atp) {Energia\\(ATP)};
+    \node[draw, circle, fill=roxodna!30, text width=1.5cm, align=center, below right=1cm and 1.5cm of met] (bio) {Biomassa};
+
+    \draw[->, thick, azulescuro, line width=1.5pt] (nut) -- (met);
+    \draw[->, thick, azulescuro, line width=1.5pt] (met) -- (atp);
+    \draw[->, thick, azulescuro, line width=1.5pt] (met) -- (bio);
+\end{tikzpicture}
+\caption{Visão esquemática do metabolismo celular. Nutrientes externos (glicose, aminoácidos, etc.) entram na rede metabólica, onde são processados por centenas a milhares de reações enzimáticas. Os produtos finais bifurcados são a \emph{energia química} (ATP, NADH --- para funções celulares) e a \emph{biomassa} (proteínas, lipídios, ácidos nucleicos --- para crescimento e divisão).}
+\label{fig:08-metabolismo}
+\end{figure}
+
 \section{Cinéticas de Reações Metabólicas}
 
 \subsection{Lei de Ação de Massas e Michaelis-Menten Reversível}
