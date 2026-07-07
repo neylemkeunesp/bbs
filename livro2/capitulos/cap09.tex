@@ -235,6 +235,33 @@ extracelulares.
 A cascata MAPK (proteína quinase ativada por mitógeno) é o protótipo de cascata
 de fosforilação em biologia. A sequência canônica é:
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape,
+    box/.style={rectangle, draw, text width=2.2cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+    \node[box, fill=laranjacel!30] (rtk) {RTK};
+    \node[box, fill=roxodna!20, below of=rtk, node distance=1.2cm] (grb) {Grb2/SOS};
+    \node[box, fill=verdeacido!30, below of=grb, node distance=1.2cm] (ras) {Ras-GTP};
+    \node[box, fill=azulclaro!40, below of=ras, node distance=1.2cm] (raf) {Raf\\(MAPKKK)};
+    \node[box, fill=azulclaro!50, below of=raf, node distance=1.2cm] (mek) {MEK\\(MAPKK)};
+    \node[box, fill=azulclaro!60, below of=mek, node distance=1.2cm] (erk) {ERK\\(MAPK)};
+    \node[box, fill=yellow!30, below of=erk, node distance=1.2cm] (tf) {Fatores\\de\\Transcrição\\(c-Fos, Elk-1)};
+
+    \draw[->, thick] (rtk) -- (grb);
+    \draw[->, thick] (grb) -- node[right, font=\footnotesize] {ativação} (ras);
+    \draw[->, thick] (ras) -- (raf);
+    \draw[->, thick] (raf) -- node[right, font=\footnotesize] {P} (mek);
+    \draw[->, thick] (mek) -- node[right, font=\footnotesize] {P\,P} (erk);
+    \draw[->, thick] (erk) -- (tf);
+
+    \node[below of=tf, node distance=1.0cm, text width=3.2cm, align=center, font=\footnotesize, fill=verdeacido!15, rounded corners]
+        (resp) {\textbf{Resposta:}\\Proliferação\\Diferenciação\\Sobrevivência};
+    \draw[->, thick] (tf) -- (resp);
+\end{tikzpicture}
+\caption{Cascata canônica MAPK/ERK. A ativação de um receptor tirosina quinase (RTK) na membrana inicia uma cadeia de fosforilação sequencial: Grb2/SOS ativa a GTPase Ras, que ativa Raf (MAPKKK), que fosforila MEK (MAPKK), que fosforila ERK (MAPK). ERK ativada transloca para o núcleo e fosforila fatores de transcrição, gerando respostas de proliferação, diferenciação ou sobrevivência. Cada passo da cascata amplifica o sinal --- tipicamente 10 a 100 vezes --- e a fosforilação dupla de ERK (P\,P) serve como um \emph{switch} digital.}
+\label{fig:09-mapk}
+\end{figure}
+
 $$\mathrm{RTK} \xrightarrow{\text{Grb2/SOS}} \mathrm{Ras\text{-}GTP}
 \xrightarrow{} \mathrm{Raf\;(MAPKKK)} \xrightarrow{P}
 \mathrm{MEK\;(MAPKK)} \xrightarrow{P\,P}
