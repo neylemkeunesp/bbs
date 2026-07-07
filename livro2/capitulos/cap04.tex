@@ -65,6 +65,45 @@ O ponto fixo é \textbf{estável} se $|f'(x^*)| < 1$ e \textbf{instável} se $|f
 Para o ponto não-trivial $x^* = 1 - 1/r$, tem-se $f'(x^*) = 2 - r$, de modo que a
 estabilidade é garantida para $|2 - r| < 1$, ou seja, $1 < r < 3$.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+    % Curva de duplicação de período (estilizada)
+    \draw[->, thick] (0,0) -- (10,0) node[right, font=\small] {$r$};
+    \draw[->, thick] (0,0) -- (0,5) node[above, font=\small] {$x^*$};
+
+    % Regime 0 < r < 1 (extinção)
+    \draw[thick, azulescuro] (0.5,0.5) -- (2.0,0.5);
+    \node[above, font=\footnotesize] at (1.25,0.5) {Extinção};
+
+    % Regime 1 < r < 3 (ponto fixo)
+    \draw[thick, verdeacido] (2.0,2.0) -- (5.5,1.0);
+    \node[above, font=\footnotesize] at (3.7,1.7) {Ponto fixo estável};
+
+    % Bifurcação de período 2
+    \draw[thick, laranjacel] (5.5,1.0) -- (5.5,2.5);
+    \draw[thick, laranjacel] (5.5,1.0) .. controls (6.5,0.5) and (7.5,0.3) .. (8.0,0.7);
+    \draw[thick, laranjacel] (5.5,2.5) .. controls (6.5,2.8) and (7.5,3.0) .. (8.0,2.5);
+    \node[right, font=\footnotesize, laranjacel] at (8.0,1.6) {Período 2};
+
+    % Bifurcação 4, 8, caos
+    \draw[thick, roxodna] (8.0,0.7) -- (8.2,0.5);
+    \draw[thick, roxodna] (8.0,2.5) -- (8.2,2.7);
+    \draw[thick, roxodna] (8.0,0.3) -- (8.4,0.8);
+    \draw[thick, roxodna] (8.0,2.7) -- (8.4,2.4);
+    \draw[thick, roxodna, dashed] (8.4,1.5) -- (9.5,1.5);
+    \node[right, font=\footnotesize, roxodna] at (9.5,1.5) {Caos};
+
+    % Marcas
+    \draw[dashed] (5.5,0) -- (5.5,2.5);
+    \node[below, font=\footnotesize] at (5.5,-0.05) {$r=3$};
+    \draw[dashed] (8.4,0) -- (8.4,1.5);
+    \node[below, font=\footnotesize] at (8.4,-0.05) {$r \approx 3{,}57$};
+\end{tikzpicture}
+\caption{Diagrama de bifurcações do mapa logístico $x_{t+1} = r x_t(1 - x_t)$. Para $0 < r < 1$, a população se extingue ($x^* = 0$, linha azul). Para $1 < r < 3$, o sistema converge a um ponto fixo estável $x^* = 1 - 1/r$ (curva verde). Em $r = 3$, ocorre a primeira \emph{bifurcação de duplicação de período}: o ponto fixo se torna instável e surge um ciclo de período 2 (laranja). Sucessivas duplicações de período (4, 8, 16, ...) culminam em caos determinístico para $r \gtrsim 3{,}57$ (região roxa).}
+\label{fig:04-logistico}
+\end{figure}
+
 \begin{lstlisting}[language=Python, caption=Diagrama de bifurcacao do mapa logistico]
 import numpy as np
 import matplotlib.pyplot as plt
@@ -264,6 +303,35 @@ organiza todos os tipos possíveis:
 Esse diagrama é uma ferramenta poderosa: basta calcular traço e determinante do jacobiano
 para classificar o equilíbrio sem resolver explicitamente os autovalores.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Diagrama de classificação
+    \draw[->, thick] (-3.5,0) -- (3.5,0) node[right, font=\small] {$\tau$};
+    \draw[->, thick] (0,-3) -- (0,3) node[above, font=\small] {$\Delta$};
+
+    % Parábola discriminante tau² = 4 Delta
+    \draw[thick, azulescuro, dashed, domain=-2.8:2.8, samples=100]
+        plot (\x, {(\x*\x)/4});
+    \node[right, font=\footnotesize, azulescuro] at (1.4, 0.5) {$\tau^2 = 4\Delta$};
+
+    % Regiões coloridas
+    \fill[red!10] (-3.5,0) rectangle (3.5,-3); % sela
+    \fill[verdeacido!15] (-3.5,0) -- (-3.5,0.2) .. controls (-1.5,0.5) and (0,0.2) .. (3.5,0.3) -- (3.5,3) -- (-3.5,3) -- cycle; % acima da parábola
+    \fill[azulclaro!25] (0,0) ellipse (1.5 and 0.4); % foco
+
+    % Labels
+    \node[red, font=\bfseries\large] at (-2, -1.5) {Sela};
+    \node[verdeescuro, font=\bfseries] at (0, 2.3) {Espiral/Centro};
+    \node[azulescuro, font=\bfseries] at (-2, 0.7) {Nó estável};
+    \node[azulescuro, font=\bfseries] at (2, 0.7) {Nó instável};
+    \node at (0, 0) {+};
+
+\end{tikzpicture}
+\caption{Diagrama de classificação dos pontos de equilíbrio em sistemas 2D pelo par $(\tau = \operatorname{tr}(J), \Delta = \det(J))$. A parábola $\tau^2 = 4\Delta$ separa regiões de autovalores reais (nós e selas) e complexos (espirais e centros). O eixo $\Delta < 0$ corresponde a pontos de sela. Para $\Delta > 0$, o sinal de $\tau$ determina se o equilíbrio é estável (esquerda) ou instável (direita).}
+\label{fig:04-classificacao}
+\end{figure}
+
 \begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e autovalores com SymPy]
 import sympy as sp
 import numpy as np
@@ -362,6 +430,41 @@ perturbações podem induzir transições irreversíveis de estado.
 A bifurcação de Hopf é o mecanismo gerador de oscilações biológicas. Um equilíbrio estável
 perde estabilidade quando um par de autovalores complexos conjugados $\lambda = \alpha(\mu) \pm i\omega(\mu)$
 atravessa o eixo imaginário: $\alpha(\mu_c) = 0$, com $d\alpha/d\mu|_{\mu_c} \neq 0$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    % Painel 1: antes da Hopf (espiral estável)
+    \begin{scope}[xshift=0cm]
+        \draw[->, thick] (-2,0) -- (2,0) node[right, font=\small] {$x$};
+        \draw[->, thick] (0,-2) -- (0,2) node[above, font=\small] {$y$};
+        \fill[azulescuro] (0,0) circle (2.5pt);
+        \node[below right, font=\footnotesize, azulescuro] at (0,0) {$\mu < \mu_c$};
+        % Espiral convergente
+        \draw[thick, verdeacido, smooth, domain=0:540, samples=100]
+            plot ({1.5*cos(\x)*exp(-\x/220)}, {1.5*sin(\x)*exp(-\x/220)});
+        \node[below, font=\small] at (0,-2.5) {Espiral estável};
+    \end{scope}
+
+    % Painel 2: depois da Hopf (ciclo limite)
+    \begin{scope}[xshift=5cm]
+        \draw[->, thick] (-2,0) -- (2,0) node[right, font=\small] {$x$};
+        \draw[->, thick] (0,-2) -- (0,2) node[above, font=\small] {$y$};
+        \fill[red] (0,0) circle (2.5pt);
+        \node[below right, font=\footnotesize, red] at (0,0) {$\mu > \mu_c$};
+        % Ciclo limite
+        \draw[thick, laranjacel, line width=1.5pt] (0,0) circle (1.2);
+        % Seta no ciclo
+        \draw[->, very thick, laranjacel] (1.0,0.5) -- (1.2,0);
+        % Espiral divergente
+        \draw[thick, verdescuro, smooth, dashed, domain=0:540, samples=80]
+            plot ({0.3*cos(\x)*exp(\x/600)}, {0.3*sin(\x)*exp(\x/600)});
+        \node[below, font=\small] at (0,-2.5) {Ciclo limite estável};
+    \end{scope}
+\end{tikzpicture}
+\caption{Bifurcação de Hopf supercrítica. (Esquerda) Para $\mu < \mu_c$, o equilíbrio é um foco estável: trajetórias vizinhas convergem para a origem em espiral amortecida. (Direita) Para $\mu > \mu_c$, o equilíbrio se torna instável e surge um \emph{ciclo limite} estável --- uma órbita fechada de raio $A \sim \sqrt{\mu - \mu_c}$ para a qual todas as trajetórias vizinhas convergem. Esta é a transição que gera oscilações auto-sustentadas em sistemas biológicos como ritmos circadianos e oscilações de NF-$\kappa$B.}
+\label{fig:04-hopf}
+\end{figure}
 
 Na bifurcação de Hopf \emph{supercrítica}, para $\mu > \mu_c$, surge um ciclo limite
 estável ao redor do equilíbrio (agora instável). A amplitude do ciclo cresce como
