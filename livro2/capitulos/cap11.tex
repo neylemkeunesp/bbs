@@ -48,7 +48,41 @@ uma perturbação, e como esse padrão de organização pode ser medido,
 quantificado e previsto. Para responder a essas perguntas, três ferramentas
 se mostraram particularmente úteis: medições multi-camada em séries
 temporais, integração computacional rigorosa, e modelos matemáticos que
-oferecem uma hipótese explícita e falsificável sobre o sistema.
+oferecem uma hipótese explícita e falsificável sobre o sistema. A
+Figura~\ref{fig:11-multiescala} ilustra esquematicamente o escopo da
+integração multi-ômica: as cinco camadas ômicas --- genômica,
+transcriptômica, proteômica, metabolômica e fenômica --- alimentam
+modelos em quatro escalas biológicas --- molecular, celular, tecidual e
+do organismo ---, em uma pirâmide de integração que conecta os dados
+com a função sistêmica.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.8, every node/.style={font=\small}]
+    % Multi-scale integration
+    \node[draw, circle, fill=roxodna!30, text width=2cm, align=center] at (0,3) {Molecular};
+    \node[draw, circle, fill=laranjacel!30, text width=2cm, align=center] at (3,3) {Celular};
+    \node[draw, circle, fill=verdeacido!30, text width=2cm, align=center] at (6,3) {Tecido};
+    \node[draw, circle, fill=azulclaro!30, text width=2cm, align=center] at (9,3) {Organismo};
+
+    % Arrows showing integration
+    \draw[->, ultra thick] (1,3) -- (2,3);
+    \draw[->, ultra thick] (4,3) -- (5,3);
+    \draw[->, ultra thick] (7,3) -- (8,3);
+
+    % Bottom layer: omics
+    \node[font=\tiny] at (0,1.5) {Genômica};
+    \node[font=\tiny] at (2,1.5) {Transcriptômica};
+    \node[font=\tiny] at (4,1.5) {Proteômica};
+    \node[font=\tiny] at (6,1.5) {Metabolômica};
+    \node[font=\tiny] at (8,1.5) {Fenômica};
+
+    \draw[<->, thick, azulescuro] (0,2) -- (8,2);
+    \node[above, font=\footnotesize] at (4,2) {Integração Multi-Escala};
+\end{tikzpicture}
+\caption{Esquema conceitual de integração multiômica em múltiplas escalas. As cinco camadas de dados ômicos (genômica, transcriptômica, proteômica, metabolômica, fenômica --- embaixo) alimentam modelos em quatro níveis de organização biológica (molecular, celular, tecidual, organismo --- em cima). As setas entre níveis indicam que a integração permite transferir informação de uma escala para a outra --- por exemplo, inferir funções celulares a partir de dados moleculares, ou fenótipos organismais a partir de assinaturas teciduais.}
+\label{fig:11-multiescala}
+\end{figure}
 
 \subsection{Estratégia de Integração Multi-Ômica}
 \label{sub:image11-estrategia}
@@ -78,7 +112,35 @@ sparsidade: muitos zeros legítimos (genes não-expressos, proteínas abaixo do
 limite de detecção). \textbf{Quarto}, ruído técnico: preparação de amostra,
 lote de reagente, profundidade de sequenciamento. \textbf{Quinto}, ruído
 biológico: variabilidade inter-individual e inter-tempo. Resolver esses cinco
-desafios é o trabalho prático do bioinformata de sistemas.
+desafios é o trabalho prático do bioinformata de sistemas. A
+Figura~\ref{fig:11-camadas-omicas} sintetiza as camadas ômicas em uma
+pilha vertical análoga ao dogma central: do genoma (estático) ao
+transcriptoma (resposta rápida), ao proteoma (função executora) e ao
+metaboloma (fenótipo mais próximo).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % Central dogma with omics layers
+    \node[draw, rectangle, fill=roxodna!30, minimum width=2.5cm, minimum height=1cm] at (0,4) {Genômica};
+    \node[draw, rectangle, fill=laranjacel!30, minimum width=2.5cm, minimum height=1cm] at (0,2.5) {Transcriptômica};
+    \node[draw, rectangle, fill=verdeacido!30, minimum width=2.5cm, minimum height=1cm] at (0,1) {Proteômica};
+    \node[draw, rectangle, fill=azulclaro!30, minimum width=2.5cm, minimum height=1cm] at (0,-0.5) {Metabolômica};
+
+    % Arrows showing flow
+    \draw[->, ultra thick] (0,3.5) -- (0,3.0) node[right, midway, font=\tiny] {transcrição};
+    \draw[->, ultra thick] (0,2.0) -- (0,1.5) node[right, midway, font=\tiny] {tradução};
+    \draw[->, ultra thick] (0,0.5) -- (0,0) node[right, midway, font=\tiny] {catálise};
+
+    % Characteristics on right
+    \node[right, font=\tiny, text width=3.5cm] at (2,4) {DNA: estático, variações\\SNPs, CNVs, mutações};
+    \node[right, font=\tiny, text width=3.5cm] at (2,2.5) {mRNA: dinâmico, 10$^3$-10$^7$ cópias\\responde rapidamente};
+    \node[right, font=\tiny, text width=3.5cm] at (2,1) {Proteínas: funcional, modificações\\10$^4$-10$^6$ moléculas};
+    \node[right, font=\tiny, text width=3.5cm] at (2,-0.5) {Metabólitos: fenotípico\\10$^{-9}$-10$^{-3}$ M};
+\end{tikzpicture}
+\caption{Camadas ômicas em analogia ao dogma central. Genômica (estática, escala tecidual), transcriptômica (dinâmica, 10$^3$--10$^7$ cópias), proteômica (10$^4$--10$^6$ moléculas, com modificações pós-traducionais) e metabolômica (10$^{-9}$--10$^{-3}$ M) são lidas em série: cada camada adiciona informação complementar sobre o estado do sistema. A seta de catálise --- proteína $\to$ metabólito --- é a única via que modifica o ambiente químico; as outras são informacionais.}
+\label{fig:11-camadas-omicas}
+\end{figure}
 
 \section{Integração Multi-ômica}
 \label{sec:11-multio-mica}
@@ -104,6 +166,67 @@ Três famílias principais são distinguidas pela literatura:
   o fim, e os resultados são então combinados por voto, média ou regra
   bayesiana. Robusto a problemas específicos de uma camada; mais conservador.
 \end{itemize}
+
+A Figura~\ref{fig:11-fusao} compara as três estratégias graficamente:
+na \emph{early fusion} todas as camadas são concatenadas em uma única
+matriz integrada; na \emph{intermediate fusion} cada camada é reduzida
+a representações latentes (módulos) que depois se combinam; na \emph{late
+fusion} cada camada é modelada independentemente e os modelos produzem
+um consenso por voto, média ou regra bayesiana.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.7, every node/.style={font=\tiny}]
+    % Early fusion
+    \node[font=\small, above] at (2,5) {\textbf{Early Fusion}};
+    \node[draw, fill=roxodna!30] (g1) at (0,4) {Genômica};
+    \node[draw, fill=laranjacel!30] (t1) at (1.5,4) {Transcr.};
+    \node[draw, fill=verdeacido!30] (p1) at (3,4) {Proteômica};
+    \node[draw, fill=azulclaro!30] (m1) at (4.5,4) {Metabol.};
+    \node[draw, fill=yellow!30, text width=1.5cm, align=center] (int1) at (2.25,2.5) {Integração\\Completa};
+    \node[draw, fill=gray!30, text width=1.5cm, align=center] (mod1) at (2.25,1) {Modelo};
+
+    \draw[->, thick] (g1) -- (int1);
+    \draw[->, thick] (t1) -- (int1);
+    \draw[->, thick] (p1) -- (int1);
+    \draw[->, thick] (m1) -- (int1);
+    \draw[->, thick] (int1) -- (mod1);
+
+    % Intermediate fusion
+    \node[font=\small, above] at (8,5) {\textbf{Intermediate Fusion}};
+    \node[draw, fill=roxodna!30] (g2) at (6.5,4) {Genômica};
+    \node[draw, fill=laranjacel!30] (t2) at (8,4) {Transcr.};
+    \node[draw, fill=verdeacido!30] (p2) at (9.5,4) {Proteômica};
+    \node[draw, fill=yellow!30] (int2a) at (7.25,2.8) {Módulo 1};
+    \node[draw, fill=yellow!30] (int2b) at (9.25,2.8) {Módulo 2};
+    \node[draw, fill=gray!30, text width=1.5cm, align=center] (mod2) at (8.25,1) {Modelo};
+
+    \draw[->, thick] (g2) -- (int2a);
+    \draw[->, thick] (t2) -- (int2a);
+    \draw[->, thick] (p2) -- (int2b);
+    \draw[->, thick] (int2a) -- (mod2);
+    \draw[->, thick] (int2b) -- (mod2);
+
+    % Late fusion
+    \node[font=\small, above] at (13.5,5) {\textbf{Late Fusion}};
+    \node[draw, fill=roxodna!30, text width=1.2cm, align=center] (g3) at (12,4) {Genômica};
+    \node[draw, fill=laranjacel!30, text width=1.2cm, align=center] (t3) at (13.5,4) {Transcr.};
+    \node[draw, fill=verdeacido!30, text width=1.2cm, align=center] (p3) at (15,4) {Proteômica};
+    \node[draw, fill=yellow!30] (m3a) at (12,2.8) {Modelo 1};
+    \node[draw, fill=yellow!30] (m3b) at (13.5,2.8) {Modelo 2};
+    \node[draw, fill=yellow!30] (m3c) at (15,2.8) {Modelo 3};
+    \node[draw, fill=gray!30, text width=1.5cm, align=center] (final) at (13.5,1) {Consenso};
+
+    \draw[->, thick] (g3) -- (m3a);
+    \draw[->, thick] (t3) -- (m3b);
+    \draw[->, thick] (p3) -- (m3c);
+    \draw[->, thick] (m3a) -- (final);
+    \draw[->, thick] (m3b) -- (final);
+    \draw[->, thick] (m3c) -- (final);
+\end{tikzpicture}
+\caption{Três estratégias de fusão de dados multi-ômicos. \textbf{Esquerda (Early Fusion):} todas as camadas são concatenadas em uma única matriz; o modelo recebe a matriz completa. \textbf{Centro (Intermediate Fusion):} cada camada é reduzida a representações latentes (módulos) --- e.g., MOFA, autoencoders ---, e os módulos são então combinados em um modelo único. \textbf{Direita (Late Fusion):} cada camada é modelada independentemente até o fim; o resultado final é um consenso entre os modelos (voto, média, regra bayesiana).}
+\label{fig:11-fusao}
+\end{figure}
 
 \subsection{Métodos Baseados em Correlação}
 \label{sub:image11-correlacao}
@@ -185,7 +308,40 @@ LIGER mostrando-se particularmente eficazes para integração de dados de
 scATAC-seq. O pacote Python \texttt{scIB} e o pipeline de benchmarking
 distribuídos pelos autores permitem que novos métodos ou novos conjuntos
 de dados sejam avaliados sob o mesmo protocolo padronizado, oferecendo
-um critério objetivo para a escolha de ferramentas em projetos concretos.
+um critério objetivo para a escolha de ferramentas em projetos concretos. A
+Figura~\ref{fig:11-workflow} apresenta o pipeline típico de uma análise
+multiômica: dos dados brutos heterogêneos (múltiplas plataformas) passa-se
+por controle de qualidade, normalização, integração, análise estatística,
+modelagem computacional e, finalmente, validação experimental --- com um
+elo de retroalimentação (linha tracejada vermelha) que conecta a
+validação de volta à modelagem.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=1.2cm, scale=0.75, transform shape,
+    box/.style={rectangle, draw, text width=3cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+
+    \node[box, fill=roxodna!30] (raw) {Dados Brutos\\Multi-Ômicos};
+    \node[box, fill=laranjacel!30, below of=raw] (qc) {Controle de\\Qualidade};
+    \node[box, fill=verdeacido!30, below of=qc] (norm) {Normalização\\e Filtro};
+    \node[box, fill=azulclaro!30, below of=norm] (int) {Integração\\de Dados};
+    \node[box, fill=yellow!30, below of=int] (anal) {Análise\\Estatística};
+    \node[box, fill=gray!30, below of=anal] (model) {Modelagem\\de Sistemas};
+    \node[box, fill=green!30, below of=model] (val) {Validação\\Experimental};
+
+    \draw[->, thick] (raw) -- (qc);
+    \draw[->, thick] (qc) -- (norm);
+    \draw[->, thick] (norm) -- (int);
+    \draw[->, thick] (int) -- (anal);
+    \draw[->, thick] (anal) -- (model);
+    \draw[->, thick] (model) -- (val);
+
+    % Feedback loop
+    \draw[->, thick, dashed, red] (val) -| ++(2,0) |- (model);
+\end{tikzpicture}
+\caption{Pipeline típico de análise multiômica. A sequência canônica envolve sete etapas: (1) aquisição de dados brutos multi-ômicos (RNA-seq, proteômica, metabolômica, etc.); (2) controle de qualidade --- remoção de outliers, FastQC/MultiQC; (3) normalização e filtro (z-score, log, correção de efeito de lote); (4) integração de dados (correlação, redes, ML); (5) análise estatística (testes, FDR, enriquecimento); (6) modelagem de sistemas (ODEs, FBA, simulação); (7) validação experimental (qPCR, Western, ensaios enzimáticos). O elo de retroalimentação tracejado (vermelho) simboliza que resultados experimentais negativos podem levar a revisão do modelo.}
+\label{fig:11-workflow}
+\end{figure}
 
 \begin{lstlisting}[language=Python, caption=Integracao multi-omica simples]
 import pandas as pd
@@ -297,7 +453,51 @@ subunidade catalítica TPS1A é regulada por fosforilação por PKA, Snf1 e
 Pho85. \textbf{Terceira}: a trealase neutra NTH1 é ativada por fosforilação
 via PKA quando glicose retorna ao meio --- exatamente o momento em que a
 trealose deve ser mobilizada. T6P também funciona como inibidor alostérico
-de hexoquinase II e, em menor grau, regula a glicólise via PFK.
+de hexoquinase II e, em menor grau, regula a glicólise via PFK. A
+Figura~\ref{fig:11-via-trealose} esquematiza a via completa: G6P e
+UDP-Glc são convertidos em T6P pela enzima TPS1 (subunidade catalítica
+do complexo TSC), T6P é desfosforilado por TPS2 produzindo trealose
+livre, e a trealose é hidrolisada pela enzima NTH1 (trealase neutra) em
+duas glicoses. A seta vermelha \emph{Estresse} $\to$ UDP-Glc indica a
+ativação transcricional de TPS1 sob choque térmico; a seta azul
+\emph{Recuperação} $\to$ Trealose indica a mobilização durante a
+recuperação.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\small}]
+    % Synthesis pathway
+    \node[draw, circle, fill=azulclaro!30] (g6p) at (0,3) {G6P};
+    \node[draw, circle, fill=azulclaro!30] (udpg) at (0,1.5) {UDP-Glc};
+    \node[draw, circle, fill=azulclaro!30] (t6p) at (3,1.5) {T6P};
+    \node[draw, circle, fill=laranjacel!50, text width=1.5cm, align=center] (tre) at (6,1.5) {Trealose};
+
+    % Enzymes
+    \node[draw, rectangle, fill=verdeacido!50, font=\tiny] (tps1) at (1.5,2.2) {TPS1};
+    \node[draw, rectangle, fill=verdeacido!50, font=\tiny] (tps2) at (4.5,2.2) {TPS2};
+    \node[draw, rectangle, fill=red!50, font=\tiny] (nth1) at (6,0) {NTH1};
+
+    % Reactions
+    \draw[->, ultra thick, azulescuro] (g6p) -- (udpg);
+    \draw[->, ultra thick, azulescuro] (udpg) -- (t6p) node[above, midway, font=\tiny] {+ G6P};
+    \draw[->, ultra thick, azulescuro] (t6p) -- (tre);
+    \draw[->, ultra thick, red] (tre) -- (6,0.3) node[right, midway, font=\tiny] {2 Glc};
+
+    % Enzyme labels
+    \draw[->, dashed] (tps1) -- (1.5,1.5);
+    \draw[->, dashed] (tps2) -- (4.5,1.5);
+    \draw[->, dashed] (nth1) -- (6,0.75);
+
+    % Regulation
+    \node[draw, ellipse, fill=yellow!30, font=\tiny] (stress) at (-2,1.5) {Estresse};
+    \draw[->, thick, red] (stress) -- (udpg) node[above, midway, font=\tiny] {$\uparrow$ síntese};
+
+    \node[draw, ellipse, fill=green!30, font=\tiny] (normal) at (8,1.5) {Recuperação};
+    \draw[->, thick, blue] (normal) -- (tre) node[above, midway, font=\tiny] {$\uparrow$ degradação};
+\end{tikzpicture}
+\caption{Via de biossíntese e degradação da trealose em \textit{Saccharomyces cerevisiae}. A síntese ocorre em duas etapas: TPS1 (trealose-6-fosfato sintase) catalisa UDP-Glc + G6P $\to$ T6P; TPS2 (T6P fosfatase) converte T6P em trealose livre. A degradação é catalisada por NTH1 (trealase neutra), que hidrolisa trealose em duas glicoses. A regulação é transcricional (estresse \emph{via} Msn2/4 ativa TPS1/TPS2), pós-traducional (PKA fosforila e ativa NTH1) e alostérica (T6P inibe PFK e hexoquinase II).}
+\label{fig:11-via-trealose}
+\end{figure}
 
 \subsection{Dados Experimentais Multi-ômicos}
 \label{sub:image11-dados}
