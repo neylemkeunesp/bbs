@@ -237,7 +237,6 @@ condições pareadas:
 \begin{equation}
 \rho_{XY} = \frac{\operatorname{Cov}(X, Y)}{\sigma_X \sigma_Y}
 \end{equation}
-
 A correlação \emph{parcial} $\rho_{XY \mid Z}$ controla o efeito de um terceiro
 conjunto de variáveis e é usada para distinguir correlação direta de
 correlação mediada. A \emph{informação mútua} $I(X;Y)$ estende a análise a
@@ -535,7 +534,6 @@ variáveis em forma de EDOs:
 \frac{d[T6P]}{dt}                &= v_{TPS1} - v_{TPS2} \\
 \frac{d[\mathrm{Trealose}]}{dt}  &= v_{TPS2} - v_{NTH1}
 \end{align}
-
 onde $f(\text{estresse})$ é uma função de Hill com coeficiente 4 e
 constante de meio-ativação $K_d \approx 0{,}5$ (a intensidade de
 estresse é a entrada do modelo). As velocidades seguem cinética Michaelis-Menten
@@ -758,12 +756,10 @@ confundidoras pela fórmula:
 \rho_{XY \mid Z} = \frac{\rho_{XY} - \rho_{XZ}\rho_{YZ}}
                         {\sqrt{(1 - \rho_{XZ}^2)(1 - \rho_{YZ}^2)}}
 \end{equation}
-
 Informação mútua detecta relações não-monotônicas:
 \begin{equation}
 I(X;Y) = \sum_{x, y} p(x, y)\, \log \frac{p(x, y)}{p(x)\, p(y)}
 \end{equation}
-
 Graphical LASSO (gLASSO) infere grafos gaussianos esparsos a partir de
 correlações amostrais, penalizando o número de arestas. Redes Bayesianas
 dinâmicas aprendem grafos causais em séries temporais, com a vantagem

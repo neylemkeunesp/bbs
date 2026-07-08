@@ -50,7 +50,6 @@ necessária a forma reversível:
 \begin{equation}
 v = \frac{V_f \frac{[S]}{K_{MS}} - V_r \frac{[P]}{K_{MP}}}{1 + \frac{[S]}{K_{MS}} + \frac{[P]}{K_{MP}}}
 \end{equation}
-
 A consistência termodinâmica exige $K_{eq} = V_f K_{MP} / (V_r K_{MS})$ --- a constante
 de equilíbrio é determinada pelos parâmetros cinéticos, não independentemente.
 
@@ -68,7 +67,6 @@ degradação:
 \begin{equation}
 \frac{dX_i}{dt} = \alpha_i \prod_{j=1}^{n} X_j^{g_{ij}} - \beta_i \prod_{j=1}^{n} X_j^{h_{ij}}
 \end{equation}
-
 Os expoentes $g_{ij}$ e $h_{ij}$ são as elasticidades cinéticas, equivalentes aos
 coeficientes de sensibilidade da MCA. A grande vantagem é analítica: o estado estacionário
 é encontrado por um sistema de equações lineares em escala logarítmica, permitindo análise
@@ -128,12 +126,10 @@ S = \begin{bmatrix}
 \end{bmatrix}
 \begin{matrix} \leftarrow A \\ \leftarrow B \\ \leftarrow C \\ \leftarrow D \end{matrix}
 \end{equation}
-
 O balanço dinâmico de massa para todos os metabólitos é simplesmente:
 \begin{equation}
 \frac{d\mathbf{c}}{dt} = S \cdot \mathbf{v}
 \end{equation}
-
 onde $\mathbf{c}$ é o vetor de concentrações e $\mathbf{v}$ o vetor de fluxos. A hipótese
 fundamental da MFA é a do \emph{pseudo-estado estacionário}: os metabólitos intracelulares
 atingem estado estacionário muito mais rapidamente do que as variáveis externas (biomassa,
@@ -142,7 +138,6 @@ nutrientes no meio), portanto $d\mathbf{c}/dt \approx \mathbf{0}$ e:
 \begin{equation}
 S \cdot \mathbf{v} = \mathbf{0}
 \end{equation}
-
 Esse sistema de equações lineares homogêneas é geralmente \emph{subdeterminado}: há mais
 reações ($n$) do que metabólitos ($m$), portanto o espaço nulo de $S$ é não-trivial e
 infinitas distribuições de fluxo satisfazem o balanço de massa. Para determinar $\mathbf{v}$
@@ -220,7 +215,6 @@ O problema de FBA é formulado como programação linear:
 \text{sujeito a} \quad & S \cdot \mathbf{v} = \mathbf{0} \\
 & \mathbf{v}_{min} \leq \mathbf{v} \leq \mathbf{v}_{max} \notag
 \end{align}
-
 O vetor $\mathbf{c}$ define o objetivo: tipicamente $c_i = 1$ para a reação de biomassa e
 $c_i = 0$ para todas as demais, equivalendo a maximizar a taxa de crescimento. Os limites
 $\mathbf{v}_{max}$ e $\mathbf{v}_{min}$ codificam restrições termodinâmicas (reações

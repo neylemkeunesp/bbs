@@ -80,14 +80,12 @@ crescimento é proporcional ao tamanho da população:
 \begin{equation}
 \frac{dN}{dt} = r N
 \end{equation}
-
 O parâmetro $r = b - d$ é a \emph{taxa intrínseca de crescimento per capita} --- a
 diferença entre as taxas de natalidade e mortalidade, ambas expressas na
 mesma escala por indivíduo. A solução é imediata:
 \begin{equation}
 N(t) = N_0\, e^{rt}
 \end{equation}
-
 O modelo exponencial descreve com precisão surpreendente populações em regimes
 de baixa densidade, longe da capacidade de suporte do ambiente. Bactérias em
 meio fresco, populações de insetos durante surtos e processos tumorais
@@ -134,12 +132,10 @@ $K$ (a densidade máxima sustentável pelo ambiente):
 \begin{equation}
 \frac{dN}{dt} = r N\left(1 - \frac{N}{K}\right)
 \end{equation}
-
 A solução analítica é a clássica sigmoidal:
 \begin{equation}
 N(t) = \frac{K}{1 + \left(\dfrac{K - N_0}{N_0}\right)\, e^{-rt}}
 \end{equation}
-
 A densidade $N = K/2$ merece destaque: é o ponto de inflexão da sigmoidal e o
 ponto em que a taxa $dN/dt$ é máxima. Populações abaixo desse valor estão em
 fase de aceleração; acima dele, em fase de desaceleração. Modelos logísticos
@@ -198,7 +194,6 @@ década de 1930, e a equação que o carrega é:
 \begin{equation}
 \frac{dN}{dt} = r N \left(1 - \frac{N}{K}\right) \left(\frac{N}{A} - 1\right)
 \end{equation}
-
 O parâmetro $A$, com $0 < A < K$, é a \emph{densidade crítica} de Allee --- a
 menor densidade compatível com crescimento populacional positivo. A equação
 admite três pontos de equilíbrio: $N^* = 0$ (extinção, estável), $N^* = A$
@@ -247,7 +242,6 @@ uma \emph{equação de diferença}. O modelo de Ricker é emblemático:
 \begin{equation}
 N_{t+1} = N_t\, e^{r\left(1 - \frac{N_t}{K}\right)}
 \end{equation}
-
 Apesar de sua forma inocente, o modelo de Ricker produz comportamento
 surpreendentemente rico: convergência monotônica para $K$ em baixos valores de
 $r$; oscilações amortecidas em valores intermediários; oscilações sustentadas;
@@ -355,7 +349,6 @@ a presença de presas beneficia o crescimento dos predadores proporcionalmente
 \frac{dV}{dt} &= \alpha V - \beta V P \\
 \frac{dP}{dt} &= \delta \beta V P - \gamma P
 \end{align}
-
 O parâmetro $\alpha$ é a taxa intrínseca de crescimento das presas na ausência
 de predação; $\beta$ é a taxa de encontro/predação; $\delta$ é a eficiência
 com que presas consumidas convertem-se em novos predadores; e $\gamma$ é a
@@ -366,7 +359,6 @@ em extinção de uma espécie --- e um equilíbrio não-trivial de coexistência
 \begin{equation}
 V^* = \frac{\gamma}{\delta \beta}, \qquad P^* = \frac{\alpha}{\beta}
 \end{equation}
-
 O Jacobiano no equilíbrio tem traço zero e determinante positivo. Seus
 autovalores são puramente imaginários $\pm i \sqrt{\alpha \gamma}$, indicando
 que o equilíbrio é um \emph{centro} --- nem atrator nem repulsor. Trajetórias
@@ -483,7 +475,6 @@ Lotka e Volterra, no mesmo estudo, propuseram o modelo de competição interespe
 \frac{dN_1}{dt} &= r_1 N_1 \left(1 - \frac{N_1 + \alpha_{12} N_2}{K_1}\right) \\
 \frac{dN_2}{dt} &= r_2 N_2 \left(1 - \frac{N_2 + \alpha_{21} N_1}{K_2}\right)
 \end{align}
-
 O parâmetro $\alpha_{12}$ expressa o efeito de um indivíduo da espécie 2
 sobre a espécie 1, em unidades de "equivalentes" da espécie 1; $\alpha_{21}$
 é a grandeza simétrica. Os quatro regimes qualitativos possíveis são definidos
@@ -549,7 +540,6 @@ por uma função crescente da densidade do parceiro:
 \frac{dN_1}{dt} &= r_1 N_1 \left(1 - \frac{N_1}{K_1 + \alpha_{12} N_2}\right) \\
 \frac{dN_2}{dt} &= r_2 N_2 \left(1 - \frac{N_2}{K_2 + \alpha_{21} N_1}\right)
 \end{align}
-
 Os mutualismos \emph{facultativos} --- aqueles em que cada espécie pode
 sobreviver sozinha --- diferem dos mutualismos \emph{obrigatórios}, nos quais
 a sobrevivência individual depende de interações com a outra espécie. As
@@ -570,7 +560,6 @@ assume distribuição de Poisson para os ataques:
 H_{t+1} &= \lambda H_t e^{-a P_t} \\
 P_{t+1} &= c H_t \left(1 - e^{-a P_t}\right)
 \end{align}
-
 O termo exponencial $e^{-a P_t}$ é a fração de hospedeiros que escapa do
 parasitismo na geração $t$; $\lambda$ é a taxa de reprodução do hospedeiro;
 $a$ é a área de descoberta do parasitóide; $c$ é o número médio de parasitóides
@@ -629,7 +618,6 @@ O modelo mais simples de uma doença conferindo imunidade permanente é o
 \frac{dI}{dt} &= \beta \frac{SI}{N} - \gamma I \\
 \frac{dR}{dt} &= \gamma I
 \end{align}
-
 onde $N = S + I + R$ é mantido constante (caso de doença com mortalidade
 desprezível em escala epidêmica). O parâmetro $\beta$ é a taxa de transmissão
 (contatos infectantes por unidade de tempo), e $\gamma$ é a taxa de
@@ -671,7 +659,6 @@ R_0 = \frac{\beta}{\gamma} = \underbrace{\beta}_{\text{contatos infectantes
 por unidade de tempo}} \times \underbrace{\frac{1}{\gamma}}_{\text{duração do
 período infeccioso}}
 \end{equation}
-
 O limiar epidêmico é exatamente $R_0 = 1$:
 \begin{itemize}
 \item $R_0 < 1$: a epidemia se extingue --- cada infectado gera em média
@@ -699,7 +686,6 @@ $R_0^{\mathrm{eff}} < 1$, donde:
 \begin{equation}
 f > 1 - \frac{1}{R_0}
 \end{equation}
-
 Para sarampo ($R_0 \approx 15$), $f > 0{,}93$ --- 93\% de cobertura. Esta é a
 exigência que torna a hesitação vacinal tão perigosa: a queda de 5\% na
 cobertura vacinal em algumas comunidades brasileiras nas últimas décadas já é
@@ -750,7 +736,6 @@ Nesses casos, a população retorna de $I$ diretamente a $S$, em vez de a $R$:
 \frac{dS}{dt} &= -\beta \frac{SI}{N} + \gamma I \\
 \frac{dI}{dt} &= \beta \frac{SI}{N} - \gamma I
 \end{align}
-
 Quando $R_0 > 1$, o sistema atinge equilíbrio endêmico com $I^* = N(1 - 1/R_0)$
 e $S^* = N/R_0$. A doença persiste indefinidamente na população --- é o regime
 \emph{endêmico}, distinto do regime epidêmico transitório do SIR. A
@@ -787,7 +772,6 @@ explícito $E$ para "expostos não infecciosos":
 \frac{dI}{dt} &= \sigma E - \gamma I \\
 \frac{dR}{dt} &= \gamma I
 \end{align}
-
 O parâmetro $\sigma$ é a taxa de progressão de $E$ para $I$ --- seu inverso
 é o período de incubação médio. Embora $R_0$ permaneça formalmente
 $R_0 = \beta/\gamma$, a \emph{dinâmica temporal} difere: a fase de propagação
@@ -896,7 +880,6 @@ A equação resultante é simples e elegante:
 \begin{equation}
 \frac{dp}{dt} = c p (1 - p) - e p = p\,\bigl(c(1 - p) - e\bigr)
 \end{equation}
-
 O equilíbrio não-trivial $p^* = 1 - e/c$ é positivo (e portanto a
 metapopulação persiste) se e somente se $c > e$. A condição \emph{c $>$ e
 $}$ é uma das formulações mais elegantes em ecologia: a colonização deve
@@ -947,7 +930,6 @@ de reação-difusão:
 \frac{\partial N}{\partial t} = \underbrace{f(N)}_{\text{reação local}}
                               + \underbrace{D \nabla^2 N}_{\text{dispersão}}
 \end{equation}
-
 onde $f(N)$ é a dinâmica local de crescimento (logística, por exemplo, ou uma
 forma qualquer) e $D$ é o coeficiente de difusão, que descreve o movimento
 browniano --- a versão mais simples de dispersão. Em 1D, o Laplaciano é a
@@ -959,7 +941,6 @@ A equação emblemática para invasões biológicas é a equação de
 \frac{\partial N}{\partial t} = r N \left(1 - \frac{N}{K}\right)
                               + D \frac{\partial^2 N}{\partial x^2}
 \end{equation}
-
 Fisher (1937) e Kolmogorov-Petrovskii-Piskunov (1937) mostraram
 independentemente que essa equação admite soluções de \emph{onda viajante} ---
 perfis de densidade $N(x - ct)$ que se propagam com velocidade constante
@@ -968,7 +949,6 @@ suaves) é:
 \begin{equation}
 c_{\min} = 2\sqrt{r D}
 \end{equation}
-
 A Figura~\ref{fig:10-fkpp} ilustra o perfil característico de uma onda
 viajante em dois instantes ($t_1$ e $t_2$): a frente de invasão se desloca
 com velocidade $c_{\min} = \Delta x / \Delta t$ sem deformação apreciável,
@@ -1052,7 +1032,6 @@ inibidor do que do ativador:
 \frac{\partial u}{\partial t} &= f(u, v) + D_u \nabla^2 u \\
 \frac{\partial v}{\partial t} &= g(u, v) + D_v \nabla^2 v
 \end{align}
-
 A análise de estabilidade linear ao redor do equilíbrio homogêneo mostra que,
 embora o equilíbrio seja estável na ausência de difusão ($f$ e $g$ são
 estabilizantes), ele se torna instável quando $D_v \gg D_u$. A partir do

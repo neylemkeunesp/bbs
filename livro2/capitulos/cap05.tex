@@ -64,7 +64,6 @@ A função objetivo mais comum é a \emph{soma dos quadrados dos resíduos} (SSE
 J(\boldsymbol{\theta}) = \text{SSE}(\boldsymbol{\theta}) = \sum_{i=1}^{n} r_i^2 =
 \sum_{i=1}^{n} \left[y_i - \hat{y}_i(\boldsymbol{\theta})\right]^2
 \end{equation}
-
 onde $r_i = y_i - \hat{y}_i(\boldsymbol{\theta})$ é o \emph{resíduo} no ponto $i$ ---
 a diferença entre o dado observado e a previsão do modelo com os parâmetros atuais.
 A minimização de SSE é justificada estatisticamente quando os erros de medição são
@@ -84,7 +83,6 @@ inversamente proporcional à sua variância experimental:
 J(\boldsymbol{\theta}) = \sum_{i=1}^{n} w_i \left[y_i - \hat{y}_i(\boldsymbol{\theta})\right]^2,
 \quad \text{tipicamente } w_i = \frac{1}{\sigma_i^2}
 \end{equation}
-
 Na cinética enzimática, por exemplo, medições a concentrações baixas de substrato tendem a
 ter maior erro relativo; nesse caso, pesos $w_i = 1/\hat{y}_i$ ou $w_i = 1/\hat{y}_i^2$
 são mais apropriados que pesos uniformes.
@@ -100,7 +98,6 @@ probabilidade de observar os dados que de fato observamos:
 \boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}) =
 \arg\max_{\boldsymbol{\theta}} P(\text{dados} \mid \boldsymbol{\theta})
 \end{equation}
-
 Por conveniência numérica, trabalha-se com a \emph{log-verossimilhança}:
 $\ell(\boldsymbol{\theta}) = \ln \mathcal{L}(\boldsymbol{\theta}) = \sum_i \ln P(y_i \mid \boldsymbol{\theta})$.
 
@@ -110,7 +107,6 @@ Quando os erros de medição são independentes e gaussianos com variância $\si
 \ell(\boldsymbol{\theta}) = -\frac{n}{2}\ln(2\pi\sigma^2) -
 \frac{1}{2\sigma^2} \sum_{i=1}^{n}\left[y_i - \hat{y}_i(\boldsymbol{\theta})\right]^2
 \end{equation}
-
 Um resultado fundamental é que, sob essa hipótese de ruído gaussiano, maximizar
 $\ell(\boldsymbol{\theta})$ é matematicamente equivalente a minimizar o SSE. Ou seja:
 \emph{OLS é MLE para dados com ruído gaussiano}. Quando o ruído tem outra distribuição
@@ -127,7 +123,6 @@ observados para produzir uma distribuição \emph{posterior}:
 \begin{equation}
 P(\boldsymbol{\theta} \mid \text{dados}) = \frac{P(\text{dados} \mid \boldsymbol{\theta}) \cdot P(\boldsymbol{\theta})}{P(\text{dados})}
 \end{equation}
-
 O numerador é o produto da verossimilhança pelo prior; o denominador é uma constante de
 normalização. Em vez de um único ponto ótimo, a abordagem bayesiana produz uma distribuição
 completa sobre os parâmetros, quantificando incerteza de forma natural. Parâmetros bem
@@ -198,7 +193,6 @@ gradiente aponta na direção de maior crescimento, e seu oposto aponta para a d
 \begin{equation}
 \boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} - \alpha \nabla J(\boldsymbol{\theta}^{(k)})
 \end{equation}
-
 O escalar $\alpha > 0$ é a \emph{taxa de aprendizado} (tamanho do passo). Sua escolha é
 crítica: $\alpha$ muito pequeno torna a convergência lenta; $\alpha$ muito grande causa
 oscilações ou divergência. Na prática, estratégias como \emph{line search} (otimizar
@@ -238,7 +232,6 @@ EDOs --- usa-se aproximação por diferenças finitas:
 \begin{equation}
 \frac{\partial J}{\partial \theta_i} \approx \frac{J(\boldsymbol{\theta} + h \mathbf{e}_i) - J(\boldsymbol{\theta})}{h}
 \end{equation}
-
 onde $\mathbf{e}_i$ é o $i$-ésimo vetor canônico e $h \sim 10^{-5}$ é um incremento
 pequeno. A convergência é declarada quando $\|\nabla J\| < \epsilon_g$, ou quando a mudança
 nos parâmetros $\|\boldsymbol{\theta}^{(k+1)} - \boldsymbol{\theta}^{(k)}\| < \epsilon_\theta$,
@@ -253,7 +246,6 @@ Hessiana} $\mathbf{H}$, com $H_{ij} = \partial^2 J / \partial \theta_i \partial 
 \begin{equation}
 \boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} - \mathbf{H}^{-1}(\boldsymbol{\theta}^{(k)}) \nabla J(\boldsymbol{\theta}^{(k)})
 \end{equation}
-
 A convergência é quadrática perto do mínimo --- o número de dígitos corretos dobra a cada
 iteração --- mas calcular e inverter $\mathbf{H}$ é custoso ($O(p^3)$ para $p$ parâmetros)
 e o método pode divergir longe do mínimo.
@@ -278,7 +270,6 @@ amortecimento $\lambda$:
 \begin{equation}
 \boldsymbol{\theta}^{(k+1)} = \boldsymbol{\theta}^{(k)} + (\mathbf{J}^T \mathbf{J} + \lambda \mathbf{I})^{-1} \mathbf{J}^T \mathbf{r}
 \end{equation}
-
 Quando $\lambda \to 0$, recupera-se Gauss-Newton; quando $\lambda \to \infty$, o passo se
 torna um pequeno gradiente descendente. A estratégia adaptativa é simples: se um passo
 reduz $J$, aceitar e diminuir $\lambda$ (tornar mais agressivo); se $J$ aumenta, rejeitar e
@@ -340,7 +331,6 @@ P(\text{aceitar}) = \begin{cases}
 e^{-\Delta J / T} & \text{se } \Delta J \geq 0
 \end{cases}
 \end{equation}
-
 onde $\Delta J = J(\boldsymbol{\theta}_\text{novo}) - J(\boldsymbol{\theta}_\text{atual})$.
 A temperatura decresce segundo um cronograma $T_k = T_0 \alpha^k$, com $\alpha \in [0.8, 0.99]$.
 Em alta temperatura, a busca é amplamente exploratória; em baixa temperatura, converge para
@@ -356,7 +346,6 @@ aleatórios $\mathbf{a}, \mathbf{b}, \mathbf{c}$:
 \begin{equation}
 \mathbf{v} = \mathbf{a} + F(\mathbf{b} - \mathbf{c})
 \end{equation}
-
 onde $F \in [0.5, 1.0]$ é o fator de escala de mutação. O candidato $\mathbf{u}$ é gerado
 por cruzamento com probabilidade $CR \in [0.5, 0.9]$, e substitui $\boldsymbol{\theta}$
 apenas se $J(\mathbf{u}) \leq J(\boldsymbol{\theta})$.
@@ -405,7 +394,6 @@ posição global $\mathbf{g}$:
 \mathbf{v}_i^{(k+1)} &= w \mathbf{v}_i^{(k)} + c_1 r_1 (\mathbf{p}_i - \mathbf{x}_i^{(k)}) + c_2 r_2 (\mathbf{g} - \mathbf{x}_i^{(k)}) \\
 \mathbf{x}_i^{(k+1)} &= \mathbf{x}_i^{(k)} + \mathbf{v}_i^{(k+1)}
 \end{align}
-
 onde $w$ é o peso de inércia e $r_1$, $r_2$ são números aleatórios em $[0,1]$.
 
 A tabela a seguir compara os principais métodos de otimização para estimação de parâmetros:
@@ -477,7 +465,6 @@ contêm sobre cada parâmetro e sobre as correlações entre pares de parâmetro
 \begin{equation}
 \mathbf{F}_{ij} = \sum_{k=1}^{n} \frac{1}{\sigma_k^2} \frac{\partial \hat{y}_k}{\partial \theta_i} \frac{\partial \hat{y}_k}{\partial \theta_j}
 \end{equation}
-
 A inversa da FIM fornece o \emph{limite de Cramér-Rao}: a variância de qualquer estimador
 não-viesado dos parâmetros satisfaz $\text{Var}(\hat{\theta}_i) \geq (\mathbf{F}^{-1})_{ii}$.
 Portanto, $\mathbf{C} = \mathbf{F}^{-1}$ é uma estimativa da \emph{matriz de covariância}
@@ -493,7 +480,6 @@ O intervalo de confiança de 95\% para o parâmetro $\theta_i$ é:
 \begin{equation}
 \theta_i^* \pm t_{n-p, 0.025} \sqrt{C_{ii}}
 \end{equation}
-
 onde $t_{n-p, 0.025}$ é o quantil da distribuição $t$ de Student com $n-p$ graus de
 liberdade. A diagonal $\sqrt{C_{ii}}$ fornece o erro padrão do parâmetro $\theta_i$, e os
 elementos fora da diagonal indicam correlações: $\rho_{ij} = C_{ij}/\sqrt{C_{ii} C_{jj}}$
@@ -566,7 +552,6 @@ que é explicada pelo modelo:
 \begin{equation}
 R^2 = 1 - \frac{\text{SS}_\text{res}}{\text{SS}_\text{tot}} = 1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{\sum_i (y_i - \bar{y})^2}
 \end{equation}
-
 Um $R^2$ próximo de 1 indica bom ajuste; próximo de 0 indica que o modelo não explica
 os dados melhor que a média. Porém, $R^2$ tem uma limitação séria: sempre aumenta ao
 adicionar parâmetros ao modelo, mesmo que esses parâmetros sejam irrelevantes. O
@@ -575,7 +560,6 @@ $R^2$ \emph{ajustado} corrige esse viés penalizando a complexidade:
 \begin{equation}
 R^2_\text{adj} = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
 \end{equation}
-
 onde $n$ é o número de observações e $p$ o número de parâmetros. O $R^2_\text{adj}$
 pode diminuir quando se adiciona parâmetros irrelevantes, tornando-o mais apropriado
 para comparação entre modelos.
@@ -589,7 +573,6 @@ Informação de Akaike} (AIC) faz essa mediação baseado na teoria da informaç
 \begin{equation}
 \text{AIC} = 2p - 2\ln(\mathcal{L}) \approx n\ln\!\left(\frac{\text{SSE}}{n}\right) + 2p
 \end{equation}
-
 onde $p$ é o número de parâmetros e $\mathcal{L}$ é a máxima verossimilhança. O modelo
 com menor AIC é preferido. A penalidade $2p$ desencoraja modelos supercomplexos. Para
 amostras pequenas ($n/p < 40$), usa-se a versão corrigida AICc:
@@ -597,14 +580,12 @@ amostras pequenas ($n/p < 40$), usa-se a versão corrigida AICc:
 \begin{equation}
 \text{AICc} = \text{AIC} + \frac{2p(p+1)}{n-p-1}
 \end{equation}
-
 O \emph{Critério de Informação Bayesiana} (BIC) penaliza a complexidade mais
 agressivamente, com $p\ln(n)$ em vez de $2p$:
 
 \begin{equation}
 \text{BIC} = p\ln(n) - 2\ln(\mathcal{L}) \approx n\ln\!\left(\frac{\text{SSE}}{n}\right) + p\ln(n)
 \end{equation}
-
 Para $n > 7$, o BIC favorece modelos mais simples que o AIC. A escolha entre AIC e BIC
 reflete objetivos diferentes: o AIC otimiza a capacidade preditiva em dados novos; o BIC
 tenta identificar o ``modelo verdadeiro'' subjacente. Na biologia de sistemas, onde dados

@@ -105,18 +105,15 @@ modelo de ligação simples:
 \begin{equation}
 L + R \underset{k_{\mathrm{off}}}{\overset{k_{\mathrm{on}}}{\rightleftharpoons}} LR
 \end{equation}
-
 A constante de dissociação no equilíbrio é definida como:
 \begin{equation}
 K_d = \frac{k_{\mathrm{off}}}{k_{\mathrm{on}}} = \frac{[L][R]}{[LR]}
 \end{equation}
-
 A fração de receptores ocupados, $\theta$, segue a equação de Hill para $n = 1$
 (hipérbole de Michaelis):
 \begin{equation}
 \theta = \frac{[LR]}{[R]_{\mathrm{total}}} = \frac{[L]}{K_d + [L]}
 \end{equation}
-
 O $K_d$ tem interpretação direta: é a concentração de ligante que ocupa metade
 dos receptores. Quanto menor o $K_d$, maior a afinidade. Receptores de alta
 afinidade como os de insulina têm $K_d$ na faixa de 0.1--1 nM; receptores de
@@ -160,14 +157,12 @@ ordinárias:
                     - k_{\mathrm{act}}[LR] \\
 \frac{d[R^*]}{dt} &= k_{\mathrm{act}}[LR] - k_{\mathrm{inact}}[R^*]
 \end{align}
-
 No estado estacionário ($d/dt = 0$), a concentração de receptor ativo é:
 \begin{equation}
 [R^*]_{ss} = \frac{k_{\mathrm{act}} \cdot k_{\mathrm{on}}[L][R]_{\mathrm{total}}}
 {k_{\mathrm{inact}}(k_{\mathrm{off}} + k_{\mathrm{act}})
  + k_{\mathrm{act}} \cdot k_{\mathrm{on}}[L]}
 \end{equation}
-
 Essa expressão é análoga à equação de Michaelis-Menten: o numerador cresce
 linearmente com o estímulo, o denominador satura, e a resposta tem a forma de
 hipérbole retangular.
@@ -393,7 +388,6 @@ a fração ativa no equilíbrio é:
                               + 4 v q \left(\frac{[X]_{\mathrm{tot}}}{K_1}\right)
                               \left(\frac{[X]_{\mathrm{tot}}}{K_2}\right)^{-1}}}
 \end{equation}
-
 onde $v$ e $q$ são as velocidades (opostas) de fosforilação e
 desfosforilação. O resultado central é que o \emph{coeficiente de Hill efetivo},
 medido experimentalmente como a inclinação da curva dose-resposta em escala
@@ -403,7 +397,6 @@ logarítmica, pode exceder em muito a estequiometria (1):
 n_H \;=\; 1 \;+\; \frac{\ln 2}{\ln\!\bigl(1 + [X]_{\mathrm{tot}}/K_1\bigr)
                               \;+\; \ln\!\bigl(1 + [X]_{\mathrm{tot}}/K_2\bigr)}
 \end{equation}
-
 Quando $[X]_{\mathrm{tot}} \gg K_1, K_2$, a resposta torna-se
 quase-digital: a transição de OFF para ON ocorre em uma estreita janela de
 concentração do estímulo. Na cascata MAPK, esse efeito multiplica-se: três
@@ -583,7 +576,6 @@ v_{\mathrm{release}} &= k_{\mathrm{rel}} \cdot [\mathrm{IP}_3] \cdot
 \frac{[\mathrm{Ca}^{2+}]^2}{K_1^2 + [\mathrm{Ca}^{2+}]^2} \\
 v_{\mathrm{uptake}} &= k_{\mathrm{uptake}} \cdot [\mathrm{Ca}^{2+}]
 \end{align}
-
 geram oscilações sustentadas para uma faixa de valores de $[\mathrm{IP}_3]$.
 A simulação computacional abaixo ilustra como a frequência aumenta com
 $[\mathrm{IP}_3]$:
@@ -745,7 +737,6 @@ estacionário:
 \begin{equation}
 D \nabla^2 M - k [M] = 0
 \end{equation}
-
 cuja solução unidimensional é uma exponencial decrescente
 $M(x) = M_0 e^{-x/\sqrt{D/k}}$. O comprimento característico
 $\lambda = \sqrt{D/k}$ define a distância em que o morfógeno cai a $1/e$

@@ -96,7 +96,6 @@ A_{ij} = \begin{cases}
 0 & \text{caso contrário}
 \end{cases}
 \end{equation}
-
 Para grafos não-direcionados, $A$ é simétrica ($A_{ij} = A_{ji}$) e a diagonal é nula
 (sem autoconexões). Uma propriedade elegante da álgebra linear das redes é que o elemento
 $(i,j)$ da matriz $A^k$ conta o número de caminhos de comprimento $k$ entre os vértices
@@ -113,7 +112,6 @@ B_{ie} = \begin{cases}
 0 & \text{caso contrário}
 \end{cases}
 \end{equation}
-
 Nas redes metabólicas, a matriz $B$ é análoga à matriz estequiométrica $S$, onde cada
 coluna representa uma reação e o sinal indica se o metabólito é produzido ou consumido.
 
@@ -128,7 +126,6 @@ da rede é:
 \begin{equation}
 \langle k \rangle = \frac{1}{n} \sum_{i=1}^{n} k_i = \frac{2|E|}{|V|}
 \end{equation}
-
 onde o fator 2 reflete o fato de que cada aresta contribui com dois extremos.
 
 Um \emph{caminho} entre dois vértices é uma sequência de vértices $v_1, v_2, \ldots, v_k$
@@ -147,7 +144,6 @@ todas as distâncias:
 \begin{equation}
 L = \frac{1}{n(n-1)} \sum_{u \neq v} d(u, v)
 \end{equation}
-
 Um \emph{componente conectado} é um subconjunto máximo de vértices no qual existe caminho
 entre qualquer par. O maior componente conectado de uma rede é chamado de
 \emph{componente gigante}; em redes biológicas reais, ele tipicamente engloba a maioria dos
@@ -212,7 +208,6 @@ $p$ independente --- a distribuição de graus é Poissoniana:
 \begin{equation}
 P(k) = \frac{\langle k \rangle^k \, e^{-\langle k \rangle}}{k!}
 \end{equation}
-
 Nessa distribuição, a maioria dos nós tem grau próximo à média $\langle k \rangle$, e
 nós com grau muito acima da média são exponencialmente raros. Essa homogeneidade topológica,
 porém, não é o que se observa na natureza.
@@ -223,7 +218,6 @@ Albert e Barabási mostraram em 1999 que redes reais --- sociais, tecnológicas 
 \begin{equation}
 P(k) \sim k^{-\gamma}
 \end{equation}
-
 com expoente $\gamma$ tipicamente entre 2 e 3. Essas redes são chamadas \emph{livre de
 escala} (\textit{scale-free}) porque a distribuição de potência é invariante de escala
 --- não há uma escala de grau característica. A consequência mais marcante é a existência
@@ -243,7 +237,6 @@ ao redor do nó $i$ em relação ao máximo possível:
 \begin{equation}
 C_i = \frac{2 E_i}{k_i(k_i - 1)}
 \end{equation}
-
 onde $E_i$ é o número de arestas efetivamente presentes entre os $k_i$ vizinhos de $i$.
 O coeficiente global $C = n^{-1} \sum_i C_i$ mede a tendência geral à formação de
 agrupamentos na rede. Biologicamente, alto coeficiente de agrupamento indica modularidade:
@@ -301,7 +294,6 @@ mais conexões, com probabilidade proporcional ao grau $k_i$:
 \begin{equation}
 \Pi(k_i) = \frac{k_i}{\sum_j k_j}
 \end{equation}
-
 O princípio é coloquialmente conhecido como ``rico fica mais rico'': hubs atraem
 desproporcionalmente mais conexões ao longo do crescimento da rede. O resultado é
 uma distribuição de graus do tipo $P(k) \sim k^{-3}$.
@@ -604,7 +596,6 @@ muda quando a atividade da enzima $i$ é perturbada infinitesimalmente:
 \begin{equation}
 C_i^J = \frac{\partial J / J}{\partial E_i / E_i} = \frac{\partial \ln J}{\partial \ln E_i}
 \end{equation}
-
 É uma derivada logarítmica normalizada: mede a elasticidade do fluxo em relação à enzima.
 $C_i^J = 1$ significa que duplicar $E_i$ dobra o fluxo; $C_i^J = 0$ significa que
 perturbar $E_i$ não altera $J$.
@@ -616,7 +607,6 @@ perturbada:
 \begin{equation}
 C_i^S = \frac{\partial S / S}{\partial E_i / E_i} = \frac{\partial \ln S}{\partial \ln E_i}
 \end{equation}
-
 É importante notar que os coeficientes de controle são propriedades \emph{globais} do
 sistema: eles dependem de todas as enzimas e de toda a estrutura da rede, não apenas da
 enzima $i$ em questão. Isso significa que o mesmo coeficiente $C_i^J$ pode variar
@@ -632,7 +622,6 @@ metabólitos específicos, mantendo todos os outros parâmetros fixos:
 \begin{equation}
 \varepsilon_S^{v_i} = \frac{\partial v_i / v_i}{\partial S / S} = \frac{\partial \ln v_i}{\partial \ln S}
 \end{equation}
-
 Uma elasticidade positiva ($\varepsilon > 0$) indica que o metabólito $S$ ativa a reação
 (como substrato ou ativador alostérico); negativa ($\varepsilon < 0$) indica inibição.
 O valor absoluto indica sensibilidade: $|\varepsilon| > 1$ indica cooperatividade ou
@@ -644,7 +633,6 @@ em relação ao substrato $S$ tem uma forma analítica elegante:
 \begin{equation}
 \varepsilon_S^v = \frac{K_M}{K_M + S}
 \end{equation}
-
 Quando $S \ll K_M$ (enzima longe da saturação), $\varepsilon_S^v \approx 1$; quando
 $S \gg K_M$ (enzima saturada), $\varepsilon_S^v \approx 0$. Uma enzima saturada é
 insensível à concentração de substrato --- e, portanto, incapaz de transmitir informação
@@ -662,7 +650,6 @@ e os coeficientes de controle de concentração somam 0:
 \begin{equation}
 \sum_{i=1}^{n} C_i^J = 1 \qquad \text{e} \qquad \sum_{i=1}^{n} C_i^S = 0
 \end{equation}
-
 A primeira equação é a afirmação matemática de que o controle é distribuído e conservado:
 se uma enzima ganhar controle, outra perde. A segunda equação reflete que concentrações
 estacionárias são robustas a escalonamentos uniformes das atividades enzimáticas.
@@ -673,7 +660,6 @@ globais (coeficientes de controle):
 \begin{equation}
 \sum_{i=1}^{n} C_i^J \, \varepsilon_S^{v_i} = 0
 \end{equation}
-
 para cada metabólito interno $S$. Esse teorema é a ponte entre a cinética local de cada
 enzima e o comportamento global da via: permite calcular os coeficientes de controle
 a partir das elasticidades, que são quantidades mensuráveis experimentalmente.
@@ -687,14 +673,12 @@ que é isomerizada pela fosfoglicose isomerase ($E_2$) em frutose-6-fosfato ($P$
 \begin{equation*}
 G \xrightarrow{E_1 \; (\text{Hexocinase})} S \xrightarrow{E_2 \; (\text{Isomerase})} P
 \end{equation*}
-
 As taxas seguem cinética de Michaelis-Menten:
 
 \begin{align*}
 v_1 &= \frac{V_{max1} \cdot G}{K_{M1} + G}, \quad V_{max1} = 10{,}0 \text{ mM/min}, \quad K_{M1} = 1{,}0 \text{ mM} \\
 v_2 &= \frac{V_{max2} \cdot S}{K_{M2} + S}, \quad V_{max2} = 15{,}0 \text{ mM/min}, \quad K_{M2} = 2{,}0 \text{ mM}
 \end{align*}
-
 com $G = 5{,}0$ mM mantido fixo pelo transporte celular.
 
 \textbf{Passo 1: Estado estacionário.} No estado estacionário, $v_1 = v_2 = J$. Como $G$ é fixo:
@@ -702,26 +686,22 @@ com $G = 5{,}0$ mM mantido fixo pelo transporte celular.
 \begin{equation*}
 J = v_1 = \frac{10{,}0 \times 5{,}0}{1{,}0 + 5{,}0} = \frac{50{,}0}{6{,}0} \approx 8{,}33 \text{ mM/min}
 \end{equation*}
-
 Igualando $v_2 = J$ e resolvendo para $S$:
 
 \begin{equation*}
 \frac{15{,}0 \cdot S}{2{,}0 + S} = \frac{25{,}0}{3{,}0} \quad \Rightarrow \quad 45{,}0 S = 50{,}0 + 25{,}0 S \quad \Rightarrow \quad S = 2{,}50 \text{ mM}
 \end{equation*}
-
 \textbf{Passo 2: Elasticidades.} Como $G$ é fixo, $\varepsilon_S^{v_1} = 0$ (a hexocinase
 não responde a $S$ neste modelo simplificado). Para a isomerase:
 
 \begin{equation*}
 \varepsilon_S^{v_2} = \frac{K_{M2}}{K_{M2} + S} = \frac{2{,}0}{2{,}0 + 2{,}5} = \frac{2{,}0}{4{,}5} \approx 0{,}44
 \end{equation*}
-
 \textbf{Passo 3: Coeficientes de controle.} Aplicando o Teorema de Conectividade:
 
 \begin{equation*}
 C_1^J \cdot 0 + C_2^J \cdot 0{,}44 = 0 \quad \Rightarrow \quad C_2^J = 0
 \end{equation*}
-
 E pelo Teorema de Soma: $C_1^J + C_2^J = 1 \Rightarrow C_1^J = 1$.
 
 O resultado é teoricamente perfeito: neste cenário simplificado, a hexocinase detém
@@ -737,7 +717,6 @@ passa a dar:
 C_1^J \, \varepsilon_S^{v_1} + C_2^J \, \varepsilon_S^{v_2} = 0 \quad \Rightarrow \quad
 \frac{C_1^J}{C_2^J} = -\frac{\varepsilon_S^{v_2}}{\varepsilon_S^{v_1}} > 0
 \end{equation*}
-
 O controle se redistribui entre as duas enzimas, ilustrando o princípio central da MCA:
 \emph{o controle metabólico é distribuído, e sua distribuição depende da estrutura cinética
 de toda a rede}.
@@ -791,7 +770,6 @@ físicos nos fluxos:
 \begin{equation}
 \text{maximizar} \quad \mathbf{c}^T \mathbf{v} \quad \text{sujeito a} \quad S \mathbf{v} = 0, \quad v_{min} \leq v_i \leq v_{max}
 \end{equation}
-
 O vetor $\mathbf{c}$ define o objetivo biológico --- tipicamente a produção de biomassa.
 As restrições $S \mathbf{v} = 0$ impõem estado estacionário estrutural; os limites $v_{min},
 v_{max}$ refletem restrições termodinâmicas e de capacidade enzimática. A solução é
