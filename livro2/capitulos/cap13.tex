@@ -27,16 +27,88 @@ O restante deste capítulo detalhará cada um desses pontos, articulando a teori
 
 O processo de descoberta de um fármaco --- do conceito inicial à molécula aprovada para uso clínico --- é, em sua forma tradicional, uma sequência linear de gargalos sucessivos, cada um deles eliminando candidatos até que reste um punhado de compostos viáveis. A sequência canônica começa pela identificação de um alvo molecular --- usualmente uma proteína cuja modulação é hipotetizada como terapêutica --- e segue com a triagem de bibliotecas de milhares a milhões de compostos em ensaios bioquímicos ou celulares, a otimização dos compostos-semente que apresentam atividade, os testes pré-clínicos em modelos animais e, finalmente, os ensaios clínicos em humanos, divididos em fases I a IV. Cada etapa consome tempo, recursos e candidatos: é típico que entre cinco mil e dez mil compostos triados gerem um único fármaco aprovado, em um ciclo que dura dez a quinze anos e custa, em estimativas recentes, algo entre um e três bilhões de dólares. Esses números --- a chamada ``produtividade do pipeline'' --- não melhoraram nas últimas décadas, apesar dos avanços em química combinatória, triagem de alto rendimento e biologia molecular. Pelo contrário: em algumas áreas terapêuticas, a situação piorou, com antibióticos e fármacos para doenças raras enfrentando custos e dificuldades particularmente agudos.
 
-A biologia de sistemas propõe uma reordenação desse pipeline em três pontos críticos. O primeiro é a \emph{identificação de alvos}: em vez de começar pela bioquímica de uma proteína isolada, parte-se da topologia da rede de doença, buscando nós centrais (\emph{hubs}) ou gargalos (\emph{bottlenecks}) no módulo cuja perturbação produz o fenótipo patológico. O segundo é a \emph{combinatória de alvos}: reconhece-se que fármacos eficazes sobre doenças complexas quase sempre atingem múltiplos alvos simultaneamente, e o desenho molecular passa a explorar essa redundância de modo racional em vez de tratá-la como desvio. O terceiro é a \emph{previsão de efeitos}: a estrutura da rede de interação fármaco-alvo permite estimar, antes dos ensaios clínicos, a probabilidade de efeitos adversos, o potencial de reposicionamento para outras indicações e a subpopulação de pacientes com maior probabilidade de resposta. Esses três pontos não substituem o pipeline tradicional --- eles o informam, deslocando decisões cruciais para momentos mais precoces e mais baratos do processo.
+A biologia de sistemas propõe uma reordenação desse pipeline em três pontos críticos. O primeiro é a \emph{identificação de alvos}: em vez de começar pela bioquímica de uma proteína isolada, parte-se da topologia da rede de doença, buscando nós centrais (\emph{hubs}) ou gargalos (\emph{bottlenecks}) no módulo cuja perturbação produz o fenótipo patológico. O segundo é a \emph{combinatória de alvos}: reconhece-se que fármacos eficazes sobre doenças complexas quase sempre atingem múltiplos alvos simultaneamente, e o desenho molecular passa a explorar essa redundância de modo racional em vez de tratá-la como desvio. O terceiro é a \emph{previsão de efeitos}: a estrutura da rede de interação fármaco-alvo permite estimar, antes dos ensaios clínicos, a probabilidade de efeitos adversos, o potencial de reposicionamento para outras indicações e a subpopulação de pacientes com maior probabilidade de resposta. Esses três pontos não substituem o pipeline tradicional --- eles o informam, deslocando decisões cruciais para momentos mais precoces e mais baratos do processo. A Figura~\ref{fig:13-pipeline} sintetiza as três etapas e o deslocamento decisório que cada uma provoca ao longo do pipeline.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  node distance=0.8cm and 0.6cm,
+  every node/.style={font=\small},
+  etapa/.style={rectangle, draw=black, thick, minimum width=2.6cm, minimum height=0.8cm, align=center, fill=blue!8},
+  reord/.style={rectangle, draw=black, thick, minimum width=2.6cm, minimum height=0.8cm, align=center, fill=orange!18},
+  arrow/.style={->, thick},
+  leg/.style={font=\footnotesize, align=center}
+]
+% Pipeline tradicional (linha superior)
+\node[etapa] (t1) {Triagem\\(bibliotecas)};
+\node[etapa, right=of t1] (t2) {Otimização\\(lead)};
+\node[etapa, right=of t2] (t3) {Pré-clinico\\(animais)};
+\node[etapa, right=of t3] (t4) {Clínico\\(fases I--IV)};
+\draw[arrow] (t1) -- (t2);
+\draw[arrow] (t2) -- (t3);
+\draw[arrow] (t3) -- (t4);
+\node[leg, above=0.1cm of t1] {\textbf{Pipeline tradicional}};
+
+% Reordenações (3 etapas paralelas)
+\node[reord, below=1.2cm of t1] (r1) {Identificação\\por rede};
+\node[reord, below=1.2cm of t3] (r2) {Combinatória\\de alvos};
+\node[reord, below=1.2cm of t4] (r3) {Previsão de\\efeitos adversos};
+\draw[arrow, dashed, orange!70!black] (r1) -- (t1);
+\draw[arrow, dashed, orange!70!black] (r2) -- (t2);
+\draw[arrow, dashed, orange!70!black] (r3) -- (t3);
+\draw[arrow, dashed, orange!70!black] (r3.south east) to[bend right=20] (t4.south west);
+\node[leg, below=0.05cm of r1] {\textbf{Reordenações sistêmicas}};
+\end{tikzpicture}
+\caption{Reordenação do pipeline tradicional de descoberta de fármacos pela biologia de sistemas. O fluxo superior --- triagem, otimização, ensaios pré-clínicos, ensaios clínicos --- permanece como espinha dorsal do processo, mas três pontos de reordenação alimentam-no \emph{a priori}: a identificação de alvos a partir da topologia da rede de doença (em vez da bioquímica de um candidato), a combinatória de alvos (em vez da lógica de um fármaco-um alvo) e a previsão de efeitos pela estrutura da rede fármaco-alvo. Linhas tracejadas indicam momentos decisórios deslocados para estágios mais precoces e mais baratos do processo.}
+\label{fig:13-pipeline}
+\end{figure}
 
 A consequência mais visível dessa mudança é a emergência da \emph{farmacologia de redes} (\emph{network pharmacology}) como disciplina formal. Hopkins, em um artigo seminal de 2008 na \emph{Nature Chemical Biology}, definiu o campo como o estudo de intervenções farmacológicas no contexto de redes biológicas, em contraposição à lógica ``um fármaco, um alvo, uma doença'' que dominou a farmacologia do século XX. A premissa é direta: como qualquer fármaco em uso clínico atinge, em média, seis a dezenas de proteínas-alvo além do alvo primário, e como cada uma dessas proteínas ocupa uma posição específica em uma ou mais redes celulares, os efeitos terapêuticos e adversos são propriedades emergentes da interação do fármaco com a rede como um todo --- e não com o alvo isolado. Essa observação, que poderia parecer trivial, tem implicações profundas: o desenho racional de fármacos passa a exigir ferramentas de topologia de redes, modelos de propagação de sinais e simulações em larga escala --- exatamente o repertório da biologia de sistemas.
 
 O conceito de \emph{polifarmacologia} --- um fármaco que atinge múltiplos alvos --- não é uma peculiaridade a ser corrigida, mas uma característica a ser explorada. Em oncologia, inibidores multiquinase como sunitinibe, sorafenibe e pazopanibe atingem simultaneamente várias quinases envolvidas em vias de proliferação, angiogênese e metástase, obtendo eficácia em tumores onde inibidores de alvo único falhariam. A aspirina, embora historicamente caracterizada como inibidor de COX-1 e COX-2, exerce efeitos adicionais sobre NF-\emph{k}B, PPAR e diversas outras vias, parte dos quais contribuem para seu perfil cardiovascular benéfico. As estatinas, além de inibirem a HMG-CoA redutase, apresentam efeitos pleiotrópicos --- melhora da função endotelial, estabilização de placas ateroscleróticas, modulação imune --- que são, em parte, responsáveis pelo benefício clínico observado além do que se esperaria apenas da redução do colesterol. Em todos esses casos, a polifarmacologia não é acidente: é a razão pela qual o composto funciona em sistemas complexos, e a lógica de redes fornece o ferramental para entendê-la e refiná-la.
 
-A operacionalização da farmacologia de redes depende de bases de dados de interação fármaco-alvo em escala genômica. DrugBank, ChEMBL e BindingDB consolidam informações de afinidade (\emph{IC}$_{50}$, $K_d$), estrutura química e contexto biológico para dezenas de milhares de compostos, permitindo construir grafos bipartidos nos quais fármacos e alvos constituem os dois tipos de nó, conectados por arestas ponderadas pela afinidade. A análise desses grafos --- grau de promiscuidade de cada fármaco, sobreposição de alvos entre compostos, comunidades estruturais na rede integrada --- fornece hipóteses imediatas para reposicionamento de fármacos, previsão de efeitos adversos e identificação de pares sinérgicos. Uma métrica simples mas útil nesse contexto é a \emph{promiscuidade} de um fármaco $d$, definida como
+A operacionalização da farmacologia de redes depende de bases de dados de interação fármaco-alvo em escala genômica. DrugBank, ChEMBL e BindingDB consolidam informações de afinidade (\emph{IC}$_{50}$, $K_d$), estrutura química e contexto biológico para dezenas de milhares de compostos, permitindo construir grafos bipartidos nos quais fármacos e alvos constituem os dois tipos de nó, conectados por arestas ponderadas pela afinidade. A análise desses grafos --- grau de promiscuidade de cada fármaco, sobreposição de alvos entre compostos, comunidades estruturais na rede integrada --- fornece hipóteses imediatas para reposicionamento de fármacos, previsão de efeitos adversos e identificação de pares sinérgicos. A Figura~\ref{fig:13-bipartido} ilustra um exemplo esquemático de grafo bipartido com cinco fármacos ($A, B, C, D, E$) e cinco alvos protéicos ($T_1, T_2, T_3, T_4, T_5$), com arestas representando afinidade significativa. Uma métrica simples mas útil nesse contexto é a \emph{promiscuidade} de um fármaco $d$, definida como
 \begin{equation*}
 P_d = \frac{\text{número de alvos do fármaco } d}{\text{número total de alvos anotados}},
 \end{equation*}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  farmaco/.style={circle, draw=black, thick, fill=blue!12, minimum size=0.95cm, inner sep=1pt},
+  alvo/.style={rectangle, draw=black, thick, fill=orange!15, minimum width=1.0cm, minimum height=0.7cm, inner sep=2pt},
+  aresta/.style={thick}
+]
+\node[farmaco] (A) at (0,2.4) {$A$};
+\node[farmaco] (B) at (2.4,2.4) {$B$};
+\node[farmaco] (C) at (4.8,2.4) {$C$};
+\node[farmaco] (D) at (7.2,2.4) {$D$};
+\node[farmaco] (E) at (9.6,2.4) {$E$};
+\node[alvo] (T1) at (0,0) {$T_1$};
+\node[alvo] (T2) at (2.4,0) {$T_2$};
+\node[alvo] (T3) at (4.8,0) {$T_3$};
+\node[alvo] (T4) at (7.2,0) {$T_4$};
+\node[alvo] (T5) at (9.6,0) {$T_5$};
+\draw[aresta] (A) -- (T1);
+\draw[aresta] (A) -- (T2);
+\draw[aresta] (A) -- (T3);
+\draw[aresta] (B) -- (T2);
+\draw[aresta] (B) -- (T4);
+\draw[aresta] (C) -- (T3);
+\draw[aresta] (C) -- (T4);
+\draw[aresta] (C) -- (T5);
+\draw[aresta] (D) -- (T1);
+\draw[aresta] (D) -- (T4);
+\draw[aresta] (E) -- (T2);
+\draw[aresta] (E) -- (T5);
+\node[font=\footnotesize] at (4.8,3.4) {\textbf{Fármacos}};
+\node[font=\footnotesize] at (4.8,-0.9) {\textbf{Alvos protéicos}};
+\end{tikzpicture}
+\caption{Grafo bipartido fármaco-alvo usado em farmacologia de redes. Os nós azuis representam fármacos ($A, B, C, D, E$); os nós laranja representam alvos protéicos ($T_1, \ldots, T_5$). Cada aresta denota afinidade significativa reportada em bases como DrugBank, ChEMBL ou BindingDB. A promiscuidade de um fármaco é simplesmente seu grau no grafo: aqui, $A$ e $C$ têm grau 3, $B$, $D$ e $E$ têm grau 2. A sobreposição de alvos --- por exemplo, $T_2$ compartilhado por $A$, $B$ e $E$ --- é o ponto de partida para hipóteses de reposicionamento e de previsão de efeitos adversos compartilhados.}
+\label{fig:13-bipartido}
+\end{figure}
+
 onde valores altos indicam compostos com perfil farmacológico amplo --- candidatos tanto a reposicionamento quanto a efeitos adversos. Fármacos com promiscuidade muito alta, como muitos psicotrópicos e imunossupressores, tendem a apresentar janelas terapêuticas estreitas justamente porque sua ação distribuída atravessa múltiplas redes.
 
 
@@ -61,7 +133,46 @@ O modelo de dois compartimentos generaliza essa representação introduzindo um 
 \frac{\mathrm{d}C_1}{\mathrm{d}t} &= -(k_e + k_{12}) \, C_1(t) + k_{21} \, C_2(t), \\
 \frac{\mathrm{d}C_2}{\mathrm{d}t} &= k_{12} \, C_1(t) - k_{21} \, C_2(t),
 \end{align*}
-onde $C_1$ e $C_2$ são as concentrações nos compartimentos central e periférico. A solução desse sistema linear é uma soma de duas exponenciais com constantes de tempo distintas --- uma rápida, dominada pela distribuição inicial, e uma lenta, dominada pela eliminação. Essa cinética bifásica é observável experimentalmente em curvas de concentração plasmática de compostos como a lidocaína e o propranolol, e seu reconhecimento é essencial para regimes de dose que pretendam manter concentrações estáveis durante infusões prolongadas. Modelos com três ou mais compartimentos são necessários para fármacos com distribuição tecidual altamente heterogênea --- agentes anestésicos, por exemplo, requerem tipicamente modelos de três compartimentos para descrever suas fases de distribuição e acúmulo em tecido adiposo.
+onde $C_1$ e $C_2$ são as concentrações nos compartimentos central e periférico. A solução desse sistema linear é uma soma de duas exponenciais com constantes de tempo distintas --- uma rápida, dominada pela distribuição inicial, e uma lenta, dominada pela eliminação. Essa cinética bifásica é observável experimentalmente em curvas de concentração plasmática de compostos como a lidocaína e o propranolol, e seu reconhecimento é essencial para regimes de dose que pretendam manter concentrações estáveis durante infusões prolongadas. Modelos com três ou mais compartimentos são necessários para fármacos com distribuição tecidual altamente heterogênea --- agentes anestésicos, por exemplo, requerem tipicamente modelos de três compartimentos para descrever suas fases de distribuição e acúmulo em tecido adiposo. A Figura~\ref{fig:13-pk} ilustra esquematicamente os dois modelos canônicos: o de um compartimento, com cinética monoexponencial governada por uma única constante de eliminação $k_e$, e o de dois compartimentos, com cinética biexponencial em que a fase rápida reflete distribuição e a fase lenta reflete eliminação terminal.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  comp/.style={rectangle, draw=black, thick, minimum width=2.2cm, minimum height=1.0cm, fill=blue!10, align=center},
+  seta/.style={->, thick}
+]
+% Painel esquerdo: 1 compartimento
+\node[font=\bfseries] at (-3.2, 3.0) {(a) Modelo de 1 compartimento};
+\node[comp] (C1) at (-3.2, 1.0) {Central\\$V_d$};
+\draw[seta] (-1.2, 1.0) -- ++(0.8, 0) node[right, font=\footnotesize] {$k_e$};
+\draw[->, thick, decorate, decoration={snake, amplitude=1.5pt, segment length=4pt}] (C1.south) -- ++(0, -0.9) node[below, font=\footnotesize] {eliminação};
+% Painel direito: 2 compartimentos
+\node[font=\bfseries] at (3.2, 3.0) {(b) Modelo de 2 compartimentos};
+\node[comp] (C2) at (1.0, 1.0) {Central\\$V_1$};
+\node[comp] (P2) at (5.4, 1.0) {Periférico\\$V_2$};
+\draw[seta] (C2.east) -- node[above, font=\footnotesize] {$k_{12}$} (P2.west);
+\draw[seta] (P2.west) -- node[below, font=\footnotesize] {$k_{21}$} (C2.east);
+\draw[seta] (2.6, -0.3) -- ++(0.5, 0) node[right, font=\footnotesize] {$k_e$};
+\draw[->, thick, decorate, decoration={snake, amplitude=1.5pt, segment length=4pt}] (C2.south) -- ++(0, -0.9) node[below, font=\footnotesize] {eliminação};
+% Curva de concentração (esquemática) embaixo de ambos
+\begin{scope}[yshift=-3.4cm, xshift=-3.2cm]
+  \draw[->, thick] (0,0) -- (5.5, 0) node[right, font=\footnotesize] {$t$};
+  \draw[->, thick] (0,0) -- (0, 1.4) node[above, font=\footnotesize] {$C(t)$};
+  \draw[domain=0:5, smooth, variable=\x, blue!70!black, thick] plot ({\x}, {1.2*exp(-0.55*\x)});
+  \draw[dashed, gray] (0.6, 0) -- (0.6, 0.8);
+  \node[font=\scriptsize, blue!70!black] at (3.0, 1.0) {monoexponencial};
+\end{scope}
+\begin{scope}[yshift=-3.4cm, xshift=3.2cm]
+  \draw[->, thick] (0,0) -- (5.5, 0) node[right, font=\footnotesize] {$t$};
+  \draw[->, thick] (0,0) -- (0, 1.4) node[above, font=\footnotesize] {$C(t)$};
+  \draw[domain=0:5, smooth, variable=\x, blue!70!black, thick] plot ({\x}, {1.2*exp(-0.55*\x) + 0.35*exp(-2.2*\x)});
+  \node[font=\scriptsize, blue!70!black] at (3.4, 0.95) {biexponencial};
+\end{scope}
+\end{tikzpicture}
+\caption{Modelos farmacocinéticos compartimentais. (a) Modelo de um compartimento: o organismo é representado por um único volume $V_d$ onde o fármaco se distribui instantaneamente; a eliminação ocorre por uma reação de primeira ordem com constante $k_e$, gerando uma curva de concentração plasmática monoexponencial. (b) Modelo de dois compartimentos: distingue-se um compartimento central (sangue e tecidos altamente perfundidos, volume $V_1$) e um compartimento periférico (tecidos de captação mais lenta, volume $V_2$), conectados por constantes de transferência $k_{12}$ e $k_{21}$; a curva de concentração plasmática resultante é biexponencial, com uma fase rápida dominada pela distribuição e uma fase lenta dominada pela eliminação terminal.}
+\label{fig:13-pk}
+\end{figure}
 
 
 A interpretação clínica dos modelos PK passa pela quantificação de seis parâmetros canônicos, cada um deles associado a uma decisão terapêutica específica. O primeiro é $C_{\max}$, a concentração plasmática máxima alcançada após a administração --- determinada pela dose, pela velocidade de absorção e pelo volume de distribuição ---, cujo valor é comparado à janela terapêutica do composto: concentrações abaixo do limite inferior são ineficazes; concentrações acima do limite superior provocam toxicidade. O segundo é $T_{\max}$, o tempo transcorrido até que $C_{\max}$ seja atingido --- informação relevante para fármacos cujo efeito deve ser rápido (analgésicos, por exemplo) ou para os quais se deseja retardar a absorção (formulações de liberação prolongada). O terceiro é $\mathrm{AUC}$, a área sob a curva de concentração em função do tempo --- integral que mede a exposição total do organismo ao fármaco e é proporcional à dose administrada dividida pelo clearance. O quarto é $t_{1/2}$, a meia-vida de eliminação --- intervalo de tempo após o qual a concentração plasmática cai a metade de seu valor ---, que determina o intervalo entre doses em regime de administração repetida: tipicamente, três a cinco meias-vidas são necessárias para atingir o estado de equilíbrio. O quinto é $V_d$, o volume de distribuição aparente --- volume teórico necessário para que a dose administrada produza a concentração observada ---, que pode exceder o volume corporal real para fármacos que se acumulam extensivamente em tecidos (indicando $V_d$ da ordem de centenas a milhares de litros). O sexto é $\mathrm{CL}$, o clearance --- volume de plasma completamente depurado do fármaco por unidade de tempo ---, que mede a capacidade global de eliminação do organismo e, em conjunto com a dose, determina $\mathrm{AUC}$.
@@ -89,7 +200,52 @@ As doenças tratadas neste capítulo --- câncer, doenças cardiovasculares, dia
 
 O câncer é o exemplo paradigmático dessa transição conceitual. A visão tradicional --- um gene, uma mutação, uma doença --- foi durante décadas o motor da oncologia molecular: a descoberta dos oncogenes nos anos 1970 e 1980 (RAS, MYC, EGFR, entre outros) e dos genes supressores tumorais (TP53, RB1, PTEN) estabeleceu que mutações específicas em genes específicos podiam causar transformação celular. Essa visão foi, e continua sendo, correta no nível molecular --- é verdade que mutações em RAS ativam constitutivamente a via MAPK/ERK, que mutações em TP53 abolitam a resposta a danos no DNA, que amplificação de MYC eleva a taxa de transcrição gênica. Mas mostrou-se insuficiente para explicar o comportamento clínico dos tumores: por que dois pacientes com a mesma mutação em EGFR têm respostas diferentes ao gefitinibe; por que um mesmo tumor pode regredir com uma droga e recrescer com uma mutação de resistência; por que metástases derivadas do mesmo tumor primário apresentam perfis moleculares distintos. A resposta, hoje consensual, é que o câncer é uma doença de redes regulatórias alteradas, na qual o fenótipo maligno --- proliferação descontrolada, evasão de apoptose, angiogênese, metástase --- emerge da interação de dezenas a centenas de alterações moleculares operando em módulos funcionais interconectados.
 
-Hanahan e Weinberg, em sua revisão seminal de 2000 na \emph{Cell} e em sua atualização de 2011, organizaram esse conhecimento em uma lista de \emph{hallmarks} --- capacidades celulares adquiridas durante o desenvolvimento tumoral --- que se tornou referência para a oncologia moderna. As seis características originais eram: sinalização proliferativa sustentada, evasão de supressores de crescimento, resistência à morte celular, imortalidade replicativa, angiogênese induzida e capacidade de invasão e metástase. A revisão de 2011 adicionou duas características emergentes --- reprogramação metabólica e evasão da resposta imune --- e duas características facilitadoras --- instabilidade genômica e mutação, e inflamação promotora de tumor. Cada hallmark corresponde a alterações moleculares específicas em redes bem caracterizadas: a sinalização proliferativa sustentada envolve as vias RAS/MAPK, PI3K/AKT e JAK/STAT; a evasão apoptótica envolve a família BCL-2, a via do TP53 e a sinalização de morte celular programada; a reprogramação metabólica envolve o efeito Warburg, a glutaminólise e a síntese lipídica; e assim por diante. O ponto crucial é que essas redes estão interligadas, formando uma \emph{rede oncogênica integrada} cuja topologia determina tanto o fenótipo tumoral quanto a vulnerabilidade terapêutica.
+Hanahan e Weinberg, em sua revisão seminal de 2000 na \emph{Cell} e em sua atualização de 2011, organizaram esse conhecimento em uma lista de \emph{hallmarks} --- capacidades celulares adquiridas durante o desenvolvimento tumoral --- que se tornou referência para a oncologia moderna. As seis características originais eram: sinalização proliferativa sustentada, evasão de supressores de crescimento, resistência à morte celular, imortalidade replicativa, angiogênese induzida e capacidade de invasão e metástase. A revisão de 2011 adicionou duas características emergentes --- reprogramação metabólica e evasão da resposta imune --- e duas características facilitadoras --- instabilidade genômica e mutação, e inflamação promotora de tumor. Cada hallmark corresponde a alterações moleculares específicas em redes bem caracterizadas: a sinalização proliferativa sustentada envolve as vias RAS/MAPK, PI3K/AKT e JAK/STAT; a evasão apoptótica envolve a família BCL-2, a via do TP53 e a sinalização de morte celular programada; a reprogramação metabólica envolve o efeito Warburg, a glutaminólise e a síntese lipídica; e assim por diante. O ponto crucial é que essas redes estão interligadas, formando uma \emph{rede oncogênica integrada} cuja topologia determina tanto o fenótipo tumoral quanto a vulnerabilidade terapêutica. A Figura~\ref{fig:13-hallmarks} organiza os dez hallmarks em torno da célula tumoral e dos módulos moleculares que os sustentam.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\footnotesize, align=center},
+  cell/.style={circle, draw=black, thick, fill=red!10, minimum size=2.4cm, inner sep=2pt},
+  hall/.style={rectangle, draw=black, thick, minimum width=3.2cm, minimum height=0.55cm, fill=blue!12},
+  leg/.style={font=\scriptsize, align=center, fill=yellow!12}
+]
+% Célula tumoral central
+\node[cell] (C) at (0, 0) {Célula\\tumoral};
+
+% Hallmarks originais (2000) - 6
+\node[hall] (h1) at (-5.5, 3.0) {1. Sinalização proliferativa sustentada};
+\node[hall] (h2) at (-5.5, 2.0) {2. Evasão de supressores};
+\node[hall] (h3) at (-5.5, 1.0) {3. Resistência à morte celular};
+\node[hall] (h4) at (-5.5, 0.0) {4. Imortalidade replicativa};
+\node[hall] (h5) at (-5.5, -1.0) {5. Angiogênese induzida};
+\node[hall] (h6) at (-5.5, -2.0) {6. Invasão e metástase};
+
+% Hallmarks adicionados (2011) - 4
+\node[hall, fill=blue!20] (h7) at (5.5, 3.0) {7. Reprogramação metabólica};
+\node[hall, fill=blue!20] (h8) at (5.5, 2.0) {8. Evasão imune};
+\node[hall, fill=orange!20] (h9) at (5.5, 1.0) {9. Instabilidade genômica};
+\node[hall, fill=orange!20] (h10) at (5.5, 0.0) {10. Inflamação promotora};
+
+% Conexões
+\foreach \n in {1,2,3,4,5,6} {
+  \draw[->, thick, blue!50!black] (h\n.east) -- (C.west);
+}
+\foreach \n in {7,8,9,10} {
+  \draw[->, thick, blue!50!black] (h\n.west) -- (C.east);
+}
+
+% Legenda
+\node[leg] at (0, -3.0) {Azul claro: hallmarks originais (2000) \quad | \quad Azul escuro: hallmarks emergentes (2011) \quad | \quad Laranja: hallmarks facilitadores (2011)};
+
+% Módulos moleculares
+\node[font=\bfseries] at (0, 3.7) {Módulos moleculares subjacentes};
+\node[font=\scriptsize, align=center, fill=green!10] at (-2.5, -1.8) {RAS/MAPK, PI3K/AKT\\BCL-2, TP53, apoptose};
+\node[font=\scriptsize, align=center, fill=green!10] at (2.5, -1.8) {GLUT1, HK2, PKM2\\PD-L1, TCR, mut. drivers};
+\end{tikzpicture}
+\caption{Os dez hallmarks do câncer segundo Hanahan e Weinberg (2000, atualizado em 2011), organizados em torno da célula tumoral. Os seis hallmarks originais --- sinalização proliferativa sustentada, evasão de supressores, resistência à morte celular, imortalidade replicativa, angiogênese e metástase --- correspondem a propriedades celulares adquiridas durante a tumorigênese. A atualização de 2011 adicionou a reprogramação metabólica e a evasão imune (hallmarks emergentes), além de instabilidade genômica e inflamação promotora (hallmarks facilitadores). Os módulos moleculares subjacentes --- vias de sinalização, efetores apoptóticos, transportadores metabólicos, checkpoints imunes --- formam a \emph{rede oncogênica integrada} cuja topologia determina o fenótipo e a vulnerabilidade terapêutica do tumor.}
+\label{fig:13-hallmarks}
+\end{figure}
 
 O efeito Warburg --- a observação, feita por Otto Warburg nos anos 1920, de que células tumorais apresentam glicólise aeróbica preferencial em detrimento da fosforilação oxidativa --- é, ao mesmo tempo, um exemplo histórico e um caso atual de reprogramação metabólica. A explicação convencional --- de que a glicólise seria consequência de dano mitocondrial --- mostrou-se incompleta: muitas células tumorais têm mitocôndrias funcionais e ainda assim preferem glicólise. A interpretação sistêmica reconhece que a glicólise aeróbica oferece vantagens específicas para a célula tumoral em proliferação: gera ATP mais rapidamente, embora em menor rendimento por molécula de glicose; produz intermediários biossintéticos (ribose para nucleotídeos, acetil-CoA para lipídios, aminoácidos não-essenciais) que alimentam a síntese de biomassa necessária à divisão celular; e acidifica o microambiente extracelular, favorecendo invasão e supressão imune. As alterações moleculares que sustentam esse fenótipo incluem superexpressão do transportador de glicose GLUT1, das isoenzimas glicolíticas HK2 e PKM2, e de enzimas da via da glutaminólise --- alvos terapêuticos potenciais, com inibidores em desenvolvimento clínico.
 
