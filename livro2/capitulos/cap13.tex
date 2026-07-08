@@ -265,7 +265,47 @@ As doenças neurodegenerativas --- doença de Alzheimer, doença de Parkinson, e
 A análise de redes aplicada às doenças neurodegenerativas identifica módulos de doença distintos --- módulo de processamento de $\beta$-amiloide, módulo de fosforilação de tau, módulo de autofagia, módulo de resposta inflamatória --- cujas perturbações convergem sobre o fenótipo clínico comum. Essa decomposição modular é importante por duas razões. Primeiro, explica por que fármacos desenhados contra um único componente (anti-amiloide, por exemplo) frequentemente falham em ensaios clínicos: o módulo amiloide é apenas um dos vários alterados, e sua modulação isolada não é suficiente para reverter a cascata. Segundo, sugere alvos terapêuticos combinados ou estratégias que atuem sobre mecanismos compartilhados por múltiplos módulos --- como restauração da função autofágica, redução da neuroinflamação crônica, ou melhora da função mitocondrial. A farmacologia de redes, nesse contexto, deixa de ser abstração metodológica e torna-se estratégia terapêutica concreta para doenças em que décadas de tentativas reducionistas produziram resultados decepcionantes.
 
 
-O conceito de \emph{módulo de doença}, formalizado por Menche e colaboradores em artigo de 2015 na \emph{Science}, sintetiza em uma definição operacional a intuição central da medicina de redes: uma doença corresponde a um conjunto de componentes moleculares --- genes, proteínas, metabólitos --- que estão topologicamente próximos no interactoma humano e cujas perturbações, em conjunto, produzem um fenótipo patológico reconhecível. Mais precisamente, um módulo de doença é definido como uma ``bola'' (\emph{ball}) no grafo do interactoma centrada em um conjunto de genes associados à doença: o conjunto inclui os próprios genes de doença e seus vizinhos diretos no grafo, e o módulo é delimitado por um raio topológico que maximiza a separação entre proteínas de doença e proteínas aleatoriamente amostradas. A análise sistemática de módulos de doença em centenas de fenótipos catalogados em bases como o OMIM (\emph{Online Mendelian Inheritance in Man}) e o GWAS Catalog revelou três propriedades fundamentais. Primeiro, módulos de doenças distintas tendem a ocupar regiões topologicamente distintas do interactoma, refletindo a especificidade mecanística de cada patologia. Segundo, módulos de doenças clinicamente relacionadas --- por exemplo, doenças autoimunes, ou doenças metabólicas, ou diferentes tipos de câncer --- apresentam sobreposição substancial, refletindo mecanismos patogênicos compartilhados. Terceiro, e talvez mais relevante do ponto de vista clínico, a sobreposição entre módulos de doenças clinicamente não relacionadas explica \emph{comorbidades} --- a coexistência em um mesmo paciente de duas ou mais doenças cuja associação não seria esperada a partir dos respectivos fatores de risco conhecidos.
+O conceito de \emph{módulo de doença}, formalizado por Menche e colaboradores em artigo de 2015 na \emph{Science}, sintetiza em uma definição operacional a intuição central da medicina de redes: uma doença corresponde a um conjunto de componentes moleculares --- genes, proteínas, metabólitos --- que estão topologicamente próximos no interactoma humano e cujas perturbações, em conjunto, produzem um fenótipo patológico reconhecível. Mais precisamente, um módulo de doença é definido como uma ``bola'' (\emph{ball}) no grafo do interactoma centrada em um conjunto de genes associados à doença: o conjunto inclui os próprios genes de doença e seus vizinhos diretos no grafo, e o módulo é delimitado por um raio topológico que maximiza a separação entre proteínas de doença e proteínas aleatoriamente amostradas. A análise sistemática de módulos de doença em centenas de fenótipos catalogados em bases como o OMIM (\emph{Online Mendelian Inheritance in Man}) e o GWAS Catalog revelou três propriedades fundamentais. Primeiro, módulos de doenças distintas tendem a ocupar regiões topologicamente distintas do interactoma, refletindo a especificidade mecanística de cada patologia. Segundo, módulos de doenças clinicamente relacionadas --- por exemplo, doenças autoimunes, ou doenças metabólicas, ou diferentes tipos de câncer --- apresentam sobreposição substancial, refletindo mecanismos patogênicos compartilhados. Terceiro, e talvez mais relevante do ponto de vista clínico, a sobreposição entre módulos de doenças clinicamente não relacionadas explica \emph{comorbidades} --- a coexistência em um mesmo paciente de duas ou mais doenças cuja associação não seria esperada a partir dos respectivos fatores de risco conhecidos. A Figura~\ref{fig:13-modulo} ilustra esquematicamente essa construção: o módulo de cada doença é uma ``bola'' (ball) no interactoma centrada em seus genes associados, e a sobreposição entre bolas representa a base mecanística das comorbidades.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small, align=center},
+  interatoma/.style={circle, draw=gray!60, thick, dashed, minimum size=6.5cm},
+  modA/.style={circle, draw=red!70!black, very thick, fill=red!15, minimum size=2.6cm, fill opacity=0.4},
+  modB/.style={circle, draw=blue!70!black, very thick, fill=blue!15, minimum size=2.4cm, fill opacity=0.4},
+  modC/.style={circle, draw=green!60!black, very thick, fill=green!15, minimum size=2.2cm, fill opacity=0.4},
+  labelA/.style={font=\bfseries\small, red!70!black},
+  labelB/.style={font=\bfseries\small, blue!70!black},
+  labelC/.style={font=\bfseries\small, green!50!black},
+  anotA/.style={font=\scriptsize, align=center, fill=red!8, rectangle, inner sep=2pt},
+  anotB/.style={font=\scriptsize, align=center, fill=blue!8, rectangle, inner sep=2pt},
+  anotC/.style={font=\scriptsize, align=center, fill=green!8, rectangle, inner sep=2pt}
+]
+\node[interatoma] (I) at (0,0) {};
+\node[font=\itshape\small, gray!70!black] at (0, 3.5) {Interactoma humano (grafo PPI)};
+\node[modA] (A) at (-1.6, 0.4) {};
+\node[modB] (B) at (0.6, -0.3) {};
+\node[modC] (C) at (1.8, 1.1) {};
+\node[labelA] at (-1.6, 0.4) {Doença A};
+\node[labelB] at (0.6, -0.3) {Doença B};
+\node[labelC] at (1.8, 1.1) {Doença C};
+% Pontos de genes (decorativos)
+\foreach \p in {(-2.4,1.0),(-1.8,-0.6),(-0.9,1.2)} \fill[red!70!black] \p circle (1.2pt);
+\foreach \p in {(0.1,0.8),(1.1,-1.0)} \fill[blue!70!black] \p circle (1.2pt);
+\foreach \p in {(2.4,0.4),(1.2,1.8),(2.2,1.8)} \fill[green!50!black] \p circle (1.2pt);
+\foreach \p in {(0.9,0.6),(-0.4,-0.1)} \fill[purple!70!black] \p circle (1.2pt);
+% Anotações
+\node[anotA] at (-5.0, 1.5) {Módulo de A:\\genes A + vizinhos\\no interactoma};
+\node[anotB] at (5.5, -1.5) {Módulo de B:\\genes B + vizinhos};
+\node[anotC] at (5.0, 2.3) {Módulo de C:\\genes C + vizinhos};
+% Comorbidades
+\draw[<->, thick, red!50!black, dashed] (-3.5, -1.0) -- node[below, font=\scriptsize] {comorbidade} (3.0, -2.0);
+\draw[<->, thick, blue!50!black, dashed] (-3.5, 2.0) -- node[above, font=\scriptsize, sloped] {sobreposição mecanística} (4.5, 1.5);
+\end{tikzpicture}
+\caption{Módulos de doença no interactoma e a base mecanística das comorbidades. Cada doença --- $A$, $B$, $C$ --- corresponde a uma \emph{bola} topológica no grafo do interactoma humano, centrada em seus genes associados e delimitada por um raio que inclui os vizinhos diretos. A sobreposição entre bolas reflete mecanismos moleculares compartilhados --- inflamação crônica, estresse oxidativo, disfunção metabólica --- e é a base mecanística das comorbidades observadas na prática clínica: pares como diabetes tipo 2 e doença cardiovascular, depressão e doença cardiovascular, doença renal crônica e doença cardiovascular, Alzheimer e diabetes tipo 2. A análise sistemática de módulos de doença (Menche et al., 2015) revelou que doenças clinicamente relacionadas ocupam regiões topologicamente próximas do interactoma, e que a sobreposição entre módulos de doenças clinicamente distantes prediz comorbidades antes mesmo de serem observadas epidemiologicamente.}
+\label{fig:13-modulo}
+\end{figure}
 
 As comorbidades --- definidas como a coexistência em um mesmo paciente de duas doenças em frequência maior do que o esperado pelo acaso --- constituem um dos problemas clínicos mais relevantes da medicina contemporânea, especialmente em populações idosas, e a análise de redes fornece uma explicação sistemática para sua ocorrência. Quando duas doenças --- por exemplo, diabetes tipo 2 e doença cardiovascular aterosclerótica --- compartilham parte de seus módulos moleculares, é porque compartilham vias e mecanismos --- inflamação crônica de baixo grau, estresse oxidativo, disfunção endotelial, alteração do metabolismo lipídico ---, e essa sobreposição mecanística traduz-se, no nível populacional, em taxas de comorbidade acima do esperado. A utilidade clínica dessa observação é dupla: antecipar comorbidades em pacientes recém-diagnosticados e priorizar estratégias terapêuticas que atuem simultaneamente sobre mecanismos compartilhados. O mesmo raciocínio aplica-se a pares como depressão e doença cardiovascular, doença renal crônica e doença cardiovascular, e doença de Alzheimer e diabetes tipo 2 --- todos exemplos bem estabelecidos de comorbidades parcialmente explicadas por sobreposição de módulos.
 
@@ -287,7 +327,56 @@ A \emph{farmacogenômica} --- o estudo de como variações genéticas individuai
 
 A família do citocromo P450 merece destaque particular por sua centralidade no metabolismo da maioria dos fármacos em uso clínico. Trata-se de um conjunto de cerca de cinqüenta isoenzimas hepáticas, das quais algumas poucas --- CYP3A4, CYP2D6, CYP2C9, CYP2C19, CYP1A2 --- respondem, em conjunto, pelo metabolismo de aproximadamente setenta por cento dos fármacos comercializados. CYP3A4 e CYP3A5 metabolizam cerca de metade desse total, incluindo estatinas, imunossupressores como ciclosporina e tacrolimo, e diversos agentes oncológicos. CYP2D6, embora responsável por apenas vinte e cinco por cento dos fármacos em termos quantitativos, é especialmente importante em psiquiatria --- antipsicóticos, antidepressivos tricíclicos e inibidores seletivos de recaptação de serotonina --- e em analgesia --- codeína, tramadol, oxicodona. CYP2C9 metaboliza warfarina, fenitoína e a maioria dos anti-inflamatórios não esteroidais. CYP2C19 metaboliza clopidogrel, inibidores de bomba de prótons e alguns antidepressivos. A variabilidade funcional dessas enzimas --- decorrente de polimorfismos genéticos --- é uma das principais fontes de variabilidade interindividual na resposta a fármacos.
 
-Os fenótipos metabólicos clássicos --- classificados como \emph{Poor Metabolizer} (PM), \emph{Intermediate Metabolizer} (IM), \emph{Normal Metabolizer} (NM, também chamado \emph{Extensive Metabolizer}, EM) e \emph{Ultra-rapid Metabolizer} (UM) --- traduzem a atividade enzimática in vivo em quatro categorias operacionais. Metabolizadores pobres, geralmente homozigotos para alelos \emph{loss-of-function}, apresentam atividade enzimática muito baixa ou ausente; em consequência, fármacos metabolizados por essa via acumulam-se no organismo, com risco aumentado de toxicidade para fármacos ativos e eficácia reduzida para pró-fármacos que dependem de ativação metabólica. Metabolizadores intermediários apresentam atividade reduzida, com necessidade de monitoramento. Metabolizadores normais processam o fármaco nas doses-padrão com segurança e eficácia usuais. Metabolizadores ultra-rápidos --- geralmente portadores de duplicações gênicas ou variantes promotas --- apresentam atividade muito elevada, com risco de subdosagem para fármacos ativos e toxicidade elevada para pró-fármacos convertidos rapidamente em seus metabólitos ativos. A frequência desses fenótipos varia substancialmente entre populações geograficamente distintas --- CYP2D6 PM, por exemplo, é cerca de cinco a dez por cento em europeus e aproximadamente um por cento em asiáticos orientais, enquanto CYP2D6 UM pode atingir vinte a trinta por cento em populações do norte da África e do Oriente Médio.
+Os fenótipos metabólicos clássicos --- classificados como \emph{Poor Metabolizer} (PM), \emph{Intermediate Metabolizer} (IM), \emph{Normal Metabolizer} (NM, também chamado \emph{Extensive Metabolizer}, EM) e \emph{Ultra-rapid Metabolizer} (UM) --- traduzem a atividade enzimática in vivo em quatro categorias operacionais. Metabolizadores pobres, geralmente homozigotos para alelos \emph{loss-of-function}, apresentam atividade enzimática muito baixa ou ausente; em consequência, fármacos metabolizados por essa via acumulam-se no organismo, com risco aumentado de toxicidade para fármacos ativos e eficácia reduzida para pró-fármacos que dependem de ativação metabólica. Metabolizadores intermediários apresentam atividade reduzida, com necessidade de monitoramento. Metabolizadores normais processam o fármaco nas doses-padrão com segurança e eficácia usuais. Metabolizadores ultra-rápidos --- geralmente portadores de duplicações gênicas ou variantes promotas --- apresentam atividade muito elevada, com risco de subdosagem para fármacos ativos e toxicidade elevada para pró-fármacos convertidos rapidamente em seus metabólitos ativos. A frequência desses fenótipos varia substancialmente entre populações geograficamente distintas --- CYP2D6 PM, por exemplo, é cerca de cinco a dez por cento em europeus e aproximadamente um por cento em asiáticos orientais, enquanto CYP2D6 UM pode atingir vinte a trinta por cento em populações do norte da África e do Oriente Médio. A Figura~\ref{fig:13-cyp} ilustra a contribuição relativa das principais isoenzimas CYP ao metabolismo dos fármacos comercializados e a correspondência entre genótipos e fenótipos metabólicos.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small, align=center},
+  cyp/.style={rectangle, draw=black, thick, minimum width=2.2cm, minimum height=0.7cm, fill=blue!12},
+  fen/.style={rectangle, draw=black, thick, minimum width=1.8cm, minimum height=0.8cm, fill=orange!20},
+  seta/.style={->, thick}
+]
+% Painel esquerdo: contribuição das isoenzimas
+\node[font=\bfseries] at (-3.5, 3.7) {(a) Isoenzimas CYP e contribuição};
+\node[cyp] (cyp3a4) at (-3.5, 2.8) {CYP3A4/5};
+\node[cyp] (cyp2d6) at (-3.5, 2.0) {CYP2D6};
+\node[cyp] (cyp2c9) at (-3.5, 1.2) {CYP2C9};
+\node[cyp] (cyp2c19) at (-3.5, 0.4) {CYP2C19};
+\node[cyp] (cyp1a2) at (-3.5, -0.4) {CYP1A2};
+\node[font=\scriptsize] at (-1.2, 2.8) {\(\sim\)50\%};
+\node[font=\scriptsize] at (-1.2, 2.0) {\(\sim\)25\%};
+\node[font=\scriptsize] at (-1.2, 1.2) {\(\sim\)10\%};
+\node[font=\scriptsize] at (-1.2, 0.4) {\(\sim\)5\%};
+\node[font=\scriptsize] at (-1.2, -0.4) {\(\sim\)5\%};
+\node[font=\scriptsize, align=left] at (0.4, 2.8) {estatinas, ciclosporina,\\tacrolimo, oncológicos};
+\node[font=\scriptsize, align=left] at (0.4, 2.0) {antipsicóticos, ISRS,\\codeína, tramadol};
+\node[font=\scriptsize, align=left] at (0.4, 1.2) {warfarina, fenitoína,\\AINEs};
+\node[font=\scriptsize, align=left] at (0.4, 0.4) {clopidogrel, IBPs,\\antidepressivos};
+\node[font=\scriptsize, align=left] at (0.4, -0.4) {cafeína, teofilina,\\clozapina};
+
+% Painel direito: fenótipos metabólicos
+\node[font=\bfseries] at (4.5, 3.7) {(b) Genótipo \(\rightarrow\) fenótipo};
+\node[font=\scriptsize, align=center] at (4.5, 3.1) {LoF homozigoto / heterozigoto};
+\draw[seta] (3.3, 3.1) -- (5.5, 3.1);
+\node[fen, fill=red!30] (pm) at (6.6, 3.1) {PM};
+\node[font=\scriptsize, align=center] at (6.6, 2.4) {Atividade\\mínima};
+\node[font=\scriptsize, align=center] at (4.5, 2.0) {Heterozigoto};
+\draw[seta] (3.3, 2.0) -- (5.5, 2.0);
+\node[fen, fill=orange!30] (im) at (6.6, 2.0) {IM};
+\node[font=\scriptsize, align=center] at (6.6, 1.3) {Atividade\\reduzida};
+\node[font=\scriptsize, align=center] at (4.5, 0.9) {Wild-type};
+\draw[seta] (3.3, 0.9) -- (5.5, 0.9);
+\node[fen, fill=green!30] (nm) at (6.6, 0.9) {NM};
+\node[font=\scriptsize, align=center] at (6.6, 0.2) {Atividade\\normal};
+\node[font=\scriptsize, align=center] at (4.5, -0.2) {Duplicação / promotor};
+\draw[seta] (3.3, -0.2) -- (5.5, -0.2);
+\node[fen, fill=red!30] (um) at (6.6, -0.2) {UM};
+\node[font=\scriptsize, align=center] at (6.6, -0.9) {Atividade\\elevada};
+\end{tikzpicture}
+\caption{Farmacogenômica do citocromo P450. (a) Contribuição relativa das principais isoenzimas hepáticas CYP ao metabolismo dos fármacos em uso clínico: CYP3A4/5 (\(\sim\)50\%), CYP2D6 (\(\sim\)25\%), CYP2C9 (\(\sim\)10\%), CYP2C19 (\(\sim\)5\%) e CYP1A2 (\(\sim\)5\%) respondem, em conjunto, por mais de 70\% dos fármacos metabolizados. (b) Tradução genótipo-fenótipo: polimorfismos \emph{loss-of-function} (LoF) determinam fenótipos PM (\emph{Poor Metabolizer}) com atividade mínima, heterozigose resulta em IM (\emph{Intermediate Metabolizer}) com atividade reduzida, genótipo selvagem em NM (\emph{Normal Metabolizer}) e duplicações gênicas ou variantes promotoras em UM (\emph{Ultra-rapid Metabolizer}). As frequências populacionais desses fenótipos variam substancialmente entre grupos étnicos --- CYP2D6 PM é cerca de 5--10\% em europeus e \(\sim\)1\% em asiáticos orientais, enquanto CYP2D6 UM pode atingir 20--30\% em populações do norte da África e Oriente Médio --- com implicações clínicas diretas para ajuste de dose e seleção de fármacos alternativos.}
+\label{fig:13-cyp}
+\end{figure}
 
 O clopidogrel --- pró-fármaco antiagregante plaquetário amplamente utilizado na prevenção de eventos trombóticos após implante de \emph{stent} coronariano --- oferece um caso paradigmático da relevância clínica desses polimorfismos. O clopidogrel é, em si, farmacologicamente inativo: requer ativação hepática por CYP2C19 para gerar seu metabólito ativo, que bloqueia irreversivelmente o receptor P2Y$_{12}$ plaquetário e inibe a agregação. Polimorfismos \emph{loss-of-function} em CYP2C19 --- notadamente os alelos *2 (c.681G>A, rs4244285) e *3 (c.636G>A, rs4986893) --- reduzem ou abolam essa ativação, com consequências clínicas diretas. Metabolizadores pobres para CYP2C19 apresentam níveis plasmáticos do metabólito ativo cerca de um terço menores que metabolizadores normais, com redução proporcional da inibição plaquetária --- e, em metanálises de estudos clínicos, risco aproximadamente três vezes maior de eventos cardiovasculares maiores (morte cardiovascular, infarto, trombose de \emph{stent}) em usuários de clopidogrel. O alelo *17 (rs12248560), por outro lado, é uma variante promotora que aumenta a atividade de CYP2C19; metabolizadores ultra-rápidos apresentam ativação acelerada do clopidogrel e, paradoxalmente, podem ter risco aumentado de sangramento, embora a magnitude desse efeito seja mais controversa. As implicações práticas, incorporadas em diretrizes de sociedades cardiovasculares norte-americanas e europeias, são: para pacientes CYP2C19 PM/IM, preferir prasugrel ou ticagrelor (alternativas que não dependem de CYP2C19 para sua ativação, ou que dele dependem apenas parcialmente); para pacientes NM/EM, manter clopidogrel como opção custo-efetiva; e para pacientes UM, considerar monitoramento mais cuidadoso. Testes farmacogenômicos para CYP2C19 estão comercialmente disponíveis há mais de uma década, mas a sua implementação sistemática permanece irregular --- reflexo, em parte, da lacuna genérica entre evidência farmacogenômica e sua incorporação em protocolos clínicos.
 
@@ -303,7 +392,44 @@ A integração multiômica --- combinando genômica, transcriptômica, proteômi
 Os diagnósticos baseados em ômicas já constituem uma parcela significativa do armamentário clínico contemporâneo. No campo dos testes genômicos, o sequenciamento de painel de genes é rotina em oncologia --- identifica mutações driver em dezenas a centenas de genes simultaneamente, guiando a escolha de terapias-alvo. O sequenciamento de exoma (WES) e o genoma completo (WGS) são reservados para casos selecionados, especialmente em doenças raras e em oncogenética. A biópsia líquida --- detecção de DNA tumoral circulante (\emph{ctDNA}) no plasma --- permite monitorar carga tumoral, detectar recorrência e identificar mecanismos de resistência sem necessidade de biópsia tecidual invasiva. No campo transcriptômico, três testes para câncer de mama --- Oncotype DX (avalia 21 genes), MammaPrint (avalia 70 genes) e Prosigna/PAM50 (avalia 50 genes classificados em subtipos intrínsecos) --- tornaram-se padrão de cuidado para decidir necessidade de quimioterapia adjuvante em câncer de mama inicial receptor hormonal positivo. Outros perfis transcriptômicos estão em desenvolvimento ou já aprovados para câncer de pulmão, linfomas e leucemias. No campo proteômico e metabolômico, painéis de citocinas e perfis metabolômicos são cada vez mais usados em doenças autoimunes, em erros inatos do metabolismo e em medicina de precisão para diabetes.
 
 
-A subclassificação molecular do câncer de mama --- consolidada com o advento do painel PAM50 --- oferece um dos exemplos mais bem estabelecidos da substituição da classificação puramente clínica por uma taxonomia molecular. Aproximadamente quinze a vinte por cento dos cânceres de mama superexpressam o receptor HER2 (também chamado ERBB2), uma tirosina-quinase transmembrana cuja ativação constitutiva dirige proliferação celular descontrolada. Outros sessenta a setenta por cento são positivos para receptor de estrogênio (ER) e/ou receptor de progesterona (PR), com perfis proliferativos variados. Aproximadamente quinze por cento são negativos para os três marcadores (triplo-negativos). O painel PAM50, baseado no perfil de expressão de cinqüenta genes classificados por Parker e colaboradores em 2009, identifica cinco subtipos moleculares intrínsecos que reorganizam essa classificação. O subtipo \emph{luminal A} --- receptor de estrogênio positivo, HER2 negativo, Ki67 baixo --- tem o melhor prognóstico e responde adequadamente a hormonioterapia isolada, sem necessidade de quimioterapia adjuvante em muitos casos. O subtipo \emph{luminal B} --- receptor de estrogênio positivo, mas com Ki67 elevado e/ou HER2 positivo --- tem prognóstico intermediário e geralmente se beneficia de hormonioterapia combinada com quimioterapia. O subtipo \emph{HER2-enriquecido} --- receptor de estrogênio negativo, mas HER2 positivo --- responde a terapias anti-HER2 (trastuzumab, pertuzumab, T-DM1, trastuzumab-deruxtecana), tipicamente combinadas com quimioterapia. O subtipo \emph{basal-símile} --- triplo-negativo, com perfil de expressão semelhante a células basais/mioepiteliais --- tem o pior prognóstico e exige quimioterapia citotóxica; novos tratamentos incluem inibidores de PARP para tumores com mutações BRCA1/2 e imunoterapia para tumores com alta carga mutacional ou PD-L1 positivo. A implicação clínica, hoje rotineira, é que pacientes com o mesmo diagnóstico histológico --- ``carcinoma ductal invasivo'', por exemplo --- recebem terapêuticas completamente diferentes dependendo do subtipo molecular, e que a decisão terapêutica sem o painel molecular é considerada, na prática contemporânea, incompletamente fundamentada.
+A subclassificação molecular do câncer de mama --- consolidada com o advento do painel PAM50 --- oferece um dos exemplos mais bem estabelecidos da substituição da classificação puramente clínica por uma taxonomia molecular. Aproximadamente quinze a vinte por cento dos cânceres de mama superexpressam o receptor HER2 (também chamado ERBB2), uma tirosina-quinase transmembrana cuja ativação constitutiva dirige proliferação celular descontrolada. Outros sessenta a setenta por cento são positivos para receptor de estrogênio (ER) e/ou receptor de progesterona (PR), com perfis proliferativos variados. Aproximadamente quinze por cento são negativos para os três marcadores (triplo-negativos). O painel PAM50, baseado no perfil de expressão de cinqüenta genes classificados por Parker e colaboradores em 2009, identifica cinco subtipos moleculares intrínsecos que reorganizam essa classificação. O subtipo \emph{luminal A} --- receptor de estrogênio positivo, HER2 negativo, Ki67 baixo --- tem o melhor prognóstico e responde adequadamente a hormonioterapia isolada, sem necessidade de quimioterapia adjuvante em muitos casos. O subtipo \emph{luminal B} --- receptor de estrogênio positivo, mas com Ki67 elevado e/ou HER2 positivo --- tem prognóstico intermediário e geralmente se beneficia de hormonioterapia combinada com quimioterapia. O subtipo \emph{HER2-enriquecido} --- receptor de estrogênio negativo, mas HER2 positivo --- responde a terapias anti-HER2 (trastuzumab, pertuzumab, T-DM1, trastuzumab-deruxtecana), tipicamente combinadas com quimioterapia. O subtipo \emph{basal-símile} --- triplo-negativo, com perfil de expressão semelhante a células basais/mioepiteliais --- tem o pior prognóstico e exige quimioterapia citotóxica; novos tratamentos incluem inibidores de PARP para tumores com mutações BRCA1/2 e imunoterapia para tumores com alta carga mutacional ou PD-L1 positivo. A implicação clínica, hoje rotineira, é que pacientes com o mesmo diagnóstico histológico --- ``carcinoma ductal invasivo'', por exemplo --- recebem terapêuticas completamente diferentes dependendo do subtipo molecular, e que a decisão terapêutica sem o painel molecular é considerada, na prática contemporânea, incompletamente fundamentada. A Figura~\ref{fig:13-pam50} apresenta os quatro subtipos principais e seus marcadores canônicos.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small, align=center},
+  sub/.style={rectangle, draw=black, thick, minimum width=3.4cm, minimum height=2.2cm},
+  marc/.style={font=\scriptsize, align=center}
+]
+\node[sub, fill=blue!15] (lumA) at (0, 0) {};
+\node[font=\bfseries] at (0, 0.7) {Luminal A};
+\node[marc] at (0, 0.0) {ER+, PR+\\HER2--\\Ki67 baixo};
+\node[sub, fill=blue!25] (lumB) at (4.5, 0) {};
+\node[font=\bfseries] at (4.5, 0.7) {Luminal B};
+\node[marc] at (4.5, 0.0) {ER+, PR+\\HER2+ ou\\Ki67 alto};
+\node[sub, fill=red!15] (her2) at (0, -3.0) {};
+\node[font=\bfseries] at (0, -2.3) {HER2-enriquecido};
+\node[marc] at (0, -3.0) {ER--\\HER2++\\Ki67 alto};
+\node[sub, fill=gray!25] (basal) at (4.5, -3.0) {};
+\node[font=\bfseries] at (4.5, -2.3) {Basal-símile};
+\node[marc] at (4.5, -3.0) {Triplo-negativo\\(ER--, PR--, HER2--)\\KRT5+, KRT17+};
+
+\node[font=\bfseries] at (2.25, -4.5) {Prognóstico:};
+\draw[->, very thick, green!50!black] (-1.5, -5.0) -- (6.0, -5.0);
+\node[font=\scriptsize, green!50!black] at (-1.5, -5.3) {melhor};
+\node[font=\scriptsize, red!70!black] at (6.0, -5.3) {pior};
+
+\node[font=\bfseries] at (2.25, 1.4) {Terapêuticas canônicas};
+\node[font=\scriptsize, align=center, fill=yellow!10] at (0, -0.3) {hormonioterapia\\sozinha};
+\node[font=\scriptsize, align=center, fill=yellow!10] at (4.5, -0.3) {hormonioterapia\\+ quimioterapia};
+\node[font=\scriptsize, align=center, fill=yellow!10] at (0, -3.3) {anti-HER2 (trastuzumab,\\pertuzumab, T-DM1)\\+ QT};
+\node[font=\scriptsize, align=center, fill=yellow!10] at (4.5, -3.3) {QT citotóxica; iPARP\\(BRCA1/2 mut);\\imunoterapia\\(PD-L1+, TMB alto)};
+
+\node[font=\bfseries, fill=green!15, draw=green!50!black, thick, rounded corners] at (7.5, -1.5) {Painel PAM50\\(50 genes)};
+\end{tikzpicture}
+\caption{Subtipos moleculares de câncer de mama segundo o painel PAM50 (Parker et al., 2009). Os quatro subtipos intrínsecos --- \emph{Luminal A}, \emph{Luminal B}, \emph{HER2-enriquecido} e \emph{Basal-símile} --- reorganizam a classificação histológica tradicional com base em perfis de expressão de cinqüenta genes classificados por similaridade a linhagens celulares de referência. Marcadores canônicos: \emph{Luminal A} (ER+, PR+, HER2--, Ki67 baixo) responde a hormonioterapia sozinha; \emph{Luminal B} (ER+, HER2+ e/ou Ki67 alto) requer hormonioterapia combinada com quimioterapia; \emph{HER2-enriquecido} (HER2 superexpressado) responde a terapias anti-HER2 (trastuzumab, pertuzumab, T-DM1) combinadas com quimioterapia; \emph{Basal-símile} (triplo-negativo) é tratado com quimioterapia citotóxica, e mais recentemente com inibidores de PARP em tumores com mutações BRCA1/2 ou imunoterapia em tumores com alta carga mutacional ou expressão de PD-L1. A seta horizontal indica a gradação de prognóstico, do melhor (\emph{Luminal A}) ao pior (\emph{Basal-símile}).}
+\label{fig:13-pam50}
+\end{figure}
 
 A seleção de tratamento baseada em perfil molecular estende-se, hoje, a dezenas de indicações oncológicas. No câncer de pulmão de células não pequenas, mutações ativadoras em EGFR (especialmente deleções no exon 19 e a mutação L858R no exon 21) indicam uso de inibidores de tirosina-quinase como erlotinibe, gefitinibe ou osimertinibe (este último ativo também contra a mutação de resistência T790M). Rearranjos envolvendo o gene ALK (resultantes de inversões ou translocações cromossômicas) indicam uso de crizotinibe ou ceritinibe. No melanoma, a mutação BRAF V600E --- presente em cerca de cinqüenta por cento dos melanomas cutâneos --- indica uso de vemurafenibe ou dabrafenibe, frequentemente combinados com inibidores de MEK (trametinibe, cobimetinibe) para prevenir resistência. Na leucemia mieloide crônica, a translocação t(9;22) que gera o gene de fusão BCR-ABL é o evento fundador da doença e o alvo do imatinibe --- paradigma inicial de toda a era das terapias-alvo moleculares. No câncer de mama, mutações em BRCA1/2 indicam sensibilidade a inibidores de PARP (olaparibe, talazoparibe) por inativação de vias alternativas de reparo de DNA. A lista cresce anualmente, e a identificação de novas mutações driver e novas classes de inibidores é uma das áreas mais dinâmicas da oncologia contemporânea.
 
@@ -325,7 +451,50 @@ O trastuzumab --- anticorpo monoclonal humanizado aprovado pela FDA em 1998 e co
 
 A obrigatoriedade do teste de HER2 --- realizado rotineiramente por imuno-histoquímica ou por hibridização in situ fluorescente --- em todos os casos de câncer de mama invasivo é, hoje, parte indissociável do protocolo diagnóstico. A estratificação molecular do tumor não é opcional nem tardia; ela precede e determina a decisão terapêutica. Esta é, talvez, a lição metodológica mais importante do caso HER2/trastuzumab: a identificação de um alvo molecular em uma fração significativa da doença --- e a demonstração de que pacientes com esse alvo se beneficiam especificamente de uma terapia desenhada contra ele --- transforma a prática clínica de modo irreversível. Os desenvolvimentos subsequentes --- pertuzumab (anticorpo contra um epitopo distinto de HER2), trastuzumab-deruxtecana (conjugado anticorpo-fármaco com carga útil de inibidor de topoisomerase I), trastuzumab-duocarmazina, e diversos inibidores de tirosina-quinase de pequena molécula como lapatinibe, tucatinibe e neratinibe --- representam a continuação dessa linha de desenvolvimento, cada um com indicações específicas dentro do subgrupo HER2-positivo e cada um contribuindo para refinamento adicional da estratificação.
 
-A medicina de sistemas oferece, ao caso HER2/trastuzumab, uma camada de interpretação adicional que vai além da simples identificação do alvo. A análise de redes mostra que HER2 ocupa posição de nó central (\emph{hub}) em uma sub-rede de sinalização proliferativa que inclui também EGFR, HER3, PI3K, AKT, mTOR e ciclinas D --- e que a eficácia do trastuzumab depende, em parte, do estado de outras proteínas dessa rede (especialmente PI3K e PTEN). Pacientes com mutações ativadoras em PIK3CA ou com perda de PTEN apresentam resposta reduzida ao trastuzumab e podem se beneficiar de combinações com inibidores de PI3K (alpelisibe) ou de mTOR (everolimo). Essa observação ilustra como a biologia de sistemas transforma a decisão terapêutica de uma lógica binária --- HER2 positivo ou negativo --- para uma lógica contínua, na qual o estado de toda a sub-rede é considerado.
+A medicina de sistemas oferece, ao caso HER2/trastuzumab, uma camada de interpretação adicional que vai além da simples identificação do alvo. A análise de redes mostra que HER2 ocupa posição de nó central (\emph{hub}) em uma sub-rede de sinalização proliferativa que inclui também EGFR, HER3, PI3K, AKT, mTOR e ciclinas D --- e que a eficácia do trastuzumab depende, em parte, do estado de outras proteínas dessa rede (especialmente PI3K e PTEN). Pacientes com mutações ativadoras em PIK3CA ou com perda de PTEN apresentam resposta reduzida ao trastuzumab e podem se beneficiar de combinações com inibidores de PI3K (alpelisibe) ou de mTOR (everolimo). Essa observação ilustra como a biologia de sistemas transforma a decisão terapêutica de uma lógica binária --- HER2 positivo ou negativo --- para uma lógica contínua, na qual o estado de toda a sub-rede é considerado. A Figura~\ref{fig:13-trastuzumab} apresenta o alvo, os mecanismos de ação do anticorpo e a sub-rede HER2 central para a decisão clínica.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small, align=center},
+  recpt/.style={rectangle, draw=black, thick, minimum width=1.6cm, minimum height=0.7cm, fill=red!15},
+  prot/.style={ellipse, draw=black, thick, minimum width=1.4cm, minimum height=0.7cm, fill=blue!12, inner sep=1pt},
+  ab/.style={rectangle, draw=black, thick, minimum width=1.8cm, minimum height=0.7cm, fill=yellow!30},
+  ef/.style={font=\scriptsize, align=center, fill=green!10, inner sep=2pt},
+  seta/.style={->, thick},
+  block/.style={-|, very thick, red!70!black}
+]
+% Domínio extracelular HER2
+\node[font=\bfseries] at (0, 4.0) {Célula tumoral HER2+};
+\draw[thick] (-2.5, 1.5) -- (-2.5, 3.5);
+\node[recpt, fill=red!25] (her2) at (0, 2.7) {HER2\\ERBB2};
+\node[recpt, fill=red!15] (her3) at (3.2, 2.7) {HER3};
+\draw[thick] (-2.5, 1.5) -- (4.5, 1.5);
+\node[font=\bfseries] at (0, 0.7) {Sub-rede de sinalização};
+\node[prot] (pi3k) at (-1.5, 0.0) {PI3K};
+\node[prot] (akt) at (0.5, 0.0) {AKT};
+\node[prot] (mtor) at (2.5, 0.0) {mTOR};
+\node[prot] (mapk) at (4.5, 0.0) {MAPK/ERK};
+\draw[seta] (pi3k) -- (akt);
+\draw[seta] (akt) -- (mtor);
+\draw[seta] (akt.north) to[bend right=20] (mapk.north);
+\draw[seta] (her2.south) -- (-1.0, 1.5);
+\draw[seta] (her3.south) -- (0.5, 1.5);
+% Trastuzumab
+\node[ab] (trast) at (-3.5, 3.5) {Trastuzumab\\(Herceptin)};
+\draw[block] (trast.east) -- (her2.west);
+% ADCC
+\node[ef] at (4.0, 3.5) {ADCC:\\NK + macrófagos};
+\draw[->, thick, dashed, green!50!black] (trast.north) to[bend left=30] (4.0, 3.5);
+% Efeitos antitumorais
+\node[font=\bfseries] at (0, -1.2) {Efeitos antitumorais};
+\node[ef, fill=blue!10] at (-3.0, -1.7) {Bloqueio de\\dimerização HER2};
+\node[ef, fill=blue!10] at (0, -1.7) {Inibição de\\sinalização PI3K/AKT};
+\node[ef, fill=blue!10] at (3.0, -1.7) {Citotoxicidade\\imune (ADCC)};
+\end{tikzpicture}
+\caption{Trastuzumab: alvo, mecanismos de ação e sub-rede HER2. O trastuzumab é um anticorpo monoclonal humanizado que se liga ao domínio extracelular de HER2 (ERBB2) com dois efeitos antitumorais complementares. Primeiro, bloqueia a dimerização de HER2 com outros receptores da família EGFR --- notadamente HER3 ---, atenuando a sinalização proliferativa via PI3K/AKT/mTOR e MAPK/ERK. Segundo, recruta células do sistema imune inato --- células NK e macrófagos --- que medeiam citotoxicidade celular dependente de anticorpo (ADCC), amplificando o efeito antitumoral por via imunológica. A sub-rede HER2 inclui ainda moduladores cuja alteração afeta a resposta clínica: perda de PTEN ou mutações ativadoras em PIK3CA reduzem a resposta e indicam combinação com inibidores de PI3K (alpelisibe) ou mTOR (everolimo). Ensaios clínicos pivotais --- em particular o estudo HERA --- demonstraram redução aproximada de 50\% no risco de recorrência e de mortalidade em pacientes HER2-positivo, com seguimento de mais de dez anos.}
+\label{fig:13-trastuzumab}
+\end{figure}
 
 O segundo domínio de aplicação é o das \emph{doenças infecciosas}, onde a biologia de sistemas tem contribuído em quatro frentes. A primeira é a caracterização de redes moleculares do patógeno: a análise de redes metabólicas de Mycobacterium tuberculosis, Plasmodium falciparum, Trypanosoma cruzi e outros patógenos de relevância para a saúde brasileira identificou enzimas essenciais --- nós cuja deleção é letal para o patógeno --- e enzimas redundantes --- cuja inibição pode ser compensada ---, permitindo priorizar alvos para desenvolvimento de novos antimicrobianos. A segunda frente é o estudo de interações patógeno-hospedeiro: mapas de interação proteína-proteína entre proteínas virais e humanas, como o construído para SARS-CoV-2 em 2020, identificam mecanismos de subversão da maquinaria celular pelo patógeno e sugerem alvos terapêuticos que podem ser modulados por fármacos já aprovados --- abrindo caminho para reposicionamento. A terceira frente é a caracterização de assinaturas imunes de resposta: perfis transcriptômicos de células imunes em pacientes com tuberculose, leishmaniose ou malária permitem distinguir estágios latente e ativo, prever progressão e identificar pacientes que se beneficiarão de imunoterapia adjuvante. A quarta frente é o desenho racional de vacinas: a vacinologia de sistemas --- uso de abordagens ômicas para identificar antígenos protetores e prever imunogenicidade --- foi decisiva para o desenvolvimento acelerado das vacinas mRNA contra COVID-19.
 
