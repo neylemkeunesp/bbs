@@ -182,3 +182,13 @@ token.json
 *.html
 *Zone.Identifier*
 beamer_guard_report.txt
+
+# Local cache (Ney, 2026-07-08)
+graphify-out/
+livro/
+
+# Local dotfile
+.beamer-inverso-beamertex
+
+# Imagem solta sem origem
+capitulos/image.png
