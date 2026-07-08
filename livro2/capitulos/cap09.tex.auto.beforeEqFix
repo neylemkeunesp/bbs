@@ -1,0 +1,968 @@
+
+\chapter{Sistemas de Sinalização}
+\label{cap:09}
+
+A vida multicelular exige coordenação. Uma célula do fígado não pode simplesmente
+decidir proliferar ou morrer em isolamento --- ela recebe, interpreta e integra
+sinais de vizinhos, de órgãos distantes e do ambiente externo antes de agir. Essa
+capacidade de detecção, transmissão e resposta constitui o que chamamos de
+\emph{sinalização celular}, tema central deste capítulo.
+
+O desafio é duplo. Do lado biológico, interessa entender como moléculas
+extracelulares, muitas delas incapazes de atravessar a membrana plasmática,
+conseguem alterar o estado do núcleo e do metabolismo. Do lado quantitativo,
+interessa compreender por que cascatas de fosforilação exibem comportamentos
+qualitatividade distintos --- respostas em degrau, oscilações, memória --- que
+não estariam presentes em reações isoladas. A sinalização celular é, portanto,
+um dos objetos de estudo mais ricos da biologia de sistemas: é um texto escrito
+em moléculas, mas lido em propriedades emergentes.
+
+\section{Fundamentos da Comunicação Celular}
+\label{sec:09-fundamentos}
+
+\begin{definicaoenv}[Sinalização Celular]
+Sinalização celular é o processo pelo qual células detectam, transmitem e
+respondem a sinais químicos ou físicos, permitindo comunicação intra e
+intercelular. O processo envolve quatro etapas: emissão do sinal, recepção por
+receptor específico, transdução intracelular e produção de resposta.
+\end{definicaoenv}
+
+A lógica geral da sinalização pode ser resumida como: \textbf{ligante}
+$\rightarrow$ \textbf{receptor} $\rightarrow$ \textbf{transdução} $\rightarrow$
+\textbf{resposta}. Em cada etapa, o sinal pode ser amplificado, modificado,
+integrado com outros sinais ou extinto. Essa cadeia não é uma correia de
+transmissão passiva --- cada componente é um processador que contribui com
+lógica própria ao resultado final.
+
+\subsection{Classificação por Alcance}
+\label{subsec:09-alcance}
+
+A primeira distinção relevante para sistemas de sinalização é o alcance
+espacial do sinal. Sinais \textbf{autócrinos} são secretados e reconhecidos pela
+própria célula emissora --- padrão frequente em cânceres, onde células neoplásicas
+produzem os fatores de crescimento que estimulam sua própria proliferação.
+Sinais \textbf{parácrinos} atuam sobre células vizinhas a curta distância: os
+neurotransmissores liberados na fenda sináptica percorrem menos de 40 nanômetros
+antes de atingir os receptores pós-sinápticos. Sinais \textbf{endócrinos} ---
+hormônios como a insulina, os esteroides adrenais e a tiroxina --- são lançados
+na corrente sanguínea e podem atingir alvos em qualquer órgão do organismo,
+percorrendo metros em minutos. Há ainda a sinalização \textbf{justácrina}, que
+exige contato físico direto entre membranas, como na via Notch-Delta, onde o
+ligante e o receptor residem em células adjacentes.
+
+Cada modalidade impõe compromissos distintos entre especificidade, velocidade e
+alcance. A sinalização parácrina é rápida e localizada, mas de alcance limitado.
+A endócrina atinge todos os tecidos, mas requer um sistema de distribuição
+dedicado e é inevitavelmente lenta. A justácrina garante especificidade absoluta
+de célula a célula, ao custo de depender de contato físico.
+
+\section{Receptores Celulares e Mecanismos de Ativação}
+\label{sec:09-receptores}
+
+O ponto de entrada de qualquer sinal é o receptor. Receptores são proteínas que
+reconhecem um ligante com alta especificidade e, ao fazê-lo, sofrem uma mudança
+conformacional que inicia a cascata intracelular. Podem estar localizados na
+membrana plasmática, no citoplasma ou no núcleo, dependendo das propriedades
+físico-químicas do ligante.
+
+A classificação clássica distingue cinco famílias: (i) receptores acoplados à
+proteína G (GPCRs), (ii) receptores tirosina quinase (RTKs), (iii) receptores de
+canais iônicos, (iv) receptores nucleares e (v) receptores de citocinas
+(JAK-STAT). Cada família utiliza mecanismos de transdução distintos, com
+diferentes velocidades de resposta e repertórios de efeitos.
+
+\subsection{Receptores Acoplados à Proteína G (GPCRs)}
+\label{subsec:09-gpcr}
+
+Os GPCRs são a maior família de receptores em humanos, com aproximadamente 800
+membros, e constituem o alvo de cerca de 50\% dos fármacos aprovados clinicamente.
+Sua estrutura característica é a serpentina de sete domínios transmembrana que
+atravessa a bicamada lipídica em zigue-zague. O domínio extracelular reconhece
+o ligante; o domínio intracelular interage com a proteína G heterotrimérica
+($\alpha\beta\gamma$) no estado inativo, ligada ao GDP.
+
+O ciclo de ativação é elegante. Quando o ligante se une ao GPCR, induz uma
+mudança conformacional que facilita a troca de GDP por GTP na subunidade
+$G\alpha$. O complexo $G\alpha$-GTP se dissocia de $G\beta\gamma$, e ambas as
+partes --- $G\alpha$-GTP e o dímero $G\beta\gamma$ --- podem ativar efetores
+independentemente. A terminação ocorre por hidrólise intrínseca do GTP a GDP
+pela atividade GTPase de $G\alpha$, restaurando o estado inativo e reciclando o
+receptor.
+
+Os subtipos de proteína G determinam a identidade do sinal downstream. $G_s$
+estimula a adenilil ciclase, elevando os níveis intracelulares de cAMP; $G_i$
+inibe a mesma enzima; $G_q$ ativa a fosfolipase C$\beta$, que cliva PIP$_2$ em
+IP$_3$ e DAG, mobilizando Ca$^{2+}$ e ativando a proteína quinase C; $G_{12/13}$
+regula a organização do citoesqueleto via RhoGEFs. A mesma lógica de acoplamento
+--- ligante $\to$ conformação $\to$ seleção de via --- pode assim gerar respostas
+metabólicas completamente distintas dependendo do subtipo de G acoplado ao receptor.
+
+\subsection{Cinética de Ligação Ligante-Receptor}
+\label{subsec:09-cinetica}
+
+A interação entre um ligante L e seu receptor R é descrita no equilíbrio pelo
+modelo de ligação simples:
+\begin{equation}
+L + R \underset{k_{\mathrm{off}}}{\overset{k_{\mathrm{on}}}{\rightleftharpoons}} LR
+\end{equation}
+
+A constante de dissociação no equilíbrio é definida como:
+\begin{equation}
+K_d = \frac{k_{\mathrm{off}}}{k_{\mathrm{on}}} = \frac{[L][R]}{[LR]}
+\end{equation}
+
+A fração de receptores ocupados, $\theta$, segue a equação de Hill para $n = 1$
+(hipérbole de Michaelis):
+\begin{equation}
+\theta = \frac{[LR]}{[R]_{\mathrm{total}}} = \frac{[L]}{K_d + [L]}
+\end{equation}
+
+O $K_d$ tem interpretação direta: é a concentração de ligante que ocupa metade
+dos receptores. Quanto menor o $K_d$, maior a afinidade. Receptores de alta
+afinidade como os de insulina têm $K_d$ na faixa de 0.1--1 nM; receptores de
+neuro\-transmissores, na faixa de $\mu$M. O código abaixo implementa a curva de
+ligação e permite visualizar o efeito do $K_d$ na resposta:
+
+\begin{lstlisting}[language=Python, caption=Curva de ligacao ligante-receptor]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def receptor_binding(L, Kd, Bmax):
+    # Fracao de receptores ocupados (modelo de equilibrio)
+    return (Bmax * L) / (Kd + L)
+
+Kd = 10    # nM
+Bmax = 100 # unidades arbitrarias
+
+L = np.logspace(-1, 3, 200)  # 0.1 a 1000 nM
+bound = receptor_binding(L, Kd, Bmax)
+
+plt.figure(figsize=(8, 5))
+plt.semilogx(L, bound, 'b-', linewidth=2, label=f'Kd = {Kd} nM')
+plt.axhline(Bmax/2, color='r', linestyle='--', label='50% ocupacao')
+plt.axvline(Kd, color='r', linestyle='--')
+plt.xlabel('[Ligante] (nM)')
+plt.ylabel('Receptores Ocupados')
+plt.title('Ligacao Ligante-Receptor (equilibrio)')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('ligacao_receptor.png', dpi=150)
+\end{lstlisting}
+
+Quando o receptor é capaz de assumir três estados --- livre (R), ligado (LR) e
+ativo ($R^*$) --- o modelo se torna um sistema de três equações diferenciais
+ordinárias:
+\begin{align}
+\frac{d[R]}{dt} &= -k_{\mathrm{on}}[L][R] + k_{\mathrm{off}}[LR]
+                   + k_{\mathrm{inact}}[R^*] \\
+\frac{d[LR]}{dt} &= k_{\mathrm{on}}[L][R] - k_{\mathrm{off}}[LR]
+                    - k_{\mathrm{act}}[LR] \\
+\frac{d[R^*]}{dt} &= k_{\mathrm{act}}[LR] - k_{\mathrm{inact}}[R^*]
+\end{align}
+
+No estado estacionário ($d/dt = 0$), a concentração de receptor ativo é:
+\begin{equation}
+[R^*]_{ss} = \frac{k_{\mathrm{act}} \cdot k_{\mathrm{on}}[L][R]_{\mathrm{total}}}
+{k_{\mathrm{inact}}(k_{\mathrm{off}} + k_{\mathrm{act}})
+ + k_{\mathrm{act}} \cdot k_{\mathrm{on}}[L]}
+\end{equation}
+
+Essa expressão é análoga à equação de Michaelis-Menten: o numerador cresce
+linearmente com o estímulo, o denominador satura, e a resposta tem a forma de
+hipérbole retangular.
+
+
+\subsection{Receptores Tirosina Quinase (RTKs)}
+\label{subsec:09-rtk}
+
+Os RTKs constituem a segunda grande família de receptores membranares. Caracterizam-se
+por um domínio extracelular de ligação ao ligante, um domínio transmembrana único e
+um domínio citoplasmático com atividade tirosina quinase intrínseca. Diferentemente
+dos GPCRs, os RTKs são ativados por \textbf{dimerização}: a ligação do ligante
+induz a aproximação de dois monômeros, e a proximidade de seus domínios quinase
+permite a \emph{autofosforilação} cruzada em resíduos de tirosina. Essas
+tirosinas fosforiladas recrutam diretamente proteínas adaptadoras contendo
+domínios SH2 ou PTB, iniciando cascatas a jusante.
+
+As principais famílias de RTKs incluem o receptor de EGF (EGFR/ErbB), o receptor
+de PDGF (PDGFR), os receptores de FGF (FGFR1--4), o receptor de insulina (InsR)
+e o receptor de VEGF (VEGFR). Cada família é especializada em diferentes
+processos biológicos: EGFR dirige proliferação e diferenciação epitelial;
+VEGFR medeia angiogênese; InsR coordena resposta metabólica à glicose. A
+desregulação dos RTKs --- por superexpressão, mutação ativadora ou amplificação
+gênica --- é uma das marcas do câncer: o glioblastoma tem amplificação de EGFR;
+o câncer colorretal frequentemente superexpressa HER2 (um ErbB); os inibidores
+de tirosina quinase (TKIs) como gefitinib e erlotinib foram desenvolvidos
+justamente para silenciar esses receptores constitutivamente ativos.
+
+\subsection{Receptores de Canais Iônicos e Nucleares}
+\label{subsec:09-canais-nucleares}
+
+Há duas famílias com localização e mecanismo distintos. Os \textbf{receptores de
+canais iônicos ligand-dependentes} (também chamados de ionotrópicos) são proteínas
+multiméricas que formam um poro condutor de íons. A ligação do ligante --- um
+neurotransmissor como acetilcolina (receptor nicotínico), GABA (receptor
+GABA$_A$) ou glutamato (receptores NMDA e AMPA) --- causa uma mudança
+conformacional que abre o canal em milissegundos, gerando fluxo de íons e
+alterando o potencial de membrana. São os receptores de maior velocidade
+no sistema nervoso.
+
+Os \textbf{receptores nucleares}, por outro lado, são fatores de transcrição
+ativados por ligantes hidrofóbicos (esteroides, hormônios tireoidianos,
+retinoides) que atravessam a membrana plasmática por difusão. O ligante se une
+ao receptor no citoplasma ou no núcleo, induzindo dimerização e recrutamento de
+coativadores. O complexo migra para \emph{hormone response elements} (HREs) no
+DNA, modulando a transcrição gênica --- uma resposta que leva horas, mas é
+duradoura. Exemplos incluem o receptor de glicocorticoides (GR, alvo de
+fármacos antiinflamatórios), o receptor de estrógeno (ER, alvo do tamoxifeno em
+câncer de mama) e o PPAR$\gamma$ (regulação de metabolismo lipídico, alvo de
+tiazolidinedionas usadas no diabetes tipo 2).
+
+\section{Redes de Transdução de Sinal}
+\label{sec:09-transducao}
+
+Os sinais extracelulares raramente são transduzidos por um único caminho linear.
+A célula opera com uma rede integrada de vias que se entrecruzam, amplificam e
+modulam mutuamente --- o chamado \textbf{crosstalk}. As principais vias
+canônicas --- MAPK/ERK, PI3K/Akt, JAK-STAT, Wnt, Notch, TGF-$\beta$/Smad, NF-$\kappa$B
+e Hedgehog --- formam o esqueleto da resposta celular à maioria dos estímulos
+extracelulares.
+
+\subsection{Via MAPK/ERK: Proliferação e Diferenciação}
+\label{subsec:09-mapk}
+
+A cascata MAPK (proteína quinase ativada por mitógeno) é o protótipo de cascata
+de fosforilação em biologia. A sequência canônica é:
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape,
+    box/.style={rectangle, draw, text width=2.2cm, text centered, rounded corners, minimum height=0.8cm, font=\small}]
+    \node[box, fill=laranjacel!30] (rtk) {RTK};
+    \node[box, fill=roxodna!20, below of=rtk, node distance=1.2cm] (grb) {Grb2/SOS};
+    \node[box, fill=verdeacido!30, below of=grb, node distance=1.2cm] (ras) {Ras-GTP};
+    \node[box, fill=azulclaro!40, below of=ras, node distance=1.2cm] (raf) {Raf\\(MAPKKK)};
+    \node[box, fill=azulclaro!50, below of=raf, node distance=1.2cm] (mek) {MEK\\(MAPKK)};
+    \node[box, fill=azulclaro!60, below of=mek, node distance=1.2cm] (erk) {ERK\\(MAPK)};
+    \node[box, fill=yellow!30, below of=erk, node distance=1.2cm] (tf) {Fatores\\de\\Transcrição\\(c-Fos, Elk-1)};
+
+    \draw[->, thick] (rtk) -- (grb);
+    \draw[->, thick] (grb) -- node[right, font=\footnotesize] {ativação} (ras);
+    \draw[->, thick] (ras) -- (raf);
+    \draw[->, thick] (raf) -- node[right, font=\footnotesize] {P} (mek);
+    \draw[->, thick] (mek) -- node[right, font=\footnotesize] {P\,P} (erk);
+    \draw[->, thick] (erk) -- (tf);
+
+    \node[below of=tf, node distance=1.0cm, text width=3.2cm, align=center, font=\footnotesize, fill=verdeacido!15, rounded corners]
+        (resp) {\textbf{Resposta:}\\Proliferação\\Diferenciação\\Sobrevivência};
+    \draw[->, thick] (tf) -- (resp);
+\end{tikzpicture}
+\caption{Cascata canônica MAPK/ERK. A ativação de um receptor tirosina quinase (RTK) na membrana inicia uma cadeia de fosforilação sequencial: Grb2/SOS ativa a GTPase Ras, que ativa Raf (MAPKKK), que fosforila MEK (MAPKK), que fosforila ERK (MAPK). ERK ativada transloca para o núcleo e fosforila fatores de transcrição, gerando respostas de proliferação, diferenciação ou sobrevivência. Cada passo da cascata amplifica o sinal --- tipicamente 10 a 100 vezes --- e a fosforilação dupla de ERK (P\,P) serve como um \emph{switch} digital.}
+\label{fig:09-mapk}
+\end{figure}
+
+$$\mathrm{RTK} \xrightarrow{\text{Grb2/SOS}} \mathrm{Ras\text{-}GTP}
+\xrightarrow{} \mathrm{Raf\;(MAPKKK)} \xrightarrow{P}
+\mathrm{MEK\;(MAPKK)} \xrightarrow{P\,P}
+\mathrm{ERK\;(MAPK)} \xrightarrow{P}
+\mathrm{fatores\;de\;transcrição}$$
+
+Em detalhe: o receptor ativado recruta a adaptadora Grb2 e o fator de troca SOS;
+SOS carrega a pequena GTPase Ras com GTP, ativando-a; Ras-GTP recruta Raf no
+lado citoplasmático da membrana; Raf fosforila MEK em duas serinas; MEK
+duplamente fosforilada fosforila ERK em um resíduo de treonina e outro de
+tirosina (motivo TXY); ERK ativada dimeriza e transloca para o núcleo, onde
+fosforila fatores de transcrição como Elk-1 e c-Fos, disparando um programa de
+expressão gênica voltado para proliferação e diferenciação.
+
+A via MAPK está entre as mais frequentemente desreguladas em câncer. Mutações
+em RAS ocorrem em cerca de 30\% dos tumores humanos (KRAS em câncer de pâncreas;
+NRAS em melanoma); mutações em RAF são encontradas em mais de 60\% dos melanomas;
+mutações em MEK e ERK são raras mas existem. BRAF V600E é o exemplo
+pedagógico: uma única transversão T $\to$ A no nucleotídeo 1799 produz uma
+substituição V600E que mimetiza a fosforilação do segmento de ativação, mantendo
+a quinase em estado constitutivamente ativo. O vemurafenib --- inibidor seletivo
+de BRAF V600E --- exemplifica o paradigma da medicina de precisão: o fármaco é
+eficaz apenas em tumores que carregam a mutação.
+
+\subsection{Via PI3K/Akt: Sobrevivência e Metabolismo}
+\label{subsec:09-pi3k}
+
+A via PI3K/Akt controla simultaneamente sobrevivência celular, síntese
+proteica, metabolismo de glicogênio e captação de glicose. A cascata é
+iniciada por RTKs ou GPCRs que recrutam PI3K (fosfatidilinositol 3-quinase),
+a qual fosforila o fosfolipídeo de membrana PIP$_2$ para gerar PIP$_3$. PIP$_3$
+serve como plataforma citoplasmática que recruta PDK1 e Akt (também chamada
+de PKB) via seus domínios PH. PDK1 fosforila Akt em T308; mTORC2 contribui
+com fosforilação em S473 para ativação completa.
+
+Entre os alvos de Akt estão mTOR (síntese proteica, via S6K e 4E-BP), GSK3
+(glicogênio sintase, gliconeogênese), Bad (inibidor de apoptose), FoxO
+(fator de transcrição pró-apoptótico) e MDM2 (regulador negativo de p53).
+A desregulação é oncogênica: \emph{PTEN}, a fosfatase que reverte PIP$_3$ em
+PIP$_2$, é um dos supressores tumorais mais frequentemente mutados em câncer.
+A perda de PTEN mantém Akt constitutivamente ativa, conferindo às células
+tumorais resistência à apoptose e vantagem proliferativa.
+
+\subsection{Via JAK-STAT: Sinalização de Citocinas}
+\label{subsec:09-jakstat}
+
+A via JAK-STAT é a via de transdução mais curta e direta conhecida: receptor
+$\to$ JAK $\to$ STAT $\to$ núcleo. Receptores de citocinas (interferons,
+interleucinas, hormônios como eritropoietina e hormônio do crescimento) não
+possuem atividade quinase intrínseca, mas estão associados constitutivamente a
+quinases da família JAK (Janus quinases). A ligação da citocina dimeriza o
+receptor, aproximando os JAKs associados e permitindo fosforilação cruzada.
+Os JAKs então fosforilam resíduos de tirosina na cauda citoplasmática do
+receptor, criando sítios de ancoragem para proteínas STAT (signal transducers
+and activators of transcription) via seus domínios SH2. STATs recrutadas são
+fosforiladas por JAK, dimerizam, e migram para o núcleo onde ativam genes
+alvo com sítios GAS (interferon-\textit{gamma}-activated sequences).
+
+\subsection{Vias Wnt, Notch e TGF-$\beta$/Smad}
+\label{subsec:09-wtnnotch}
+
+Três vias adicionais merecem destaque por sua importância em desenvolvimento
+e em patologia:
+
+A \textbf{via Wnt/$\beta$-catenina} controla a biogênese e estabilidade do
+núcleo coativador $\beta$-catenina. Na ausência de Wnt, $\beta$-catenina é
+seqüestrada por um complexo de destruição --- formado por APC, axina e GSK3---
+que a fosforila, marca com ubiquitina e a direciona ao proteassomo. Com Wnt
+ligado ao receptor Frizzled e correceptor LRP5/6, a proteína Dishevelled
+inibe o complexo de destruição; $\beta$-catenina acumula no citoplasma,
+transloca para o núcleo e, em parceria com fatores TCF/LEF, ativa genes
+alvo. Mutações em APC estão presentes em mais de 80\% dos cânceres
+colorretais.
+
+A \textbf{via Notch} tem arquitetura única: o receptor é clivado ao receber o
+ligante Delta (na membrana da célula vizinha). A porção intracelular (NICD)
+se liberta, migra para o núcleo e associa-se ao fator CSL para ativar
+transcrição. Não há cascata intermediária --- o sinal chega direto ao núcleo.
+Notch media decisões de destino celular: célula-filha adota identidade A ou B
+conforme receba mais ou menos sinalização Notch.
+
+A \textbf{via TGF-$\beta$/Smad} usa a família de fatores Smad como transdutores.
+TGF-$\beta$ liga-se a receptor serina/treonina quinase tipo II, que recruta e
+fosforila receptor tipo I; este fosforila R-Smads (Smad2/3), que se associam à
+Co-Smad (Smad4) e migram para o núcleo. I-Smads (Smad6/7) servem como
+inibidores por feedback. TGF-$\beta$ tem papel dual em câncer: supressor
+tumoral em estágios iniciais, mas promotor de metástase e EMT em tumores
+avançados.
+
+\begin{exemploenv}[Wnt em câncer colorretal]
+Mais de 80\% dos cânceres colorretais abrigam mutações em APC que tornam o
+complexo de destruição disfuncional. $\beta$-catenina acumula-se constitutivamente,
+dirige a célula para um programa proliferativo sostenido e é suficiente para
+iniciar a tumorigênese intestinal em modelos animais.
+\end{exemploenv}
+
+
+\section{Cascatas de Proteínas Quinases}
+\label{sec:09-cascata-quinases}
+
+\begin{definicaoenv}[Cascata de Quinases]
+Sequência de reações bioquímicas na qual uma quinase ativa a seguinte por
+fosforilação, resultando em amplificação progressiva do sinal. A arquitetura
+em camadas é o que permite que milhares de eventos moleculares sejam
+produzidos a partir de poucas ligações ao receptor.
+\end{definicaoenv}
+
+As cascatas de MAPKs são o exemplo canônico. Em cada nível, uma MAPKKK
+ativa uma MAPKK, que por sua vez ativa uma MAPK. A arquitetura garante três
+propriedades fundamentais: \textbf{amplificação} de sinal (uma molécula
+ativada produz dezenas a centenas de cópias ativas no nível seguinte),
+\textbf{ultrassensibilidade} (resposta sigmoidal próxima a um degrau), e
+\textbf{integração} (a cascata pode ser modulada em cada nó). O componente
+básico é uma reação de fosforilação/desfosforilação catalisada por uma
+quinase e revertida por uma fosfatase.
+
+\subsection{Ultrassensibilidade: Modelo de Goldbeter-Koshland}
+\label{subsec:09-ultrassensibilidade}
+
+Goldbeter e Koshland mostraram em 1981 que um simples ciclo de
+fosforilação/desfosforilação pode exibir comportamento ultra-sensível ---
+uma resposta sigmoidal praticamente um degrau --- quando as constantes de
+Michaelis $K_1$ e $K_2$ são pequenas em relação à concentração total do
+substrato. Para um substrato $X$ que é fosforilado e depois desfosforilado,
+a fração ativa no equilíbrio é:
+
+\begin{equation}
+\frac{[X^*]}{[X]_{\mathrm{total}}} = \frac{2 v q}{v + q - \sqrt{(v - q)^2
+                              + 4 v q \left(\frac{[X]_{\mathrm{tot}}}{K_1}\right)
+                              \left(\frac{[X]_{\mathrm{tot}}}{K_2}\right)^{-1}}}
+\end{equation}
+
+onde $v$ e $q$ são as velocidades (opostas) de fosforilação e
+desfosforilação. O resultado central é que o \emph{coeficiente de Hill efetivo},
+medido experimentalmente como a inclinação da curva dose-resposta em escala
+logarítmica, pode exceder em muito a estequiometria (1):
+
+\begin{equation}
+n_H \;=\; 1 \;+\; \frac{\ln 2}{\ln\!\bigl(1 + [X]_{\mathrm{tot}}/K_1\bigr)
+                              \;+\; \ln\!\bigl(1 + [X]_{\mathrm{tot}}/K_2\bigr)}
+\end{equation}
+
+Quando $[X]_{\mathrm{tot}} \gg K_1, K_2$, a resposta torna-se
+quase-digital: a transição de OFF para ON ocorre em uma estreita janela de
+concentração do estímulo. Na cascata MAPK, esse efeito multiplica-se: três
+níveis em série podem produzir $n_H$ efetivo de 5--10.
+
+\subsection{Biestabilidade e Histerese}
+\label{subfigure:09-biestabilidade}
+
+Quando a ultra-sensibilidade é combinada a um \textbf{feedback positivo} --- em
+que o produto da cascata também ativa seu próprio precursor --- a resposta pode
+se tornar biestável: existem dois estados estáveis (OFF e ON) separados por um
+estado instável intermediário. A célula então exibe \textbf{histerese}: o
+limiar para ligar o sistema é maior do que o limiar para desligá-lo.
+
+\begin{definicaoenv}[Biestabilidade]
+Sistema com dois estados estáveis (ON e OFF) separados por um ponto de
+instabilidade. Pequenas flutuações podem produzir comutação discreta entre os
+dois estados; uma vez ligados, eles persistem mesmo quando o estímulo
+decai abaixo do limiar original de ativação, conferindo memória celular.
+\end{definicaoenv}
+
+Os requisitos para biestabilidade são ultra-sensibilidade ($n_H > 1$),
+feedback positivo e saturação de fosfatases. Consequência funcional:
+decisões de longo prazo se tornam possíveis. A resposta imune adaptativa
+envolve biestabilidades em populações de linfócitos T; o sistema de check-points
+do ciclo celular é biestável; muitos processos de desenvolvimento
+operam como comutadores biestáveis que precisam ser travados, não sensíveis a
+estímulos transitórios.
+
+\subsection{Fosforilação Distributiva vs. Processiva}
+\label{sub:image9-distributiva}
+
+Há duas maneiras arquiteturais pelas quais uma quinase pode fosforilar um
+substrato que tem dois sítios de modificação. Na fosforilação \textbf{distributiva}, o substrato se dissocia da quinase após cada fosforilação; as duas fosforilações
+são eventos independentes. Na fosforilação \textbf{processiva}, o substrato
+permanece ligado à quinase até que ambos os sítios estejam fosforilados.
+
+A arquitetura distributiva gera automaticamente ultra-sensibilidade: a
+probabilidade de ambas as fosforilações ocorrerem é o quadrado da probabilidade
+de cada uma, e a curva resultante tem a inclinação sigmoidal acentuada que
+descrevemos. A cascata MAPK é distributiva --- MEK se dissocia de ERK após
+cada fosforilação --- e este é o motivo pelo qual a MAPK exibe $n_H$ efetivo
+tão elevado. Por contraste, fosforilação processiva gera resposta mais gradual
+(mais próxima de Michaelis-Menten, $n_H \approx 1$).
+
+\subsection{Simulação Computacional}
+\label{sub:image9-simulacao}
+
+O modelo simplificado abaixo de três níveis de cascata ilustra como reproduzir
+as propriedades estudadas:
+
+\begin{lstlisting}[language=Python, caption=Cascata MAPK de 3 niveis]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def mapk_cascade(y, t, stimulus):
+    K1, K1p, K2, K2p, K3, K3p = y
+    # Ativacao (k1 depende do estimulo), inativacao linear
+    v_in_1  = 0.1 * stimulus * K1
+    v_out_1 = 0.1 * K1p
+    v_in_2  = 0.5 * K1p * K2
+    v_out_2 = 0.2 * K2p
+    v_in_3  = 1.0 * K2p * K3
+    v_out_3 = 0.3 * K3p
+    return [-v_in_1 + v_out_1,
+             v_in_1 - v_out_1 - v_in_2 + v_out_2,
+            -v_in_2 + v_out_2,
+             v_in_2 - v_out_2 - v_in_3 + v_out_3,
+            -v_in_3 + v_out_3,
+             v_in_3 - v_out_3]
+
+y0 = [100, 0, 100, 0, 100, 0]
+t = np.linspace(0, 50, 500)
+stim = 1.0
+
+sol = odeint(mapk_cascade, y0, t, args=(stim,))
+plt.figure(figsize=(11, 5))
+
+# Painel 1: dinamica temporal
+plt.subplot(1, 2, 1)
+plt.plot(t, sol[:, 1], 'b-',  lw=2, label='K1* (MAPKKK)')
+plt.plot(t, sol[:, 3], 'g-',  lw=2, label='K2* (MAPKK)')
+plt.plot(t, sol[:, 5], 'r-',  lw=2, label='K3* (MAPK)')
+plt.xlabel('Tempo')
+plt.ylabel('Concentracao (forma ativa)')
+plt.title('Dinamica da cascata MAPK')
+plt.legend(); plt.grid(alpha=0.3)
+
+# Painel 2: curva dose-resposta
+plt.subplot(1, 2, 2)
+stimuli = np.logspace(-2, 1, 25)
+resp = [odeint(mapk_cascade, y0, t, args=(s,))[-1, 5] for s in stimuli]
+plt.semilogx(stimuli, resp, 'ro-', lw=2)
+plt.xlabel('Estimulo (log)')
+plt.ylabel('MAPK ativa no equilibrio')
+plt.title('Ultrasensibilidade da cascata')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.savefig('cascata_mapk.png', dpi=150)
+plt.show()
+\end{lstlisting}
+
+O gráfico gerado mostra que a curva dose-resposta da cascata MAPK completa é
+substancialmente mais sigmoidal do que a de um único estágio isolado: a
+cascata amplifica o efeito não-linear de cada estágio.
+
+
+\section{Segundos Mensageiros}
+\label{sec:09-segundos-mensageiros}
+
+\begin{definicaoenv}[Segundo Mensageiro]
+Molécula intracelular pequena e difusível, produzida em resposta à ativação
+de um receptor, que propaga e amplifica o sinal a efetores citoplasmáticos.
+Permite que um sinal de membrana coordené respostas em todo o volume celular.
+\end{definicaoenv}
+
+Os principais segundos mensageiros são cAMP (AMP cíclico), cGMP (GMP cíclico),
+Ca$^{2+}$, IP$_3$ (inositol 1,4,5-trifosfato), DAG (diacilglicerol) e NO (óxido
+nítrico). Cada um possui um sistema próprio de síntese, degradação e alvos,
+mas todos compartilham três propriedades: amplificação, difusão e integração.
+
+\subsection{cAMP e a Via da Adenilil Ciclase}
+\label{subfigure:09-camp}
+
+A produção de cAMP é desencadeada por GPCRs acoplados a $G_s$: a subunidade
+$G_s\alpha$-GTP ativa adenilil ciclase (AC), que catalisa a ciclização de ATP
+a cAMP. cAMP liga-se às subunidades regulatórias da proteína quinase A (PKA),
+liberando as subunidades catalíticas ativas. As subunidades catalíticas
+fosforilam alvos como o fator de transcrição CREB (que ativa genes
+responsivos a cAMP), enzimas metabólicas (incluindo a fosforilação que
+inativa a glicogênio sintase) e canais iônicos. A terminação é mediada por
+fosfodiesterases (PDEs) que degradam cAMP em AMP, encerrando o sinal.
+
+A via do cAMP é central para muitas funções hormonais: a epinefrina ativa
+$G_s$ nos hepatócitos, mobilizando glicose por glicogenólise; o glucagon usa o
+mesmo mecanismo nos estados de jejum; o ACTH estimula a síntese de cortisol
+nas adrenais via cAMP. A toxina da cólera é justamente uma toxina que
+ADP-ribosila $G_s\alpha$, bloqueando sua GTPase --- o resultado é uma
+produção descontrolada de cAMP que provoca a diarreia maciça característica
+da doença.
+
+\subsection{Sinalização por Ca$^{2+}$: Oscilações e Ondas}
+\label{subfigure:09-calcio}
+
+O íon Ca$^{2+}$ tem papel duplo como mensageiro e como cofator enzimático. No
+estado de repouso, a concentração citosólica de Ca$^{2+}$ é mantida em torno de
+100 nM, três a quatro ordens de grandeza abaixo do cálcio extracelular (1--2 mM)
+e do estoque no retículo endoplasmático (0.5 mM). Essa diferença de
+concentração gera o potencial eletroquímico que dirige a abertura de canais
+de Ca$^{2+}$, gerando sinais transitórios ou oscilatórios.
+
+A produção de IP$_3$ por fosfolipase C (PLC) é o principal gatilho. IP$_3$
+difunde do interior da membrana plasmática para o retículo, liga-se a
+receptores IP$_3$R (canais de Ca$^{2+}$ regulados por ligante) e libera Ca$^{2+}$
+diretamente no citoplasma. O Ca$^{2+}$ liberado pode então ativar a PLC
+local, produzindo mais IP$_3$ --- esse \textbf{mecanismo de liberação
+autoinduzida de Ca$^{2+}$} (CICR, \emph{calcium-induced calcium release}) é
+responsável pelas oscilações observadas em muitos tipos celulares.
+
+As oscilações de Ca$^{2+}$ funcionam como código de frequência: baixa frequência
+codifica estímulo fraco, alta frequência codifica estímulo forte. Dolmetsch
+et al.\ (1998) mostraram que células de HEK respondem à histamina com trens de
+\emph{spikes} de Ca$^{2+}$ cuja frequência (e não amplitude) determina a
+especificidade transcricional: frequência baixa ativa NF-$\kappa$B,
+frequência alta ativa NFAT. A amplitude do sinal permanece saturada; é o
+ritmo que contém a informação.
+
+Um modelo simplificado de oscilações inclui três termos: influxo basal do
+meio extracelular, efluxo basal, liberação mediada por IP$_3$ e CICR
+(proporcional a $[\mathrm{Ca}^{2+}]^2$), e recaptação pelo retículo (proporcional
+linearmente a $[\mathrm{Ca}^{2+}]$). As equações:
+\begin{align}
+\frac{d[\mathrm{Ca}^{2+}]}{dt} &= v_{\mathrm{in}} - v_{\mathrm{out}}
++ v_{\mathrm{release}} - v_{\mathrm{uptake}} \\
+v_{\mathrm{release}} &= k_{\mathrm{rel}} \cdot [\mathrm{IP}_3] \cdot
+\frac{[\mathrm{Ca}^{2+}]^2}{K_1^2 + [\mathrm{Ca}^{2+}]^2} \\
+v_{\mathrm{uptake}} &= k_{\mathrm{uptake}} \cdot [\mathrm{Ca}^{2+}]
+\end{align}
+
+geram oscilações sustentadas para uma faixa de valores de $[\mathrm{IP}_3]$.
+A simulação computacional abaixo ilustra como a frequência aumenta com
+$[\mathrm{IP}_3]$:
+
+\begin{lstlisting}[language=Python, caption=Oscilacoes de Ca2+ via CICR]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+def ca_oscillations(y, t, IP3):
+    Ca = y[0]
+    k_rel, k_uptake, K1, v_in, v_out = 2.0, 0.5, 0.3, 0.1, 0.05
+    v_rel    = k_rel * IP3 * Ca**2 / (K1**2 + Ca**2)
+    v_uptake = k_uptake * Ca
+    return [v_in - v_out + v_rel - v_uptake]
+
+t = np.linspace(0, 200, 2000)
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+for i, IP3 in enumerate([0.5, 1.0, 1.5]):
+    sol = odeint(ca_oscillations, [0.1], t, args=(IP3,))
+    axes[i].plot(t, sol[:, 0], 'b-', lw=1.5)
+    axes[i].set_xlabel('Tempo')
+    axes[i].set_ylabel('[Ca2+]')
+    axes[i].set_title(f'IP3 = {IP3}')
+    axes[i].grid(alpha=0.3)
+plt.tight_layout()
+plt.savefig('oscilacoes_ca.png', dpi=150)
+plt.show()
+\end{lstlisting}
+
+\subsection{Via IP$_3$/DAG e Ativação de PKC}
+\label{subfigure:09-ip3-dag}
+
+A hidrólise de PIP$_2$ por PLC gera duas moléculas com papéis distintos. O
+IP$_3$ é hidrofílico e solúvel: difunde no citoplasma até o retículo
+endoplasmático e libera Ca$^{2+}$ via receptores IP$_3$R, conforme descrito
+acima. O DAG permanece na membrana: serve como âncora para a proteína
+quinase C (PKC), recrutando-a do citoplasma para a membrana em sinapse
+com o Ca$^{2+}$ recém-liberado. A combinação Ca$^{2+}$ + DAG ativa a PKC,
+que fosforila substratos como MARCKS, proteínas do citoesqueleto e
+fatores de transcrição. É a convergência dos dois ramos do PIP$_2$ que
+garante especificidade: nem DAG sozinho, nem Ca$^{2+}$ sozinho, alcançam
+ativação robusta de PKC.
+
+\subsection{cGMP e Sinalização por Óxido Nítrico}
+\label{subfigure:09-cgmp}
+
+A via do cGMP difere da via do cAMP por seu segundo mensageiro ser um gás.
+O óxido nítrico (NO) é produzido por NO sintases (NOS neuronal, endotelial
+e induzível) a partir do aminoácido L-arginina. Por ser uma molécula
+pequena, apolar e com meia-vida de poucos segundos, NO difunde rapidamente
+através de membranas e atua em células vizinhas antes de ser oxidado a
+nitrato. NO ativa a guanilil ciclase solúvel (sGC, contendo o grupo heme
+que liga NO), que converte GTP em cGMP. cGMP ativa PKG (proteína quinase G),
+que fosforila alvos como fosfolambdam (músculo cardíaco), canais iônicos
+e proteínas do citoesqueleto.
+
+A relevância clínica é enorme. NO produzido pelo endotélio vascular é o
+principal mediador de vasodilatação: o nitroprussiato de sódio e a nitroglicerina
+são doadores de NO; os inibidores de PDE5 (sildenafil/Viagra, tadalafil/Cialis)
+bloqueiam a degradação de cGMP, prolongando o relaxamento vascular e tratando
+disfunção erétil e hipertensão pulmonar. NO tem também papel na memória
+(sinapses hipocampais), na resposta imune (macrófagos produzem NO para matar
+bactérias) e na neurotransmissão não-adrenérgica não-colinérgica (NANC).
+
+
+\section{Dinâmica e Propriedades Emergentes}
+\label{sec:09-dinamica}
+
+As propriedades mais notáveis das redes de sinalização --- oscilações,
+adaptação, biestabilidade, robustez a ruído, memória --- não são inscritas em
+nenhum componente individual. Emergem da interação entre componentes e da
+arquitetura da rede. Esta seção descreve os principais padrões dinâmicos e as
+condições para sua ocorrência.
+
+\subsection{Loops de Feedback Positivo e Negativo}
+\label{sub:image9-feedback}
+
+O destino dinâmico de uma via de sinalização é em larga medida ditado pela
+composição de seus feedbacks. \textbf{Feedbacks negativos} estabilizam o
+sistema: reduzem a variabilidade em torno do estado estacionário, promovem
+homeostase e adaptação. Exemplos incluem a inibição por produto (o produto
+final reduz sua própria síntese), a desensibilização de receptores (GPCRs
+fosforilados por GRKs perdem afinidade por proteínas G) e os I-Smads na
+via TGF-$\beta$. São predominantes em sistemas homeostáticos: detecção de
+glicose, regulação de volume celular, termorregulação.
+
+\textbf{Feedbacks positivos} amplificam o sinal inicial e desestabilizam o
+estado de equilíbrio. CICR no Ca$^{2+}$, caspases ativadas por caspases na
+apoptose e os checkpoints do ciclo celular (que precisam comutar ON/OFF com
+decisão persistente) dependem de feedback positivo. A combinação de ambos os
+tipos de feedback em uma mesma rede é o que sustenta oscilações: o feedback
+negativo com atraso temporal gera ciclo limite, enquanto o positivo garante
+que a amplitude seja grande o suficiente para produzir um sinal detectável.
+
+\subsection{Osciladores Biológicos}
+\label{subfigure:09-oscilacoes}
+
+Vários sistemas de sinalização exibem comportamento oscilatório espontâneo
+mesmo na presença de estímulo sustentado. Os osciladores mais estudados são:
+
+\begin{itemize}
+\item \textbf{p53--Mdm2:} dano ao DNA gera uma série de pulsos de p53, com período
+de algumas horas; p53 transativa \emph{MDM2}, que ubiquitiniza p53 e a marca
+para degradação; com a queda de p53, MDM2 é desativada; p53 acumula e produz
+outro pulso. Pesquisas de Lahav e colaboradores (2004) mostraram que o número
+de pulsos e não a amplitude é o que codifica a severidade do dano.
+\item \textbf{NF-$\kappa$B:} TNF-$\alpha$ gera oscilações de localização nuclear
+de NF-$\kappa$B com período de 100 min; a oscilação depende de múltiplos
+loops de feedback negativo via I$\kappa$B$\alpha$ e A20.
+\item \textbf{Hes1:} o oscilador de segmentação embrionária usa repressão
+transcricional com atraso --- Hes1 reprime sua própria expressão, de forma
+que a proteína Hes1 oscila em torno de 2 horas.
+\item \textbf{ERK:} respostas a EGF tendem a ser transitórias; respostas a
+NGF ou PDGF podem ser sustentadas; a duração da ativação determina se a
+célula prolifera ou diferencia.
+\end{itemize}
+
+\subsection{Adaptação e Desensibilização}
+\label{sub:image9-adaptacao}
+
+A adaptação é a capacidade que o sistema tem de retornar ao estado basal
+mesmo na presença de estímulo sustentado. Em sensoriamento, adaptação
+permite perceber \emph{mudanças} em vez de intensidades absolutas --- é o
+princípio dos nossos sentidos de tato (terminações nervosas detectam
+mudanças de temperatura, não a temperatura em si) e de visão (fotorreceptores
+adaptam-se à luz ambiente para detectar contrastes).
+
+Os mecanismos moleculares são variados: fosforilação do receptor por GRKs
+(receptores fosforilados recrutam $\beta$-arrestinas, que bloqueiam o
+acoplamento a proteínas G); internalização de receptores por endocitose;
+indução de fosfatases e inibidores por feedback transcricional; depleção de
+estoques intracelulares de precursores (por exemplo, esgotamento de PIP$_2$
+local ao GPCR). A escala temporal vai de segundos (fosforilação por GRKs) a
+horas (indução transcricional).
+
+\subsection{Morfógenos e Gradientes Espaciais}
+\label{sub:image9-morfogenos}
+
+\begin{definicaoenv}[Morfógeno]
+Morfógeno é uma molécula sinalizadora que forma um gradiente de concentração
+no tecido e especifica destinos celulares distintos em função da concentração
+local. O mesmo sinal é lido por diferentes genes-alvo em diferentes limiares,
+gerando padrões espaciais discretos a partir de distribuições contínuas.
+\end{definicaoenv}
+
+A lógica é simples: a célula detecta a concentração absoluta do morfógeno,
+compara com limiares internos, e adota um destino transcricional compatível
+com a faixa detectada. Bicoid em \emph{Drosophila} gera o eixo ântero-posterior
+por um gradiente de concentração de proteína morfogenética, com tradução
+localizada a partir de mRNA materno depositado no polo anterior. Sonic
+Hedgehog (Shh) organiza o tubo neural: concentrações altas geram neurônios
+motores ventrais; concentrações intermediárias, interneurônios; concentrações
+baixas, neurônios dorsais. BMP (bone morphogenetic protein) gera o eixo
+dorso-ventral em vários sistemas.
+
+O modelo matemático típico é a equação de difusão-destruição em estado
+estacionário:
+\begin{equation}
+D \nabla^2 M - k [M] = 0
+\end{equation}
+
+cuja solução unidimensional é uma exponencial decrescente
+$M(x) = M_0 e^{-x/\sqrt{D/k}}$. O comprimento característico
+$\lambda = \sqrt{D/k}$ define a distância em que o morfógeno cai a $1/e$
+de seu valor na fonte --- é o parâmetro que limita o tamanho do tecido que
+pode ser padronizado por esse mecanismo.
+
+\subsection{Robustez e Sensibilidade}
+\label{sub:image9-robustez}
+
+Um sistema biológico precisa simultaneamente ser sensível a sinais
+específicos e robusto a perturbações aleatórias. A engenharia dos sistemas
+de sinalização satisfaz essa dupla exigência por meio de quatro mecanismos:
+
+\begin{enumerate}
+\item \textbf{Feedback negativo}: mantém concentrações próximas do
+valor desejado, amortecendo flutuações.
+\item \textbf{Redundância}: vias paralelas (PI3K/Akt vs MAPK para EGFR; NF-$\kappa$B
+e JNK para TNF-$\alpha$) garantem que a falha de uma via não abole a resposta.
+\item \textbf{Compartimentalização}: localização subcelular (microdomínios de
+membrana, endossomos, sinapses) separa espacialmente cascatas que poderiam
+interferir entre si.
+\item \textbf{Buffering}: chaperonas e proteínas de suporte (Hsp90, 14-3-3) ligam
+quinases em estados inativos, estabilizando a rede contra ativação espúria.
+\end{enumerate}
+
+A relação de compromisso entre robustez e sensibilidade tem paralelo com a
+teoria de controle: sistemas robustos a ruído tendem a ser lentos; sistemas
+rápidos tendem a ser instáveis. As redes de sinalização biológicas são
+engenharia fina em torno desse compromisso, usando ultra-sensibilidade,
+bistabilidade e oscilações para obter \emph{robustez dinâmica} --- respostas
+rápidas a sinais específicos, mas com rejeição firme a flutuações espúrias.
+Bhalla e Iyengar (1999) mostraram em artigo seminal como combinar módulos de
+sinalização simples (cada um com sua resposta característica) gera
+comportamentos globais complexos --- biestabilidade, oscilações, adaptação ---
+que nenhum módulo isolado conseguiria.
+
+
+\section{Exercícios}
+\label{sec:09-exercicios}
+
+\begin{exercicio}
+\textbf{Ligação receptor-ligante.} Um receptor apresenta $K_d = 5$ nM e
+$B_{\max} = 1000$ receptores por célula. (a) Calcule a fração de ocupação
+quando $[L] = 5$ nM. (b) Determine a concentração de ligante necessária para
+atingir 90\% de ocupação. (c) Se $k_{\mathrm{on}} = 10^6\;\mathrm{M}^{-1}\mathrm{s}^{-1}$,
+determine $k_{\mathrm{off}}$ e comente seu significado funcional.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Amplificação em cascata.} Considere uma cascata MAPK com três níveis
+(MAPKKK, MAPKK, MAPK) na qual cada quinase ativada fosforila em média 10
+moléculas do nível seguinte. Se 5 moléculas de MAPKKK forem ativadas, estime
+o número de moléculas de MAPKK e MAPK ativas, e o fator de amplificação total.
+Discuta como cascatas com mais níveis ou ganhos maiores modificariam a resposta.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Ultrassensibilidade de Goldbeter-Koshland.} Considere um sistema
+simplificado de fosforilação/desfosforilação com $[X]_{\mathrm{tot}} = 100$ nM,
+$K_1 = K_2 = 10$ nM. (a) Plote a fração ativa em função da razão $v/q$
+para $[S]$ variável. (b) Meça o coeficiente de Hill efetivo em escala
+logarítmica. (c) Compare o resultado com o caso $[X]_{\mathrm{tot}} = 1$ nM
+(mesmas $K_1, K_2$) e interprete as diferenças.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{cAMP em estado estacionário.} Em cultura de hepatócitos, cAMP é
+produzido por adenilil ciclase a $v_{\mathrm{synth}} = 0{,}5\;\mu\mathrm{M/s}$
+e degradado por fosfodiesterase seguindo cinética de primeira ordem com
+$k_{\mathrm{deg}} = 0{,}1\;\mathrm{s}^{-1}$. (a) Escreva a equação
+diferencial para $[cAMP]$. (b) Calcule a concentração de estado
+estacionário. (c) Determine a constante de tempo para atingir 90\% do
+equilíbrio após estimulação em degrau. (d) Como a constante de tempo se
+compara com tempos típicos de resposta hepática (segundos a minutos)?
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Simulação computacional da cascata MAPK.} Implemente o sistema de EDOs
+apresentado no código deste capítulo. (a) Reproduza a curva dose-resposta
+para 25 valores de estímulo distribuídos em escala logarítmica de
+$10^{-2}$ a $10$. (b) Meça o coeficiente de Hill efetivo da curva por ajuste
+logístico. (c) Investigue como $n_H$ varia quando o número de níveis da
+cascata é alterado entre 1, 2 e 4. (d) Adicione feedback negativo
+(estimulado pelo produto final) e discuta como a amplitude e a duração da
+resposta se modificam.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Oscilações de Ca$^{2+}$.} Modifique o modelo de oscilações de
+Ca$^{2+}$ apresentado no capítulo. (a) Varie sistematicamente $[\mathrm{IP}_3]$
+em uma faixa logarítmica e meça a frequência de oscilação. (b) Investigue o
+efeito de $k_{\mathrm{uptake}}$ sobre o regime oscilatório. (c) Adicione
+um termo de difusão (modelo 1D com dez compartimentos) e mostre como se
+formam ondas espaciais de Ca$^{2+}$. (d) Compare seu modelo com os dados
+experimentais de Dolmetsch et al.\ (1998) sobre codificação por frequência.
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Modelo simplificado de via Wnt/$\beta$-catenina.} Formule um sistema
+de EDOs com três variáveis: Wnt extracelular ($W$), $\beta$-catenina
+citosólica ($B_c$) e $\beta$-catenina nuclear ($B_n$). Sob Wnt, a taxa de
+degradação de $B_c$ é reduzida (efeito sobre o complexo de destruição); sob
+ausência de Wnt, $B_c$ é fosforilado e ubiquitinado. (a) Plote a resposta
+em degrau (Wnt ON/OFF). (b) Investigue como variações nos parâmetros
+imitam mutações em APC (degradação constitutivamente reduzida).
+\end{exercicio}
+
+\begin{exercicio}
+\textbf{Projeto integrador: modelagem de uma via completa.} Escolha uma das
+vias discutidas no capítulo (MAPK, PI3K/Akt, JAK-STAT, Wnt) e construa um
+modelo matemático com 6--12 componentes, com base em revisão da literatura.
+(a) Implemente o modelo em Python usando \texttt{scipy.integrate.odeint}.
+(b) Simule perturbações genéticas e farmacológicas: nocaute de uma
+componente constitutivamente inativado, inibição parcial de quinase,
+indução de superexpressão. (c) Analise a sensibilidade dos parâmetros
+usando análise de variância global (PRCC) ou amostragem de Latin Hypercube.
+(d) Gere diagnósticos quantitativos comparando previsões a dados
+experimentais de bases públicas (GEO, PathwayCommons).
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+\label{sec:09-bibliografia}
+
+Os fundamentos da sinalização celular são apresentados com profundidade nas
+obras clássicas de Alberts et al.\ (\textit{Molecular Biology of the Cell},
+7ª edição) e Lodish et al.\ (\textit{Molecular Cell Biology}, 9ª edição),
+que permanecem referências obrigatórias para a visão integrada. A leitura
+de \textit{An Introduction to Systems Biology} de Uri Alon (2ª edição) é
+particularmente recomendada: oferece uma apresentação unificada dos princípios
+de design de circuitos biológicos, com exemplos concretos em cascatas de
+fosforilação, osciladores e biestabilidade. O livro \textit{Systems Biology: A
+Textbook} de Klipp, Herrmann e colaboradores (2ª edição) é referência
+indispensável para os aspectos quantitativos e computacionais.
+
+Vários artigos seminais contribuíram para a compreensão moderna das cascatas
+de sinalização como sistemas dinâmicos. O de Kholodenko (2006) em
+\textit{Nature Reviews Molecular Cell Biology} é uma exposição influente das
+propriedades espaço-temporais das redes de sinalização. A revisão clássica de
+Ferrell (1996) sobre cascatas de MAPK como conversores de sinais graduais em
+respostas em chave permanece leitura obrigatória. O artigo de Goldbeter e
+Koshland (1981) em \textit{PNAS}, sobre ultra-sensibilidade em sistemas
+bioquímicos, é o ponto de partida para qualquer análise matemática de
+cascatas de quinases. O estudo computacional de Bhalla e Iyengar (1999) em
+\textit{Science} demonstrou de forma pioneira como combinar módulos simples
+de sinalização produz comportamentos complexos emergentes --- biestabilidade,
+oscilações, adaptação --- que nenhum dos módulos isolados seria capaz de exibir.
+
+Para a sinalização por Ca$^{2+}$, o trabalho de Dolmetsch et al.\ (1998) em
+\textit{Nature} estabeleceu que a frequência das oscilações --- e não a amplitude ---
+codifica informação transcricional. Os osciladores circadianos e de ciclo
+celular são discutidos em profundidade por Tyson e Novak em \textit{The Cell
+Cycle: Principles of Control} (Oxford). Para um tratamento computacional mais
+aprofundado, \textit{Computational Cell Biology} de Fall, Marland, Wagner e
+Tyson (Springer) é referência consolidada.
+
+Recursos online valiosos incluem KEGG Pathway e Reactome, duas bases de
+dados curadas manualmente que descrevem vias de sinalização humanas em
+formato acessível por máquina; SignaLink, base dedicada à sinalização
+multicamada em eucariotos; e PathwayCommons, agregador de vias de múltiplas
+fontes. A integração dessas bases com modelos computacionais permite validar
+predições teóricas em conjuntos de dados públicos.
+
+\begin{thebibliography}{99}
+\bibitem{alberts} Alberts B., Johnson A., Lewis J., Raff M., Roberts K.,
+Walter P. (2022). \textit{Molecular Biology of the Cell}, 7ª ed.
+Garland Science, Nova York.
+
+\bibitem{lodish} Lodish H., Berk A., Kaiser C.A., Krieger M., Bretscher A.,
+Ploegh H., Amon A., Martin K.C. (2021). \textit{Molecular Cell Biology},
+9ª ed. W.H. Freeman, Nova York.
+
+\bibitem{alon} Alon U. (2019). \textit{An Introduction to Systems Biology:
+Design Principles of Biological Circuits}, 2ª ed. CRC Press, Boca Raton.
+
+\bibitem{klipp} Klipp E., Herrmann H., Liebermeister W., Rother K., Gilles
+E.D., Wierling C., Kowald A., Lehrach H. (2016). \textit{Systems Biology: A
+Textbook}, 2ª ed. Wiley-VCH, Weinheim.
+
+\bibitem{kholodenko} Kholodenko B.N. (2006). Cell-signalling dynamics in
+time and space. \textit{Nature Reviews Molecular Cell Biology},
+7:165--176.
+
+\bibitem{ferrell} Ferrell J.E.\ Jr (1996). Tripping the switch fantastic:
+how a protein kinase cascade can convert graded inputs into switch-like
+outputs. \textit{Trends in Biochemical Sciences}, 21:460--466.
+
+\bibitem{goldbeter} Goldbeter A., Koshland D.E.\ Jr (1981). Ultrasensitivity
+in biochemical systems. \textit{Proceedings of the National Academy of
+Sciences USA}, 78:6840--6844.
+
+\bibitem{bhalla} Bhalla U.S., Iyengar R. (1999). Emergent properties of
+networks of biological signaling pathways. \textit{Science}, 283:381--387.
+
+\bibitem{dolmetsch} Dolmetsch R.E., Xu K., Lewis R.S. (1998). Calcium
+oscillations increase the efficiency and specificity of gene expression.
+\textit{Nature}, 392:933--936.
+
+\bibitem{tyson} Tyson J.J., Novak B. (2020). \textit{The Cell Cycle:
+Principles of Control}. Oxford University Press, Oxford.
+
+\bibitem{fall} Fall C.P., Marland E.S., Wagner J.M., Tyson J.J. (2002).
+\textit{Computational Cell Biology}. Springer, Nova York.
+
+\bibitem{lahav} Lahav G., Rosenfeld N., Sigal A., Geva-Zatorsky N., Levine
+A.J., Elowitz M.B., Alon U. (2004). Dynamics of the p53--Mdm2 feedback
+loop in individual cells. \textit{Nature Genetics}, 36:147--150.
+
+\bibitem{pulvermacher} KEGG Pathway Database. \textit{Kyoto Encyclopedia of
+Genes and Genomes}. Disponível em: \url{https://www.genome.jp/kegg/pathway.html}.
+Acessado em 2026.
+
+\bibitem{reactome} Reactome Knowledgebase. Disponível em:
+\url{https://reactome.org}. Acessado em 2026.
+
+\bibitem{salink} SignaLink 2.0: a service to monitor signaling pathways.
+Disponível em: \url{http://signalink.org}. Acessado em 2026.
+
+\bibitem{pathcomm} Pathway Commons. Disponível em:
+\url{https://www.pathwaycommons.org}. Acessado em 2026.
+\end{thebibliography}

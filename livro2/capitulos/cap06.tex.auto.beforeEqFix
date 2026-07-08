@@ -1,0 +1,692 @@
+\chapter{Sistemas Gênicos}
+\label{cap:06}
+
+A célula é uma máquina de informação. Seu genoma codifica não apenas as proteínas que
+executam funções estruturais e catalíticas, mas também o programa regulatório que decide
+quais proteínas são produzidas, em qual quantidade, em qual momento e em qual tipo celular.
+Compreender os sistemas gênicos --- a organização dos genes, os mecanismos de regulação da
+expressão e as ferramentas computacionais para acessar e analisar essa informação --- é
+condição necessária para a Biologia de Sistemas quantitativa.
+
+Este capítulo cobre o fluxo de informação genética desde a estrutura do DNA até as
+proteínas, os diferentes tipos de RNA e suas funções, os mecanismos de regulação da
+expressão gênica e sua modelagem matemática, e as principais tecnologias de medição de
+expressão --- com ênfase no RNA-seq. Encerramos com as ferramentas computacionais para
+localização de genes, acesso a bancos de dados genômicos e análise de enriquecimento
+funcional.
+
+\section{O Dogma Central e a Organização dos Genes}
+
+\subsection{O Fluxo de Informação Genética}
+
+\begin{definicaoenv}[Dogma Central da Biologia Molecular]
+O dogma central, formulado por Francis Crick em 1958, descreve o fluxo canônico de
+informação genética: o DNA é replicado para produzir cópias fiéis de si mesmo; é
+transcrito em RNA mensageiro (mRNA); e o mRNA é traduzido em proteína pelo ribossomo.
+Em termos esquemáticos: \textbf{DNA} $\xrightarrow{\text{transcrição}}$ \textbf{RNA}
+$\xrightarrow{\text{tradução}}$ \textbf{Proteína}.
+\end{definicaoenv}
+
+A descoberta da transcriptase reversa por Baltimore e Temin (1970) --- premiada com o Nobel
+de 1975 --- revelou que retrovírus como o HIV invertem esse fluxo: convertem seu genoma de
+RNA em DNA antes de integrar-se ao genoma do hospedeiro. Esse não é o único complemento ao
+dogma: sabe-se hoje que o RNA pode regular outros RNAs (via miRNA e siRNA), que certas
+proteínas prions propagam informação estrutural sem envolvimento do DNA, e que a epigenética
+transmite informação hereditária por modificações que não alteram a sequência nucleotídica.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, text width=2.4cm,
+                text centered, rounded corners, minimum height=0.9cm, font=\large}
+]
+
+    \node[box, fill=roxodna!30]    (dna)  at (0,0)   {\textbf{DNA}};
+    \node[box, fill=laranjacel!30] (rna)  at (5.2,0)  {\textbf{RNA}};
+    \node[box, fill=verdeacido!30] (prot) at (10.4,0) {\textbf{Proteína}};
+
+    % Replicação (loop)
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (dna) to[out=120, in=60, looseness=6]
+        node[pos=0.5, above=8mm, font=\normalsize\bfseries, color=azulescuro]
+            {Replicação}
+        (dna);
+
+    % Transcrição
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (dna) -- (rna)
+        node[midway, above=4mm, font=\normalsize\bfseries, color=azulescuro]
+            {Transcrição};
+
+    % Tradução
+    \draw[->, ultra thick, azulescuro, line width=2pt]
+        (rna) -- (prot)
+        node[midway, above=4mm, font=\normalsize\bfseries, color=azulescuro]
+            {Tradução};
+
+\end{tikzpicture}
+\caption{Dogma central da biologia molecular, formulado por Crick em 1958. O fluxo canônico de informação genética vai do DNA ao RNA por \emph{transcrição}, e do RNA à proteína por \emph{tradução}. A \emph{replicação} do DNA é o mecanismo que permite a transmissão fiel da informação genética ao longo das gerações. Exceções notáveis --- como a transcrição reversa em retrovírus --- não invalidam o dogma, mas o complementam.}
+\label{fig:06-dogma}
+\end{figure}
+
+Nesse contexto, a palavra ``gene'' ganhou múltiplas definições ao longo do século XX. A
+definição operacional mais útil para a Biologia de Sistemas é:
+
+\begin{definicaoenv}[Gene]
+Unidade fundamental da hereditariedade: sequência de DNA que codifica uma molécula
+funcional --- RNA ou proteína --- e inclui as regiões regulatórias necessárias para
+controlar sua expressão (promotor, enhancers, silenciadores).
+\end{definicaoenv}
+
+\subsection{Estrutura dos Genes: Elementos Funcionais}
+
+A anatomia de um gene eucariótico típico compreende múltiplos elementos funcionais dispostos
+linearmente no DNA. O \emph{promotor} é a região onde a RNA polimerase II e os fatores de
+transcrição gerais se ligam para iniciar a transcrição. Em eucariotos, os elementos
+promotores mais conservados incluem a TATA box ($\sim$-25 em relação ao sítio de início da
+transcrição, consenso TATAAA), a CAAT box ($\sim$-75) e as GC boxes. Reguladores
+adicionais, chamados \emph{enhancers} e \emph{silenciadores}, podem atuar a distâncias de
+dezenas ou centenas de kilobases do promotor, modulando a atividade transcricional por
+looping cromossômico.
+
+A região codificante (ORF, \textit{Open Reading Frame}) é flanqueada pelas regiões não
+traduzidas 5' (5' UTR) e 3' (3' UTR). Nos eucariotos, a ORF é interrompida por
+\emph{íntrons} --- sequências não codificantes removidas durante o processamento do
+pré-mRNA. As sequências codificantes retidas são chamadas \emph{éxons}. O
+\emph{splicing alternativo} --- inclusão ou exclusão seletiva de éxons --- permite que um
+único gene produza múltiplas isoformas proteicas. O gene da tropomiosina, por exemplo,
+produz mais de 60 variantes por splicing alternativo em diferentes tecidos.
+
+Em contraste, os genes procariotos são mais simples: sem íntrons, frequentemente
+organizados em \emph{operons} (grupos de genes com função relacionada, transcritos como
+um único mRNA policistrónico sob controle de um promotor compartilhado).
+
+\begin{definicaoenv}[Open Reading Frame (ORF)]
+Sequência contínua de códons entre um códon de início (ATG, que codifica metionina) e um
+códon de parada (TAA, TAG ou TGA), sem códons de parada internos. Uma ORF biologicamente
+significativa tipicamente tem comprimento mínimo de 300 nt (100 aminoácidos).
+\end{definicaoenv}
+
+\begin{lstlisting}[language=Python, caption=Identificacao de ORFs em sequencia de DNA]
+def find_orfs(sequence, min_length=100):
+    stop_codons = {"TAA", "TAG", "TGA"}
+    orfs = []
+    for frame in range(3):
+        i = frame
+        while i < len(sequence) - 2:
+            codon = sequence[i:i+3]
+            if codon == "ATG":
+                for j in range(i+3, len(sequence)-2, 3):
+                    stop = sequence[j:j+3]
+                    if stop in stop_codons:
+                        if (j - i + 3) >= min_length * 3:
+                            orfs.append({'start': i, 'end': j+3,
+                                         'frame': frame})
+                        break
+            i += 3
+    return orfs
+
+# Exemplo
+seq = "ATGGCTAAATGGCCATAAATG"
+print(find_orfs(seq, min_length=1))
+\end{lstlisting}
+
+
+\section{Regulação da Expressão Gênica}
+
+A expressão gênica é regulada em múltiplos níveis: transcricional, pós-transcricional,
+traducional e pós-traducional. Cada nível oferece um ponto de controle adicional, permitindo
+respostas rápidas, precisas e específicas de contexto. A regulação transcricional --- o
+controle da síntese de RNA --- é o nível mais amplamente estudado e o mais amenable à
+modelagem matemática quantitativa.
+
+\subsection{Regulação Transcricional em Procariotos: O Operon Lac}
+
+O sistema do operon lac de \textit{Escherichia coli} é o paradigma histórico da regulação
+gênica. Proposto por Jacob e Monod em 1961 (Nobel de 1965), o operon lac consiste nos
+genes \textit{lacZ} (beta-galactosidase), \textit{lacY} (permeasse) e \textit{lacA}
+(transacetilase), todos transcritos sob controle do mesmo promotor. A regulação é dupla:
+negativa, pelo repressor LacI, e positiva, pelo ativador CAP.
+
+Na ausência de lactose, o repressor LacI --- uma proteína homodimérica codificada pelo
+gene \textit{lacI} adjacente --- liga-se ao operador, uma sequência de DNA sobreposta ao
+promotor, bloqueando fisicamente o avanço da RNA polimerase. Quando lactose está presente,
+ela é convertida em alolactose, que funciona como indutor: liga-se ao repressor, alterando
+sua conformação e reduzindo sua afinidade pelo operador. O repressor se dissocia e a
+transcrição ocorre. A regulação positiva pelo CAP (\textit{catabolite activator protein})
+garante que o operon lac só seja fortemente ativado na ausência de glicose (a fonte de
+carbono preferida), via aumento dos níveis intracelulares de AMPc.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\small}]
+    % Linha de DNA
+    \draw[thick] (0,0) -- (10,0);
+
+    % Promotor
+    \fill[roxodna!50] (0.5,-0.3) rectangle (1.5,0.3);
+    \node[above, font=\small] at (1,0.3) {P};
+
+    % Operador
+    \fill[red!50] (1.7,-0.3) rectangle (2.7,0.3);
+    \node[above, font=\small] at (2.2,0.3) {O};
+
+    % Genes
+    \fill[verdeacido!50] (3.2,-0.3) rectangle (4.7,0.3);
+    \node[above, font=\small] at (3.95,0.3) {\textit{lacZ}};
+    \fill[verdeacido!50] (5.2,-0.3) rectangle (6.7,0.3);
+    \node[above, font=\small] at (5.95,0.3) {\textit{lacY}};
+    \fill[verdeacido!50] (7.2,-0.3) rectangle (8.7,0.3);
+    \node[above, font=\small] at (7.95,0.3) {\textit{lacA}};
+
+    % Repressor bloqueando
+    \node[draw, circle, fill=yellow!50, minimum size=0.6cm, font=\footnotesize] at (2.2,-1.5) {LacI};
+    \draw[->, very thick, red] (2.2,-1.1) -- (2.2,-0.4);
+
+    % Lactose
+    \node[draw, circle, fill=azulclaro!50, minimum size=0.6cm, font=\footnotesize] at (0.5,-1.5) {Lac};
+    \draw[->, dashed, azulescuro] (0.9,-1.5) -- (1.7,-1.5);
+
+    % Status
+    \node[below, font=\small, red!70!black] at (5,-2.3) {Sem lactose: LacI bloqueia o operador (OFF)};
+\end{tikzpicture}
+\caption{Operon \textit{lac} de \textit{Escherichia coli} no estado reprimido. O repressor LacI (amarelo) liga-se ao operador (O, vermelho), impedindo fisicamente a transcrição dos genes estruturais \textit{lacZ}, \textit{lacY}, \textit{lacA} pela RNA polimerase. A lactose (azul) --- quando presente --- liga-se a LacI e induz a dissociação do repressor, permitindo a transcrição.}
+\label{fig:06-operon}
+\end{figure}
+
+\subsection{Regulação Transcricional em Eucariotos}
+
+Em eucariotos, a regulação transcricional é dramaticamente mais complexa. A cromatina ---
+o complexo de DNA e proteínas histônicas --- é o substrato primário da regulação. Genes em
+eucromatina (cromatina aberta, acetilada) são transcricionalmente acessíveis; genes em
+heterocromatina (cromatina compactada, metilada) são silenciados. As modificações
+\emph{epigenéticas} das histonas --- acetilação (H3K27ac: ativação; H3K9me3: repressão) e
+metilação do DNA (CpGs metiladas: silenciamento) --- constituem um código adicional de
+informação hereditária que não altera a sequência nucleotídica, mas modula
+profundamente a expressão gênica.
+
+Os \emph{fatores de transcrição} (TFs) reconhecem sequências regulatórias específicas e
+recrutam co-ativadores ou co-repressores para o locus alvo. Ativadores recrutam complexos
+remodeladores de cromatina (SWI/SNF) e o Mediador, que conecta TFs ao aparato
+transcricional basal. O consórcio ENCODE mapeou sistematicamente elementos regulatórios
+no genoma humano por ChIP-seq (imunoprecipitação de cromatina seguida de sequenciamento),
+revelando que $\sim$80\% do genoma tem atividade bioquímica mensurável.
+
+\subsection{Modelagem Matemática: A Função de Hill}
+
+A equação de Hill é o modelo matemático padrão para regulação gênica cooperativa. Para
+ativação por um fator de transcrição TF:
+
+\begin{equation}
+\frac{d[\text{mRNA}]}{dt} = \frac{V_{\max} [\text{TF}]^n}{K_d^n + [\text{TF}]^n} - \delta [\text{mRNA}]
+\end{equation}
+
+onde $[\text{TF}]$ é a concentração do fator de transcrição, $n$ é o coeficiente de Hill
+(cooperatividade), $K_d$ é a constante de dissociação (concentração de TF que produz
+metade da expressão máxima) e $\delta$ é a taxa de degradação do mRNA.
+
+O coeficiente de Hill $n$ determina a ``abrupticidade'' da resposta: para $n = 1$
+(Michaelis-Menten), a transição é gradual; para $n \gg 1$, a resposta torna-se quase
+binária (\textit{switch-like}), com expressão essencialmente nula abaixo de $K_d$ e máxima
+acima. Biologicamente, $n > 1$ indica cooperatividade: múltiplas moléculas de TF ligam-se
+cooperativamente ao promotor, de modo que a ocupação do sítio por um TF facilita a ligação
+dos demais. O fator de transcrição $p53$, por exemplo, forma um tetrâmero funcional, o que
+confere $n \approx 4$ e uma resposta altamente switch-like ao dano de DNA.
+
+Para \emph{repressão} por um TF, a função de Hill é invertida:
+\begin{equation}
+\frac{d[\text{mRNA}]}{dt} = \frac{V_{\max} K_d^n}{K_d^n + [\text{TF}]^n} - \delta [\text{mRNA}]
+\end{equation}
+
+No estado estacionário ($d[\text{mRNA}]/dt = 0$), a concentração de mRNA é:
+$[\text{mRNA}]^* = V_{\max} [\text{TF}]^n / [\delta(K_d^n + [\text{TF}]^n)]$.
+
+\begin{lstlisting}[language=Python, caption=Funcao de Hill e estado estacionario]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def hill_activation(TF, Vmax, Kd, n, delta):
+    return (Vmax * TF**n / (Kd**n + TF**n)) / delta
+
+def hill_repression(TF, Vmax, Kd, n, delta):
+    return (Vmax * Kd**n / (Kd**n + TF**n)) / delta
+
+TF = np.linspace(0, 50, 300)
+Vmax, Kd, delta = 100, 10, 1.0
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for n in [1, 2, 4, 8]:
+    axes[0].plot(TF, hill_activation(TF, Vmax, Kd, n, delta), label=f'n={n}')
+    axes[1].plot(TF, hill_repression(TF, Vmax, Kd, n, delta), label=f'n={n}')
+
+for ax, title in zip(axes, ['Ativacao', 'Repressao']):
+    ax.axvline(Kd, color='gray', linestyle='--', label=f'Kd={Kd}')
+    ax.set_xlabel('[TF]'); ax.set_ylabel('mRNA (estado estacionario)')
+    ax.set_title(f'Hill - {title}'); ax.legend(); ax.grid(True)
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+
+\section{Tipos de RNA e suas Funções}
+
+O transcriptoma é muito mais rico do que o conjunto de mRNAs que codificam proteínas.
+Estima-se que $\sim$75\% do genoma humano é transcrito em algum tipo de RNA, mas menos de
+2\% codifica proteínas. A vasta maioria dos transcritos são \emph{RNAs não-codificantes}
+(ncRNAs) com funções regulatórias, estruturais ou catalíticas.
+
+\subsection{RNA Mensageiro}
+
+O mRNA é o intermediário entre o gene e a proteína. Nos eucariotos, o transcrito primário
+(pré-mRNA) sofre um conjunto de modificações co-transcricionais antes de ser exportado para
+o citoplasma: adição do \emph{cap} de 7-metilguanosina (m\textsuperscript{7}G) na
+extremidade 5', que protege o mRNA da degradação e é reconhecido pela maquinaria traducional;
+\emph{splicing} dos íntrons pelo spliceossomo; e poliadenilação na extremidade 3'
+(cauda poli-A de $\sim$200 adeninas), que aumenta a estabilidade e facilita a exportação nuclear.
+
+A 5' UTR e a 3' UTR não são regiões inertes: a 5' UTR contém elementos de estrutura
+secundária e sequências que regulam a eficiência de iniciação da tradução; a 3' UTR
+contém sítios de ligação para miRNAs e proteínas de ligação ao RNA que controlam a
+estabilidade e a localização do mRNA. A meia-vida dos mRNAs varia enormemente --- de
+minutos (proto-oncogenes como c-Myc e c-Fos) a horas ou dias --- e é um parâmetro
+cinético crítico para modelos matemáticos de expressão gênica.
+
+\subsection{RNA de Transferência e RNA Ribossomal}
+
+O tRNA é o adaptador molecular da tradução: carrega o aminoácido adequado e reconhece o
+códon correspondente no mRNA via seu anticódon. A estrutura tridimensional em forma de
+L do tRNA --- resultado do dobramento da estrutura secundária em ``folha de trevo'' ---
+posiciona o aminoácido na extremidade 3' (CCA-OH) enquanto o anticódon interage com o
+códon no sítio A do ribossomo. A regra do \emph{wobble} (Crick, 1966) explica por que 61
+códons senso são reconhecidos por apenas $\sim$45 tRNAs diferentes: a terceira posição do
+anticódon tem flexibilidade de pareamento, podendo reconhecer múltiplos nucletídeos na
+terceira posição do códon.
+
+O rRNA é o componente mais abundante e funcional do ribossomo. A subunidade pequena do
+ribossomo bacteriano (30S, contendo o 16S rRNA) decoda o mRNA; a subunidade grande (50S,
+com 23S e 5S rRNA) catalisa a formação da ligação peptídica. O 16S rRNA é particularmente
+importante em bioinformática: sua sequência é altamente conservada mas contém regiões
+hipervariáveis que permitem a identificação filogenética de espécies bacterianas ---
+base do sequenciamento metagenômico 16S para caracterização de comunidades microbianas.
+
+\subsection{RNAs Regulatórios: miRNA e siRNA}
+
+Os \emph{microRNAs} (miRNAs) são RNAs não-codificantes de $\sim$22 nucleotídeos que
+regulam negativamente a expressão de genes alvo por complementaridade parcial com a 3'
+UTR dos mRNAs. A biogênese segue uma via multistep: o gene de miRNA é transcrito em
+pri-miRNA (centenas de nucleotídeos, com estrutura de hairpin); a endonuclease Drosha
+(no núcleo) processa o pri-miRNA em pré-miRNA ($\sim$70 nt); a Exportina-5 transporta o
+pré-miRNA para o citoplasma; a Dicer gera o duplex de miRNA maduro ($\sim$22 nt); e uma
+fita do duplex é incorporada ao complexo RISC (\textit{RNA-Induced Silencing Complex}).
+O RISC usa o miRNA como guia para encontrar mRNAs complementares: pareamento perfeito
+induz clivagem do mRNA; pareamento imperfeito (mais comum em animais) induz repressão
+traducional e deadenilação.
+
+A importância biológica dos miRNAs é imensa: um único miRNA pode regular centenas de
+mRNAs, e o genoma humano codifica $>2500$ miRNAs (miRBase). Alterações na expressão de
+miRNAs estão associadas a praticamente todos os tipos de câncer, e miRNAs são
+investigados como biomarcadores diagnósticos no plasma sanguíneo.
+
+Os \emph{siRNAs} (\textit{small interfering RNAs}) têm estrutura similar aos miRNAs mas
+atuam por pareamento perfeito, induzindo clivagem do mRNA alvo com alta especificidade.
+A interferência por RNA (RNAi), descoberta por Fire e Mello em 1998 (Nobel 2006), é hoje
+uma ferramenta essencial para knockdown gênico experimental e está em desenvolvimento como
+plataforma terapêutica.
+
+Os \emph{lncRNAs} (\textit{long non-coding RNAs}) têm mais de 200 nt e funções diversas:
+regulação da estrutura da cromatina em \textit{cis} (HOTAIR, XIST para inativação do X) ou
+em \textit{trans}, atuando como esponjas de miRNAs (ceRNAs) ou como scaffolds para
+complexos proteicos.
+
+
+\section{Medição da Expressão Gênica}
+
+\subsection{Da Hibridização ao Sequenciamento}
+
+A medição sistemática da expressão gênica evoluiu rapidamente nas últimas décadas. O
+\emph{Northern blot} (1977) permitiu detectar transcritos individuais por hibridização com
+sondas marcadas, mas processa apenas um gene por vez. O \emph{RT-PCR quantitativo} (qPCR)
+é o padrão-ouro para validação de expressão de genes específicos: o mRNA é convertido em
+cDNA por transcriptase reversa, e o cDNA é amplificado em presença de fluoróforos que
+permitem quantificação em tempo real.
+
+Os \emph{microarrays de DNA} (1995, Brown e Botstein) revolucionaram a biologia ao permitir
+a medição simultânea da expressão de milhares de genes. Sondas de DNA (cDNA ou
+oligonucleotídeos) são imobilizadas em chips de vidro ou silício; o cDNA marcado com
+fluoróforos derivado das amostras experimental e controle é hibridizado ao chip; e a
+intensidade de fluorescência de cada spot reflete a abundância relativa de cada transcrito.
+Apesar das limitações --- faixa dinâmica restrita, necessidade de sondas pré-definidas,
+hibridização cruzada --- os microarrays geraram dados que ainda são amplamente estudados
+nos repositórios públicos GEO (Gene Expression Omnibus) e ArrayExpress.
+
+\subsection{RNA-seq}
+
+O \emph{RNA-seq} (sequenciamento de RNA por sequenciadores de alto rendimento) tornou-se
+rapidamente o método de referência para análise do transcriptoma, suplantando os
+microarrays. No protocolo padrão, o RNA total (ou o RNA poli-A-selecionado) é fragmentado,
+convertido em cDNA de fita dupla e preparado numa biblioteca de fragmentos de tamanho
+controlado. Após sequenciamento (Illumina: 50--300 nt por read), os reads são alinhados ao
+genoma de referência e contabilizados por gene, produzindo uma matriz de contagens
+(genes × amostras).
+
+As vantagens do RNA-seq sobre os microarrays são substanciais: (i) faixa dinâmica de cinco
+ordens de magnitude, versus três nos microarrays; (ii) ausência de sondas pré-definidas,
+permitindo descoberta de novos transcritos e genes; (iii) resolução de variantes de
+splicing; (iv) quantificação absoluta em reads por gene; e (v) compatibilidade com
+amostras de qualidade variável (tumor formalizado, sangue seco). As desvantagens incluem o
+custo computacional de análise e a necessidade de um genoma de referência de qualidade para
+o alinhamento.
+
+O pipeline padrão de RNA-seq segue as etapas: (1) controle de qualidade dos reads (FastQC);
+(2) trimagem de adaptadores e bases de baixa qualidade (Trimmomatic, fastp); (3)
+alinhamento ao genoma de referência (STAR, HISAT2); (4) contagem de reads por gene
+(featureCounts, HTSeq); (5) normalização e análise de expressão diferencial (DESeq2,
+edgeR); (6) análise de enriquecimento funcional (clusterProfiler, GSEA).
+
+\subsection{Normalização e Expressão Diferencial}
+
+A normalização de dados de RNA-seq visa remover variações técnicas (número de reads por
+amostra, comprimento dos genes) para tornar amostras comparáveis. As métricas mais comuns
+são:
+
+\begin{itemize}
+\item \textbf{RPKM/FPKM} (\textit{Reads/Fragments Per Kilobase per Million}): normaliza
+  por comprimento do gene e pelo número total de reads. Inadequado para comparações entre
+  amostras porque o total de RPKM não é constante.
+\item \textbf{TPM} (\textit{Transcripts Per Million}): normaliza primeiro por comprimento,
+  depois pelo total. Comparável entre amostras do mesmo tecido.
+\item \textbf{DESeq2 VST} e \textbf{TMM} (edgeR): normalização baseada em modelos
+  estatísticos negativos binomiais, preferida para análise de expressão diferencial formal.
+\end{itemize}
+
+A análise de expressão diferencial identifica genes cuja expressão difere significativamente
+entre condições (tratado vs.\ controle, tumor vs.\ normal). O DESeq2 modela as contagens
+com distribuição binomial negativa, estima dispersões de forma shrunk (emprestando força
+estatística entre genes similares) e aplica o teste de Wald para calcular $p$-valores. A
+correção de Benjamini-Hochberg (FDR) controla a taxa de falsos positivos no contexto de
+múltiplos testes simultâneos.
+
+\begin{lstlisting}[language=Python, caption=Pipeline de RNA-seq e volcano plot]
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Simular matriz de contagens (30 genes, 6 amostras: 3 controle + 3 tratamento)
+np.random.seed(42)
+n_genes = 500
+ctrl = np.random.negative_binomial(50, 0.5, (n_genes, 3))
+trt  = np.random.negative_binomial(50, 0.5, (n_genes, 3))
+# 50 genes diferencialmente expressos
+trt[:50] = np.random.negative_binomial(200, 0.5, (50, 3))
+counts = np.hstack([ctrl, trt])
+
+# Normalizacao TPM simplificada
+gene_lengths = np.random.randint(500, 5000, n_genes)
+def tpm(counts, lengths):
+    rpk = counts / (lengths[:, None] / 1000)
+    sf = rpk.sum(axis=0) / 1e6
+    return rpk / sf
+
+tpm_counts = tpm(counts, gene_lengths)
+
+# Teste t simples por gene
+log_fc = np.log2(tpm_counts[:, 3:].mean(1) / (tpm_counts[:, :3].mean(1) + 1e-6))
+p_vals = np.array([stats.ttest_ind(tpm_counts[i, :3], tpm_counts[i, 3:])[1]
+                   for i in range(n_genes)])
+
+# Correcao de Benjamini-Hochberg
+from statsmodels.stats.multitest import multipletests
+_, p_adj, _, _ = multipletests(p_vals, method='fdr_bh')
+
+# Volcano plot
+sig = (p_adj < 0.05) & (np.abs(log_fc) > 1)
+plt.figure(figsize=(8, 6))
+plt.scatter(log_fc, -np.log10(p_adj), alpha=0.4, s=10, color='gray')
+plt.scatter(log_fc[sig], -np.log10(p_adj[sig]), color='red', s=15,
+            label=f'Significativos: {sig.sum()}')
+plt.axhline(-np.log10(0.05), color='r', linestyle='--')
+plt.axvline(-1, color='b', linestyle='--'); plt.axvline(1, color='b', linestyle='--')
+plt.xlabel('log2(Fold Change)'); plt.ylabel('-log10(FDR)')
+plt.title('Volcano Plot --- RNA-seq'); plt.legend(); plt.grid(True, alpha=0.3)
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+
+\section{Localização e Anotação de Genes}
+
+\subsection{Predição de Genes}
+
+A identificação de genes a partir da sequência genômica crua é um dos problemas fundacionais
+da bioinformática. As abordagens se dividem em dois grandes paradigmas. Na predição
+\emph{ab initio}, algoritmos identificam genes com base em características intrínsecas da
+sequência: presença de ORFs, composição de dinucleotídeos, modelos de sítios de splice
+(doador GT e aceitador AG) e sinais de poliadenilação. Os modelos de Markov Ocultos (HMMs)
+são a arquitetura padrão para esse tipo de predição --- Augustus e GenScan (eucariotos),
+Prodigal e GeneMark (procariotos) são as ferramentas mais usadas.
+
+Na predição baseada em \emph{evidências}, dados experimentais orientam a anotação:
+alinhamentos de ESTs (\textit{Expressed Sequence Tags}) e transcritos completos de cDNA,
+proteínas homólogas de espécies relacionadas por BLAST, e reads de RNA-seq mapeados ao
+genoma. Pipelines integrativos como MAKER e Braker combinam as duas abordagens para
+produzir anotações de alta qualidade.
+
+A predição de genes em eucariotos é significativamente mais difícil que em procariotos,
+pelos seguintes motivos: (i) os genes eucarióticos são esparsos --- $\sim$25\,000 genes em
+$\sim$3 bilhões de pares de bases humanos; (ii) os íntrons são longos (mediana $\sim$3 kb)
+e numerosos (média de 8 éxons por gene humano); (iii) o splicing alternativo multiplica as
+isoformas; e (iv) o DNA repetitivo ($\sim$45\% do genoma humano) interfere com os
+alinhamentos.
+
+\subsection{Bancos de Dados Genômicos}
+
+O GenBank (NCBI) é o repositório primário de sequências de nucleotídeos, com mais de 350
+milhões de sequências e 10 trilhões de pares de bases (2024). Cada registro genômico inclui
+a sequência, metadados do organismo e uma tabela de \emph{features} anotando elementos
+funcionais: genes, CDSs, mRNAs, rRNAs, repeat regions. O formato GenBank é texto plano
+estruturado com campos padronizados (LOCUS, DEFINITION, ACCESSION, FEATURES, ORIGIN).
+
+O BioPython (Cock et al., 2009) fornece uma interface Python completa para acessar e
+manipular registros do NCBI via Entrez:
+
+\begin{lstlisting}[language=Python, caption=Acesso ao GenBank via BioPython]
+from Bio import Entrez, SeqIO
+
+Entrez.email = "seu_email@example.com"
+
+def fetch_gene(query, db="nucleotide", max_results=5):
+    handle = Entrez.esearch(db=db, term=query, retmax=max_results)
+    ids = Entrez.read(handle)["IdList"]
+    records = []
+    for gid in ids:
+        h = Entrez.efetch(db=db, id=gid, rettype="gb", retmode="text")
+        rec = SeqIO.read(h, "genbank")
+        records.append(rec)
+    return records
+
+# Buscar HBB (hemoglobina beta humana)
+recs = fetch_gene("Homo sapiens HBB mRNA", max_results=1)
+rec = recs[0]
+print(f"ID: {rec.id} | {len(rec)} bp | {rec.annotations['organism']}")
+
+# Extrair CDSs
+for feat in rec.features:
+    if feat.type == "CDS":
+        prod = feat.qualifiers.get("product", ["?"])[0]
+        prot = feat.qualifiers.get("translation", [""])[0]
+        print(f"CDS: {prod} | {len(prot)} aa")
+\end{lstlisting}
+
+\subsection{Ontologia Gênica e Análise de Enriquecimento}
+
+A Gene Ontology (GO) é um vocabulário controlado que descreve funções de genes em três
+domínios hierárquicos: \textbf{Função Molecular} (MF: atividades bioquímicas da proteína,
+ex: ``oxygen transporter activity''), \textbf{Processo Biológico} (BP: processos de nível
+celular ou organísmico, ex: ``oxygen transport'') e \textbf{Componente Celular} (CC:
+localização, ex: ``hemoglobin complex''). Os termos GO formam um DAG (\textit{Directed
+Acyclic Graph}) em que termos mais específicos são filhos de termos mais gerais.
+
+A análise de \emph{enriquecimento de GO} responde à pergunta: dado um conjunto de genes
+(por exemplo, genes diferencialmente expressos num experimento de RNA-seq), quais termos
+GO estão sobre-representados em comparação com o genoma de referência? O teste mais comum
+é o hipergeométrico (ou equivalentemente, o teste exato de Fisher), com correção para
+múltiplos testes por FDR. Ferramentas como clusterProfiler (R), gProfiler e Enrichr
+automatizam essa análise e produzem visualizações como dotplots e redes de termos GO.
+
+Além da GO, as análises de enriquecimento frequentemente incluem vias do KEGG
+(\textit{Kyoto Encyclopedia of Genes and Genomes}) e do Reactome, que organizam genes em
+vias metabólicas e de sinalização biologicamente interpretáveis.
+
+
+\section{Exercícios}
+
+\begin{exercicio}
+Uma região codificante tem 1200 nucleotídeos. (a) Quantos códons ela contém? (b) Quantos
+aminoácidos codifica a proteína resultante (descontando o códon de parada)? (c) Se a taxa
+de tradução em eucariotos é de $\sim$5 aminoácidos por segundo, quanto tempo leva a
+síntese completa de uma molécula dessa proteína?
+\end{exercicio}
+
+\begin{exercicio}
+Calcule o conteúdo GC da sequência \texttt{5'-ATGCGATCGTAGCTAGCTAA-3'} e discuta por que
+o conteúdo GC é biologicamente relevante: como ele afeta a temperatura de desnaturação
+do DNA ($T_m$) e por que regiões promotoras de genes ativamente transcritos tendem a ter
+conteúdo GC baixo?
+\end{exercicio}
+
+\begin{exercicio}
+Para uma função de Hill de ativação com $n = 4$, $K_d = 10$ nM e $V_{\max} = 100$
+nM/min: (a) calcule a taxa de transcrição quando $[\text{TF}] = 10$ nM; (b) em que
+concentração de TF se atinge 90\% de $V_{\max}$? (c) compare com o caso $n = 1$ ---
+qual requer maior variação de $[\text{TF}]$ para passar de 10\% a 90\% de $V_{\max}$?
+Interprete biologicamente o papel do coeficiente de Hill na robustez do switch.
+\end{exercicio}
+
+\begin{exercicio}[RNA-seq]
+Implemente em Python uma função que: (a) normalize uma matriz de contagens brutas para
+TPM, dado um vetor de comprimentos de genes; (b) calcule log2(Fold Change) e valor-$p$
+(teste $t$ de Welch) entre dois grupos de amostras; (c) aplique correção de Benjamini-Hochberg
+para FDR; (d) gere um volcano plot colorindo em vermelho os genes com FDR $<$ 0.05 e
+$|\text{log2FC}| > 1$.
+\end{exercicio}
+
+\begin{exercicio}[BioPython]
+Usando BioPython: (a) baixe o registro GenBank do gene TP53 humano (busca: ``Homo sapiens
+TP53 mRNA RefSeq''); (b) extraia e imprima todas as features do tipo CDS e gene;
+(c) calcule o conteúdo GC da sequência codificante; (d) traduza a CDS e verifique quantos
+aminoácidos tem a proteína p53.
+\end{exercicio}
+
+\begin{exercicio}
+Considere o modelo de regulação gênica com síntese por função de Hill e degradação linear:
+\begin{align*}
+  \frac{dm}{dt} &= \frac{V_m [P]^n}{K_m^n + [P]^n} - \delta_m m \\
+  \frac{d[P]}{dt} &= k_p m - \delta_p [P]
+\end{align*}
+onde $m$ é o mRNA e $[P]$ é a proteína. Com $V_m = 10$, $K_m = 5$, $n = 2$,
+$\delta_m = 0.5$, $k_p = 2$, $\delta_p = 0.3$: (a) encontre o estado estacionário
+numericamente; (b) simule as dinâmicas por 50 unidades de tempo a partir de $(m_0, P_0) = (0, 0)$;
+(c) analise a estabilidade do equilíbrio via jacobiano.
+\end{exercicio}
+
+\begin{exercicio}[Projeto Integrador]
+Escolha um conjunto de dados de RNA-seq disponível no GEO (ex: GSE74246, carcinoma
+hepático). Construa um pipeline completo: (a) baixe os dados de contagem pré-processados;
+(b) normalize e filtre genes com baixa contagem; (c) realize análise de expressão
+diferencial entre dois grupos biológicos; (d) gere volcano plot e heatmap dos 50 genes
+mais significativos; (e) realize análise de enriquecimento GO e KEGG com os genes
+diferencialmente expressos; (f) interprete biologicamente os resultados: quais vias estão
+alteradas? Há consistência com a literatura?
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+
+O dogma central da biologia molecular foi enunciado por Crick (1958) \cite{crick1958} e
+formalizado em detalhes em Crick (1970) \cite{crick1970}. A descoberta da transcriptase
+reversa por Baltimore \cite{baltimore1970} e Temin e Mizutani \cite{temin1970} (Nobel 1975)
+representa a primeira exceção demonstrada ao fluxo canônico. A interferência por RNA foi
+descoberta por Fire e Mello \cite{fire1998} (Nobel 2006). O consórcio ENCODE mapeou
+sistematicamente os elementos regulatórios do genoma humano \cite{encode2012}.
+
+Para biologia molecular clássica, Watson et al.\ \cite{watson2013} (\textit{Molecular
+Biology of the Gene}) e Alberts et al.\ \cite{alberts2022} (\textit{Molecular Biology of
+the Cell}) são as referências textuais definitivas. O BioPython é descrito em Cock et al.\
+\cite{cock2009}. DESeq2 é descrito em Love et al.\ \cite{love2014} e é a ferramenta de
+análise de expressão diferencial de RNA-seq mais citada. Para microRNAs, Bartel (2018)
+\cite{bartel2018} fornece uma revisão abrangente.
+
+Para a função de Hill e modelagem matemática de regulação gênica, o livro de Alon (2019)
+\cite{alon2019} é a referência mais acessível e matematicamente rigorosa. O RNA-seq é
+introduzido em Wang et al.\ (2009) \cite{wang2009} e revisado anualmente com novas
+ferramentas.
+
+\begin{thebibliography}{99}
+
+\bibitem{crick1958}
+Crick F.H.C. (1958).
+On protein synthesis.
+\textit{Symposia of the Society for Experimental Biology} \textbf{12}: 138--163.
+
+\bibitem{crick1970}
+Crick F.H.C. (1970).
+Central dogma of molecular biology.
+\textit{Nature} \textbf{227}: 561--563.
+
+\bibitem{baltimore1970}
+Baltimore D. (1970).
+RNA-dependent DNA polymerase in virions of RNA tumour viruses.
+\textit{Nature} \textbf{226}: 1209--1211.
+
+\bibitem{temin1970}
+Temin H.M., Mizutani S. (1970).
+RNA-dependent DNA polymerase in virions of Rous sarcoma virus.
+\textit{Nature} \textbf{226}: 1211--1213.
+
+\bibitem{fire1998}
+Fire A. et al. (1998).
+Potent and specific genetic interference by double-stranded RNA in
+\textit{Caenorhabditis elegans}.
+\textit{Nature} \textbf{391}: 806--811.
+
+\bibitem{encode2012}
+ENCODE Project Consortium (2012).
+An integrated encyclopedia of DNA elements in the human genome.
+\textit{Nature} \textbf{489}: 57--74.
+
+\bibitem{watson2013}
+Watson J.D. et al. (2013).
+\textit{Molecular Biology of the Gene}, 7\textordfeminine\ ed.
+Pearson.
+
+\bibitem{alberts2022}
+Alberts B. et al. (2022).
+\textit{Molecular Biology of the Cell}, 7\textordfeminine\ ed.
+Garland Science.
+
+\bibitem{cock2009}
+Cock P.J.A. et al. (2009).
+Biopython: freely available Python tools for computational molecular biology
+and bioinformatics.
+\textit{Bioinformatics} \textbf{25}: 1422--1423.
+
+\bibitem{love2014}
+Love M.I., Huber W., Anders S. (2014).
+Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2.
+\textit{Genome Biology} \textbf{15}: 550.
+
+\bibitem{bartel2018}
+Bartel D.P. (2018).
+Metazoan MicroRNAs.
+\textit{Cell} \textbf{173}: 20--51.
+
+\bibitem{alon2019}
+Alon U. (2019).
+\textit{An Introduction to Systems Biology: Design Principles of Biological Circuits},
+2\textordfeminine\ ed.
+Chapman \& Hall/CRC.
+
+\bibitem{wang2009}
+Wang Z., Gerstein M., Snyder M. (2009).
+RNA-Seq: a revolutionary tool for transcriptomics.
+\textit{Nature Reviews Genetics} \textbf{10}: 57--63.
+
+\end{thebibliography}

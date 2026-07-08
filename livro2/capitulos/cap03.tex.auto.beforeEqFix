@@ -1,0 +1,971 @@
+\chapter{Redes Estáticas e Teoria dos Grafos}
+\label{cap:03}
+
+A biologia dos sistemas enfrenta um desafio epistemológico fundamental: os componentes de
+uma célula — genes, proteínas, metabólitos — não atuam de forma isolada, mas em concerto,
+por meio de uma densa teia de interações. Compreender como essas interações se organizam
+topologicamente e como sua estrutura condiciona a função do sistema é o tema central deste
+capítulo. A ferramenta matemática adequada para essa tarefa é a \emph{teoria dos grafos},
+cujas origens remontam a Leonhard Euler e seu famoso problema das sete pontes de Königsberg
+(1736), mas que ganhou nova vida nas últimas décadas com o estudo das redes complexas.
+
+Ao longo das próximas seções, construiremos o repertório conceitual e computacional
+necessário para analisar redes biológicas: da definição formal de um grafo e suas
+representações matriciais, passando pelas propriedades topológicas que distinguem diferentes
+classes de redes — aleatórias, small-world e livre de escala —, até os motivos de rede
+e os modelos específicos de redes biológicas. Encerramos o capítulo com uma introdução à
+Análise de Controle Metabólico (MCA), que fornece uma teoria quantitativa rigorosa para
+entender como perturbações locais — em enzimas individuais — se propagam e afetam o sistema
+como um todo.
+
+\section{O que São Redes Biológicas?}
+
+\begin{definicaoenv}[Rede Biológica]
+Uma rede biológica é uma representação matemática das interações entre componentes de um
+sistema vivo. Formalmente, é um grafo $G = (V, E)$ onde os vértices $V$ correspondem a
+entidades biológicas — genes, proteínas, metabólitos, células — e as arestas $E$ representam
+relações entre elas: interações físicas, regulação transcricional, conversões enzimáticas ou
+cascatas de sinalização.
+\end{definicaoenv}
+
+A motivação para estudar redes biológicas vai além da descrição. Redes revelam propriedades
+do sistema que não são visíveis quando se examina cada componente separadamente. Em
+particular, quatro características emergentes distinguem redes biológicas de conjuntos de
+partes independentes: (i) \emph{estrutura modular}, com grupos de nós funcionalmente
+relacionados formando módulos coesos; (ii) \emph{hierarquia organizacional}, na qual módulos
+se organizam em níveis de complexidade crescente; (iii) \emph{robustez a perturbações},
+mantendo a função mesmo diante de falhas aleatórias; e (iv) \emph{propriedades emergentes},
+que surgem da topologia das interações e não podem ser deduzidas das propriedades individuais
+dos componentes.
+
+As redes biológicas se organizam em quatro grandes classes, segundo a natureza dos
+componentes e das interações envolvidas. As \emph{redes de interação proteína-proteína}
+(PPI, do inglês \textit{protein-protein interaction}) são não-direcionadas, com proteínas
+como nós e interações físicas como arestas; exemplos incluem complexos ribossomais e o
+proteossomo. As \emph{redes metabólicas} representam transformações bioquímicas: os nós
+podem ser metabólitos ou reações enzimáticas, e as arestas são as conversões catalisadas
+por enzimas; a glicólise e o ciclo de Krebs são exemplos clássicos. As \emph{redes
+regulatórias gênicas} (GRN) são direcionadas, conectando fatores de transcrição (TFs) aos
+genes que regulam, com sinal de ativação ou repressão. Por fim, as \emph{redes de sinalização
+celular} transmitem informação de receptores de membrana ao núcleo por meio de cascatas de
+fosforilação, frequentemente envolvendo amplificação e integração de sinais de múltiplas
+fontes.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % 6 nós em círculo
+    \foreach \i in {1,...,6} {
+        \node[circle, draw, fill=azulclaro!30, minimum size=0.7cm] (n\i) at ({60*\i}:2) {\i};
+    }
+    % Arestas circulares
+    \draw[thick, azulescuro] (n1) -- (n2);
+    \draw[thick, azulescuro] (n2) -- (n3);
+    \draw[thick, azulescuro] (n3) -- (n4);
+    \draw[thick, azulescuro] (n4) -- (n5);
+    \draw[thick, azulescuro] (n5) -- (n6);
+    \draw[thick, azulescuro] (n6) -- (n1);
+    % Cordas (3 arestas verdes)
+    \draw[thick, verdeacido] (n1) -- (n4);
+    \draw[thick, verdeacido] (n2) -- (n5);
+    \draw[thick, verdeacido] (n3) -- (n6);
+\end{tikzpicture}
+\caption{Exemplo de grafo com 6 vértices e 9 arestas. As arestas em azul formam um ciclo de comprimento 6, e as três arestas em verde conectam pares de vértices opostos. Esse grafo é uma \emph{grafoil} --- uma estrutura usada em teoria de redes para ilustrar propriedades topológicas como ciclos, conectividade e diâmetro.}
+\label{fig:03-grafo-exemplo}
+\end{figure}
+
+
+\section{Fundamentos de Teoria dos Grafos}
+
+\subsection{Grafos e suas Representações}
+
+Formalmente, um \emph{grafo} $G = (V, E)$ é composto por um conjunto de vértices $V$
+(também chamados nós) e um conjunto de arestas $E \subseteq V \times V$ (também chamadas
+ligações). Quando as arestas não possuem direção --- ou seja, a relação $(u, v)$ é
+idêntica a $(v, u)$ ---, dizemos que o grafo é \emph{não-direcionado}, como ocorre nas redes
+PPI. Quando as arestas possuem sentido --- como nas redes regulatórias gênicas, onde um TF
+ativa ou reprime um gene, mas não o inverso ---, o grafo é \emph{direcionado} (ou dígrafo),
+e a distinção $(u, v) \neq (v, u)$ é biologicamente significativa.
+
+A representação algébrica mais natural de um grafo é a \emph{matriz de adjacência} $A$,
+uma matriz quadrada de dimensão $n \times n$ onde $n = |V|$:
+
+\begin{equation}
+A_{ij} = \begin{cases}
+1 & \text{se existe aresta de } i \text{ para } j \\
+0 & \text{caso contrário}
+\end{cases}
+\end{equation}
+
+Para grafos não-direcionados, $A$ é simétrica ($A_{ij} = A_{ji}$) e a diagonal é nula
+(sem autoconexões). Uma propriedade elegante da álgebra linear das redes é que o elemento
+$(i,j)$ da matriz $A^k$ conta o número de caminhos de comprimento $k$ entre os vértices
+$i$ e $j$ --- uma ferramenta poderosa para análise de alcançabilidade em redes metabólicas
+e de sinalização.
+
+Uma representação alternativa, especialmente útil para redes esparsas e para análise de
+fluxos, é a \emph{matriz de incidência} $B$ de dimensão $n \times m$, onde $m = |E|$:
+
+\begin{equation}
+B_{ie} = \begin{cases}
+1 & \text{se o vértice } i \text{ é a origem da aresta } e \\
+-1 & \text{se o vértice } i \text{ é o destino da aresta } e \\
+0 & \text{caso contrário}
+\end{cases}
+\end{equation}
+
+Nas redes metabólicas, a matriz $B$ é análoga à matriz estequiométrica $S$, onde cada
+coluna representa uma reação e o sinal indica se o metabólito é produzido ou consumido.
+
+\subsection{Grau, Caminhos e Componentes}
+
+O \emph{grau} de um vértice $i$ é o número de arestas a ele conectadas, denotado $k_i$.
+Em grafos não-direcionados, $k_i = \sum_j A_{ij}$. Em dígrafos, distinguem-se o
+\emph{grau de entrada} $k_i^{in} = \sum_j A_{ji}$ (arestas que chegam) e o
+\emph{grau de saída} $k_i^{out} = \sum_j A_{ij}$ (arestas que partem). O grau médio
+da rede é:
+
+\begin{equation}
+\langle k \rangle = \frac{1}{n} \sum_{i=1}^{n} k_i = \frac{2|E|}{|V|}
+\end{equation}
+
+onde o fator 2 reflete o fato de que cada aresta contribui com dois extremos.
+
+Um \emph{caminho} entre dois vértices é uma sequência de vértices $v_1, v_2, \ldots, v_k$
+tal que existe aresta entre $v_i$ e $v_{i+1}$ para todo $i$. O comprimento do caminho é o
+número de arestas percorridas. O \emph{caminho mais curto} --- ou geodésica --- entre $u$ e $v$
+tem comprimento $d(u,v)$, que define a \emph{distância} entre eles na rede. Caminhos fechados
+--- onde $v_1 = v_k$ --- são chamados \emph{ciclos}. Biologicamente, caminhos correspondem a
+vias de sinalização ou rotas metabólicas; ciclos correspondem a \emph{loops} de feedback,
+presentes em praticamente todo circuito regulatório biológico.
+
+A partir das distâncias entre pares de vértices, definem-se duas medidas globais
+fundamentais. O \emph{diâmetro} $D$ é a maior distância entre qualquer par de vértices:
+$D = \max_{u,v \in V} d(u,v)$. O \emph{comprimento médio de caminho} $L$ é a média de
+todas as distâncias:
+
+\begin{equation}
+L = \frac{1}{n(n-1)} \sum_{u \neq v} d(u, v)
+\end{equation}
+
+Um \emph{componente conectado} é um subconjunto máximo de vértices no qual existe caminho
+entre qualquer par. O maior componente conectado de uma rede é chamado de
+\emph{componente gigante}; em redes biológicas reais, ele tipicamente engloba a maioria dos
+nós, sinalizando integração funcional do sistema.
+
+
+\subsection{Implementação com NetworkX}
+
+A biblioteca NetworkX para Python é a ferramenta padrão para análise computacional de
+redes. O exemplo a seguir ilustra a criação de um grafo simples, o cálculo das principais
+métricas e a visualização:
+
+\begin{lstlisting}[language=Python, caption=Criacao e analise basica de grafos com NetworkX]
+import networkx as nx
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Criar grafo nao-direcionado
+G = nx.Graph()
+G.add_nodes_from([1, 2, 3, 4, 5])
+G.add_edges_from([(1,2), (1,3), (2,3), (3,4), (4,5)])
+
+# Propriedades basicas
+print(f"Numero de nos: {G.number_of_nodes()}")
+print(f"Numero de arestas: {G.number_of_edges()}")
+print(f"Grau medio: {np.mean([d for n, d in G.degree()]):.2f}")
+
+# Distancias
+print(f"Diametro: {nx.diameter(G)}")
+print(f"Caminho medio: {nx.average_shortest_path_length(G):.3f}")
+
+# Obter matriz de adjacencia
+A = nx.adjacency_matrix(G).todense()
+
+# Caminhos de comprimento 2 via A2
+A2 = np.linalg.matrix_power(np.array(A), 2)
+print("Caminhos de comprimento 2 (diagonal = triangulos):")
+print(A2)
+
+# Visualizacao
+nx.draw(G, with_labels=True, node_color='lightblue',
+        node_size=500, font_size=16)
+plt.show()
+\end{lstlisting}
+
+\section{Propriedades Topológicas de Redes}
+
+A topologia de uma rede --- o padrão de como seus nós estão conectados --- não é uniforme
+entre diferentes sistemas. Redes de interação proteica humanas, redes regulatórias de
+\textit{E. coli} e redes de coautoria científica compartilham propriedades surpreendentes
+que as distinguem de grafos gerados aleatoriamente. Três métricas capturam essas
+propriedades de forma complementar: a distribuição de graus, o coeficiente de agrupamento
+e o comprimento médio de caminho.
+
+\subsection{Distribuição de Graus e Redes Scale-Free}
+
+A \emph{distribuição de graus} $P(k)$ é a fração de nós na rede que possuem grau $k$.
+Ela é, em certo sentido, a ``impressão digital'' topológica de uma rede. Em redes geradas
+pelo modelo clássico de Erdős-Rényi --- onde cada par de nós é conectado com probabilidade
+$p$ independente --- a distribuição de graus é Poissoniana:
+
+\begin{equation}
+P(k) = \frac{\langle k \rangle^k \, e^{-\langle k \rangle}}{k!}
+\end{equation}
+
+Nessa distribuição, a maioria dos nós tem grau próximo à média $\langle k \rangle$, e
+nós com grau muito acima da média são exponencialmente raros. Essa homogeneidade topológica,
+porém, não é o que se observa na natureza.
+
+Albert e Barabási mostraram em 1999 que redes reais --- sociais, tecnológicas e biológicas
+--- seguem uma \emph{lei de potência}:
+
+\begin{equation}
+P(k) \sim k^{-\gamma}
+\end{equation}
+
+com expoente $\gamma$ tipicamente entre 2 e 3. Essas redes são chamadas \emph{livre de
+escala} (\textit{scale-free}) porque a distribuição de potência é invariante de escala
+--- não há uma escala de grau característica. A consequência mais marcante é a existência
+de \emph{hubs}: nós com grau muito acima da média, que são raros porém absolutamente
+centrais para a conectividade da rede. No interatoma humano, proteínas como TP53, ubiquitina
+e proteínas do complexo de histonas são exemplos de hubs com centenas de interações.
+
+A identificação de uma lei de potência é feita em gráfico log-log: se $\log P(k)$ é função
+linear de $\log k$ com inclinação $-\gamma$, a rede é livre de escala.
+
+\subsection{Coeficiente de Agrupamento}
+
+O \emph{coeficiente de agrupamento local} $C_i$ mede a fração de pares de vizinhos de $i$
+que também são conectados entre si --- em outras palavras, quantos triângulos existem
+ao redor do nó $i$ em relação ao máximo possível:
+
+\begin{equation}
+C_i = \frac{2 E_i}{k_i(k_i - 1)}
+\end{equation}
+
+onde $E_i$ é o número de arestas efetivamente presentes entre os $k_i$ vizinhos de $i$.
+O coeficiente global $C = n^{-1} \sum_i C_i$ mede a tendência geral à formação de
+agrupamentos na rede. Biologicamente, alto coeficiente de agrupamento indica modularidade:
+proteínas de um mesmo complexo tendem a interagir entre si, formando cliques densas.
+
+
+\subsection{Redes Small-World}
+
+Em 1998, Watts e Strogatz publicaram um artigo seminal na \textit{Nature} descrevendo
+uma classe de redes que combina duas propriedades aparentemente contraditórias: alto
+coeficiente de agrupamento (como numa rede regular, onde cada nó se conecta apenas
+aos seus vizinhos próximos) e pequeno comprimento médio de caminho (como numa rede
+aleatória). Essa combinação define as \emph{redes small-world}.
+
+O modelo de Watts-Strogatz é construído a partir de um anel regular de $n$ nós, onde
+cada nó se conecta aos $k$ vizinhos mais próximos. Em seguida, cada aresta é
+``reconectada'' com probabilidade $p$ a um nó escolhido aleatoriamente. Para $p = 0$,
+a rede permanece regular; para $p = 1$, torna-se aleatória. O regime intermediário
+($p \sim 0.01$ a $0.1$) produz redes com $C \gg C_{\text{random}}$ e
+$L \approx L_{\text{random}}$, que é exatamente o comportamento small-world.
+
+A interpretação biológica é elegante: os atalhos introduzidos pela reconexão permitem
+que sinais percorram rapidamente qualquer parte da rede, mesmo que a maioria das
+conexões seja local. Redes de neurônios, redes metabólicas e redes de coexpressão gênica
+foram identificadas como small-world, o que implica eficiência de comunicação com
+baixo custo de cabeamento.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    % Anel regular de 8 nós
+    \foreach \i in {1,...,8} {
+        \node[circle, draw, fill=azulclaro!30, minimum size=0.7cm] (n\i) at ({45*\i-45}:1.5) {\i};
+    }
+    % Conexões do anel
+    \foreach \i [evaluate=\i as \j using {int(mod(\i,8)+1)}] in {1,...,8} {
+        \draw[thick] (n\i) -- (n\j);
+    }
+    % Atalhos (reconexões) - verde tracejado
+    \draw[thick, verdeacido, dashed] (n1) -- (n5);
+    \draw[thick, verdeacido, dashed] (n3) -- (n7);
+    \node[above, font=\small] at (0, 2.3) {Small-world: anel + atalhos};
+\end{tikzpicture}
+\caption{Construção do modelo de Watts--Strogatz para redes small-world. Parte-se de um anel regular onde cada nó se conecta aos $k$ vizinhos mais próximos (linhas pretas). Em seguida, com probabilidade $p \in [0, 1]$, cada aresta é ``reconectada'' a um nó aleatório --- no exemplo, duas reconexões (linhas verdes tracejadas) criam atalhos que reduzem drasticamente o comprimento médio de caminho $L$ sem destruir o alto agrupamento local $C$.}
+\label{fig:03-smallworld}
+\end{figure}
+
+\subsection{Redes Livre de Escala e o Modelo de Barabási-Albert}
+
+O mecanismo gerador das redes livre de escala foi proposto por Barabási e Albert
+sob o nome de \emph{ligação preferencial} (\textit{preferential attachment}): quando
+um novo nó entra na rede, ele se conecta preferencialmente aos nós que já possuem
+mais conexões, com probabilidade proporcional ao grau $k_i$:
+
+\begin{equation}
+\Pi(k_i) = \frac{k_i}{\sum_j k_j}
+\end{equation}
+
+O princípio é coloquialmente conhecido como ``rico fica mais rico'': hubs atraem
+desproporcionalmente mais conexões ao longo do crescimento da rede. O resultado é
+uma distribuição de graus do tipo $P(k) \sim k^{-3}$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.95]
+    % Painel esquerdo: rede aleatória (Poisson)
+    \begin{scope}[xshift=0cm]
+        \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
+        \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$P(k)$};
+        \draw[thick, azulescuro, line width=1.2pt, smooth] plot coordinates {
+            (0.5,0.1) (1,1) (1.5,2.5) (2,2.8) (2.5,2) (3,0.8) (3.5,0.2)
+        };
+        \draw[dashed, gray] (2,0) -- (2,2.8);
+        \node[below, font=\footnotesize] at (2,-0.1) {$\langle k \rangle$};
+        \node[above, font=\small] at (2, 3) {Aleatória (Erdős--Rényi)};
+    \end{scope}
+
+    % Painel direito: rede scale-free (power law)
+    \begin{scope}[xshift=5.5cm]
+        \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
+        \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$P(k)$};
+        \draw[thick, verdeacido, line width=1.2pt, domain=0.7:3.8, smooth]
+            plot (\x, {3/\x});
+        \node[above, font=\small] at (2, 3) {Scale-free (Barabási--Albert)};
+    \end{scope}
+\end{tikzpicture}
+\caption{Distribuição de graus $P(k)$ comparada entre redes aleatórias e livres de escala. (Esquerda) Redes de Erdős--Rényi seguem uma distribuição de Poisson centrada em $\langle k \rangle$ --- a maioria dos nós tem grau próximo da média. (Direita) Redes de Barabási--Albert seguem uma lei de potência $P(k) \sim k^{-\gamma}$, característica de hubs raros mas dominantes.}
+\label{fig:03-degrees}
+\end{figure}
+
+Do ponto de vista biológico, hubs têm implicações profundas. Em redes de interação
+proteica, hubs são evolutivamente conservados, frequentemente essenciais para a
+viabilidade celular e enriquecidos como alvos de drogas. Mas há também uma vulnerabilidade
+assimétrica: redes scale-free são notavelmente \emph{robustas} a falhas aleatórias ---
+a probabilidade de remover um hub ao acaso é baixa, já que hubs são raros ---
+mas são \emph{frágeis} a ataques direcionados, nos quais hubs são deliberadamente
+removidos e a rede se fragmenta rapidamente.
+
+\begin{lstlisting}[language=Python, caption=Comparando modelos de rede com NetworkX]
+import networkx as nx
+import numpy as np
+
+# 1. Rede Aleatoria (Erdos-Renyi)
+G_er = nx.erdos_renyi_graph(n=100, p=0.06)
+
+# 2. Rede Small-World (Watts-Strogatz)
+G_ws = nx.watts_strogatz_graph(n=100, k=6, p=0.1)
+
+# 3. Rede Scale-Free (Barabasi-Albert)
+G_ba = nx.barabasi_albert_graph(n=100, m=3)
+
+for G, name in [(G_er, 'Erdos-Renyi'), (G_ws, 'Watts-Strogatz'), (G_ba, 'Barabasi-Albert')]:
+    C = nx.average_clustering(G)
+    degrees = [d for n, d in G.degree()]
+    print(f"\n{name}:")
+    print(f"  Clustering medio: {C:.3f}")
+    print(f"  Grau medio: {np.mean(degrees):.2f}")
+    if nx.is_connected(G):
+        L = nx.average_shortest_path_length(G)
+        print(f"  Caminho medio: {L:.3f}")
+    # Identificar hubs (grau > 2 * media)
+    threshold = 2 * np.mean(degrees)
+    hubs = [n for n in G.nodes() if G.degree(n) > threshold]
+    print(f"  Numero de hubs: {len(hubs)}")
+\end{lstlisting}
+
+\subsection{Motivos de Rede}
+
+Uri Alon e colaboradores introduziram o conceito de \emph{motivo de rede} (\textit{network
+motif}): padrões de interconexão que ocorrem significativamente mais vezes em uma rede
+real do que em redes aleatórias com a mesma distribuição de graus. Motivos são os
+``blocos de construção'' funcionais da rede.
+
+Três motivos são particularmente recorrentes em redes regulatórias biológicas. O
+\emph{loop feedforward} (FFL) consiste em um regulador $X$ que controla diretamente
+um gene-alvo $Z$ e também o controla indiretamente via um regulador intermediário $Y$.
+O FFL funciona como filtro de ruído e detector de persistência: sinal transitório em
+$X$ não ativa $Z$, mas sinal sustentado sim. O \emph{feedback positivo} entre dois
+componentes cria biestabilidade --- o sistema pode ser mantido em dois estados
+alternativos, funcionando como memória celular. O \emph{feedback negativo} produz
+homeostase e pode gerar oscilações, como nos relógios circadianos.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Feed-forward loop
+    \node[font=\small\bfseries, azulescuro] at (0,0.3) {Feed-forward Loop};
+    \node[circle, draw, fill=azulclaro!30] (A1) at (0,-0.8) {X};
+    \node[circle, draw, fill=azulclaro!30] (B1) at (-1,-2.2) {Y};
+    \node[circle, draw, fill=azulclaro!30] (C1) at (1,-2.2) {Z};
+    \draw[->, thick] (A1) -- (B1);
+    \draw[->, thick] (A1) -- (C1);
+    \draw[->, thick] (B1) -- (C1);
+
+    % Bi-fan
+    \node[font=\small\bfseries, verdeescuro] at (4.5,0.3) {Bi-fan};
+    \node[circle, draw, fill=verdeacido!30] (A2) at (3.8,-0.8) {X};
+    \node[circle, draw, fill=verdeacido!30] (B2) at (5.2,-0.8) {Y};
+    \node[circle, draw, fill=verdeacido!30] (C2) at (3.8,-2.2) {Z};
+    \node[circle, draw, fill=verdeacido!30] (D2) at (5.2,-2.2) {W};
+    \draw[->, thick] (A2) -- (C2);
+    \draw[->, thick] (A2) -- (D2);
+    \draw[->, thick] (B2) -- (C2);
+    \draw[->, thick] (B2) -- (D2);
+
+    % Feedback loop
+    \node[font=\small\bfseries, laranjacel] at (8.5,0.3) {Feedback Loop};
+    \node[circle, draw, fill=laranjacel!30] (A3) at (7.8,-1.5) {X};
+    \node[circle, draw, fill=laranjacel!30] (B3) at (9.2,-1.5) {Y};
+    \draw[->, thick, bend left=30] (A3) to (B3);
+    \draw[->, thick, bend left=30] (B3) to (A3);
+\end{tikzpicture}
+\caption{Três motivos de rede recorrentes em redes biológicas. \emph{Feed-forward loop} (esquerda): três nós em cascata --- $X$ regula $Y$ e $Z$, e $Y$ também regula $Z$; atua como filtro de ruído e detector de persistência. \emph{Bi-fan} (centro): dois reguladores que controlam independentemente dois alvos --- função de integração de sinais. \emph{Feedback loop} (direita): dois nós com regulação mútua --- produz biestabilidade (feedback positivo) ou homeostase (feedback negativo).}
+\label{fig:03-motifs}
+\end{figure}
+
+
+\section{Redes Biológicas}
+
+\subsection{Redes de Interação Proteína-Proteína}
+
+As redes PPI (\textit{protein-protein interaction}) representam o conjunto de interações
+físicas entre proteínas de um organismo. São não-direcionadas --- a interação entre P1 e P2
+é a mesma de P2 e P1 --- e tipicamente possuem estrutura scale-free com alto coeficiente
+de agrupamento, refletindo a organização em complexos proteicos.
+
+A detecção experimental de interações PPI em larga escala emprega principalmente três
+abordagens. O método \emph{yeast two-hybrid} (Y2H) testa pares individuais de proteínas
+pela reconstituição de um fator de transcrição quando há interação; é de alto throughput
+mas sujeito a falsos positivos. A \emph{purificação por afinidade acoplada a espectrometria
+de massa} (AP-MS) identifica os parceiros de uma proteína de interesse in vivo, capturando
+complexos nativos com maior fidelidade. A \emph{co-imunoprecipitação} (co-IP) valida
+interações específicas em condições mais próximas das fisiológicas.
+
+Dentre os genes que figuram como hubs no interatoma humano, TP53 ocupa posição de destaque.
+Mutado em mais de 50\% de todos os cânceres humanos, TP53 interage com mais de 100 proteínas,
+incluindo MDM2 (que o ubiquitina e direciona à degradação proteassomal), ATM e ATR (sensores
+de dano ao DNA), p21 (inibidor de quinase ciclino-dependente) e BAX e PUMA (efetores
+pró-apoptóticos). A perda de TP53 por mutação não apenas remove sua função supressora de
+tumores, mas desconecta simultaneamente múltiplas vias críticas --- reparo de DNA,
+controle do ciclo celular e apoptose ---  ilustrando como a remoção de um hub pode
+fragmentar a rede funcional.
+
+Para acessar redes PPI programaticamente, as principais bases de dados oferecem APIs REST:
+
+\begin{lstlisting}[language=Python, caption=Consultando a rede PPI de TP53 via STRING]
+import requests
+import networkx as nx
+
+# Parametros da consulta
+species = '9606'   # Homo sapiens
+gene = 'TP53'
+threshold = 700    # score de confianca minimo (0-1000)
+
+url = (f'https://string-db.org/api/json/network'
+       f'?identifiers={gene}&species={species}'
+       f'&required_score={threshold}')
+data = requests.get(url).json()
+
+# Construir grafo ponderado
+G = nx.Graph()
+for interaction in data:
+    n1 = interaction['preferredName_A']
+    n2 = interaction['preferredName_B']
+    score = interaction['score']
+    G.add_edge(n1, n2, weight=score)
+
+print(f"Rede {gene}: {G.number_of_nodes()} nos, {G.number_of_edges()} arestas")
+print(f"Clustering medio: {nx.average_clustering(G):.3f}")
+\end{lstlisting}
+
+As principais bases de dados para redes PPI são \textbf{STRING} (string-db.org), que
+integra evidências experimentais, de coexpressão, genômica comparativa e literatura com
+score de confiança; \textbf{BioGRID} (thebiogrid.org), que compila interações experimentais
+de publicações; e \textbf{IntAct} (ebi.ac.uk/intact), curada manualmente pelo European
+Bioinformatics Institute.
+
+\subsection{Redes Metabólicas}
+
+As redes metabólicas representam o conjunto de reações bioquímicas catalisadas por enzimas
+em um organismo. Existem duas representações complementares. Na \emph{rede de metabólitos},
+os nós são os compostos químicos e as arestas são as reações que os interconvertem. Na
+\emph{rede de reações}, os nós são as reações enzimáticas e as arestas conectam reações
+que compartilham metabólitos. A escolha entre as duas depende da pergunta biológica: a
+primeira é mais intuitiva para identificar rotas; a segunda é mais adequada para análise de
+dependências entre reações.
+
+Matematicamente, a representação mais poderosa é a \emph{matriz estequiométrica} $S$
+(análoga à matriz de incidência), de dimensão $m \times r$, onde $m$ é o número de
+metabólitos e $r$ o número de reações. O elemento $S_{ij}$ é o coeficiente estequiométrico
+do metabólito $i$ na reação $j$ --- positivo se produzido, negativo se consumido, zero se
+ausente. No estado estacionário, os fluxos das reações satisfazem $S \cdot \mathbf{v} = 0$,
+o que define o espaço nulo de $S$ e é a base da Análise de Balanço de Fluxos (FBA).
+
+As bases de dados mais utilizadas para redes metabólicas são \textbf{KEGG} (genome.jp/kegg),
+com mapas de vias e reconstruções por organismo; \textbf{Reactome} (reactome.org),
+que cobre vias humanas com anotação funcional detalhada; e \textbf{BioCyc} (biocyc.org),
+com reconstruções para centenas de organismos.
+
+\subsection{Redes Regulatórias Gênicas}
+
+As redes regulatórias gênicas (GRN) são dígrafos onde os nós são genes e os fatores de
+transcrição (TFs), e as arestas representam regulação transcricional --- com sinal positivo
+(ativação) ou negativo (repressão). A topologia das GRN reflete a lógica do controle
+genético: hierarquia regulatória, em que poucos TFs ``mestres'' controlam a expressão de
+centenas de genes-alvo; modularidade, com módulos de genes coexpressos em condições
+específicas; e motivos regulatórios como o FFL.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85,
+    gene/.style={rectangle, draw, fill=azulclaro!30, rounded corners, minimum width=1cm},
+    tf/.style={ellipse, draw, fill=roxodna!30, minimum width=1cm}]
+    % TFs
+    \node[tf] (TF1) at (0,2) {TF1};
+    \node[tf] (TF2) at (2.5,2) {TF2};
+    % Genes-alvo
+    \node[gene] (G1) at (0,0) {G-A};
+    \node[gene] (G2) at (2.5,0) {G-B};
+    % Regulações
+    \draw[->, thick, verdeacido] (TF1) -- (G1) node[midway, left, font=\small] {$+$};
+    \draw[->, thick, red] (TF1) -- (G2) node[midway, right, font=\small] {$-$};
+    \draw[->, thick, verdeacido] (TF2) -- (G2) node[midway, right, font=\small] {$+$};
+\end{tikzpicture}
+\caption{Exemplo de rede regulatória gênica (GRN). Os fatores de transcrição TF1 e TF2 (elipses roxas) regulam dois genes-alvo G-A e G-B (retângulos azuis). Setas verdes indicam ativação ($+$), setas vermelhas indicam repressão ($-$). A topologia --- neste caso, um TF que simultaneamente ativa um gene e reprime outro --- é a base da lógica combinatória do controle gênico.}
+\label{fig:03-grn}
+\end{figure}
+
+A base de dados \textbf{RegulonDB} compila a GRN de \textit{Escherichia coli} em
+maior profundidade experimental de qualquer organismo, sendo referência para estudos
+mecanísticos. Para humanos, o consórcio \textbf{ENCODE} mapeou elementos regulatórios
+em escala genômica por ChIP-seq e ensaios de acessibilidade cromatinica. \textbf{TRANSFAC}
+cataloga sítios de ligação de fatores de transcrição.
+
+\subsection{Redes de Sinalização Celular}
+
+As redes de sinalização celular transmitem informação do ambiente extracelular ao núcleo.
+Ligantes se ligam a receptores de membrana que ativam cascatas de quinases por fosforilação
+sequencial, amplificando o sinal e integrando múltiplos inputs. A via MAPK, por exemplo,
+passa por RAS $\to$ RAF $\to$ MEK $\to$ ERK, com cada passo amplificando e modularizando
+a resposta. O \emph{cross-talk} entre vias --- conexões laterais entre cascatas diferentes
+--- adiciona uma camada de complexidade e permite respostas contexto-específicas.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, node distance=1cm,
+    protein/.style={rectangle, draw, fill=azulclaro!30, rounded corners, minimum width=1.8cm, minimum height=0.7cm}]
+    \node[protein] (R) at (0,3) {Receptor};
+    \node[protein, below=of R] (K1) {Quinase 1};
+    \node[protein, below=of K1] (K2) {Quinase 2};
+    \node[protein, below=of K2] (TF) {TF};
+    \node[left=0.8cm of R, fill=laranjacel!50, circle, minimum size=0.7cm] (L) {L};
+    \draw[->, thick] (L) -- (R);
+    \draw[->, thick] (R) -- (K1);
+    \draw[->, thick] (K1) -- (K2) node[midway, right, font=\footnotesize] {P};
+    \draw[->, thick] (K2) -- (TF) node[midway, right, font=\footnotesize] {P};
+    \node[below=0.5cm of TF, font=\small] {$\Downarrow$ Núcleo};
+\end{tikzpicture}
+\caption{Cascata canônica de sinalização celular. Um ligante extracelular (L, laranja) liga-se a um receptor de membrana (R), que ativa uma cascata sequencial de quinases (K1, K2) por fosforilação (P), culminando na ativação de um fator de transcrição (TF). Cada passo da cascata amplifica o sinal --- tipicamente 10 a 100 vezes --- convertendo um pequeno número de eventos de ligação em uma resposta transcricional robusta no núcleo.}
+\label{fig:03-sinalizacao}
+\end{figure}
+
+As bases de dados \textbf{KEGG Pathway}, \textbf{Reactome} e \textbf{SignaLink} cobrem
+redes de sinalização, com representações que incluem a direcionalidade e a natureza
+(ativação, inibição, fosforilação) de cada interação.
+
+
+\section{Análise de Controle Metabólico}
+
+\subsection{Motivação e Questão Central}
+
+Dada uma via metabólica com múltiplas enzimas, qual delas controla o fluxo? A intuição
+comum --- reforçada pela noção popular de ``enzima limitante da velocidade'' (\textit{rate-limiting
+step}) --- sugere que há uma etapa que detém controle total. A Análise de Controle Metabólico
+(MCA), desenvolvida independentemente por Henrik Kacser e Jim Burns (1973) e por Reinhart
+Heinrich e Tom Rapoport (1974), demonstrou que essa intuição é incorreta: o controle do
+fluxo é uma propriedade \emph{sistêmica}, distribuída entre todas as enzimas da via, e não
+pertence a nenhuma delas individualmente.
+
+\begin{definicaoenv}[Análise de Controle Metabólico]
+A MCA é uma teoria quantitativa que analisa como mudanças nos parâmetros cinéticos
+individuais de enzimas --- sua atividade máxima $V_{max}$, constantes de afinidade $K_M$
+--- afetam propriedades sistêmicas como o fluxo estacionário $J$ e as concentrações de
+metabólitos $S_i$.
+\end{definicaoenv}
+
+A MCA distingue dois tipos de grandezas. As \emph{propriedades locais} descrevem como cada
+enzima responde individualmente aos metabólitos em sua vizinhança imediata. As \emph{propriedades
+globais} descrevem como o sistema como um todo responde a perturbações em uma enzima
+específica. A conexão entre local e global --- e o fato de que o controle sempre soma 1
+quando distribuído entre todas as enzimas --- é o resultado central da teoria.
+
+\subsection{Coeficientes de Controle}
+
+O \emph{coeficiente de controle de fluxo} $C_i^J$ mede quanto o fluxo estacionário $J$
+muda quando a atividade da enzima $i$ é perturbada infinitesimalmente:
+
+\begin{equation}
+C_i^J = \frac{\partial J / J}{\partial E_i / E_i} = \frac{\partial \ln J}{\partial \ln E_i}
+\end{equation}
+
+É uma derivada logarítmica normalizada: mede a elasticidade do fluxo em relação à enzima.
+$C_i^J = 1$ significa que duplicar $E_i$ dobra o fluxo; $C_i^J = 0$ significa que
+perturbar $E_i$ não altera $J$.
+
+De forma análoga, o \emph{coeficiente de controle de concentração} $C_i^S$ mede quanto
+a concentração estacionária do metabólito $S$ muda quando a atividade da enzima $i$ é
+perturbada:
+
+\begin{equation}
+C_i^S = \frac{\partial S / S}{\partial E_i / E_i} = \frac{\partial \ln S}{\partial \ln E_i}
+\end{equation}
+
+É importante notar que os coeficientes de controle são propriedades \emph{globais} do
+sistema: eles dependem de todas as enzimas e de toda a estrutura da rede, não apenas da
+enzima $i$ em questão. Isso significa que o mesmo coeficiente $C_i^J$ pode variar
+significativamente dependendo do contexto celular --- tipo celular, condição nutricional,
+fase do ciclo de crescimento.
+
+\subsection{Elasticidades}
+
+Em contraste com os coeficientes de controle, as \emph{elasticidades} são propriedades
+\emph{locais}: medem a sensibilidade da taxa de uma reação individual a mudanças em
+metabólitos específicos, mantendo todos os outros parâmetros fixos:
+
+\begin{equation}
+\varepsilon_S^{v_i} = \frac{\partial v_i / v_i}{\partial S / S} = \frac{\partial \ln v_i}{\partial \ln S}
+\end{equation}
+
+Uma elasticidade positiva ($\varepsilon > 0$) indica que o metabólito $S$ ativa a reação
+(como substrato ou ativador alostérico); negativa ($\varepsilon < 0$) indica inibição.
+O valor absoluto indica sensibilidade: $|\varepsilon| > 1$ indica cooperatividade ou
+saturação longe do $K_M$; $|\varepsilon| < 1$ indica baixa sensibilidade.
+
+Para a cinética clássica de Michaelis-Menten, $v = V_{max} S / (K_M + S)$, a elasticidade
+em relação ao substrato $S$ tem uma forma analítica elegante:
+
+\begin{equation}
+\varepsilon_S^v = \frac{K_M}{K_M + S}
+\end{equation}
+
+Quando $S \ll K_M$ (enzima longe da saturação), $\varepsilon_S^v \approx 1$; quando
+$S \gg K_M$ (enzima saturada), $\varepsilon_S^v \approx 0$. Uma enzima saturada é
+insensível à concentração de substrato --- e, portanto, incapaz de transmitir informação
+de controle.
+
+
+\subsection{Teoremas da MCA}
+
+A teoria possui dois teoremas fundamentais que relacionam coeficientes de controle
+entre si e com as elasticidades.
+
+O \emph{Teorema de Soma} estabelece que os coeficientes de controle de fluxo somam 1,
+e os coeficientes de controle de concentração somam 0:
+
+\begin{equation}
+\sum_{i=1}^{n} C_i^J = 1 \qquad \text{e} \qquad \sum_{i=1}^{n} C_i^S = 0
+\end{equation}
+
+A primeira equação é a afirmação matemática de que o controle é distribuído e conservado:
+se uma enzima ganhar controle, outra perde. A segunda equação reflete que concentrações
+estacionárias são robustas a escalonamentos uniformes das atividades enzimáticas.
+
+O \emph{Teorema de Conectividade} liga propriedades locais (elasticidades) a propriedades
+globais (coeficientes de controle):
+
+\begin{equation}
+\sum_{i=1}^{n} C_i^J \, \varepsilon_S^{v_i} = 0
+\end{equation}
+
+para cada metabólito interno $S$. Esse teorema é a ponte entre a cinética local de cada
+enzima e o comportamento global da via: permite calcular os coeficientes de controle
+a partir das elasticidades, que são quantidades mensuráveis experimentalmente.
+
+\subsection{Exemplo: O Início da Glicólise}
+
+Considere as duas primeiras reações da glicólise em células tumorais (efeito Warburg):
+a fosforilação da glicose $G$ pela hexocinase ($E_1$), produzindo glicose-6-fosfato ($S$),
+que é isomerizada pela fosfoglicose isomerase ($E_2$) em frutose-6-fosfato ($P$):
+
+\begin{equation*}
+G \xrightarrow{E_1 \; (\text{Hexocinase})} S \xrightarrow{E_2 \; (\text{Isomerase})} P
+\end{equation*}
+
+As taxas seguem cinética de Michaelis-Menten:
+
+\begin{align*}
+v_1 &= \frac{V_{max1} \cdot G}{K_{M1} + G}, \quad V_{max1} = 10{,}0 \text{ mM/min}, \quad K_{M1} = 1{,}0 \text{ mM} \\
+v_2 &= \frac{V_{max2} \cdot S}{K_{M2} + S}, \quad V_{max2} = 15{,}0 \text{ mM/min}, \quad K_{M2} = 2{,}0 \text{ mM}
+\end{align*}
+
+com $G = 5{,}0$ mM mantido fixo pelo transporte celular.
+
+\textbf{Passo 1: Estado estacionário.} No estado estacionário, $v_1 = v_2 = J$. Como $G$ é fixo:
+
+\begin{equation*}
+J = v_1 = \frac{10{,}0 \times 5{,}0}{1{,}0 + 5{,}0} = \frac{50{,}0}{6{,}0} \approx 8{,}33 \text{ mM/min}
+\end{equation*}
+
+Igualando $v_2 = J$ e resolvendo para $S$:
+
+\begin{equation*}
+\frac{15{,}0 \cdot S}{2{,}0 + S} = \frac{25{,}0}{3{,}0} \quad \Rightarrow \quad 45{,}0 S = 50{,}0 + 25{,}0 S \quad \Rightarrow \quad S = 2{,}50 \text{ mM}
+\end{equation*}
+
+\textbf{Passo 2: Elasticidades.} Como $G$ é fixo, $\varepsilon_S^{v_1} = 0$ (a hexocinase
+não responde a $S$ neste modelo simplificado). Para a isomerase:
+
+\begin{equation*}
+\varepsilon_S^{v_2} = \frac{K_{M2}}{K_{M2} + S} = \frac{2{,}0}{2{,}0 + 2{,}5} = \frac{2{,}0}{4{,}5} \approx 0{,}44
+\end{equation*}
+
+\textbf{Passo 3: Coeficientes de controle.} Aplicando o Teorema de Conectividade:
+
+\begin{equation*}
+C_1^J \cdot 0 + C_2^J \cdot 0{,}44 = 0 \quad \Rightarrow \quad C_2^J = 0
+\end{equation*}
+
+E pelo Teorema de Soma: $C_1^J + C_2^J = 1 \Rightarrow C_1^J = 1$.
+
+O resultado é teoricamente perfeito: neste cenário simplificado, a hexocinase detém
+\emph{todo} o controle sobre o fluxo ($C_{HK}^J = 1$) e a isomerase não tem nenhum
+($C_{PGI}^J = 0$). Aumentar a atividade da isomerase não altera o fluxo.
+
+\textbf{A realidade biológica: feedback alostérico.}
+\textit{In vivo}, a hexocinase é inibida por seu próprio produto G6P ($S$), o que introduz
+uma elasticidade negativa $\varepsilon_S^{v_1} < 0$. Nesse caso, o Teorema de Conectividade
+passa a dar:
+
+\begin{equation*}
+C_1^J \, \varepsilon_S^{v_1} + C_2^J \, \varepsilon_S^{v_2} = 0 \quad \Rightarrow \quad
+\frac{C_1^J}{C_2^J} = -\frac{\varepsilon_S^{v_2}}{\varepsilon_S^{v_1}} > 0
+\end{equation*}
+
+O controle se redistribui entre as duas enzimas, ilustrando o princípio central da MCA:
+\emph{o controle metabólico é distribuído, e sua distribuição depende da estrutura cinética
+de toda a rede}.
+
+\begin{lstlisting}[language=Python, caption=Calculo numerico dos coeficientes de controle]
+import numpy as np
+from scipy.optimize import fsolve
+
+# Taxas de reacao (Michaelis-Menten)
+def v_hk(G, Vmax1=10.0, Km1=1.0):
+    return Vmax1 * G / (Km1 + G)
+
+def v_pgi(S, Vmax2=15.0, Km2=2.0):
+    return Vmax2 * S / (Km2 + S)
+
+G_fixed = 5.0
+
+# Estado estacionario
+S_ss = fsolve(lambda S: v_hk(G_fixed) - v_pgi(S), 2.5)[0]
+J_ss  = v_pgi(S_ss)
+print(f"G6P estacionario: {S_ss:.2f} mM")
+print(f"Fluxo estacionario: {J_ss:.2f} mM/min")
+
+# Coeficientes de controle por perturbacao numerica
+def get_J(Vmax1=10.0, Vmax2=15.0):
+    S = fsolve(lambda S: v_hk(G_fixed, Vmax1) - v_pgi(S, Vmax2), 2.5)[0]
+    return v_pgi(S, Vmax2)
+
+delta = 0.01  # perturbacao de 1%
+C_hk  = (get_J(Vmax1=10.0*(1+delta)) - get_J()) / (get_J() * delta)
+C_pgi = (get_J(Vmax2=15.0*(1+delta)) - get_J()) / (get_J() * delta)
+print(f"C_HK^J  = {C_hk:.3f}")   # esperado: ~1.0
+print(f"C_PGI^J = {C_pgi:.3f}")  # esperado: ~0.0
+\end{lstlisting}
+
+
+\subsection{MCA e a Abordagem de Palsson (COBRA/FBA)}
+
+A MCA é poderosa mas exige parâmetros cinéticos detalhados --- $K_M$, $V_{max}$,
+constantes de inibição --- para cada enzima da rede. Esses parâmetros são difíceis de
+medir \textit{in vivo} em condições fisiológicas, e a análise é estritamente local:
+os coeficientes de controle são linearizações válidas em torno de um estado estacionário
+específico.
+
+Para superar essas limitações em escala genômica, Bernhard Palsson e colaboradores
+desenvolveram a abordagem \textbf{COBRA} (\textit{Constraint-Based Reconstruction and
+Analysis}), cujo método central é a \emph{Análise de Balanço de Fluxos} (FBA). Em vez
+de cinética detalhada, COBRA parte apenas da estequiometria (matriz $S$) e de limites
+físicos nos fluxos:
+
+\begin{equation}
+\text{maximizar} \quad \mathbf{c}^T \mathbf{v} \quad \text{sujeito a} \quad S \mathbf{v} = 0, \quad v_{min} \leq v_i \leq v_{max}
+\end{equation}
+
+O vetor $\mathbf{c}$ define o objetivo biológico --- tipicamente a produção de biomassa.
+As restrições $S \mathbf{v} = 0$ impõem estado estacionário estrutural; os limites $v_{min},
+v_{max}$ refletem restrições termodinâmicas e de capacidade enzimática. A solução é
+calculada por programação linear e fornece a distribuição de fluxos metabólicos que
+otimiza o objetivo dado as restrições.
+
+A tabela a seguir resume as diferenças entre as duas abordagens:
+
+\begin{table}[h]
+\centering
+\caption{Comparativo entre MCA e COBRA/FBA}
+\label{tab:mca-cobra}
+\begin{tabular}{lll}
+\toprule
+\textbf{Característica} & \textbf{MCA} & \textbf{COBRA/FBA} \\
+\midrule
+Foco & Controle cinético local & Capacidades de fluxo globais \\
+Dados necessários & $K_M$, $V_{max}$, etc. & Estequiometria + limites de fluxo \\
+Escala & Vias isoladas & Redes genômicas (GEMs) \\
+Fundamento & EDOs linearizadas & Álgebra linear + prog. linear \\
+Espaço de análise & Um ponto estacionário & Cone de soluções possíveis \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As duas abordagens são complementares: MCA descreve como o controle dinâmico opera
+localmente em torno de um estado; COBRA delimita a fronteira das capacidades estruturais
+da rede. Em conjunto, permitem uma compreensão integrada do metabolismo --- do mecanismo
+molecular à função sistêmica.
+
+\section{Exercícios}
+
+\begin{exercicio}
+Dada a matriz de adjacência
+\[
+A = \begin{bmatrix}
+0 & 1 & 1 & 0 \\
+1 & 0 & 1 & 1 \\
+1 & 1 & 0 & 1 \\
+0 & 1 & 1 & 0
+\end{bmatrix},
+\]
+calcule: (a) o grau de cada vértice e o grau médio; (b) o número de triângulos; (c) a
+distância entre os vértices 1 e 4 e o diâmetro do grafo.
+\end{exercicio}
+
+\begin{exercicio}
+Para um nó com grau $k = 4$ que possui exatamente 3 arestas entre seus vizinhos,
+calcule o coeficiente de agrupamento local $C_i$ e interprete o resultado em termos
+de modularidade.
+\end{exercicio}
+
+\begin{exercicio}
+Uma rede de 100 nós tem a seguinte distribuição de graus: 60 nós com grau 2, 30 com
+grau 3, 8 com grau 5 e 2 com grau 10. Calcule o grau médio $\langle k \rangle$. Essa
+distribuição é mais consistente com uma rede aleatória (Poisson) ou scale-free (lei de
+potência)? Justifique sua resposta.
+\end{exercicio}
+
+\begin{exercicio}[NetworkX]
+Gere com NetworkX uma rede Barabási-Albert com $n = 100$ nós e $m = 2$, e uma rede
+Erdős-Rényi com o mesmo número de nós e grau médio equivalente. Compare as distribuições
+de graus, o coeficiente de agrupamento médio e o comprimento médio de caminho. Identifique
+os 5 maiores hubs em cada rede e interprete a diferença.
+\end{exercicio}
+
+\begin{exercicio}[Robustez]
+Utilizando NetworkX, simule a remoção sequencial de nós de uma rede scale-free ($n = 200$,
+$m = 2$) segundo duas estratégias: (a) remoção aleatória e (b) remoção do nó de maior
+grau a cada passo. Para cada estratégia, acompanhe o tamanho do componente gigante em
+função da fração de nós removidos. Qual estratégia fragmenta a rede mais rapidamente?
+O que isso implica para a robustez de redes biológicas a mutações versus terapias
+direcionadas a hubs?
+\end{exercicio}
+
+\begin{exercicio}[MCA]
+Para a enzima com cinética $v = 100 S / (10 + S)$, calcule a elasticidade
+$\varepsilon_S^v$ para $S = 5$, $S = 10$ e $S = 50$. Como a sensibilidade da enzima
+ao substrato muda conforme $S$ aumenta? O que acontece com a capacidade da enzima de
+transmitir controle de fluxo quando está saturada?
+\end{exercicio}
+
+\begin{exercicio}[MCA]
+Em uma via com 5 enzimas, os seguintes coeficientes de controle de fluxo foram medidos:
+$C_1^J = 0{,}40$, $C_2^J = 0{,}30$, $C_3^J = 0{,}20$, $C_4^J = 0{,}05$. Qual deve ser
+$C_5^J$ para que o Teorema de Soma seja satisfeito? Um pesquisador quer aumentar o fluxo
+da via em 20\%. Em qual enzima vale mais a pena intervir? Justifique.
+\end{exercicio}
+
+\section{Notas Bibliográficas}
+
+A teoria dos grafos como disciplina matemática formal foi fundada por Euler em 1736.
+Os estudos modernos de redes complexas começaram com os trabalhos seminais de Watts e
+Strogatz sobre redes small-world \cite{watts1998} e de Barabási e Albert sobre redes
+scale-free e ligação preferencial \cite{barabasi1999}. O livro \textit{Network Science}
+de Barabási \cite{barabasi2016}, disponível gratuitamente em networksciencebook.com,
+é a referência mais acessível e abrangente para o tema.
+
+Para redes biológicas, o livro de Uri Alon \textit{An Introduction to Systems Biology}
+\cite{alon2019} é indispensável: cobre motivos de rede, princípios de design de circuitos
+e a biologia dos sistemas de forma exemplarmente didática. O artigo original de Alon e
+colaboradores que identificou motivos em redes regulatórias de \textit{E. coli} é uma
+leitura fundamental \cite{milo2002}.
+
+A Análise de Controle Metabólico foi desenvolvida independentemente por Kacser e Burns
+\cite{kacser1973} e por Heinrich e Rapoport \cite{heinrich1974}. O livro de David Fell
+\textit{Understanding the Control of Metabolism} \cite{fell1997} é a referência clássica
+para a teoria. Para a abordagem COBRA e FBA, o trabalho de Orth, Thiele e Palsson
+\cite{orth2010} no \textit{Nature Biotechnology} e o livro de Palsson \textit{Systems
+Biology: Properties of Reconstructed Networks} \cite{palsson2015} são as referências
+centrais.
+
+Do ponto de vista computacional, a documentação do NetworkX (networkx.org) é excelente,
+e o livro de Newman \textit{Networks} \cite{newman2018} cobre teoria de grafos e redes
+complexas com rigor matemático. Para análise de redes biológicas em R, o pacote igraph
+(igraph.org) é amplamente utilizado. Para visualização, Cytoscape (cytoscape.org) e Gephi
+(gephi.org) são as ferramentas de referência.
+
+\begin{thebibliography}{99}
+
+\bibitem{watts1998}
+Watts D.J., Strogatz S.H. (1998).
+Collective dynamics of `small-world' networks.
+\textit{Nature} \textbf{393}: 440--442.
+
+\bibitem{barabasi1999}
+Barabási A.L., Albert R. (1999).
+Emergence of scaling in random networks.
+\textit{Science} \textbf{286}: 509--512.
+
+\bibitem{barabasi2016}
+Barabási A.L. (2016).
+\textit{Network Science}.
+Cambridge University Press.
+Disponível em: \url{http://networksciencebook.com}.
+
+\bibitem{alon2019}
+Alon U. (2019).
+\textit{An Introduction to Systems Biology: Design Principles of Biological Circuits}, 2ª ed.
+Chapman \& Hall/CRC.
+
+\bibitem{milo2002}
+Milo R. et al. (2002).
+Network motifs: simple building blocks of complex networks.
+\textit{Science} \textbf{298}: 824--827.
+
+\bibitem{kacser1973}
+Kacser H., Burns J.A. (1973).
+The control of flux.
+\textit{Symposia of the Society for Experimental Biology} \textbf{27}: 65--104.
+
+\bibitem{heinrich1974}
+Heinrich R., Rapoport T.A. (1974).
+A linear steady-state treatment of enzymatic chains.
+\textit{European Journal of Biochemistry} \textbf{42}: 89--95.
+
+\bibitem{fell1997}
+Fell D. (1997).
+\textit{Understanding the Control of Metabolism}.
+Portland Press.
+
+\bibitem{orth2010}
+Orth J.D., Thiele I., Palsson B.O. (2010).
+What is flux balance analysis?
+\textit{Nature Biotechnology} \textbf{28}: 245--248.
+
+\bibitem{palsson2015}
+Palsson B.O. (2015).
+\textit{Systems Biology: Properties of Reconstructed Networks}.
+Cambridge University Press.
+
+\bibitem{newman2018}
+Newman M.E.J. (2018).
+\textit{Networks}, 2ª ed.
+Oxford University Press.
+
+\end{thebibliography}
