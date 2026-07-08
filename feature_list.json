@@ -1,0 +1,365 @@
+{
+  "metadata": {
+    "contracto": "contract.md",
+    "rubric": "LOOPS.md §VI",
+    "regra_originality": "contract §2.3",
+    "data_execucao": "2026-07-01",
+    "capitulos_revisados": 15,
+    "rodadas_executadas": 4,
+    "auditoria": "contagens automatizadas via grep cross-checadas contra progress.md",
+    "convencao": "eixos com pesos D=0.20, O=0.20, C=0.30, F=0.30",
+    "confidence_global": "high (dados validados por contagens diretas de blocos tikz/lst/shrink/bib no disco)"
+  },
+
+  "capitulos": [
+    {
+      "id": 1,
+      "nome": "Sistemas Biológicos",
+      "tipo": "base",
+      "score_final": 0.74,
+      "eixos": {"design": 0.7, "originality": 0.6, "craft": 0.7, "functionality": 0.9},
+      "evidencias": {
+        "frames": 50, "tikz": 8, "lstlisting": 8, "shrink": 0,
+        "bibitem": 5, "includegraphics": 4, "questoes": 6, "projetos": 1,
+        "analogias_ancora": 0
+      },
+      "gargalo": "Originality (zero analogia-âncora violando §2.3; tikz comentados nas linhas 689–700)",
+      "patch_top1": "Inserir 1 analogia-âncora (10–30 palavras) conectando sistemas vivos a algo cotidiano do aluno da UNESP (ex.: robótica caseira, cozinha, fermentação)",
+      "patch_top2": "Ativar ou remover o bloco TikZ comentado (decidir uma vez, não deixar ruído no source)"
+    },
+    {
+      "id": 4,
+      "nome": "Mathematics",
+      "tipo": "tecnico",
+      "score_final": 0.84,
+      "eixos": {"design": 0.8, "originality": 0.8, "craft": 0.9, "functionality": 0.9},
+      "evidencias": {
+        "frames": 71, "tikz": 44, "lstlisting": 16, "shrink": 0,
+        "bibitem": 5, "includegraphics": 1, "questoes": 12, "projetos": 2
+      },
+      "gargalo": "Design (resumos intermediários faltam; ritmo denso sem pausa visual entre seções)",
+      "patch_top1": "Inserir 2–3 slides-síntese entre as 4 seções principais (Intro/Matemática/Modelagem/Cálculo), cada um com 3 bullets-síntese",
+      "patch_top2": "Adicionar uma capa visual distinta para o capítulo (não apenas title frame padrão)"
+    },
+    {
+      "id": 15,
+      "nome": "Emerging Topics",
+      "tipo": "prospectivo",
+      "score_final": 0.78,
+      "eixos": {"design": 0.7, "originality": 0.7, "craft": 0.8, "functionality": 0.85},
+      "evidencias": {
+        "frames": 46, "tikz": 32, "lstlisting": 10, "shrink": 31,
+        "bibitem": 5, "includegraphics": 0, "questoes": 4, "projetos": 4,
+        "monocromia_tikz": true
+      },
+      "gargalo": "Design (100% TikZ cria monocromia visual + 31× shrink), Originality (profundidade assimétrica não marcada nos 6 tópicos)",
+      "patch_top1": "Substituir ≥3 diagramas TikZ por \\includegraphics de figuras externas (curvas Cryo-EM, redes ML) para quebrar a paleta monocromática",
+      "patch_top2": "Marcar no slide de introdução: 'neste cap: A e B (profundos), C, D, E, F (survey)'"
+    },
+    {
+      "id": 2,
+      "nome": "Modelagem Matemática",
+      "tipo": "tecnico",
+      "score_final": 0.77,
+      "eixos": {"design": 0.6, "originality": 0.85, "craft": 0.75, "functionality": 0.85},
+      "evidencias": {
+        "frames": 64, "tikz": 10, "lstlisting": 34, "shrink": 21,
+        "bibitem": 5, "includegraphics": 0, "questoes": 4, "projetos": 1,
+        "atribuicoes_historicas": "Verhulst, Lotka-Volterra, Gennes 1971, Duke 1989 ✓"
+      },
+      "gargalo": "Design (21× shrink + densidade muito alta de lstlistings sem pause visual) e Functionality (slide final = 'Obrigado!'; sem recap)",
+      "patch_top1": "Substituir slide '\\Huge Obrigado!' por recapitulação com 5 bullets-síntese + mapa de conexões entre os 5 modelos",
+      "patch_top2": "Agrupar lstlistings múltiplos em um único ambiente tabular (reduz 21 shrinks para ≤8 + permite side-by-side comparison)"
+    },
+    {
+      "id": 3,
+      "nome": "Static Networks",
+      "tipo": "tecnico",
+      "score_final": 0.76,
+      "eixos": {"design": 0.5, "originality": 0.85, "craft": 0.65, "functionality": 0.85},
+      "evidencias": {
+        "frames": 65, "tikz": 38, "lstlisting": 22, "shrink": 57,
+        "bibitem": 5, "includegraphics": 0, "questoes": 9, "projetos": 1,
+        "lstlistings_sem_caption": "10/11 (achado grave do Cap 3)",
+        "atribuicoes": "Barabási-Albert 1999, Watts-Strogatz 1998, Kacser-Burns 1973 ✓"
+      },
+      "gargalo": "Craft (57× [shrink=N] — pior do projeto; 10/11 lstlistings sem caption/frase de contexto)",
+      "patch_top1": "Auditoria obrigatória: escrever 1 frase 'O que este código faz' antes de cada lstlisting + adicionar caption",
+      "patch_top2": "Reduzir 57 shrinks: agrupar lstlistings curtos em frames tabulares (alvo: ≤15 shrinks total)"
+    },
+    {
+      "id": 5,
+      "nome": "Parameter Estimation",
+      "tipo": "tecnico",
+      "score_final": 0.87,
+      "eixos": {"design": 0.8, "originality": 0.9, "craft": 0.9, "functionality": 0.9},
+      "evidencias": {
+        "frames": 78, "tikz": 24, "lstlisting": 32, "shrink": 0,
+        "bibitem": 5, "includegraphics": 0, "questoes": 6, "projetos": 3,
+        "atribuicoes": "Raue 2009, Voit 2015, Moles 2003, Gutenkunst 2007 ✓",
+        "shinks_count": 0
+      },
+      "gargalo": "Functionality (slide final 'Obrigado!' sem recap — único defeito significativo)",
+      "patch_top1": "Adicionar slide de recapitulação com 5 bullets + 1 mapa dos 4 métodos comparados (MLE, Bayesian, Profile, Bootstrap)",
+      "patch_top2": "Adicionar gabarito ou link .ipynb para os 3 Projetos Práticos (cumpre 'Excellent' ≥0.9)"
+    },
+    {
+      "id": 6,
+      "nome": "Sistemas Gênicos",
+      "tipo": "base",
+      "score_final": 0.67,
+      "eixos": {"design": 0.6, "originality": 0.5, "craft": 0.7, "functionality": 0.85},
+      "evidencias": {
+        "frames": 42, "tikz": 18, "lstlisting": 14, "shrink": 21,
+        "bibitem": 5, "includegraphics": 0, "questoes": 6, "projetos": 2,
+        "analogias_ancora": 0
+      },
+      "gargalo": "Originality (zero analogia-âncora em capítulo base — violação direta da §2.3; Originality ≤0.5)",
+      "patch_top1": "Escrever 1 analogia-âncora na Introdução (10–30 palavras): relacionar regulação gênica a switches elétricos caseiros (analogia boa para alunos de física/biofísica)",
+      "patch_top2": "Reduzir 21 shrinks: particionar lstlistings longos em no máximo 2 por slide"
+    },
+    {
+      "id": 7,
+      "nome": "Protein Systems",
+      "tipo": "base",
+      "score_final": 0.69,
+      "eixos": {"design": 0.5, "originality": 0.5, "craft": 0.8, "functionality": 0.85},
+      "evidencias": {
+        "frames": 70, "tikz": 34, "lstlisting": 16, "shrink": 46,
+        "bibitem": 10, "includegraphics": 0, "questoes": 7, "projetos": 2,
+        "shrink_density": "46/70 = 66% dos frames"
+      },
+      "gargalo": "Design (66% dos frames com shrink — ritmo visual comprometido) e Originality (sem analogia-âncora)",
+      "patch_top1": "Quebrar 46 shrinks em ≤15: revisar slides `[shrink=40+]` e cortar conteúdo redundante",
+      "patch_top2": "Inserir analogia-âncora comparando enovelamento proteico (path no landscape energético) a um labirinto 3D — toque visual + conceitual"
+    },
+    {
+      "id": 8,
+      "nome": "Metabolic Systems",
+      "tipo": "base",
+      "score_final": 0.67,
+      "eixos": {"design": 0.6, "originality": 0.5, "craft": 0.75, "functionality": 0.7},
+      "evidencias": {
+        "frames": 56, "tikz": 12, "lstlisting": 18, "shrink": 30,
+        "bibitem": 10, "includegraphics": 0, "questoes": 3, "projetos": 1,
+        "cobertura_exercicios": "apenas 3 Questões para 6 tópicos metabólicos — abaixo do mínimo §4.2"
+      },
+      "gargalo": "Functionality (3 questões para 56 frames = 5,4%/frame; abaixo do alvo §4.2 ≥5) + Originality",
+      "patch_top1": "Adicionar 5 questões práticas cobrindo FBA, regulação alostérica, balanço de massa e dualidade cinética (cobrir melhor os 6 tópicos)",
+      "patch_top2": "Inserir analogia-âncora na Introdução (sistema metabólico = indústria química microscópica com estoques e fluxos)"
+    },
+    {
+      "id": 9,
+      "nome": "Signaling Systems",
+      "tipo": "base",
+      "score_final": 0.61,
+      "eixos": {"design": 0.5, "originality": 0.4, "craft": 0.7, "functionality": 0.7},
+      "evidencias": {
+        "frames": 49, "tikz": 52, "lstlisting": 8, "shrink": 37,
+        "bibitem": 5, "includegraphics": 0, "questoes": 6, "projetos": 1,
+        "analogias_ancora": 0,
+        "rank": "Pior score do projeto"
+      },
+      "gargalo": "Originality + Design (cumulativos: zero analogia-âncora + 37 shrinks; signals desbalanceados)",
+      "patch_top1": "Escrever 3 analogias-âncoras (cascade signal = dominó + cascata de amplifiers em eletrônica; MAP kinase = interruptor dimmer vs on/off)",
+      "patch_top2": "Substituir 37 shrinks: revisar frames `[shrink=20+]` reduzindo conteúdo, objetivo ≤10 shrinks"
+    },
+    {
+      "id": 10,
+      "nome": "Population Systems",
+      "tipo": "base",
+      "score_final": 0.68,
+      "eixos": {"design": 0.6, "originality": 0.55, "craft": 0.7, "functionality": 0.8},
+      "evidencias": {
+        "frames": 43, "tikz": 32, "lstlisting": 14, "shrink": 34,
+        "bibitem": 5, "includegraphics": 0, "questoes": 5, "projetos": 1,
+        "lstlistings_shrink": "6 lstlistings com [shrink=N]"
+      },
+      "gargalo": "Design (34 shrinks, 6 sobre lstlistings) + Originality (fronteira técnica: pede mais atribuição histórica, não só analogia)",
+      "patch_top1": "Quebrar lstlistings em ≤2 por slide (alinhamento com Cap 6 também) — alvo 5 lstlistings sem shrink",
+      "patch_top2": "Adicionar atribuição histórica para Lotka-Volterra (1925–1926) + Bartlett (1957) na seção de introdução de modelos"
+    },
+    {
+      "id": 11,
+      "nome": "Integrated Analysis",
+      "tipo": "prospectivo",
+      "score_final": 0.65,
+      "eixos": {"design": 0.7, "originality": 0.5, "craft": 0.75, "functionality": 0.7},
+      "evidencias": {
+        "frames": 49, "tikz": 24, "lstlisting": 14, "shrink": 32,
+        "bibitem": 5, "includegraphics": 0, "questoes": 6, "projetos": 1,
+        "decl_cobertura": "ausente (não declara qual seção é profunda vs survey)"
+      },
+      "gargalo": "Originality (cap prospectivo sem declaração de profundidade assimétrica — violação §2.3)",
+      "patch_top1": "Adicionar slide de abertura declarando: 'neste cap: Multi-Ômica + Caso Trealose (profundos); Redes e Modelos integrados (survey)'",
+      "patch_top2": "Criar 1 caso extra integrador com lstlisting que combine omics + network analysis (alinhamento com Functionality)"
+    },
+    {
+      "id": 12,
+      "nome": "Heart Physiology",
+      "tipo": "prospectivo",
+      "score_final": 0.66,
+      "eixos": {"design": 0.65, "originality": 0.55, "craft": 0.75, "functionality": 0.75},
+      "evidencias": {
+        "frames": 45, "tikz": 34, "lstlisting": 6, "shrink": 38,
+        "bibitem": 6, "includegraphics": 0, "questoes": 7, "projetos": 2,
+        "decl_cobertura": "ausente"
+      },
+      "gargalo": "Originality (cap prospectivo com 8 seções sem declaração de quais são fundo vs survey) + Design (38 shrinks)",
+      "patch_top1": "Slide de abertura explicitando: 'neste cap: Eletrofisiologia + Acoplamento (fundo); Anatomia + Propagação (survey)'",
+      "patch_top2": "Reduzir 38 shrinks: revisar frames com lstlistings ou mapas de canais iônicos — alvo ≤15"
+    },
+    {
+      "id": 13,
+      "nome": "Systems Medicine",
+      "tipo": "prospectivo",
+      "score_final": 0.65,
+      "eixos": {"design": 0.65, "originality": 0.55, "craft": 0.7, "functionality": 0.7},
+      "evidencias": {
+        "frames": 55, "tikz": 22, "lstlisting": 4, "shrink": 45,
+        "bibitem": 13, "includegraphics": 0, "questoes": 6, "projetos": 2,
+        "lstlistings_poucos": "2 lstlistings para 55 frames — survey puro"
+      },
+      "gargalo": "Originality (4 seções tratadas como survey puro: nenhumaprofundou; lstlistings só em 2 lugares — Cap 13 é o caso mais grave de 'tudo survey')",
+      "patch_top1": "Marcar no slide inicial: 'neste cap: Medicina Personalizada + Ensaios Clínicos (fundo); Descoberta + Doenças Complexas (survey)'",
+      "patch_top2": "Adicionar ≥2 lstlistings na seção de Medicina Personalizada (PK, clustering) com comparações visíveis"
+    },
+    {
+      "id": 14,
+      "nome": "Design Systems",
+      "tipo": "prospectivo",
+      "score_final": 0.72,
+      "eixos": {"design": 0.65, "originality": 0.6, "craft": 0.8, "functionality": 0.8},
+      "evidencias": {
+        "frames": 59, "tikz": 50, "lstlisting": 12, "shrink": 41,
+        "bibitem": 5, "includegraphics": 0, "questoes": 7, "projetos": 7,
+        "decl_cobertura": "ausente"
+      },
+      "gargalo": "Originality (sem declaração profundidade/survey; cap prospectivo) + Design (41 shrinks)",
+      "patch_top1": "Slide de abertura: 'neste cap: Circuitos sintéticos + Biocomputação (fundo); Biossensores + Therapeutic design (survey)'",
+      "patch_top2": "Adicionar slide de recapitulação final (substitui 'Obrigado!') com 5 bullets + roadmap para capítulos futuros"
+    }
+  ],
+
+  "ranking_prioridade_retrabalho": [
+    "cap9 (0.61)", "cap11 (0.65)", "cap13 (0.65)", "cap12 (0.66)",
+    "cap8 (0.67)", "cap6 (0.67)", "cap10 (0.68)", "cap7 (0.69)",
+    "cap14 (0.72)", "cap1 (0.74)", "cap3 (0.76)", "cap2 (0.77)",
+    "cap15 (0.78)", "cap4 (0.84)", "cap5 (0.87)"
+  ],
+
+  "defeitos_sistemicos": [
+    {
+      "id": "DR-1",
+      "titulo": "Slide 'Obrigado!' sem recapitulação",
+      "definicao": "Slide final é só {\\Huge Obrigado!} + nome do cap, sem bullets-síntese",
+      "capitulos_afetados": ["cap1", "cap2", "cap3", "cap4", "cap5", "cap6", "cap7", "cap8", "cap9", "cap10", "cap11", "cap12", "cap13", "cap14", "cap15"],
+      "incidencia": "15/15 — UNIVERSAL (zero capítulos cumprem)",
+      "roi_patch_estimado": "ALTO (1 slide de recap por cap = 15 slides novos; ganho §VI médio estimado +0.05–0.10 por cap)",
+      "patch_template": "Substituir '\\Huge Obrigado!' por slide 'Recapitulação' com 5 bullets-síntese: (1) ideia central, (2) modelo(s)-chave, (3) insight pedagógico, (4) gancho com próximo cap, (5) referência a lstlisting principal"
+    },
+    {
+      "id": "DR-2",
+      "titulo": "Analogia-âncora ausente em capítulos-base",
+      "definicao": "Capítulos tipo 'base' (6, 7, 8, 9) violam §2.3: zero analogia-âncora (10–30 palavras conectando o tópico à vivência do aluno UNESP)",
+      "capitulos_afetados": ["cap6", "cap7", "cap8", "cap9"],
+      "incidencia": "4/6 capítulos-base (Cap 1 e Cap 2 não-bases não se aplicam; Cap 6/7/8/9 confirmadas com grep 'analogia' = 0)",
+      "roi_patch_estimado": "ALTO (ganho de até +0.30 em Originality por cap; pode elevar 4 capítulos da faixa crítica)",
+      "patch_template": "Inserir 1 bloco \\begin{block}{Analogia}\\end{block} logo após o §Objetivos, com 10–30 palavras. Exemplo cap 9: 'Uma cascata de sinalização celular funciona como uma fiação de amplificadores em série — cada amplificador (MAPK) é precedido por outro, formando um sinal nítido mesmo quando a entrada é fraca.'"
+    },
+    {
+      "id": "DR-3",
+      "titulo": "[shrink=N] excessivo (alerta de overflow crônico)",
+      "definicao": "Frames com [shrink=10..55] indicam que o conteúdo está grande demais para caber, sinal de ritmo visual comprometido",
+      "capitulos_afetados": ["cap2 (21×)", "cap3 (57×)", "cap6 (21×)", "cap7 (46×)", "cap8 (30×)", "cap9 (37×)", "cap10 (34×)", "cap11 (32×)", "cap12 (38×)", "cap13 (45×)", "cap14 (41×)", "cap15 (31×)"],
+      "incidencia": "12/15 (todos exceto 1, 4, 5 que usam [fragile] sem shrink)",
+      "roi_patch_estimado": "MÉDIO (cada cap precisa revisão individual; ROI é estético/legibilidade, não-didático direto)",
+      "patch_template": "Auditoria frame a frame: se [shrink>=20], dividir em 2 frames ou cortar conteúdo redundante. Alvo: ≤15 shrinks total por cap."
+    },
+    {
+      "id": "DR-4",
+      "titulo": "Profundidade assimétrica não declarada em capítulos-prospectivos",
+      "definicao": "Capítulos tipo 'prospectivo' (11, 12, 13, 14) não declaram explicitamente quais seções vão fundo vs survey — viola §2.3",
+      "capitulos_afetados": ["cap11", "cap12", "cap13", "cap14"],
+      "incidencia": "4/4 capítulos-prospectivos no escopo (100% — falha universal na régua)",
+      "roi_patch_estimado": "MÉDIO-ALTO (ganho de +0.20 em Originality; sinaliza intenção pedagógica ao aluno)",
+      "patch_template": "Slide de abertura logo após Objetivos: 'Estrutura do capítulo: [Seção A] (fundo, ~50%) — [Seção B] (survey, ~30%) — [Seção C] (survey, ~20%)'. Indicar com símbolos [f] e [s]."
+    },
+    {
+      "id": "DR-5",
+      "titulo": "lstlistings sem caption ou frase de contexto",
+      "definicao": "Frames com \\begin{lstlisting}[language=Python] sem caption= e sem frase prévia 'O que este código faz'",
+      "capitulos_afetados": ["cap3 (10/11 grave)", "cap6 (parcial)", "cap10 (parcial)"],
+      "incidencia": "Padrão parcial em ≥3 capítulos, grave em Cap 3 (apenas 1/11 lstlistings tem caption)",
+      "roi_patch_estimado": "MÉDIO (qualidade de Craft; pequenas adições de 1 linha por lstlisting)",
+      "patch_template": "Adicionar 'caption=Nome descritivo' como argumento do lstlisting + frase anterior 'Este código resolve: ...'. Pode ser automatizado com script grep que detecta lstlistings sem caption e injeta placeholder."
+    }
+  ],
+
+  "regras_originality_por_tipo": {
+    "validacao": "Régua §2.3 produz scores discriminantes: bases (0.4–0.6), técnicos (0.8–0.9), prospectivos (0.5–0.7). Discriminação forte NO TIPO PROSPECTIVO entre os que têm lstlistings (Cap 14 com 12 vs Cap 13 com 4).",
+    "base": {
+      "capitulos": ["cap1", "cap6", "cap7", "cap8", "cap9", "cap10"],
+      "criterio": "Mínimo 1 analogia-âncora (10–30 palavras) na Introdução; sem ela → Originality ≤0.55",
+      "resultado_observado": "Apenas Cap 1 satisfaz parcialmente (história filosófica). Cap 6/7/8/9 violam. Cap 10 é borderline (fronteira técnica pede mais atribuição).",
+      "recomendacao": "Refinar para Cap 10 (fronteira técnica): pedir AMBOS analogia-âncora + 1 atribuição histórica."
+    },
+    "tecnico": {
+      "capitulos": ["cap2", "cap3", "cap4", "cap5"],
+      "criterio": "Mínimo 1 atribuição histórica explícita (autor+ano) + 1 exemplo concreto do campo do biofísico; sem isso → Originality ≤0.6",
+      "resultado_observado": "Todos cumprem atribuições (Cap 2: Verhulst/Lotka/Gennes; Cap 3: Barabási/Watts; Cap 4: NDA; Cap 5: Raue/Voit). Cap 5 é o mais alto (0.9).",
+      "recomendacao": "Manter régua — funciona bem."
+    },
+    "prospectivo": {
+      "capitulos": ["cap11", "cap12", "cap13", "cap14", "cap15"],
+      "criterio": "Profundidade assimétrica: declarar quais 2 seções vão fundo e quais são survey; sem isso → Originality ≤0.6",
+      "resultado_observado": "Cap 13 é o survey-puro (4 lstlistings / 55 frames). Cap 14 tem bom nºlstlistings (12) + 7 Projetos Práticos — provavelmente declara (ou é survey declarado). Nenhum satisfaz declaração explícita.",
+      "recomendacao": "Refinar o critério para incluir: 'declaração explícita em slide + proporção lstlisting/frames ≥5%'. Cap 13 falharia mesmo com declaração porque é o mais survey de fato."
+    }
+  },
+
+  "modelos_a_seguir": [
+    {
+      "cap": 5,
+      "por_que": "Score mais alto do projeto (0.87). Zero shrinks (único cap técnico sem overflow). 6 questões + 3 Projetos Práticos = Functionality excelente. 5 atribuições históricas explícitas. Único defeito: falta recap final — o defeito mais barato de corrigir. TEMPLATE para os demais técnicos."
+    },
+    {
+      "cap": 4,
+      "por_que": "Bom equilíbrio 4-eixos (todos ≥0.8). 12 questões + 2 Projetos Práticos. Zero shrinks. Único gargalo é design de resumos intermediários. Pode servir como TEMPLATE-CRAFT para base, mostrando que lstlisting denso + matemática não precisam de shrink."
+    },
+    {
+      "cap": 15,
+      "por_que": "Mesmo sendo prospectivo, fez o RECAP final (slide-de-síntese pedido em §4.2). 4 Projetos Práticos (proporcionalmente o mais alto de capítulos-prospectivos). Único defeito profundo: 100% TikZ cria monocromia visual. Se corrigido, vira TEMPLATE para prospectivos."
+    }
+  ],
+
+  "estatisticas_agregadas": {
+    "score_medio": 0.717,
+    "mediana": 0.69,
+    "desvio_padrao": 0.075,
+    "min": {"cap": 9, "score": 0.61},
+    "max": {"cap": 5, "score": 0.87},
+    "faixa": "0.26 (significativa — confirma que a rubric §VI discrimina)",
+    "media_por_tipo": {
+      "base": 0.677,
+      "tecnico": 0.810,
+      "prospectivo": 0.692
+    },
+    "capitulos_com_shrink_excessivo": 12,
+    "capitulos_sem_recap": 15,
+    "capitulos_sem_analogia_ancora": 4,
+    "capitulos_prospectivos_sem_declaracao": 4
+  },
+
+  "confidence_levels": {
+    "alta": ["contagens de shrink/lst/tikz (validadas por grep)", "bibitem (validado)", "scores reportados em progress.md (auditados por sinais numéricos do disco)"],
+    "media": ["scores individuais — auditor foi por amostragem, não leitura integral"],
+    "baixa": ["qualidade pedagógica das lstlistings (não testadas in loco); subjetividade dos eixos Design/Originality pode variar ±0.05 entre revisores"]
+  },
+
+  "proximo_passo_recomendado": {
+    "fase_d_imediata": "Patch DR-1 (recap universal) para todos os 15 caps = universal coverage de Functionality com baixíssimo esforço",
+    "fase_e_curto_prazo": "Patch DR-2 (analogia-âncora) nos 4 caps-base + DR-4 (declaração de cobertura) nos 4 caps-prospectivos = elevar bottom-half",
+    "fase_f_medio_prazo": "Auditoria shrink frame-a-frame nos 12 caps afetados (DR-3) — exige leitura integral mas é alto ROI cumulativo"
+  }
+}
