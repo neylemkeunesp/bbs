@@ -236,7 +236,7 @@ ativação pelo endocárdio ventricular.
 \subsection{Eletrocardiograma}
 \label{sub:image12-ecg}
 
-\begin{exemploenv}[Ondas do ECG e sua origem]
+\begin{exemploenumv}[Ondas do ECG e sua origem]
 A onda P registra a despolarização dos átrios; o complexo QRS registra a
 despolarização dos ventrículos; a onda T registra a repolarização
 ventricular (a repolarização atrial é mascarada pelo QRS e geralmente
@@ -245,7 +245,7 @@ oferecem leituras quantitativas da condução: o PR mede o tempo entre o
 início da ativação atrial e o início da ativação ventricular --- reflete
 essencialmente o atraso nodal AV --- e o QT mede a duração total da
 ativação ventricular, incluindo platô e repolarização.
-\end{exemploenv}
+\end{exemploenumv}
 
 O ECG é, portanto, uma janela indireta para a eletrofisiologia subjacente.
 Anormalidades --- arritmias, distúrbios de condução, isquemia --- deixam
@@ -710,7 +710,7 @@ calcium release} (CICR), realiza uma amplificação da ordem de dez vezes
 entre o sinal de gatilho (DHPR) e o sinal total (RyR).
 
 A concentração citosólica de Ca$^{2+}$ transita assim de cerca de
-$0{,}1\,\mu$M em diástole para $1$--$10\,\mu$M em sístole. O Ca$^{2+}$
+$0{,}1\,\mu\,M$ em diástole para $1$--$10\,\mu\,M$ em sístole. O Ca$^{2+}$
 liga-se à troponina C, alterando a conformação do complexo
 troponina-tropomiosina e expondo os sítios de ligação da actina à
 miosina. A hidrólise de ATP pela cabeça da miosina gera o \emph{power
@@ -810,26 +810,26 @@ F = F_{\max} \cdot \frac{[\mathrm{Ca}^{2+}]_i^n}{K_d^n + [\mathrm{Ca}^{2+}]_i^n}
 \end{equation}
 A função $g(L)$ captura a relação comprimento-tensão --- a \emph{lei de
 Frank-Starling}, formulada por Otto Frank (1895) e Ernest Starling (1918):
-\begin{exemploenv}[Lei de Frank-Starling]
+\begin{exemploenumv}[Lei de Frank-Starling]
 A força de contração do ventrículo é proporcional ao comprimento inicial
 das fibras musculares cardíacas dentro da faixa fisiológica. Quando o
 retorno venoso aumenta e o enchimento diastólico é maior, o débito
 sistólico aumenta automaticamente --- sem necessidade de regulação
 nervosa ou humoral --- para acomodar o volume extra.
-\end{exemploenv}
+\end{exemploenumv}
 
 O mecanismo molecular reside na sensibilidade do complexo actina-miosina
 ao Ca$^{2+}$ dependente do comprimento do sarcômero. Sarcômeros
-distendidos (até o limite de ~$2{,}2\,\mu$m de sobreposição ótima)
+distendidos (até o limite de $\sim 2{,}2\,\mu\,m$ de sobreposição ótima)
 apresentam maior sensibilidade e recrutam mais pontes cruzadas.
-Sarcômeros demasiadamente distendidos (>2{,}4\,\mu$m) começam a perder
+Sarcômeros demasiadamente distendidos ($> 2{,}4\,\mu\,m$) começam a perder
 sobreposição e a força cai.
 
 O modelo de dois fatores produz a curva característica: ramo ascendente
-até $L_0 \approx 2{,}0$--$2{,}2\,\mu$m, platô em uma faixa estreita,
-ramo descendente para comprimentos superiores a $2{,}4\,\mu$m. Em
+até $L_0 \approx 2{,}0$--$2{,}2\,\mu\,m$, platô em uma faixa estreita,
+ramo descendente para comprimentos superiores a $2{,}4\,\mu\,m$. Em
 condições fisiológicas, o coração opera predominantemente na faixa de
-comprimento entre 1,9 e $2{,}2\,\mu$m --- sempre no ramo ascendente, com
+comprimento entre 1,9 e $2{,}2\,\mu\,m$ --- sempre no ramo ascendente, com
 margem para ajuste.
 
 \begin{lstlisting}[language=Python, caption=Curva forca-comprimento (Frank-Starling)]
@@ -862,10 +862,10 @@ plt.savefig('frank_starling.png', dpi=150)
 
 A Figura~\ref{fig:12-frank-starling} apresenta a curva clássica de
 Frank-Starling --- força ativa em função do comprimento do sarcômero.
-O \emph{ramo ascendente} (até $L_0 \approx 2{,}0$--$2{,}2\,\mu$m)
+O \emph{ramo ascendente} (até $L_0 \approx 2{,}0$--$2{,}2\,\mu\,m$)
 reflete o aumento de sobreposição actina-miosina; o \emph{platô} em
 uma faixa estreita, a sobreposição ótima; o \emph{ramo descendente}
-(acima de $2{,}4\,\mu$m) reflete a perda de sobreposição. Em
+(acima de $2{,}4\,\mu\,m$) reflete a perda de sobreposição. Em
 condições fisiológicas, o coração opera predominantemente no ramo
 ascendente, com margem para ajuste por pré-carga.
 
@@ -881,10 +881,10 @@ ascendente, com margem para ajuste por pré-carga.
         plot (\x, {2.5*(\x-0.8)});
 
     % Plateau
-    \draw[thick, verdescuro] (2,3) -- (2.4,3);
+    \draw[thick, verdeescuro] (2,3) -- (2.4,3);
 
     % Descending limb
-    \draw[thick, rojascuro] (2.4,3) -- (3,0);
+    \draw[thick, red] (2.4,3) -- (3,0);
 \end{tikzpicture}
 \caption{Curva clássica de Frank-Starling --- força ativa em função do comprimento do sarcômero. O \textbf{ramo ascendente} (azulescuro, $L < L_0$) reflete o aumento de sobreposição actina-miosina --- quanto mais distendido o sarcômero, mais pontes cruzadas se formam. O \textbf{platô} (verde-escuro, $L \approx L_0$ a $1{,}2 L_0$) marca a sobreposição ótima. O \textbf{ramo descendente} (vermelho, $L > 1{,}2 L_0$) reflete a perda de sobreposição e queda de força. A lei de Frank-Starling --- \emph{a força é proporcional ao comprimento inicial} --- explica o aumento automático do débito sistólico em resposta a aumento de pré-carga.}
 \label{fig:12-frank-starling}
@@ -1072,7 +1072,7 @@ pointes} e fibrilação ventricular.
 \label{fig:12-lqts}
 \end{figure}
 
-\begin{exemploenv}[Modulação da velocidade de propagação por drogas]
+\begin{exemploenumv}[Modulação da velocidade de propagação por drogas]
 Bloqueadores de canais de sódio (classe I da classificação Vaughan-Williams)
 reduzem o upstroke do PA ($dV/dt|_{max}$), com consequente redução da
 velocidade de propagação. Em casos extremos, a propagação falha em
@@ -1082,7 +1082,7 @@ de potássio (classe III, como amiodarona) prolongam o APD e, via
 aumento do ERP, são geralmente antiarrítmicos. O balanço terapêutico
 entre condutância e refratariedade é a base da classificação
 antiarrítmica moderna.
-\end{exemploenv}
+\end{exemploenumv}
 
 \section{Exercícios}
 \label{sec:12-exercicios}
@@ -1098,7 +1098,7 @@ o APD?
 
 \begin{exercicio}
 \textbf{Equação de Nernst.} A 37°C, calcule o potencial de equilíbrio para
-Ca$^{2+}$ dados $[\mathrm{Ca}^{2+}]_o = 2$ mM e $[\mathrm{Ca}^{2+}]_i = 0{,}1\;\mu$M.
+Ca$^{2+}$ dados $[\mathrm{Ca}^{2+}]_o = 2$ mM e $[\mathrm{Ca}^{2+}]_i = 0{,}1\;\mu\,M$.
 Use a relação $E = (58/z) \log_{10}([X]_o/[X]_i)$ mV. O que isso implica
 sobre a magnitude da força eletromotriz disponível para entrada de
 Ca$^{2+}$ durante o platô?
@@ -1142,7 +1142,7 @@ $V_m$ ligeiramente mais despolarizado.
 \textbf{Curva de Frank-Starling.} (a) Implemente em Python a função
 \texttt{contraction\_force} dada no texto. (b) Plote a força em função
 do Ca$^{2+}$ intracelular para três comprimentos de sarcômero (1,9; 2,0;
-2,1\,\mu$m). (c) Discuta como alterações da sensibilidade da miosina ao
+$2{,}1\,\mu\,m$). (c) Discuta como alterações da sensibilidade da miosina ao
 Ca$^{2+}$ (modeladas por variações do $K_d$) afetam a resposta.
 \end{exercicio}
 

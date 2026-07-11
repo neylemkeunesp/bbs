@@ -292,7 +292,7 @@ O que se pode afirmar com segurança é que a biologia de sistemas, como discipl
 
 Este capítulo final --- e o livro como um todo --- encerra com uma série de exercícios progressivos que atravessam, de forma integrada, os principais temas discutidos ao longo dos capítulos anteriores. Os exercícios não são estanques: cada um referencia técnicas, modelos, ou dados introduzidos em capítulos específicos, e o leitor é convidado a reconhecer as conexões, a mobilizar ferramentas discutidas em diferentes partes do livro, e a refletir sobre como a integração de métodos é parte constitutiva da prática contemporânea da biologia de sistemas. Os exercícios variam em dificuldade, de uma a quatro estrelas (\(\star\) a \(\star\star\star\star\)), e em modalidade --- alguns podem ser resolvidos analiticamente com lápis e papel, outros requerem programação em \texttt{Python} ou \texttt{R}, e outros ainda envolvem acesso a bases de dados públicas ou simulação computacional.
 
-\begin{exercicio}[\(\star\)] Considere a rede de interação proteína--proteína do \emph{Saccharomyces cerevisiae} (levedura de padeiro) disponível em \texttt{STRING} (\texttt{https://string-db.org/}) com nível de confiança médio (\texttt{medium confidence}, \texttt{score} \(\geq 0.4\)). 
+\begin{exercicio}[$\star$] Considere a rede de interação proteína--proteína do \emph{Saccharomyces cerevisiae} (levedura de padeiro) disponível em \texttt{STRING} (\texttt{https://string-db.org/}) com nível de confiança médio (\texttt{medium confidence}, \texttt{score} \(\geq 0.4\)). 
 \begin{itemize}
   \item[(a)] Baixe a rede e construa um grafo não-direcionado ponderado usando as bibliotecas \texttt{NetworkX} (\texttt{Python}) ou \texttt{igraph} (\texttt{R}).
   \item[(b)] Calcule três métricas de centralidade para cada nó: \emph{degree centrality}, \emph{betweenness centrality}, e \emph{closeness centrality}. Identifique os dez genes mais centrais em cada métrica.
@@ -304,7 +304,7 @@ Sugestão de ferramentas: \texttt{NetworkX} para grafos; \texttt{matplotlib} ou 
 
 
 
-\begin{exercicio}[\(\star\star\)] Considere um conjunto de dados de expressão gênica em \emph{bulk} de tecido hepático de camundongos, comparando camundongos wild-type e camundongos knock-out para um fator de transcrição \texttt{X} (n=10 por grupo, dados disponíveis no \texttt{GEO} sob accession \texttt{GSE12345}).
+\begin{exercicio}[$\star\star$] Considere um conjunto de dados de expressão gênica em \emph{bulk} de tecido hepático de camundongos, comparando camundongos wild-type e camundongos knock-out para um fator de transcrição \texttt{X} (n=10 por grupo, dados disponíveis no \texttt{GEO} sob accession \texttt{GSE12345}).
 \begin{itemize}
   \item[(a)] Realize a análise de expressão diferencial usando \texttt{DESeq2} (\texttt{R}) ou \texttt{pydeseq2} (\texttt{Python}). Identifique os genes diferencialmente expressos (DEGs) com \texttt{FDR} \(< 0.05\) e \(|\log_2 FC| > 1\). Quantos DEGs você encontrou? Há mais up-regulated ou down-regulated no knock-out?
   \item[(b)] Aplique \emph{Weighted Gene Co-expression Network Analysis} (WGCNA) aos dados normalizados. Construa a matriz de adjacência usando uma potência \emph{soft} apropriada (escolha usando o critério \emph{scale-free topology fit}), detecte módulos por \emph{clustering} hierárquico com \emph{dynamic tree cut}, e identifique os \emph{module eigengenes} (primeira componente principal de cada módulo).
@@ -317,7 +317,7 @@ Discuta o pipeline em não mais que quatro páginas, com figuras ilustrativas (\
 
 
 
-\begin{exercicio}[\(\star\star\star\)] Considere a rede regulatória gênica do ciclo celular da levedura descrita por Li et al.\\ em 2004 --- um modelo com 11 nós (genes) e 30 arestas representando regulação transcricional. A regra de atualização booleana para cada gene \(i\) é:
+\begin{exercicio}[$\star\star\star$] Considere a rede regulatória gênica do ciclo celular da levedura descrita por Li et al.\\ em 2004 --- um modelo com 11 nós (genes) e 30 arestas representando regulação transcricional. A regra de atualização booleana para cada gene \(i\) é:
 \[
 x_i(t+1) = \begin{cases} 1 & \text{se } \sum_{j \in \text{Ativadores}(i)} w_{ij} x_j(t) > \sum_{k \in \text{Inibidores}(i)} |w_{ik}| x_k(t) \\ 0 & \text{caso contrário} \end{cases}
 \]
@@ -335,7 +335,7 @@ Discuta os resultados em não mais que cinco páginas, com pelo menos uma figura
 
 
 
-\begin{exercicio}[\(\star\star\star\star\)] Este exercício integrador combina dados de múltiplas camadas ômicas --- genômica, transcriptômica, proteômica, metabolômica --- em uma análise conjunta de amostras de tumor pancreático ductal (\emph{pancreatic ductal adenocarcinoma}, PDAC), com o objetivo de identificar subtipos moleculares com significado clínico.
+\begin{exercicio}[$\star\star\star\star$] Este exercício integrador combina dados de múltiplas camadas ômicas --- genômica, transcriptômica, proteômica, metabolômica --- em uma análise conjunta de amostras de tumor pancreático ductal (\emph{pancreatic ductal adenocarcinoma}, PDAC), com o objetivo de identificar subtipos moleculares com significado clínico.
 
 Os dados estão disponíveis publicamente via o \emph{Cancer Genome Atlas} (TCGA-PAAD) e o \emph{Clinical Proteomic Tumor Analysis Consortium} (CPTAC-PDAC). Acesse-os via \texttt{GDC Data Portal} (\texttt{https://portal.gdc.cancer.gov/}) e \texttt{UALCAN} (\texttt{https://ualcan.path.uab.edu/}). Você precisará de:
 \begin{itemize}
