@@ -48,7 +48,7 @@ essência da abordagem quantitativa em biologia.
         draw=azulescuro,
         thick,
         fill=azulclaro!15,
-        text width=2.4cm,
+        text width=3.0cm,
         text centered,
         minimum height=1.2cm
     },
@@ -60,9 +60,9 @@ essência da abordagem quantitativa em biologia.
 ]
 
     \node[box] (bio) {Sistema Biológico};
-    \node[box, right=2cm of bio] (modelo) {Modelo Matemático};
+    \node[box, right=5cm of bio] (modelo) {Modelo Matemático};
     \node[box, below=1.5cm of modelo] (analise) {Análise Computacional};
-    \node[box, left=2cm of analise] (pred) {Previsões\\Hipóteses};
+    \node[box, left=5cm of analise] (pred) {Previsões\\Hipóteses};
 
     \draw[arrow] (bio) -- node[above, font=\footnotesize] {Abstração} (modelo);
     \draw[arrow] (modelo) -- node[right, font=\footnotesize] {Simulação} (analise);
