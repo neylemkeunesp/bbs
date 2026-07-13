@@ -365,24 +365,24 @@ está equipada para analisar.
     \node[concept, fill=laranjacel!90, right=of dna] (rna) {RNA};
     \node[concept, fill=verdeacido!90, right=of rna] (prot) {Proteína};
     \node[concept, fill=azulclaro!90, below=of prot] (met) {Metabólito};
-    \node[concept, fill=yellow!90, text=black!80, below=of rna] (cel) {Célula};
+    \node[concept, fill=yellow!90, text=black, below=of rna] (cel) {Célula};
 
     % Fluxo principal
-    \draw[->, line width=2.5pt, color=gray!30] (dna) -- (rna);
-    \draw[->, line width=2.5pt, color=gray!30] (rna) -- (prot);
-    \draw[->, line width=2.5pt, color=gray!30] (prot) -- (met);
-    \draw[->, line width=2.5pt, color=gray!30] (met) -- (cel);
+    \draw[->, line width=2.5pt, color=verdeescuro] (dna) -- (rna);
+    \draw[->, line width=2.5pt, color=verdeescuro] (rna) -- (prot);
+    \draw[->, line width=2.5pt, color=verdeescuro] (prot) -- (met);
+    \draw[->, line width=2.5pt, color=verdeescuro] (met) -- (cel);
 
     % Retroalimentações
     \draw[->, line width=1.5pt, color=roxodna!80!black, dashed] (prot) to[bend right=55]
-         node[arrow_label, above, sloped] {Regulação} (dna);
+         node[arrow_label, above, sloped, color=verdeescuro] {Regulação} (dna);
 
     \draw[->, line width=1.5pt, color=azulclaro!80!black, dashed] (met) to[bend left=45]
-         node[arrow_label, below right] {Feedback} (prot);
+         node[arrow_label, left, color=verdeescuro] {Feedback} (prot);
 
     % Saída fenotípica
-    \draw[->, line width=3pt, color=black!70] (cel) -- ++(-3,-2)
-         node[below, font=\bfseries\large\sffamily] {Fenótipo};
+    \draw[->, line width=3pt, color=verdeescuro] (cel) -- ++(-3,-2)
+         node[below, font=\bfseries\large\sffamily, color=verdeescuro] {Fenótipo};
 \end{tikzpicture}
 \caption{Visão integrada dos sistemas biológicos: o dogma central e suas retroalimentações. O fluxo principal de informação (setas cinzas) --- DNA $\to$ RNA $\to$ Proteína $\to$ Metabólito $\to$ Célula --- é pontuado por alças de retroalimentação: proteínas reguladoras (fatores de transcrição) atuam sobre a expressão gênica no DNA, enquanto metabólitos modulam a atividade enzimática por alosteria. O fenótipo celular emerge da integração de todo o sistema.}
 \label{fig:01-integracao}

@@ -176,7 +176,7 @@ plt.show()
     \draw[thick, azulescuro, domain=0:4.8, smooth, samples=100]
         plot (\x, {3/(1+9*exp(-1.5*\x))});
     \draw[dashed, verdeacido, thick] (0,3) -- (5,3) node[right, font=\small] {$K$};
-    \draw[dashed, red] (0,1.5) -- (5,1.5) node[right, font=\tiny] {$K/2$};
+    \draw[dashed, red] (0,1.5) -- (5,1.5) node[right, font=\tiny, black] {$K/2$};
     \fill[red] (1.5,1.5) circle (2pt);
 \end{tikzpicture}
 \caption{Crescimento logístico de Verhulst. A solução sigmoidal $N(t) = K/(1 + ((K-N_0)/N_0) e^{-rt})$ satura no valor $K$ (linha verde, capacidade de suporte) e apresenta ponto de inflexão em $K/2$ (linha vermelha), onde a taxa $dN/dt$ é máxima.}

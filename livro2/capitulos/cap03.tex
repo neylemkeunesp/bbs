@@ -304,22 +304,22 @@ uma distribuição de graus do tipo $P(k) \sim k^{-3}$.
     % Painel esquerdo: rede aleatória (Poisson)
     \begin{scope}[xshift=0cm]
         \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
-        \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$P(k)$};
+        \draw[->, thick] (0,0) -- (0,2.8) node[above, font=\small] {$P(k)$};
         \draw[thick, azulescuro, line width=1.2pt, smooth] plot coordinates {
             (0.5,0.1) (1,1) (1.5,2.5) (2,2.8) (2.5,2) (3,0.8) (3.5,0.2)
         };
         \draw[dashed, gray] (2,0) -- (2,2.8);
         \node[below, font=\footnotesize] at (2,-0.1) {$\langle k \rangle$};
-        \node[above, font=\small] at (2, 3) {Aleatória (Erdős--Rényi)};
+        \node[above, font=\small] at (2, 3.3) {Aleatória (Erdős--Rényi)};
     \end{scope}
 
     % Painel direito: rede scale-free (power law)
     \begin{scope}[xshift=5.5cm]
         \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
-        \draw[->, thick] (0,0) -- (0,3.2) node[above, font=\small] {$P(k)$};
+        \draw[->, thick] (0,0) -- (0,2.8) node[above, font=\small] {$P(k)$};
         \draw[thick, verdeacido, line width=1.2pt, domain=0.7:3.8, smooth]
             plot (\x, {3/\x});
-        \node[above, font=\small] at (2, 3) {Scale-free (Barabási--Albert)};
+        \node[above, font=\small] at (2, 3.3) {Scale-free (Barabási--Albert)};
     \end{scope}
 \end{tikzpicture}
 \caption{Distribuição de graus $P(k)$ comparada entre redes aleatórias e livres de escala. (Esquerda) Redes de Erdős--Rényi seguem uma distribuição de Poisson centrada em $\langle k \rangle$ --- a maioria dos nós tem grau próximo da média. (Direita) Redes de Barabási--Albert seguem uma lei de potência $P(k) \sim k^{-\gamma}$, característica de hubs raros mas dominantes.}
