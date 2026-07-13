@@ -17,6 +17,14 @@
 \usetikzlibrary{arrows.meta, shapes, positioning, calc,
   decorations.pathreplacing, decorations.shapes, decorations.pathmorphing,
   shadows, patterns, fit, matrix, backgrounds, automata, trees}
+% Regra: todo diagrama TikZ deve ter fundo branco opaco, garantindo
+% legibilidade quando o leitor usa fundo escuro (dark mode) no PDF.
+% Desenhamos um retângulo branco do tamanho da bounding box na camada de
+% background (atrás dos nodes), via execute at end picture + scope on
+% background layer. O retângulo vai ATRÁS do conteúdo, não por cima.
+\tikzset{every picture/.append style={execute at end picture={\begin{scope}[on background layer]
+  \path[fill=white,fill opacity=1] (current bounding box.south west) rectangle (current bounding box.north east);
+\end{scope}}}}
 \usepackage{chemfig}
 \usepackage{listings}
 \usepackage{booktabs, multirow, longtable, array}
