@@ -103,19 +103,89 @@ variáveis discretas no tempo.
 
 \subsection{Contínuos e discretos}
 
-A escolha entre modelos contínuos e discretos depende da escala do sistema. Quando
-as variáveis (concentrações, populações) são grandes, a aproximação contínua é
-válida e conveniente: a dinâmica é descrita por EDOs como
+A escolha entre modelos contínuos e discretos depende essencialmente da
+escala do sistema --- mais especificamente, do número de partículas ou eventos
+relevantes. Quando as variáveis (concentrações, populações) são grandes, a
+aproximação contínua é válida e conveniente: a dinâmica é descrita por EDOs
+como
 \begin{equation}
   \derivada{[X]}{t} = k_1 - k_2[X].
 \end{equation}
-Quando o sistema opera com poucos elementos discretos --- dezenas de moléculas de
-uma espécie rara, eventos raros de mutação, divisão celular de uma única célula ---
-a representação discreta é mais fiel:
+Quando o sistema opera com poucos elementos discretos --- dezenas de moléculas
+de uma espécie rara, eventos raros de mutação, divisão celular de uma única
+célula --- a representação discreta é mais fiel:
 \begin{equation}
   X(t+1) = X(t) + \text{prod} - \text{deg},
 \end{equation}
-onde prod e deg são variáveis aleatórias inteiras.
+onde \emph{prod} e \emph{deg} são variáveis aleatórias inteiras.
+
+\begin{definicaoenv}[Limite Termodinâmico]
+O \emph{limite termodinâmico} é a condição em que o número de partículas se
+torna grande o suficiente ($N \gg 1$) para que as flutuações relativas
+$1/\sqrt{N}$ se tornem desprezíveis. Nesta condição, a média da variável
+contínua e a média da variável discreta coincidem, e o modelo contínuo
+\emph{é} a média exata do discreto. Para sistemas com $N \lesssim 100$, por
+outro lado, a aproximação contínua pode falhar tanto qualitativamente (e.g.
+absorção de estados) quanto quantitativamente.
+\end{definicaoenv}
+
+\subsubsection{Quando usar cada formulação?}
+
+\begin{itemize}
+    \item \textbf{Modelo contínuo (EDO):} apropriado quando $N \ggg 1$ e os
+          processos são bem misturados (cinética química em solução diluída,
+          culturas de células em agitador, expressão gênica em organismos
+          multicelulares onde cada tipo molecular tem milhares de cópias).
+          Vantagem: ferramentas analíticas (cálculo, álgebra linear) e
+          eficiência computacional. Limitação: ignora ruído intrínseco.
+
+    \item \textbf{Modelo discreto (equação de diferenças):} útil quando o
+          número de eventos por intervalo de tempo é pequeno o suficiente para
+          fazer uma média ---\emph{trajetória a trajetória}---
+          enganosa, mas o sistema ainda permite descrição determinística
+          aproximada (e.g.\ $N$ entre $10^2$ e $10^4$ na vizinhança de um
+          ponto de equilíbrio). Vantagem: recuperamos o formalismo contínuo
+          no limite $\Delta t \to 0$ (como vimos no decaimento radioativo
+          da Seção~2.3). Limitação: ainda sem variabilidade estocástica.
+
+    \item \textbf{Modelo estocástico (master equation / Gillespie):} obrigatório
+          quando $N \lesssim 100$ e os eventos individuais importam
+          (transcrição de um gene com poucas cópias, canal iônico com
+          poucos estados, transmissão sináptica com poucos receptores).
+          Aqui a média determinística \emph{não} basta --- é preciso
+          amostrar a distribuição. Detalhes no Capítulo~7.
+\end{itemize}
+
+\subsubsection{Convergência contínuo $\to$ discreto}
+
+O exemplo pedagógico mais limpo é o decaimento radioativo que tratamos na
+Seção~2.3. A versão contínua
+\begin{equation*}
+    \dot{N} = -\lambda N \quad \Longrightarrow \quad N(t) = N_0\, e^{-\lambda t}
+\end{equation*}
+e a versão discreta
+\begin{equation*}
+    N_{n+1} = N_n(1 - \lambda\,\Delta t) \quad \Longrightarrow \quad N_n = N_0 (1-\lambda\,\Delta t)^n
+\end{equation*}
+convergem para a mesma trajetória no limite $\Delta t \to 0$ com $N$ fixo, e
+divergen apenas na ordem $\mathcal{O}(\Delta t)$ para $\Delta t$ finito:
+a discreto \emph{subestima} o decaimento porque aproxima a exponencial por
+uma seqüência geométrica. Para $\lambda\,\Delta t < 0{,}05$, o erro relativo
+fica abaixo de $5$\,\% e ambas formulações servem igualmente bem ao
+propósito de interpretar biologicamente o fenômeno.
+
+\begin{exemploenumv}[Heurística do limite termodinâmico]
+Em uma cultura bacteriana com $\sim 10^9$ células/mL, o número de divisões
+por hora ($\sim 10^8$) é grande o suficiente para que flutuações no tempo
+de duplicação ($\sigma \sim 5$\,min em torno de uma média de 30\,min) sejam
+completamente absorvidas pela população. Um modelo contínuo (Malthus,
+logístico) descreve a média com erro desprezível. Já em uma infecção viral
+inicial de uma linhagem celular com $10^3$ células --- onde cada célula tem
+$\sim 10^2$ cópias de um receptor viral --- a estocasticidade da infecção
+(e.g.\ algumas células sortearão 0 partículas virais, outras $3$)
+influencia decisivamente o destino da população: aqui a média contínua é
+enganyadora, e o modelo precisa incorporar ruído.
+\end{exemploenumv}
 
 \subsection{Empíricos e mecanísticos}
 
@@ -127,6 +197,119 @@ físico-químicos e biológicos: leis de conservação, cinéticas de reação, 
 metabólicos. São mais difíceis de construir e parametrizar, mas podem extrapolar seguros
 para condições não testadas experimentalmente --- e, crucialmente, geram hipóteses
 mecanísticas que podem ser testadas experimentalmente.
+
+\section{Construção de Modelos}
+
+Um modelo matemático não surge pronto --- ele é construído por etapas iterativas
+que conectam o sistema biológico ao formalismo matemático de forma disciplinada.
+As quatro etapas canônicas são:
+
+\begin{enumerate}
+    \item \textbf{Definição do problema.} Identificar a questão biológica a ser
+          respondida, o escopo do modelo e os fenômenos que devem ser capturados.
+          Uma pergunta mal formulada leva a um modelo impossível de validar.
+    \item \textbf{Identificação de variáveis.} Listar as variáveis de estado
+          (grandezas que mudam com o tempo, como concentrações, populações),
+          os parâmetros (constantes do modelo, como taxas de reação) e os
+          sinais de entrada e saída.
+    \item \textbf{Formulação das equações.} Traduzir as hipóteses biológicas em
+          relações matemáticas --- leis de conservação, cinéticas, condições
+          iniciais e de contorno. Esta é a etapa onde a biologia encontra a
+          matemática.
+    \item \textbf{Análise e simulação.} Resolver as equações (analiticamente
+          quando possível, numericamente quando necessário), interpretar os
+          resultados à luz da biologia e validar contra dados experimentais.
+\end{enumerate}
+
+\begin{definicaoenv}[Etapas da Construção de Modelos]
+A modelagem matemática em biologia segue um protocolo iterativo de quatro
+etapas: (i) definição do problema biológico, (ii) identificação de variáveis
+de estado e parâmetros, (iii) formulação de equações a partir de hipóteses
+mecanísticas, e (iv) análise/simulação seguida de validação experimental.
+O ciclo se repete, refinando o modelo a cada iteração.
+\end{definicaoenv}
+
+\subsection{Estudo de Caso: Decaimento Radioativo}
+
+Para ilustrar todas as etapas, considere o sistema mais simples possível: um
+isótopo radioativo que decai espontaneamente ao longo do tempo. Embora o
+exemplo seja da física, o formalismo é idêntico ao que usaremos para degradação
+de mRNA, apoptose celular ou qualquer processo biológico com cinética de
+primeira ordem.
+
+\paragraph{Definição do problema.} Como varia o número de núcleos radioativos
+$N(t)$ ao longo do tempo, na ausência de qualquer fonte que os produza?
+
+\paragraph{Variáveis e parâmetros.} A variável de estado é $N(t)$ --- o número
+de núcleos radioativos no instante $t$ (uma grandeza inteira mas com tratamento
+contínuo para grandes populações). O parâmetro é $\lambda > 0$, a constante de
+decaimento, com dimensão de [tempo]$^{-1}$.
+
+\paragraph{Hipótese biológica.} A taxa de decaimento é proporcional ao número
+de núcleos presentes: quanto mais núcleos, mais decaimentos por unidade de
+tempo. Esta é a hipótese de \emph{cinética de primeira ordem}.
+
+\subsection{Formulação Contínua}
+
+A formulação contínua trata $N(t)$ como uma grandeza real e descreve o sistema
+por uma equação diferencial ordinária:
+
+\begin{equation}
+    \derivada{N}{t} = -\lambda N,
+    \label{eq:02-decay-cont}
+\end{equation}
+
+onde o sinal negativo indica perda. A solução analítica, com condição inicial
+$N(0) = N_0$, é a exponencial decrescente
+
+\begin{equation}
+    N(t) = N_0\, e^{-\lambda t}.
+    \label{eq:02-decay-cont-sol}
+\end{equation}
+
+A meia-vida --- tempo para $N$ cair pela metade --- é
+$\tau_{1/2} = \ln 2 / \lambda$.
+
+\subsection{Formulação Discreta}
+
+Quando o número de moléculas ou núcleos é pequeno, o ruído intrínseco não pode
+ser ignorado: a variável $N$ deve assumir valores inteiros e os decaimentos
+ocorrem em eventos discretos no tempo. A formulação natural passa a ser uma
+\emph{equação de diferenças}, não uma equação diferencial. Aproximando
+\eqref{eq:02-decay-cont} pela diferença finita forward com passo $\Delta t$,
+
+\begin{equation}
+    N_{n+1} = N_n - \lambda\, \Delta t\, N_n = N_n(1 - \lambda\, \Delta t).
+    \label{eq:02-decay-disc}
+\end{equation}
+
+Para $\lambda\, \Delta t \ll 1$ e $N_n$ grande, esta recorrência produz uma
+trajetória que se aproxima da exponencial contínua. A solução exata da
+\eqref{eq:02-decay-disc}, partindo de $N_0$, é
+
+\begin{equation}
+    N_n = N_0\, (1 - \lambda\, \Delta t)^n.
+    \label{eq:02-decay-disc-sol}
+\end{equation}
+
+A meia-vida discreta --- primeiro $n^*$ tal que $N_{n^*} \le N_0/2$ --- satisfaz
+$(1 - \lambda\, \Delta t)^{n^*} = 1/2$, donde $n^* = \ln(1/2)/\ln(1 - \lambda\,\Delta t)$.
+
+\begin{exemploenumv}[Decaimento: contínuo vs. discreto]
+Considere $\lambda = 0{,}1$\,min$^{-1}$ e $\Delta t = 1$\,min. Calcule $N$ em
+$t = 10$\,min partindo de $N_0 = 1000$:
+
+\begin{itemize}
+    \item \textbf{Contínuo:} $N(10) = 1000 \cdot e^{-0{,}1 \times 10} = 1000 \cdot e^{-1} \approx 367{,}9$.
+    \item \textbf{Discreto:} $N_{10} = 1000 \cdot (1 - 0{,}1 \times 1)^{10} = 1000 \cdot 0{,}9^{10} \approx 348{,}7$.
+\end{itemize}
+
+A diferença ($\sim 5$\,\%) reflete a discretização: à medida que $\Delta t \to 0$,
+$N_n \to N(t)$ e ambas formulações convergem. Para sistemas com pequeno número
+de moléculas ($N \lesssim 100$), porém, mesmo o modelo discreto médio deixa de
+capturar as flutuações estocásticas --- aí é necessário um modelo genuinamente
+estocástico (Gillespie, que veremos no Capítulo~7).
+\end{exemploenumv}
 
 \section{Equações Diferenciais em Biologia}
 
@@ -344,9 +527,10 @@ portanto, para a capacidade de suporte, independentemente da condição inicial
         \draw[thick, azulescuro, domain=-0.3:2.3]
             plot (\x, {-1.3*(\x-1)});
         \fill[verdeacido] (1,0) circle (2pt);
-        \node[below, font=\small, verdeacido] at (1,-0.1) {Estável};
-        \draw[->, thick, red] (0.5,0.4) -- (1,0.05);
-        \draw[->, thick, red] (1.5,0.4) -- (1,0.05);
+        \node[above, font=\small, verdeacido] at (1,0.05) {Estável};
+        % Setas horizontais ao longo do eixo, apontando para o equilíbrio (convergência)
+        \draw[->, verdebio, line width=1pt] (0.3,0.2) -- (0.92,0.2);
+        \draw[->, verdebio, line width=1pt] (1.7,0.2) -- (1.08,0.2);
         \node[below, font=\footnotesize] at (1,-0.7) {$\mathrm{Re}(\lambda) < 0$};
     \end{scope}
 
@@ -358,9 +542,10 @@ portanto, para a capacidade de suporte, independentemente da condição inicial
         \draw[thick, azulescuro, domain=-0.3:2.3]
             plot (\x, {1.3*(\x-1)});
         \fill[red] (1,0) circle (2pt);
-        \node[below, font=\small, red] at (1,-0.1) {Instável};
-        \draw[->, thick, red] (0.5,-0.4) -- (1,-0.05);
-        \draw[->, thick, red] (1.5,-0.4) -- (1,-0.05);
+        \node[above, font=\small, red] at (1,0.05) {Instável};
+        % Setas horizontais ao longo do eixo, apontando para fora do equilíbrio (divergência)
+        \draw[->, red, line width=1pt] (1.08,0.2) -- (1.7,0.2);
+        \draw[->, red, line width=1pt] (0.92,0.2) -- (0.3,0.2);
         \node[below, font=\footnotesize] at (1,-0.7) {$\mathrm{Re}(\lambda) > 0$};
     \end{scope}
 \end{tikzpicture}
