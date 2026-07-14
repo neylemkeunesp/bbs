@@ -174,6 +174,69 @@ uma seqüência geométrica. Para $\lambda\,\Delta t < 0{,}05$, o erro relativo
 fica abaixo de $5$\,\% e ambas formulações servem igualmente bem ao
 propósito de interpretar biologicamente o fenômeno.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % Eixos
+    \draw[->, thick] (0,0) -- (9.0,0) node[right, font=\small] {$t$};
+    \draw[->, thick] (0,0) -- (0,5.2) node[above, font=\small] {$N(t)$};
+
+    % Curva continua (solucao analitica): N = 100 * exp(-0.5 t)
+    \draw[thick, red, smooth, samples=120, domain=0:8.5]
+        plot (\x, {5.2 * exp(-0.5*\x)});
+    \node[font=\footnotesize, red] at (3.2, 4.2)
+        {Contínuo: $N(t) = N_0\,e^{-\lambda t}$};
+
+    % Pontos discretos com Delta t = 1 (subestimando)
+    \foreach \n in {0,1,2,3,4,5,6,7,8} {
+        \pgfmathsetmacro{\Ny}{5.2 * pow(0.5, \n)}
+        \fill[azulclaro] (\n, \Ny) circle (2.5pt);
+    }
+    \node[font=\footnotesize, azulescuro, right] at (8.3, 1.95)
+        {$\Delta t = 1$};
+
+    % Pontos discretos com Delta t = 0.5 (mais fino)
+    \foreach \n in {0,1,...,16} {
+        \pgfmathsetmacro{\tx}{0.5*\n}
+        \pgfmathsetmacro{\Ny}{5.2 * pow(0.75, \n)}
+        \fill[verdebio] (\tx, \Ny) circle (1.5pt);
+    }
+    \node[font=\footnotesize, verdebio, right] at (8.3, 1.10)
+        {$\Delta t = 0{,}5$};
+
+    % Tick labels
+    \foreach \x in {0,2,4,6,8} {
+        \draw (\x,0.05) -- (\x,-0.05);
+        \node[below, font=\footnotesize] at (\x,-0.05) {\x};
+    }
+    \foreach \y/\val in {0/0, 1/19, 2/37, 3/55, 4/73, 5/91} {
+        \draw (0.05,\y) -- (-0.05,\y);
+        \node[left, font=\footnotesize] at (-0.05,\y) {\val};
+    }
+
+    % Caixa de legenda inferior
+    \node[draw=gray, rounded corners=2pt,
+          font=\footnotesize, align=left,
+          fill=cinzafundo, inner sep=6pt] at (4.5, 0.7) {%
+        $\lambda = 0{,}5$, $N_0 = 100$%
+    };
+
+    % Anotacao do gap
+    \draw[<->, thin, gray] (0, 4.5) -- (0.05, 4.5);
+    \node[font=\tiny, right, gray] at (0.1, 4.5)
+        {gap contínuo $\approx$ discreto refinado};
+\end{tikzpicture}
+\caption{Convergência contínua $\to$ discreta para o decaimento radioativo
+$\dot{N} = -\lambda N$, com $\lambda = 0{,}5$ e $N_0 = 100$. A curva
+vermelha contínua (solução analítica) coincide praticamente com os pontos
+verdes do esquema discreto refinado ($\Delta t = 0{,}5$), enquanto o esquema
+mais grosseiro ($\Delta t = 1$, pontos azuis) subestima o decaimento ---
+visível logo a partir de $t \approx 4$. A magnitude da discrepância escala
+como $\mathcal{O}(\Delta t)$, em acordo com a análise de erro local do
+método de Euler.}
+\label{fig:02-convergencia}
+\end{figure}
+
 \begin{exemploenumv}[Heurística do limite termodinâmico]
 Em uma cultura bacteriana com $\sim 10^9$ células/mL, o número de divisões
 por hora ($\sim 10^8$) é grande o suficiente para que flutuações no tempo
