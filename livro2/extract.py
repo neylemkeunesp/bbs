@@ -14,6 +14,10 @@ import re
 import sys
 from pathlib import Path
 
+# Paths are relative to the livro2/ directory containing this script.
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parent
+
 
 def normalize(tex: str) -> str:
     return tex.replace('\r\n', '\n').replace('\r', '\n')
@@ -291,8 +295,8 @@ if __name__ == '__main__':
         ('capitulo14-design-systems.tex', '14'),
         ('capitulo15-emerging-topics.tex', '15'),
     ]
-    caps_dir = Path('/home/lemke/bbs/capitulos')
-    out_dir = Path('/home/lemke/bbs/livro2/extracted')
+    caps_dir = REPO / 'capitulos'
+    out_dir = HERE / 'extracted'
     out_dir.mkdir(parents=True, exist_ok=True)
 
     import json

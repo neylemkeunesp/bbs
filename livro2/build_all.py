@@ -7,9 +7,12 @@ usando prosa fluida, sem caixas, com equações/tikz/código intactos.
 import json, re, subprocess, sys
 from pathlib import Path
 
-CAPS_DIR  = Path('/home/lemke/bbs/capitulos')
-OUT_DIR   = Path('/home/lemke/bbs/livro2/capitulos')
-WRITER    = Path('/home/lemke/bbs/livro2/prose_writer.py')
+# Paths are relative to the repo root (parent of livro2/)
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parent
+CAPS_DIR  = REPO / 'capitulos'
+OUT_DIR   = HERE / 'capitulos'
+WRITER    = HERE / 'prose_writer.py'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 METAS = {

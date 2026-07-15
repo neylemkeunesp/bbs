@@ -10,7 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-LIVRO2 = Path("/home/lemke/bbs/livro2")
+LIVRO2 = Path(__file__).resolve().parent
+REPO   = LIVRO2.parent
 CAPS_DIR = LIVRO2 / "capitulos"
 CAPS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -42,7 +43,7 @@ def create_placeholder(cap_name: str):
 def copy_images():
     img_dst = LIVRO2 / "images"
     img_dst.mkdir(exist_ok=True)
-    img_src = Path("/home/lemke/bbs/images")
+    img_src = REPO / "images"
     for f in img_src.glob("*.png"):
         dst = img_dst / f.name
         if not dst.exists():
@@ -60,7 +61,7 @@ def copy_images():
         dst = img_dst / img
         if not dst.exists():
             # Copiar do livro1 se existir
-            src1 = Path("/home/lemke/bbs/livro/images") / img
+            src1 = REPO / "livro" / "images" / img
             if src1.exists():
                 import shutil
                 shutil.copy(src1, dst)

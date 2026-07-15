@@ -8,8 +8,10 @@ parágrafos corridos, mantém equações/tikz/lstlistings com envoltura.
 import json, re, textwrap
 from pathlib import Path
 
-EXTRACTED = Path("/home/lemke/bbs/livro2/extracted")
-OUT       = Path("/home/lemke/bbs/livro2/capitulos")
+# Paths are relative to the livro2/ directory containing this script.
+HERE = Path(__file__).resolve().parent
+EXTRACTED = HERE / "extracted"
+OUT       = HERE / "capitulos"
 OUT.mkdir(parents=True, exist_ok=True)
 
 # Metadados dos capítulos
