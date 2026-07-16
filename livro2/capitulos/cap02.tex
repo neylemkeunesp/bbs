@@ -1,824 +1,1296 @@
-\chapter{Modelagem Matemática em Biologia}
+\chapter{Modelagem Matemática}
 \label{cap:02}
 
-Modelar é uma das atividades mais antigas da ciência: antes de fazer um experimento
-caro, lento ou impossível, constrói-se uma representação simplificada do sistema e
-estuda-se seu comportamento. Na biologia, essa prática ganhou impulso extraordinário
-a partir do século XX, quando ficou claro que processos como crescimento populacional,
-dinâmica de infecções e regulação genética obedecem a leis quantitativas que podem
-ser formalizadas em linguagem matemática. Este capítulo introduz os fundamentos da
-modelagem matemática em biologia, das equações diferenciais ordinárias aos métodos
-numéricos, terminando com um modelo estocástico clássico: o reptation do DNA.
 
-\section{O que é um Modelo Matemático}
+\section{Introdução}
 
-\begin{definicaoenv}[Modelo Matemático]
-Um modelo matemático é uma representação abstrata de um sistema real usando linguagem
-matemática --- equações, funções, grafos ou algoritmos --- que permite fazer previsões
-quantitativas sobre o comportamento do sistema e testar hipóteses de modo rigoroso.
-\end{definicaoenv}
+\textbf{2.1 Introdução à Modelagem Matemática.}
 
-Nenhum modelo é uma cópia fiel da realidade. George Box, estatístico britânico,
-formulou o axioma mais honesto da ciência quantitativa: \emph{``All models are wrong,
-but some are useful.''} A questão não é se o modelo captura todos os detalhes do
-sistema --- ele nunca o fará --- mas se captura os aspectos relevantes para a pergunta
-que se quer responder. Um modelo simples, que responde corretamente uma pergunta
-delimitada, vale mais do que um modelo complexo que não responde nada com clareza.
+Objetivos de Aprendizagem
 
-A modelagem matemática oferece vantagens concretas ao biólogo experimental. Ela
-permite testar hipóteses \emph{in silico}, antes de investir tempo e recursos em
-bancada. Permite otimizar o design experimental, identificando quais medições
-trarão mais informação sobre parâmetros desconhecidos. Permite identificar componentes
-chave do sistema --- aqueles cuja perturbação tem maior impacto no comportamento
-emergente. E permite, em última instância, fazer design racional de sistemas biológicos,
-orientando a engenharia metabólica e a biologia sintética com predições fundamentadas.
+Compreender o que são modelos matemáticos, Aprender a construir modelos para sistemas biológicos, Dominar técnicas de análise de modelos e Aplicar modelagem a problemas reais.
 
-O processo de modelagem é cíclico, não linear. Parte-se do sistema biológico, abstrai-se
-um modelo, analisam-se suas predições por simulação, interpretam-se os resultados e
-retorna-se ao sistema para validação. Os dados experimentais refinam o modelo,
-que gera novas predições, que guiam novos experimentos. Esse ciclo iterativo é a
-essência da abordagem quantitativa em biologia.
+\textbf{Definição (Modelo Matemático).}
 
+Representação abstrata de um sistema real usando linguagem matemática, que permite fazer previsões quantitativas sobre o comportamento do sistema.
+
+\textbf{Por que Modelar Sistemas Biológicos?.}
+
+Previsão de comportamento, Teste de hipóteses in silico, Otimização de experimentos, Identificação de componentes chave e Design racional de sistemas.
+
+Dinâmica de populações, Vias metabólicas, Redes regulatórias, Farmacocinética, Biologia sintética e Medicina personalizada.
+
+--- IMP: 
+
+"All models are wrong, but some are useful" --- George Box
+
+\textbf{O Ciclo da Modelagem.}
+
+%
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[
-    auto,
-    box/.style={
-        rectangle,
-        draw=azulescuro,
+auto,
+    excalidraw/.style={
+        decorate,
+        decoration={random steps, segment length=3pt, amplitude=0.5pt},
         thick,
-        fill=azulclaro!15,
-        text width=3.0cm,
-        text centered,
+        font=\fontfamily{pzc}\selectfont\large
+    },
+    box/.style={
+        rectangle, 
+        draw=azulescuro, 
+        excalidraw,
+        fill=azulclaro!5, 
+        text width=2.4cm, 
+        text centered, 
         minimum height=1.2cm
     },
     arrow/.style={
-        ->,
-        thick,
-        azulescuro
+        ->, 
+        thick, 
+        azulescuro, 
+        excalidraw
     }
 ]
 
     \node[box] (bio) {Sistema Biológico};
-    \node[box, right=5cm of bio] (modelo) {Modelo Matemático};
-    \node[box, below=1.5cm of modelo] (analise) {Análise Computacional};
-    \node[box, left=5cm of analise] (pred) {Previsões\\Hipóteses};
+    \node[box, right=2cm of bio] (modelo) {Modelo Matemático};
+    \node[box, below=1.5cm of modelo] (analise) {Analise Computacional};
+    \node[box, left=2cm of analise] (pred) {Previsões\\Hipóteses};
 
     \draw[arrow] (bio) -- node[above, font=\footnotesize] {Abstração} (modelo);
     \draw[arrow] (modelo) -- node[right, font=\footnotesize] {Simulação} (analise);
     \draw[arrow] (analise) -- node[below, font=\footnotesize] {Interpretação} (pred);
     \draw[arrow] (pred) -- node[left, font=\footnotesize] {Validação} (bio);
-
 \end{tikzpicture}
-\caption{Ciclo iterativo da modelagem matemática em biologia. A abstração do sistema biológico produz um modelo formal, que é submetido a análise computacional para gerar previsões testáveis. As previsões são validadas experimentalmente, e discrepâncias refinam o modelo --- reiniciando o ciclo. Este processo iterativo é a estrutura operacional padrão da abordagem quantitativa em biologia de sistemas.}
-\label{fig:02-ciclo}
+\caption{Diagrama esquemático.}
 \end{figure}
+%
+
+Ciclo Iterativo
+
+O processo é iterativo: modelos são refinados com base em novos dados experimentais
 
 \section{Tipos de Modelos}
 
-Os modelos matemáticos podem ser classificados segundo vários critérios, cada um
-relevante para uma escolha metodológica diferente.
+\textbf{Classificação de Modelos.}
 
-\subsection{Determinísticos e estocásticos}
+Por Natureza Matemática
 
-Nos modelos \textbf{determinísticos}, o estado futuro do sistema é completamente
-determinado pelo estado presente e pelos parâmetros: dado um conjunto inicial de
-condições, a trajetória é única. Esses modelos são apropriados quando o número de
-moléculas ou indivíduos é grande o suficiente para que as flutuações estatísticas
-sejam desprezíveis. Nos modelos \textbf{estocásticos}, em contraste, a aleatoriedade
-é incorporada explicitamente, e o que se obtém são distribuições de probabilidade
-sobre trajetórias possíveis. Quando o número de moléculas é pequeno --- por exemplo,
-poucos fatores de transcrição numa célula --- as flutuações deixam de ser ruído e
-passam a ser informação: a variabilidade célula a célula em expressão gênica é um
-fenômeno real, não um artefato, e só pode ser capturada por modelos estocásticos.
+resultado único para cada conjunto de condições e incorporam aleatoriedade e probabilidade.
 
-\subsection{Estáticos e dinâmicos}
+Por Dependência Temporal
 
-Modelos \textbf{estáticos} descrevem o sistema em equilíbrio ou numa configuração
-que não varia com o tempo: redes de interação proteína-proteína, estruturas de
-equilíbrio de ligação, concentrações no estado estacionário. Modelos \textbf{dinâmicos}
-capturam a evolução temporal e são tipicamente formulados como equações diferenciais
-ordinárias (EDOs) para variáveis contínuas, ou como equações de diferenças para
-variáveis discretas no tempo.
+não mudam com o tempo (redes, equilíbrio) e evolução temporal (EDOs, EDPs).
 
-\subsection{Contínuos e discretos}
+Por Escala
 
-A escolha entre modelos contínuos e discretos depende essencialmente da
-escala do sistema --- mais especificamente, do número de partículas ou eventos
-relevantes. Quando as variáveis (concentrações, populações) são grandes, a
-aproximação contínua é válida e conveniente: a dinâmica é descrita por EDOs
-como
-\begin{equation}
-  \derivada{[X]}{t} = k_1 - k_2[X].
-\end{equation}
-Quando o sistema opera com poucos elementos discretos --- dezenas de moléculas
-de uma espécie rara, eventos raros de mutação, divisão celular de uma única
-célula --- a representação discreta é mais fiel:
-\begin{equation}
-  X(t+1) = X(t) + \text{prod} - \text{deg},
-\end{equation}
-onde \emph{prod} e \emph{deg} são variáveis aleatórias inteiras.
+nível molecular/celular, populações celulares e tecidos, órgãos, organismos.
 
-\begin{definicaoenv}[Limite Termodinâmico]
-O \emph{limite termodinâmico} é a condição em que o número de partículas se
-torna grande o suficiente ($N \gg 1$) para que as flutuações relativas
-$1/\sqrt{N}$ se tornem desprezíveis. Nesta condição, a média da variável
-contínua e a média da variável discreta coincidem, e o modelo contínuo
-\emph{é} a média exata do discreto. Para sistemas com $N \lesssim 100$, por
-outro lado, a aproximação contínua pode falhar tanto qualitativamente (e.g.
-absorção de estados) quanto quantitativamente.
-\end{definicaoenv}
+\textbf{Modelos Contínuos vs Discretos.}
 
-\subsubsection{Quando usar cada formulação?}
+Modelos Contínuos
 
-\begin{itemize}
-    \item \textbf{Modelo contínuo (EDO):} apropriado quando $N \ggg 1$ e os
-          processos são bem misturados (cinética química em solução diluída,
-          culturas de células em agitador, expressão gênica em organismos
-          multicelulares onde cada tipo molecular tem milhares de cópias).
-          Vantagem: ferramentas analíticas (cálculo, álgebra linear) e
-          eficiência computacional. Limitação: ignora ruído intrínseco.
+Variáveis contínuas, Equações diferenciais, Concentrações e Grande número de moléculas.
 
-    \item \textbf{Modelo discreto (equação de diferenças):} útil quando o
-          número de eventos por intervalo de tempo é pequeno o suficiente para
-          fazer uma média ---\emph{trajetória a trajetória}---
-          enganosa, mas o sistema ainda permite descrição determinística
-          aproximada (e.g.\ $N$ entre $10^2$ e $10^4$ na vizinhança de um
-          ponto de equilíbrio). Vantagem: recuperamos o formalismo contínuo
-          no limite $\Delta t \to 0$ (como vimos no decaimento radioativo
-          da Seção~2.3). Limitação: ainda sem variabilidade estocástica.
-
-    \item \textbf{Modelo estocástico (master equation / Gillespie):} obrigatório
-          quando $N \lesssim 100$ e os eventos individuais importam
-          (transcrição de um gene com poucas cópias, canal iônico com
-          poucos estados, transmissão sináptica com poucos receptores).
-          Aqui a média determinística \emph{não} basta --- é preciso
-          amostrar a distribuição. Detalhes no Capítulo~7.
-\end{itemize}
-
-\subsubsection{Convergência contínuo $\to$ discreto}
-
-O exemplo pedagógico mais limpo é o decaimento radioativo que tratamos na
-Seção~2.3. A versão contínua
+%
 \begin{equation*}
-    \dot{N} = -\lambda N \quad \Longrightarrow \quad N(t) = N_0\, e^{-\lambda t}
+\derivada{[X]}{t} = k_1 - k_2[X]
 \end{equation*}
-e a versão discreta
+%
+
+Modelos Discretos
+
+Contagem de moléculas, Algoritmos estocásticos, Eventos discretos e Pequeno número de moléculas.
+
+%
 \begin{equation*}
-    N_{n+1} = N_n(1 - \lambda\,\Delta t) \quad \Longrightarrow \quad N_n = N_0 (1-\lambda\,\Delta t)^n
+X(t+1) = X(t) + \text{prod} - \text{deg}
 \end{equation*}
-convergem para a mesma trajetória no limite $\Delta t \to 0$ com $N$ fixo, e
-divergen apenas na ordem $\mathcal{O}(\Delta t)$ para $\Delta t$ finito:
-a discreto \emph{subestima} o decaimento porque aproxima a exponencial por
-uma seqüência geométrica. Para $\lambda\,\Delta t < 0{,}05$, o erro relativo
-fica abaixo de $5$\,\% e ambas formulações servem igualmente bem ao
-propósito de interpretar biologicamente o fenômeno.
+%
 
-\begin{figure}[htbp]
-\centering
-\begin{tikzpicture}[scale=0.85]
-    % Eixos
-    \draw[->, thick] (0,0) -- (9.0,0) node[right, font=\small] {$t$};
-    \draw[->, thick] (0,0) -- (0,5.2) node[above, font=\small] {$N(t)$};
+Quando usar cada tipo?
 
-    % Curva continua (solucao analitica): N = 100 * exp(-0.5 t)
-    \draw[thick, red, smooth, samples=120, domain=0:8.5]
-        plot (\x, {5.2 * exp(-0.5*\x)});
-    \node[font=\footnotesize, red] at (3.2, 4.2)
-        {Contínuo: $N(t) = N_0\,e^{-\lambda t}$};
+Contínuo: 100 moléculas e Discreto: 100 moléculas.
 
-    % Pontos discretos com Delta t = 1 (subestimando)
-    \foreach \n in {0,1,2,3,4,5,6,7,8} {
-        \pgfmathsetmacro{\Ny}{5.2 * pow(0.5, \n)}
-        \fill[azulclaro] (\n, \Ny) circle (2.5pt);
-    }
-    \node[font=\footnotesize, azulescuro, right] at (8.3, 1.95)
-        {$\Delta t = 1$};
+\textbf{Modelos Empíricos vs Mecanísticos.}
 
-    % Pontos discretos com Delta t = 0.5 (mais fino)
-    \foreach \n in {0,1,...,16} {
-        \pgfmathsetmacro{\tx}{0.5*\n}
-        \pgfmathsetmacro{\Ny}{5.2 * pow(0.75, \n)}
-        \fill[verdebio] (\tx, \Ny) circle (1.5pt);
-    }
-    \node[font=\footnotesize, verdebio, right] at (8.3, 1.10)
-        {$\Delta t = 0{,}5$};
+Empíricos
 
-    % Tick labels
-    \foreach \x in {0,2,4,6,8} {
-        \draw (\x,0.05) -- (\x,-0.05);
-        \node[below, font=\footnotesize] at (\x,-0.05) {\x};
-    }
-    \foreach \y/\val in {0/0, 1/19, 2/37, 3/55, 4/73, 5/91} {
-        \draw (0.05,\y) -- (-0.05,\y);
-        \node[left, font=\footnotesize] at (-0.05,\y) {\val};
-    }
+Ajuste de curvas, Regressão estatística, Machine learning e Pouca interpretação biológica.
 
-    % Caixa de legenda inferior
-    \node[draw=gray, rounded corners=2pt,
-          font=\footnotesize, align=left,
-          fill=cinzafundo, inner sep=6pt] at (4.5, 0.7) {%
-        $\lambda = 0{,}5$, $N_0 = 100$%
-    };
+Simples e rápidos e Bom ajuste aos dados.
 
-    % Anotacao do gap
-    \draw[<->, thin, gray] (0, 4.5) -- (0.05, 4.5);
-    \node[font=\tiny, right, gray] at (0.1, 4.5)
-        {gap contínuo $\approx$ discreto refinado};
-\end{tikzpicture}
-\caption{Convergência contínua $\to$ discreta para o decaimento radioativo
-$\dot{N} = -\lambda N$, com $\lambda = 0{,}5$ e $N_0 = 100$. A curva
-vermelha contínua (solução analítica) coincide praticamente com os pontos
-verdes do esquema discreto refinado ($\Delta t = 0{,}5$), enquanto o esquema
-mais grosseiro ($\Delta t = 1$, pontos azuis) subestima o decaimento ---
-visível logo a partir de $t \approx 4$. A magnitude da discrepância escala
-como $\mathcal{O}(\Delta t)$, em acordo com a análise de erro local do
-método de Euler.}
-\label{fig:02-convergencia}
-\end{figure}
+Pouco poder preditivo e Extrapolação arriscada.
 
-\begin{exemploenumv}[Heurística do limite termodinâmico]
-Em uma cultura bacteriana com $\sim 10^9$ células/mL, o número de divisões
-por hora ($\sim 10^8$) é grande o suficiente para que flutuações no tempo
-de duplicação ($\sigma \sim 5$\,min em torno de uma média de 30\,min) sejam
-completamente absorvidas pela população. Um modelo contínuo (Malthus,
-logístico) descreve a média com erro desprezível. Já em uma infecção viral
-inicial de uma linhagem celular com $10^3$ células --- onde cada célula tem
-$\sim 10^2$ cópias de um receptor viral --- a estocasticidade da infecção
-(e.g.\ algumas células sortearão 0 partículas virais, outras $3$)
-influencia decisivamente o destino da população: aqui a média contínua é
-enganyadora, e o modelo precisa incorporar ruído.
-\end{exemploenumv}
+Mecanísticos
 
-\subsection{Empíricos e mecanísticos}
+Representam processos reais, Leis de conservação, Princípios físico-químicos e Interpretação biológica.
 
-Os modelos \textbf{empíricos} são ajustados aos dados sem compromisso com os mecanismos
-subjacentes: regressões, modelos de machine learning, ajustes polinomiais. São rápidos
-e flexíveis, mas têm poder preditivo limitado fora da faixa de dados usada para o ajuste.
-Os modelos \textbf{mecanísticos}, ao contrário, representam explicitamente os processos
-físico-químicos e biológicos: leis de conservação, cinéticas de reação, fluxos
-metabólicos. São mais difíceis de construir e parametrizar, mas podem extrapolar seguros
-para condições não testadas experimentalmente --- e, crucialmente, geram hipóteses
-mecanísticas que podem ser testadas experimentalmente.
+Poder preditivo e Extrapolação confiável.
+
+Complexos e Muitos parâmetros.
 
 \section{Construção de Modelos}
 
-Um modelo matemático não surge pronto --- ele é construído por etapas iterativas
-que conectam o sistema biológico ao formalismo matemático de forma disciplinada.
-As quatro etapas canônicas são:
+\textbf{Etapas da Construção de Modelos.}
 
-\begin{enumerate}
-    \item \textbf{Definição do problema.} Identificar a questão biológica a ser
-          respondida, o escopo do modelo e os fenômenos que devem ser capturados.
-          Uma pergunta mal formulada leva a um modelo impossível de validar.
-    \item \textbf{Identificação de variáveis.} Listar as variáveis de estado
-          (grandezas que mudam com o tempo, como concentrações, populações),
-          os parâmetros (constantes do modelo, como taxas de reação) e os
-          sinais de entrada e saída.
-    \item \textbf{Formulação das equações.} Traduzir as hipóteses biológicas em
-          relações matemáticas --- leis de conservação, cinéticas, condições
-          iniciais e de contorno. Esta é a etapa onde a biologia encontra a
-          matemática.
-    \item \textbf{Análise e simulação.} Resolver as equações (analiticamente
-          quando possível, numericamente quando necessário), interpretar os
-          resultados à luz da biologia e validar contra dados experimentais.
-\end{enumerate}
+\textbf{-}
 
-\begin{definicaoenv}[Etapas da Construção de Modelos]
-A modelagem matemática em biologia segue um protocolo iterativo de quatro
-etapas: (i) definição do problema biológico, (ii) identificação de variáveis
-de estado e parâmetros, (iii) formulação de equações a partir de hipóteses
-mecanísticas, e (iv) análise/simulação seguida de validação experimental.
-O ciclo se repete, refinando o modelo a cada iteração.
-\end{definicaoenv}
+Objetivo claro, Escopo bem definido e Questões a responder.
 
-\subsection{Estudo de Caso: Decaimento Radioativo}
+\textbf{-}
 
-Para ilustrar todas as etapas, considere o sistema mais simples possível: um
-isótopo radioativo que decai espontaneamente ao longo do tempo. Embora o
-exemplo seja da física, o formalismo é idêntico ao que usaremos para degradação
-de mRNA, apoptose celular ou qualquer processo biológico com cinética de
-primeira ordem.
+Variáveis de estado, Parâmetros e Entradas e saídas.
 
-\paragraph{Definição do problema.} Como varia o número de núcleos radioativos
-$N(t)$ ao longo do tempo, na ausência de qualquer fonte que os produza?
+\textbf{-}
 
-\paragraph{Variáveis e parâmetros.} A variável de estado é $N(t)$ --- o número
-de núcleos radioativos no instante $t$ (uma grandeza inteira mas com tratamento
-contínuo para grandes populações). O parâmetro é $\lambda > 0$, a constante de
-decaimento, com dimensão de [tempo]$^{-1}$.
+Leis de conservação, Cinéticas de reação e Condições iniciais e de contorno.
 
-\paragraph{Hipótese biológica.} A taxa de decaimento é proporcional ao número
-de núcleos presentes: quanto mais núcleos, mais decaimentos por unidade de
-tempo. Esta é a hipótese de \emph{cinética de primeira ordem}.
+\textbf{-}
 
-\subsection{Formulação Contínua}
+\textbf{Exemplo: Modelo de Decaimento Radioativo.}
 
-A formulação contínua trata $N(t)$ como uma grandeza real e descreve o sistema
-por uma equação diferencial ordinária:
+Sistema
 
-\begin{equation}
-    \derivada{N}{t} = -\lambda N,
-    \label{eq:02-decay-cont}
-\end{equation}
+Um isótopo radioativo decai espontaneamente ao longo do tempo
 
-onde o sinal negativo indica perda. A solução analítica, com condição inicial
-$N(0) = N_0$, é a exponencial decrescente
+ $N(t)$ = número de núcleos no tempo $t$
 
-\begin{equation}
-    N(t) = N_0\, e^{-\lambda t}.
-    \label{eq:02-decay-cont-sol}
-\end{equation}
+ Taxa de decaimento proporcional ao número de núcleos
 
-A meia-vida --- tempo para $N$ cair pela metade --- é
-$\tau_{1/2} = \ln 2 / \lambda$.
+--- DEST: 
 
-\subsection{Formulação Discreta}
+%
+\begin{equation*}
+\derivada{N}{t} = -\lambda N
+\end{equation*}
+%
 
-Quando o número de moléculas ou núcleos é pequeno, o ruído intrínseco não pode
-ser ignorado: a variável $N$ deve assumir valores inteiros e os decaimentos
-ocorrem em eventos discretos no tempo. A formulação natural passa a ser uma
-\emph{equação de diferenças}, não uma equação diferencial. Aproximando
-\eqref{eq:02-decay-cont} pela diferença finita forward com passo $\Delta t$,
+%
+\begin{equation*}
+N(t) = N_0 e^{-\lambda t}
+\end{equation*}
+%
 
-\begin{equation}
-    N_{n+1} = N_n - \lambda\, \Delta t\, N_n = N_n(1 - \lambda\, \Delta t).
-    \label{eq:02-decay-disc}
-\end{equation}
+onde $N_0 = N(0)$ é a condição inicial e $\lambda$ é a constante de decaimento.
 
-Para $\lambda\, \Delta t \ll 1$ e $N_n$ grande, esta recorrência produz uma
-trajetória que se aproxima da exponencial contínua. A solução exata da
-\eqref{eq:02-decay-disc}, partindo de $N_0$, é
+\textbf{Implementação: Decaimento Radioativo.}
 
-\begin{equation}
-    N_n = N_0\, (1 - \lambda\, \Delta t)^n.
-    \label{eq:02-decay-disc-sol}
-\end{equation}
+%
+\begin{lstlisting}[language=Python, caption=Solução numérica do decaimento, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
 
-A meia-vida discreta --- primeiro $n^*$ tal que $N_{n^*} \le N_0/2$ --- satisfaz
-$(1 - \lambda\, \Delta t)^{n^*} = 1/2$, donde $n^* = \ln(1/2)/\ln(1 - \lambda\,\Delta t)$.
+# Definir a EDO
+def decay(N, t, lam):
+    """Taxa de variacao de N"""
+    return -lam * N
 
-\begin{exemploenumv}[Decaimento: contínuo vs. discreto]
-Considere $\lambda = 0{,}1$\,min$^{-1}$ e $\Delta t = 1$\,min. Calcule $N$ em
-$t = 10$\,min partindo de $N_0 = 1000$:
+# Parametros
+lambda_val = 0.5  # constante de decaimento
+N0 = 100          # quantidade inicial
+t = np.linspace(0, 10, 100)
+\end{lstlisting}
+%
 
-\begin{itemize}
-    \item \textbf{Contínuo:} $N(10) = 1000 \cdot e^{-0{,}1 \times 10} = 1000 \cdot e^{-1} \approx 367{,}9$.
-    \item \textbf{Discreto:} $N_{10} = 1000 \cdot (1 - 0{,}1 \times 1)^{10} = 1000 \cdot 0{,}9^{10} \approx 348{,}7$.
-\end{itemize}
+\textbf{Implementação: Decaimento Radioativo (2/2).}
 
-A diferença ($\sim 5$\,\%) reflete a discretização: à medida que $\Delta t \to 0$,
-$N_n \to N(t)$ e ambas formulações convergem. Para sistemas com pequeno número
-de moléculas ($N \lesssim 100$), porém, mesmo o modelo discreto médio deixa de
-capturar as flutuações estocásticas --- aí é necessário um modelo genuinamente
-estocástico (Gillespie, que veremos no Capítulo~7).
-\end{exemploenumv}
+%
+\begin{lstlisting}[language=Python, caption=Solução e Visualização]
+# Resolver numericamente
+N_num = odeint(decay, N0, t, args=(lambda_val,))
+
+# Solucao analitica
+N_ana = N0 * np.exp(-lambda_val * t)
+
+# Plotar
+plt.plot(t, N_num, 'b-', label='Numerica')
+plt.plot(t, N_ana, 'r--', label='Analitica')
+plt.xlabel('Tempo')
+plt.ylabel('N(t)')
+plt.legend()
+\end{lstlisting}
+%
 
 \section{Equações Diferenciais em Biologia}
 
-\begin{definicaoenv}[Equação Diferencial Ordinária]
-Uma equação diferencial ordinária (EDO) relaciona uma função com suas derivadas
-em relação a uma única variável independente, geralmente o tempo. A forma geral de
-um sistema de $n$ EDOs autônomas é
-\begin{equation}
-  \derivada{\vect{x}}{t} = \vect{f}(\vect{x},\, \vect{p}),
-\end{equation}
-onde $\vect{x}(t) \in \mathbb{R}^n$ é o vetor de variáveis de estado,
-$\vect{p}$ é o vetor de parâmetros e $\vect{f}$ é a função que define a dinâmica.
-\end{definicaoenv}
+\textbf{Equações Diferenciais Ordinárias (EDOs).}
 
-A escolha de uma EDO de primeira ordem para modelar processos biológicos é
-justificada em muitas situações: a taxa de variação de uma concentração depende
-do estado presente, não do passado --- o sistema é sem memória, ou markoviano.
-Quando o passado importa, aparecem equações com retardo (\emph{delay differential
-equations}), que descrevem, por exemplo, o tempo de maturação de células imunes
-antes de responder a um estímulo.
+\textbf{Definição (EDO).}
 
-\subsection{Crescimento exponencial e decaimento}
+Equação que relaciona uma função com suas derivadas em relação a uma variável independente (geralmente o tempo).
 
-O modelo mais simples de crescimento populacional supõe que cada indivíduo se reproduz
-a uma taxa constante $r$ independentemente dos demais:
-\begin{equation}
-  \derivada{N}{t} = rN, \qquad N(0) = N_0.
-\end{equation}
-A solução analítica é a exponencial $N(t) = N_0 e^{rt}$. Para $r > 0$ a população
-cresce sem limite; para $r < 0$ ela decai; para $r = 0$ permanece estacionária.
-O tempo de duplicação, quando $r > 0$, é $t_2 = \ln 2 / r$. O mesmo modelo descreve
-o decaimento radioativo, com $\lambda > 0$ substituindo $-r$:
-\begin{equation}
-  \derivada{N}{t} = -\lambda N \quad\Rightarrow\quad N(t) = N_0 e^{-\lambda t}.
-\end{equation}
-A coincidência formal não é mero acidente: ambos os processos são proporcionais ao
-número de entidades presentes, sem interações.
+Forma Geral
 
-\subsection{Crescimento logístico}
+%
+\begin{equation*}
+\derivada{\vect{x}}{t} = \vect{f}(\vect{x}, t, \vect{p})
+\end{equation*}
+%
 
-O crescimento exponencial é fisicamente impossível: recursos são finitos. Pierre-François
-Verhulst introduziu em 1838 a equação logística para capturar a limitação por capacidade
-de suporte $K$:
-\begin{equation}
-  \derivada{N}{t} = rN\!\left(1 - \frac{N}{K}\right).
-\end{equation}
-Quando $N \ll K$, o fator $(1-N/K) \approx 1$ e o crescimento é praticamente
-exponencial. Quando $N \to K$, o fator se anula e o crescimento cessa. A solução
-analítica tem forma sigmoidal:
-\begin{equation}
-  N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)},
-\end{equation}
-com ponto de inflexão em $N = K/2$ --- onde a taxa de crescimento $dN/dt$ é máxima.
+onde:
 
+$\vect{x} = $ vetor de variáveis de estado, $t = $ tempo, $\vect{p} = $ vetor de parâmetros e $\vect{f} = $ função que define a dinâmica.
+
+\textbf{Classificação de EDOs.}
+
+Por Ordem
+
+$t = f(x,t)$, $dt^2 = f(x, t, t)$ e derivadas até $n$-ésima ordem.
+
+Por Linearidade
+
+$t = ax + b$ e $t = ax^2 + bx$.
+
+Por Autonomia
+
+$t = f(x)$ (não depende explicitamente de $t$) e $t = f(x,t)$.
+
+\textbf{Exemplo: Crescimento Exponencial.}
+
+Modelo Simples de Crescimento
+
+Uma populacao cresce proporcionalmente ao seu tamanho:
+
+%
+\begin{equation*}
+\derivada{N}{t} = rN
+\end{equation*}
+%
+
+onde $r$ é a taxa de crescimento per capita.
+
+%
+\begin{equation*}
+N(t) = N_0 e^{rt}
+\end{equation*}
+%
+
+ crescimento\\
+
+ decaimento\\
+
+ estacionário
+
+Tempo de Duplicação
+
+$t_2 = r$
+
+\textbf{Exemplo: Crescimento Logístico.}
+
+Modelo de Verhulst
+
+Populacao com capacidade de suporte limitada $K$:
+
+%
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right)
+\end{equation*}
+%
+
+%
+\begin{equation*}
+N(t) = \frac{K N_0 e^{rt}}{K + N_0(e^{rt} - 1)}
+\end{equation*}
+%
+
+$N K$ quando $t $, Forma sigmoidal e Ponto de inflexão em $N = K/2$.
+
+%
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.9]
-    \draw[->, thick] (0,0) -- (5.5,0) node[right, font=\small] {$t$};
-    \draw[->, thick] (0,0) -- (0,4.2) node[above, font=\small] {$N$};
-
-    % Curva sigmoidal logística
-    \draw[thick, azulescuro, line width=1.2pt, domain=0:5, smooth, samples=100]
+\begin{tikzpicture}
+\draw[->] (0,0) -- (5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,4) node[above] {$N$};
+    \draw[thick, azulescuro, domain=0:4.5, smooth, samples=100]
         plot (\x, {3/(1+2*exp(-1.5*\x))});
-
-    % Linha da capacidade de suporte
-    \draw[dashed, verdeacido] (0,3) -- (5.3,3) node[right, font=\footnotesize] {$K$};
-
-    % Ponto de inflexão em N = K/2 (matematicamente em t = ln(2)/1.5 ≈ 0.462)
-    \fill[red] (0.462, 1.5) circle (1.5pt);
-    \node[above right, font=\footnotesize, red] at (0.462, 1.5) {$K/2$};
+    \draw[dashed, verdeacido] (0,3) -- (5,3) node[right, font=\tiny] {$K$};
+    \node[below] at (2.5,0) {Tempo};
 \end{tikzpicture}
-\caption{Curva de crescimento logístico $N(t)$ em função do tempo. A solução analítica tem forma sigmoidal que parte de $N(0)$ e satura assintoticamente em $K$ (capacidade de suporte). O ponto de inflexão $N = K/2$ marca o instante de máxima taxa de crescimento.}
-\label{fig:02-logistico}
+\caption{Diagrama esquemático.}
 \end{figure}
+%
 
-Esse comportamento em S é ubíquo em biologia: crescimento de colônias bacterianas, difusão de inovações tecnológicas, proliferação tumoral em estágio inicial.
+\textbf{Implementação: Crescimento Logístico.}
 
-\subsection{Sistemas de EDOs: O Modelo Predador-Presa}
-
-O seguinte código resolve e visualiza o modelo logístico usando o integrador
-\texttt{odeint} do SciPy:
-\begin{lstlisting}[language=Python, caption=Modelo de crescimento logístico]
+%
+\begin{lstlisting}[language=Python, caption=Modelo logístico, basicstyle=\ttfamily\footnotesize]
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 def logistic(N, t, r, K):
-    """Crescimento logístico de Verhulst."""
-    return r * N * (1 - N / K)
+    """Modelo de crescimento logistico"""
+    return r * N * (1 - N/K)
 
-r, K, N0 = 0.5, 100, 10
-t = np.linspace(0, 20, 300)
-N = odeint(logistic, N0, t, args=(r, K)).flatten()
+# Parametros
+r = 0.5    # taxa de crescimento
+K = 100    # capacidade de suporte
+N0 = 10    # populacao inicial
 
-plt.plot(t, N, 'b-', linewidth=2)
-plt.axhline(K, color='r', linestyle='--', label=f'K = {K}')
-plt.xlabel('Tempo'); plt.ylabel('N(t)')
-plt.legend(); plt.grid(True); plt.tight_layout()
+# Tempo
+t = np.linspace(0, 20, 200)
+
+# Resolver
+N = odeint(logistic, N0, t, args=(r, K))
 \end{lstlisting}
+%
 
-\section{Sistemas de EDOs: O Modelo Predador-Presa}
+\textbf{Implementação: Crescimento Logístico (2/2).}
 
-Quando múltiplas espécies ou variáveis interagem, a dinâmica é descrita por um
-sistema acoplado de EDOs. O exemplo mais clássico é o modelo de Lotka-Volterra,
-formulado independentemente pelo matemático-estatístico Alfred Lotka (1920) e pelo
-matemático Vito Volterra (1926), este motivado por dados de capturas de pesca no
-Adriático durante a Primeira Guerra Mundial --- período em que a pesca foi reduzida
-e a proporção de predadores aumentou, contrariando a intuição.
+%
+\begin{lstlisting}[language=Python, caption=Visualização]
+# Plotar
+plt.figure(figsize=(10, 6))
+plt.plot(t, N, 'b-', linewidth=2, label='N(t)')
+plt.axhline(y=K, color='r', linestyle='--',
+            label=f'K = {K}')
+plt.xlabel('Tempo')
+plt.ylabel('Populacao N(t)')
+plt.legend()
+plt.grid(True)
+\end{lstlisting}
+%
 
-O sistema descreve a dinâmica de presas $V$ (do italiano \emph{vittime}) e
-predadores $P$ (do italiano \emph{predatori}):
-\begin{align}
-  \derivada{V}{t} &= \underbrace{\alpha V}_{\text{crescimento}} -
-                     \underbrace{\beta V P}_{\text{predação}} \\[6pt]
-  \derivada{P}{t} &= \underbrace{\delta \beta V P}_{\text{reprodução}} -
-                     \underbrace{\gamma P}_{\text{morte}}.
-\end{align}
-As presas crescem exponencialmente na ausência de predadores (taxa $\alpha$) e
-são removidas a uma taxa proporcional ao número de encontros $VP$. Os predadores
-ganham biomassa ao consumir presas (eficiência de conversão $\delta$) e morrem
-naturalmente a uma taxa $\gamma$. O produto $VP$ representa a probabilidade de
-encontro entre as duas populações em campo aleatório --- uma hipótese simplificadora,
-mas robusta em muitas condições.
+\section{Sistemas de EDOs}
 
-O sistema possui dois pontos de equilíbrio: a origem $(0,0)$ (extinção mútua) e
-o equilíbrio não-trivial $(V^*, P^*) = (\gamma/\delta\beta,\; \alpha/\beta)$. A
-análise do jacobiano nesse ponto revela autovalores puramente imaginários, indicando
-que as trajetórias são órbitas fechadas no plano de fase --- oscilações periódicas
-conservativas, confirmadas qualitativamente pelos dados de Volterra.
+\textbf{Sistemas Acoplados.}
 
-\begin{figure}[htbp]
-\centering
-\begin{tikzpicture}[scale=0.9]
-    \draw[->, thick] (0,0) -- (4.5,0) node[right, font=\small] {$V$};
-    \draw[->, thick] (0,0) -- (0,4.5) node[above, font=\small] {$P$};
+Sistema Geral
 
-    % Trajetória em órbita fechada (LV clássico = centro, autovalores puramente imaginários)
-    % Raio constante: elipse paramétrica ao redor do equilíbrio (V*, P*) = (2, 2)
-    \draw[thick, verdeacido, line width=1.2pt, domain=0:720, samples=200, smooth]
-        plot ({2 + 1.5*cos(\x)},
-              {2 + 1.5*sin(\x)});
+Quando múltiplas variáveis interagem:
 
-    % Seta indicando direção do ciclo (sentido anti-horário = presas crescem primeiro)
-    \draw[->, thick, verdeacido] (3.4, 2.15) -- (3.0, 2.45);
+%
+\begin{align*}
+\derivada{x_1}{t} &= f_1(x_1, x_2, \ldots, x_n, t)\\
+\derivada{x_2}{t} &= f_2(x_1, x_2, \ldots, x_n, t)\\
+&\vdots\\
+\derivada{x_n}{t} &= f_n(x_1, x_2, \ldots, x_n, t)
+\end{align*}
+%
 
-    % Ponto de equilíbrio
-    \fill[red] (2,2) circle (2.5pt) node[right, font=\footnotesize] {Equilíbrio $(V^*, P^*)$};
+--- DEST: 
 
-    % Eixos labels
-    \node[below, font=\small] at (2,-0.3) {Presas};
-    \node[left, font=\small, rotate=90] at (-0.4,2) {Predadores};
-\end{tikzpicture}
-\caption{Retrato de fase do sistema de Lotka--Volterra. A trajetória forma uma órbita fechada ao redor do equilíbrio não-trivial $(V^*, P^*)$ --- as populações de presas e predadores oscilam perpetuamente em ciclos defasados, sem convergir nem divergir. Esse comportamento é característico de sistemas conservativos Hamiltonianos, e foi a primeira explicação matemática para os ciclos populacionais observados por Volterra nas pescas do Adriático.}
-\label{fig:02-lotka}
-\end{figure}
+%
+\begin{equation*}
+\derivada{\vect{x}}{t} = \vect{f}(\vect{x}, t)
+\end{equation*}
+%
 
-\begin{lstlisting}[language=Python, caption=Sistema predador-presa de Lotka-Volterra]
+\textbf{Exemplo: Modelo Predador-Presa (Lotka-Volterra).}
+
+Sistema
+
+%
+\begin{align*}
+\derivada{V}{t} &= \alpha V - \beta V P \quad \text{(Presas)}\\
+\derivada{P}{t} &= \delta \beta V P - \gamma P \quad \text{(Predadores)}
+\end{align*}
+%
+
+onde:
+
+$V$ = populacao de presas, $P$ = populacao de predadores, $$ = taxa de crescimento das presas, $$ = taxa de predação, $$ = taxa de morte dos predadores e $$ = eficiência de conversão.
+
+\textbf{Interpretação do Modelo Predador-Presa.}
+
+%
+\begin{equation*}
+\derivada{V}{t} = \underbrace{\alpha V}_{\text{crescimento}} - \underbrace{\beta V P}_{\text{predação}}
+\end{equation*}
+%
+
+Crescem exponencialmente sem predadores, Perdem individuos por predação e Taxa de predação $\beta$ encontros ($VP$).
+
+%
+\begin{equation*}
+\derivada{P}{t} = \underbrace{\delta \beta V P}_{\text{crescimento}} - \underbrace{\gamma P}_{\text{morte}}
+\end{equation*}
+%
+
+Crescem ao consumir presas, Morrem naturalmente e Dependem das presas para sobreviver.
+
+--- IMP: 
+
+Este sistema exibe oscilações periódicas características!
+
+\textbf{Implementação: Lotka-Volterra.}
+
+%
+\begin{lstlisting}[language=Python, caption=Sistema predador-presa, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy.integrate import odeint
-import numpy as np, matplotlib.pyplot as plt
 
 def lotka_volterra(y, t, alpha, beta, delta, gamma):
+    """Sistema Lotka-Volterra"""
     V, P = y
-    return [alpha*V - beta*V*P,
-            delta*beta*V*P - gamma*P]
+    dVdt = alpha*V - beta*V*P
+    dPdt = delta*beta*V*P - gamma*P
+    return [dVdt, dPdt]
 
+# Parametros
 alpha, beta, delta, gamma = 1.0, 0.1, 0.75, 1.5
-y0, t = [10, 5], np.linspace(0, 50, 2000)
+y0, t = [10, 5], np.linspace(0, 50, 1000)
+\end{lstlisting}
+%
+
+\textbf{Implementação: Lotka-Volterra (2/2).}
+
+%
+\begin{lstlisting}[language=Python, caption=Resolução e Plotting]
+# Resolver
 sol = odeint(lotka_volterra, y0, t,
              args=(alpha, beta, delta, gamma))
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-ax1.plot(t, sol[:,0], 'b-', label='Presas')
-ax1.plot(t, sol[:,1], 'r-', label='Predadores')
-ax1.set(xlabel='Tempo', ylabel='Populacao'); ax1.legend()
-
-ax2.plot(sol[:,0], sol[:,1], 'g-')  # retrato de fase
-ax2.set(xlabel='Presas (V)', ylabel='Predadores (P)')
-ax2.set_title('Retrato de fase')
-plt.tight_layout()
+# Plotar series temporais
+plt.plot(t, sol[:, 0], 'b-', label='Presas')
+plt.plot(t, sol[:, 1], 'r-', label='Predadores')
+plt.xlabel('Tempo')
+plt.ylabel('Populacao')
+plt.legend()
 \end{lstlisting}
+%
 
-\section{Análise de Equilíbrio e Estabilidade}
+\textbf{Retrato de Fase.}
 
-\begin{definicaoenv}[Ponto de Equilíbrio]
-Um ponto de equilíbrio (ou estado estacionário) de um sistema dinâmico é um estado
-$\vect{x}^*$ tal que $\vect{f}(\vect{x}^*) = \vect{0}$ --- a derivada temporal
-é nula e o sistema permanece indefinidamente nesse estado na ausência de perturbações.
-\end{definicaoenv}
+%
+\begin{lstlisting}[language=Python, caption=Plano de fase, basicstyle=\ttfamily\tiny]
+# Retrato de fase
+plt.figure()
+plt.plot(sol[:, 0], sol[:, 1],
+         'g-', linewidth=2)
+plt.plot(sol[0, 0], sol[0, 1],
+         'go', markersize=10,
+         label='Inicio')
+plt.xlabel('Presas (V)')
+plt.ylabel('Predadores (P)')
+plt.title('Retrato de Fase')
+plt.legend()
+plt.grid(True)
 
-A estabilidade de um equilíbrio é analisada por linearização. Dada uma perturbação
-pequena $\delta\vect{x} = \vect{x} - \vect{x}^*$, a dinâmica linearizada é
-\begin{equation}
-  \derivada{\delta\vect{x}}{t} = J(\vect{x}^*)\,\delta\vect{x},
-\end{equation}
-onde $J$ é a matriz jacobiana avaliada no equilíbrio, com entradas
-$J_{ij} = \partial f_i/\partial x_j|_{\vect{x}^*}$. A solução geral é uma
-combinação de exponenciais $e^{\lambda_k t}$, onde $\lambda_k$ são os autovalores
-de $J$. O equilíbrio é \textbf{assintoticamente estável} se todos os autovalores
-têm parte real negativa; é \textbf{instável} se ao menos um tem parte real positiva.
+# Campo vetorial
+V = np.linspace(0, 20, 20)
+P = np.linspace(0, 15, 20)
+V_grid, P_grid = np.meshgrid(V, P)
+dV, dP = lotka_volterra(
+    [V_grid, P_grid], 0,
+    alpha, beta, delta, gamma)
+plt.quiver(V_grid, P_grid,
+           dV, dP, alpha=0.5)
+\end{lstlisting}
+%
 
-Para o crescimento logístico, o jacobiano é escalar: $J(N^*) = r(1 - 2N^*/K)$.
-No equilíbrio trivial $N^* = 0$, tem-se $J = r > 0$ --- instável. No equilíbrio
-não-trivial $N^* = K$, tem-se $J = -r < 0$ --- estável. A população converge,
-portanto, para a capacidade de suporte, independentemente da condição inicial
-(desde que $N_0 > 0$).
-
+%
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.85]
-    % Painel estável
-    \begin{scope}[xshift=0cm]
-        \draw[->, thick] (-0.5,0) -- (2.5,0) node[right, font=\small] {$x$};
-        \draw[->, thick] (0,-1.3) -- (0,1.5) node[above, font=\small] {$\dot{x}$};
-        % Reta com inclinação negativa cruzando (1, 0): dx/dt < 0 se x>1 (volta), >0 se x<1 (afasta)
-        \draw[thick, azulescuro, domain=-0.3:2.3]
-            plot (\x, {-1.3*(\x-1)});
-        \fill[verdeacido] (1,0) circle (2pt);
-        \node[above, font=\small, verdeacido] at (1,0.55) {Estável};
-        % Setas horizontais abaixo do label, apontando para o equilíbrio (convergência)
-        \draw[->, verdebio, line width=1pt] (0.3,-0.15) -- (0.92,-0.15);
-        \draw[->, verdebio, line width=1pt] (1.7,-0.15) -- (1.08,-0.15);
-        \node[below, font=\footnotesize] at (1,-0.7) {$\mathrm{Re}(\lambda) < 0$};
+\begin{tikzpicture}
+\draw[->] (0,0) -- (4,0) node[right] {$V$};
+    \draw[->] (0,0) -- (0,4) node[above] {$P$};
+
+    % Trajetoria em espiral
+    \draw[thick, verdeacido, domain=0:720, samples=200, smooth]
+        plot ({2 + 1.5*cos(\x)/(1+\x/360)},
+              {2 + 1.5*sin(\x)/(1+\x/360)});
+
+    % Ponto de equilibrio
+    \fill[red] (2,2) circle (2pt) node[right, font=\tiny] {Equilíbrio};
+
+    \node[below] at (2,-0.2) {Presas};
+    \node[left, rotate=90] at (-0.3,2) {Predadores};
+\end{tikzpicture}
+\caption{Diagrama esquemático.}
+\end{figure}
+%
+
+Trajetórias fechadas, Oscilações periódicas e Centro estável.
+
+\section{Analise de Equilíbrio}
+
+\textbf{Pontos de Equilíbrio (Steady States).}
+
+\textbf{Definição (Ponto de Equilíbrio).}
+
+Estado no qual o sistema não muda com o tempo:
+
+%
+\begin{equation*}
+\derivada{\vect{x}}{t} = \vect{0} \quad \Rightarrow \quad \vect{f}(\vect{x}^*, t) = \vect{0}
+\end{equation*}
+%
+
+Exemplo: Crescimento Logístico
+
+%
+\begin{equation*}
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right) = 0
+\end{equation*}
+%
+
+Pontos de equilíbrio:
+
+$N^*_1 = 0$ (extinção) e $N^*_2 = K$ (capacidade de suporte).
+
+\textbf{Estabilidade de Pontos de Equilíbrio.}
+
+Classificação
+
+sistema retorna ao equilíbrio após perturbação, sistema se afasta após perturbação e comportamento intermediário.
+
+%
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+% Estavel
+    \begin{scope}
+        \draw[->] (-1,0) -- (3,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,2) node[above] {$\dot{x}$};
+        \draw[thick, azulescuro] (-0.5,1.5) parabola bend (1,0) (2.5,1.5);
+        \fill[verdeacido] (1,0) circle (2pt) node[below, font=\tiny] {Estável};
+        \draw[->, thick, red] (0.5,0.3) -- (1,0.1);
+        \draw[->, thick, red] (1.5,0.3) -- (1,0.1);
     \end{scope}
 
-    % Painel instável
-    \begin{scope}[xshift=6cm]
-        \draw[->, thick] (-0.5,0) -- (2.5,0) node[right, font=\small] {$x$};
-        \draw[->, thick] (0,-1.3) -- (0,1.5) node[above, font=\small] {$\dot{x}$};
-        % Reta com inclinação positiva cruzando (1, 0): dx/dt > 0 se x>1 (afasta), <0 se x<1 (afasta)
-        \draw[thick, azulescuro, domain=-0.3:2.3]
-            plot (\x, {1.3*(\x-1)});
-        \fill[red] (1,0) circle (2pt);
-        \node[above, font=\small, red] at (1,0.55) {Instável};
-        % Setas horizontais abaixo do label, apontando para fora do equilíbrio (divergência)
-        \draw[->, red, line width=1pt] (1.08,-0.15) -- (1.7,-0.15);
-        \draw[->, red, line width=1pt] (0.92,-0.15) -- (0.3,-0.15);
-        \node[below, font=\footnotesize] at (1,-0.7) {$\mathrm{Re}(\lambda) > 0$};
+    % Instavel
+    \begin{scope}[xshift=5cm]
+        \draw[->] (-1,0) -- (3,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,2) node[above] {$\dot{x}$};
+        \draw[thick, azulescuro] (-0.5,-1.5) parabola[bend at end] (1,0);
+        \draw[thick, azulescuro] (1,0) parabola (2.5,-1.5);
+        \fill[red] (1,0) circle (2pt) node[below, font=\tiny] {Instável};
+        \draw[->, thick, verdeacido] (0.5,-0.3) -- (0,-0.5);
+        \draw[->, thick, verdeacido] (1.5,-0.3) -- (2,-0.5);
     \end{scope}
 \end{tikzpicture}
-\caption{Classificação de pontos de equilíbrio unidimensionais pelo sinal de $\dot{x}$ nas vizinhanças. (Esquerda) Equilíbrio \textbf{estável}: $\dot{x} > 0$ à esquerda e $\dot{x} < 0$ à direita --- perturbações convergem. (Direita) Equilíbrio \textbf{instável}: $\dot{x} < 0$ à esquerda e $\dot{x} > 0$ à direita --- perturbações divergem. A classificação se estende a sistemas de dimensão $n$ pelos autovalores da jacobiana.}
-\label{fig:02-estabilidade}
+\caption{Diagrama esquemático.}
 \end{figure}
+%
+
+\textbf{Analise de Estabilidade Linear.}
+
+Linearização em Torno do Equilíbrio
+
+Para $ = ^* + $ (pequena perturbação):
+
+%
+\begin{equation*}
+\derivada{\delta\vect{x}}{t} = \mathbf{J}(\vect{x}^*) \delta\vect{x}
+\end{equation*}
+%
+
+onde $\mathbf{J}(\vect{x}^*)$ é a matriz Jacobiana:
+
+%
+\begin{equation*}
+J_{ij} = \parcial{f_i}{x_j}\Bigg|_{\vect{x}^*}
+\end{equation*}
+%
+
+Critério de Estabilidade
+
+O equilíbrio $^*$ é estável se todos os autovalores de $(^*)$ têm parte real negativa.
+
+\textbf{Exemplo: Analise do Crescimento Logístico.}
+
+Modelo
+
+%
+\begin{equation*}
+\derivada{N}{t} = f(N) = rN\left(1 - \frac{N}{K}\right)
+\end{equation*}
+%
+
+%
+\begin{equation*}
+J = \derivada{f}{N} = r\left(1 - \frac{2N}{K}\right)
+\end{equation*}
+%
+
+$N^* = 0$: $J(0) = r > 0$ $\Rightarrow$ instável e $N^* = K$: $J(K) = -r < 0$ $\Rightarrow$ estável.
+
+--- IMP: 
+
+A populacao converge para a capacidade de suporte $K$
+
+\textbf{Analise de Estabilidade Computacional.}
+
+%
+\begin{lstlisting}[language=Python, caption=Calculo do Jacobiano e autovalores, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+from scipy.linalg import eig
+
+def jacobian_lotka_volterra(y, alpha, beta, delta, gamma):
+    V, P = y
+    return np.array([
+        [alpha - beta*P, -beta*V],
+        [delta*beta*P, delta*beta*V - gamma]
+    ])
+
+# Ponto de equilibrio e Jacobiano
+V_eq, P_eq = gamma / (delta * beta), alpha / beta
+J = jacobian_lotka_volterra([V_eq, P_eq], alpha, beta, delta, gamma)
+
+# Autovalores
+eigenvalues, _ = eig(J)
+print(f"Autovalores: {eigenvalues}")
+\end{lstlisting}
+%
+
+\textbf{Analise de Estabilidade Computacional.}
+
+%
+\begin{lstlisting}[language=Python, caption=Analise de autovalores]
+# Ponto de equilibrio
+V_eq = gamma / (delta * beta)
+P_eq = alpha / beta
+
+# Calcular Jacobiano no equilibrio
+J = jacobian_lotka_volterra([V_eq, P_eq],
+                             alpha, beta, delta, gamma)
+
+# Autovalores
+eigenvalues, eigenvectors = eig(J)
+print(f"Autovalores: {eigenvalues}")
+print(f"Partes reais: {eigenvalues.real}")
+\end{lstlisting}
+%
 
 \section{Métodos Numéricos}
 
-A grande maioria dos sistemas de EDOs biologicamente realistas não possui solução
-analítica em forma fechada. A não-linearidade, a alta dimensionalidade e a
-rigidez (\emph{stiffness} --- presença de constantes de tempo muito diferentes)
-tornam a integração numérica indispensável.
+\textbf{Por que Métodos Numéricos?.}
 
-\subsection{Método de Euler}
+Limitações das Soluções Analíticas
 
-O método de Euler é o integrador mais simples: aproxima a derivada por diferença
-finita à frente e avança o sistema um passo de tamanho $h$:
-\begin{equation}
-  \vect{x}(t+h) = \vect{x}(t) + h\cdot\vect{f}(\vect{x}(t),\, t).
-\end{equation}
-O erro local por passo é $O(h^2)$ e o erro global acumulado é $O(h)$ --- diz-se
-que o método é de primeira ordem. Para passos pequenos, o erro é aceitável; para
-passos grandes, a imprecisão se acumula rapidamente e a solução pode tornar-se
-instável.
+Maioria dos sistemas biológicos são não-lineares, Poucos modelos têm solução analítica fechada e Sistemas complexos requerem aproximação numérica.
 
-\subsection{Runge-Kutta de 4ª ordem}
+Métodos Numéricos Comuns
 
-O método de Runge-Kutta de quarta ordem (RK4) avalia a derivada em quatro pontos
-por passo e combina as avaliações com pesos cuidadosamente escolhidos:
-\begin{align}
-  k_1 &= \vect{f}(\vect{x}_n,\; t_n) \\
-  k_2 &= \vect{f}\!\left(\vect{x}_n + \tfrac{h}{2}k_1,\; t_n + \tfrac{h}{2}\right) \\
-  k_3 &= \vect{f}\!\left(\vect{x}_n + \tfrac{h}{2}k_2,\; t_n + \tfrac{h}{2}\right) \\
-  k_4 &= \vect{f}(\vect{x}_n + hk_3,\; t_n + h) \\[4pt]
-  \vect{x}_{n+1} &= \vect{x}_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4).
-\end{align}
-O erro local é $O(h^5)$ e o erro global é $O(h^4)$ --- quatro ordens de grandeza
-mais preciso que Euler para o mesmo passo. Em Python, o \texttt{odeint} do SciPy
-implementa o método de Adams-Moulton com controle adaptativo de passo, que ajusta $h$
-automaticamente para manter o erro abaixo de uma tolerância especificada. Para sistemas
-rígidos, o \texttt{solve\_ivp} com método \texttt{Radau} ou \texttt{BDF} é mais
-eficiente.
+simples, primeira ordem, preciso, quarta ordem, passo variável (RK45, Dormand-Prince) e sistemas rígidos (BDF).
 
-\section{Análise de Sensibilidade}
+\textbf{Método de Euler.}
 
-A análise de sensibilidade responde à pergunta: quão sensível é a saída do modelo
-a variações nos parâmetros de entrada? Ela é indispensável tanto para validar
-modelos (um modelo robusto não deve depender criticamente de parâmetros mal
-estimados) quanto para identificar alvos de intervenção (parâmetros aos quais a
-saída é muito sensível são candidatos naturais a alvos terapêuticos ou de engenharia).
+Ideia Básica
 
-O \textbf{coeficiente de sensibilidade local} de uma variável de estado $x$ em
-relação a um parâmetro $p$ é a derivada parcial normalizada:
-\begin{equation}
-  S_{x,p} = \parcial{\ln x}{\ln p} = \frac{p}{x}\,\parcial{x}{p}.
-\end{equation}
-Um coeficiente $S_{x,p} = 2$ significa que um aumento de 1\% em $p$ produz um
-aumento de 2\% em $x$. A análise local é rápida e pode ser feita analiticamente,
-mas captura apenas o comportamento em torno de um ponto nominal de parâmetros.
+Aproximar derivada por diferença finita:
 
-A \textbf{análise de sensibilidade global} (métodos de Sobol, FAST, amostragem
-Latin Hypercube) explora todo o espaço de parâmetros e decompõe a variância total
-da saída em contribuições de cada parâmetro e de suas interações. É computacionalmente
-mais custosa, mas fornece uma imagem completa da robustez do modelo e é especialmente
-valiosa quando a incerteza paramétrica é grande.
+%
+\begin{equation*}
+\derivada{x}{t} \approx \frac{x(t+h) - x(t)}{h}
+\end{equation*}
+%
 
-\section{Boas Práticas em Modelagem}
+--- DEST: 
 
-A modelagem matemática é uma arte tanto quanto uma ciência. Algumas práticas,
-desenvolvidas ao longo de décadas de experiência coletiva, reduzem erros frequentes
-e aumentam a credibilidade dos resultados.
+%
+\begin{equation*}
+x(t+h) = x(t) + h \cdot f(x(t), t)
+\end{equation*}
+%
 
-A primeira é a \textbf{parcimônia}: comece com o modelo mais simples que responde
-a pergunta, e adicione complexidade apenas quando os dados exigirem. Einstein teria
-dito que as coisas devem ser tão simples quanto possível, mas não mais simples.
-Um modelo com dez parâmetros ajustados a dez pontos de dados não tem poder preditivo;
-um modelo com dois parâmetros ajustados a dez pontos e validado em dez outros
-pontos independentes é genuinamente informativo.
+Partir de $x_0$ em $t_0$, Calcular $x_1 = x_0 + h f(x_0, t_0)$ e Repetir: $x_n+1 = x_n + h f(x_n, t_n)$.
 
-A segunda é a \textbf{verificação de unidades}: toda equação deve ser dimensionalmente
-consistente. Somas de concentrações com taxas, ou de tempos com comprimentos, são
-sempre erros. A análise dimensional frequentemente revela quais combinações de
-parâmetros realmente importam.
+Erro
 
-A terceira é a \textbf{validação cruzada}: ajustar o modelo a um conjunto de dados
-e testá-lo em dados independentes, idealmente de condições diferentes das usadas
-no ajuste. Um alto $R^2$ no conjunto de treinamento não garante poder preditivo.
+Erro local: $O(h^2)$, Erro global: $O(h)$
 
-A quarta é a \textbf{quantificação de incerteza}: reportar não apenas os valores
-ótimos dos parâmetros, mas também seus intervalos de confiança, e propagar essa
-incerteza para as predições. Modelos que apresentam predições pontuais sem
-incerteza transmitem uma confiança que raramente é justificada.
+\textbf{Implementação do Método de Euler.}
 
-\subsection*{Estudo de caso: reptation do DNA}
+%
+\begin{lstlisting}[language=Python, caption=Euler forward, basicstyle=\ttfamily\footnotesize]
+def euler(f, x0, t):
+    n = len(t)
+    x = np.zeros((n, len(x0)))
+    x[0] = x0
+    for i in range(n-1):
+        h = t[i+1] - t[i]
+        x[i+1] = x[i] + h * np.array(f(x[i], t[i]))
+    return x
 
-Para encerrar o capítulo com um exemplo que ilustra a transição entre modelos
-determinísticos e estocásticos, considere o problema da difusão de uma molécula
-de DNA em um gel de eletroforese. A técnica de \emph{gel electrophoresis} --- um
-dos pilares da biologia molecular do século XX --- separa fragmentos de DNA por
-tamanho: fragmentos menores migram mais rápido que fragmentos maiores, porque
-encontram menos resistência ao atravessar a malha polimérica do gel.
+# Exemplo
+def exp_growth(x, t, r=0.5): return r * x
+t = np.linspace(0, 10, 100)
+x_euler = euler(lambda x,t: exp_growth(x,t), [1.0], t)
+\end{lstlisting}
+%
 
+\textbf{Método de Runge-Kutta de 4ª Ordem (RK4).}
+
+Ideia
+
+Usar múltiplas avaliações da derivada para melhor aproximação
+
+--- DEST: 
+
+%
+\begin{align*}
+k_1 &= f(x_n, t_n)\\
+k_2 &= f(x_n + \frac{h}{2}k_1, t_n + \frac{h}{2})\\
+k_3 &= f(x_n + \frac{h}{2}k_2, t_n + \frac{h}{2})\\
+k_4 &= f(x_n + hk_3, t_n + h)\\
+x_{n+1} &= x_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+%
+
+Precisão
+
+Erro local: $O(h^5)$, Erro global: $O(h^4)$
+
+\textbf{Implementação do RK4.}
+
+%
+\begin{lstlisting}[language=Python, caption=Runge-Kutta 4, basicstyle=\ttfamily\footnotesize]
+def rk4(f, x0, t):
+    n, x = len(t), np.zeros((len(t), len(x0)))
+    x[0] = x0
+    for i in range(n-1):
+        h = t[i+1] - t[i]
+        k1 = np.array(f(x[i], t[i]))
+        k2 = np.array(f(x[i] + h*k1/2, t[i] + h/2))
+        k3 = np.array(f(x[i] + h*k2/2, t[i] + h/2))
+        k4 = np.array(f(x[i] + h*k3, t[i] + h))
+        x[i+1] = x[i] + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
+    return x
+
+# Usar
+x_rk4 = rk4(lambda x,t: exp_growth(x,t), [1.0], t)
+\end{lstlisting}
+%
+
+\section{Analise de Sensibilidade}
+
+\textbf{Analise de Sensibilidade.}
+
+\textbf{Definição (Sensibilidade).}
+
+Medida de como a saída de um modelo varia em resposta a mudanças nos parâmetros de entrada.
+
+Por que é importante?
+
+Identificar parâmetros críticos, Priorizar experimentos para estimar parâmetros, Avaliar robustez do modelo e Simplificar modelos complexos.
+
+Coeficiente de Sensibilidade
+
+%
+\begin{equation*}
+S_{x,p} = \parcial{x}{p} \cdot \frac{p}{x} = \frac{\parcial \ln x}{\parcial \ln p}
+\end{equation*}
+%
+
+Sensibilidade relativa normalizada
+
+\textbf{Tipos de Analise de Sensibilidade.}
+
+Local
+
+Variação em torno de um ponto nominal, Derivadas parciais e Rápida e analítica (quando possível).
+
+Global
+
+Exploração de todo o espaço de parâmetros, Métodos de amostragem (Monte Carlo, Sobol) e Computacionalmente intensiva.
+
+--- Trade-off ---
+
+Local: rápida mas limitada \\
+
+Global: abrangente mas custosa
+
+\textbf{Analise de Sensibilidade Local.}
+
+%
+\begin{lstlisting}[language=Python, caption=Sensibilidade por diferenças finitas, basicstyle=\ttfamily\footnotesize]
+def sensitivity_local(model, params, param_names,
+                       perturbation=0.01):
+    """
+    Analise de sensibilidade local
+    """
+    baseline = model(params)
+    sensitivities = {}
+    for i, name in enumerate(param_names):
+        params_pert = params.copy()
+        params_pert[i] *= (1 + perturbation)
+        output_pert = model(params_pert)
+        sensitivities[name] = (output_pert - baseline) / baseline / perturbation
+    return sensitivities
+
+# Exemplo
+sens = sensitivity_local(lambda p: p[1], [0.5, 100, 10], ['r', 'K', 'N0'])
+\end{lstlisting}
+%
+
+\section{Ajuste de Modelos a Dados}
+
+\textbf{Estimação de Parâmetros.}
+
+Problema
+
+Dados: $(t_1, y_1), (t_2, y_2), , (t_n, y_n)$\\
+
+Modelo: $(t; )$\\
+
+Objetivo: Encontrar $^*$ que melhor ajusta os dados
+
+Função Objetivo
+
+Mínimos quadrados:
+
+%
+\begin{equation*}
+\text{SSE}(\vect{p}) = \sum_{i=1}^{n} [y_i - \hat{y}(t_i; \vect{p})]^2
+\end{equation*}
+%
+
+Objetivo: $\min_ ()$
+
+Métodos de Otimização
+
+Levenberg-Marquardt, Evolução Diferencial e Algoritmos Genéticos.
+
+\textbf{Ajuste de Curvas com scipy.}
+
+%
+\begin{lstlisting}[language=Python, caption=Estimação de parâmetros, basicstyle=\ttfamily\footnotesize]
+from scipy.optimize import curve_fit
+
+# Dados experimentais
+t_data = np.linspace(0, 10, 20)
+N_data = 100/(1+9*np.exp(-0.5*t_data)) + np.random.normal(0, 2, 20)
+
+# Modelo e Ajuste
+def logistic_model(t, r, K): return K / (1 + (K/10 - 1)*np.exp(-r*t))
+p_opt, _ = curve_fit(logistic_model, t_data, N_data, p0=[1.0, 50])
+
+# Plotar
+plt.plot(t_data, N_data, 'o', label='Dados')
+plt.plot(t_data, logistic_model(t_data, *p_opt), '-', label='Ajuste')
+\end{lstlisting}
+%
+
+\textbf{Validação de Modelos.}
+
+Métricas de Qualidade do Ajuste
+
+Soma dos erros quadrados, Coeficiente de determinação (0 a 1), Raiz do erro quadrático médio e Critérios de informação (penalizam complexidade).
+
+%
+\begin{equation*}
+R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}
+\end{equation*}
+%
+
+Atenção!
+
+$R^2$ alto não garante bom modelo, Validar com dados independentes e Verificar plausibilidade biológica.
+
+\section{Estudo de Caso}
+
+\textbf{Estudo de Caso: Dinâmica de Infecção Viral.}
+
+Sistema
+
+Modelo SIR (Susceptible-Infected-Recovered):
+
+%
+\begin{align*}
+\derivada{S}{t} &= -\beta \frac{SI}{N}\\
+\derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I\\
+\derivada{R}{t} &= \gamma I
+\end{align*}
+%
+
+Número Básico de Reprodução ($R_0$)
+
+%
+\begin{equation*}
+R_0 = \frac{\beta}{\gamma}
+\end{equation*}
+%
+
+\textbf{Estudo de Caso: Dinâmica de Infecção Viral (cont.).}
+
+Parâmetros do Modelo SIR
+
+onde:
+
+$S$ = susceptíveis, $I$ = infectados, $R$ = recuperados, $$ = taxa de transmissão, $$ = taxa de recuperação e $N = S + I + R$ = populacao total.
+
+\textbf{Numero Básico de Reprodução.}
+
+--- DEF: $R_0$ (R-naught) ---
+
+Numero médio de infecções secundárias causadas por um indivíduo infectado em uma populacao totalmente susceptível.
+
+--- DEST: 
+
+%
+\begin{equation*}
+R_0 = \frac{\beta}{\gamma}
+\end{equation*}
+%
+
+Interpretação
+
+$R_0 < 1$: epidemia se extingue, $R_0 > 1$: epidemia se propaga e $R_0 = 1$: limiar epidêmico.
+
+$R_0$ estimado entre 2-6, dependendo da variante e medidas de controle
+
+\textbf{Implementação do Modelo SIR.}
+
+%
+\begin{lstlisting}[language=Python, caption=Modelo SIR completo, basicstyle=\ttfamily\footnotesize]
+def sir_model(y, t, beta, gamma):
+    S, I, R = y
+    N = S + I + R
+    return [-beta * S * I / N, beta * S * I / N - gamma * I, gamma * I]
+
+# Parametros e condicoes iniciais
+beta, gamma = 0.5, 0.1
+R0 = beta / gamma
+N, I0 = 1000, 10
+y0 = [N - I0, I0, 0]
+\end{lstlisting}
+%
+
+\textbf{Analise e Visualização.}
+
+%
+\begin{lstlisting}[language=Python, caption=Analise do modelo SIR, basicstyle=\ttfamily\footnotesize]
+S, I, R = sol.T
+plt.figure(figsize=(10, 6))
+plt.plot(t, S, 'b-', label='Suscept.'), plt.plot(t, I, 'r-', label='Infect.')
+plt.plot(t, R, 'g-', label='Recuper.')
+plt.xlabel('Tempo'), plt.ylabel('Individuos'), plt.legend(), plt.grid(True)
+
+# Estatisticas
+peak_idx = np.argmax(I)
+print(f"Pico: {I[peak_idx]:.0f} em {t[peak_idx]:.1f} dias")
+print(f"Ataque final: {R[-1]/N*100:.1f}%")
+\end{lstlisting}
+%
+
+\section{Modelos Estocásticos: Reptation do DNA}
+
+\textbf{Por que Modelos Estocásticos?.}
+
+Limitações dos Modelos Determinísticos
+
+Assumem grande número de moléculas e variáveis contínuas, Ignoram flutuações térmicas e variabilidade molecular e Inadequados quando $N 100$ moléculas ou eventos raros.
+
+Quando usar modelos estocásticos?
+
+Movimentos de moléculas individuais, Sistemas com ruído térmico relevante (escala nanométrica), Polímeros em confinamento (gel, cromatina, poros) e Expressão gênica com poucos fatores de transcrição.
+
+--- IMP: 
+
+Flutuações não são "ruído a eliminar" — frequentemente carregam informação biológica.
+
+\textbf{Movimento de Polímeros: O Modelo de Reptation.}
+
+\textbf{Definição (Reptation).}
+
+Mecanismo de movimento de um polímero longo (como o DNA) confinado em uma rede ou gel, proposto por P.G.\ de Gennes (1971). O polímero se move como uma cobra dentro de um tubo virtual formado pelos obstáculos ao seu redor.
+
+O DNA não pode atravessar os obstáculos da rede, Cria um ``tubo'' ao longo de seu contorno, Move-se pela criação/destruição de alças nas extremidades e Movimento resultante: difusão ao longo do próprio eixo.
+
+%
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.95]
-    % Obstáculos do gel (pontos cinza)
+\begin{tikzpicture}
+% Obstáculos
     \foreach \x/\y in {0.5/0.5, 1.5/1.5, 2.5/0.8, 3.5/1.8, 0.8/2.5, 2.0/2.8, 3.2/0.3, 1.2/3.2, 3.8/2.5} {
-        \fill[gray!50] (\x, \y) circle (4pt);
+        \fill[gray!50] (\x, \y) circle (3pt);
     }
-    % Cadeia de DNA serpenteando
-    \draw[thick, azulescuro, line width=1.5pt, rounded corners=4pt]
+    % Tubo / DNA
+    \draw[thick, azulescuro, rounded corners=4pt]
         (0,1.0) .. controls (0.5,0.9) and (1.0,1.3) ..
         (1.5,1.1) .. controls (2.0,0.9) and (2.5,1.5) ..
         (3.0,1.4) .. controls (3.5,1.3) and (3.8,1.8) .. (4.0,1.6);
     % Setas de movimento
-    \draw[->, very thick, verdeacido] (3.8,1.7) -- (4.5,1.55);
-    \draw[->, very thick, red]        (0.2,1.05) -- (-0.5,1.1);
-    % Labels
-    \node[font=\footnotesize, azulescuro] at (2.0, 0.2) {DNA};
-    \node[font=\footnotesize, gray]       at (3.5, 3.3) {gel};
+    \draw[->, thick, verdeacido] (3.8,1.7) -- (4.3,1.55);
+    \draw[->, thick, red]        (0.2,1.05) -- (-0.3,1.1);
+    \node[font=\tiny, azulescuro] at (2.0, 0.3) {DNA};
+    \node[font=\tiny, gray]       at (3.5, 3.0) {gel};
 \end{tikzpicture}
-\caption{Modelo de \emph{reptation} do DNA em gel de eletroforese. A cadeia polimérica (azul) atravessa a malha porosa do gel (pontos cinza), e seu movimento é descrito como uma caminhada aleatória unidimensional ao longo do próprio eixo do tubo topológico que ela define. O coeficiente de difusão efetivo decresce com o quadrado do comprimento da cadeia --- $D \propto 1/N^2$ --- explicando por que fragmentos maiores migram substancialmente mais devagar.}
-\label{fig:02-reptation}
+\caption{Diagrama esquemático.}
 \end{figure}
+%
 
-O modelo de \emph{reptation}, introduzido por Pierre-Gilles de Gennes em 1971
-(premiado com o Nobel de Física em 1991), representa o DNA como uma cadeia
-flexível confinada em um ``tubo'' topológico definido pelos obstáculos do gel. O
-movimento é descrito como uma caminhada aleatória unidimensional ao longo do
-eixo do próprio tubo: cada extremidade da cadeia avança ou recua com probabilidade
-$1/2$ a cada passo de tempo $\tau$, adicionando ou removendo um segmento. O
-coeficiente de difusão efetivo em três dimensões escala como $D \propto D_c/N^2$
-onde $N$ é o número de segmentos e $D_c = b^2/(2\tau)$ é o coeficiente curvilinear
---- essa dependência com $N^2$ é a base teórica da separação de fragmentos de DNA
-por tamanho na eletroforese em gel, e foi verificada experimentalmente com
-precisão notável.
+\textbf{Formulação Estocástica do Reptation (1/2).}
+
+Modelo de Caminhada Aleatória no Tubo
+
+O DNA é representado por $N$ segmentos de comprimento $b$. A cada passo de tempo $ t$, cada extremidade:
+
+Com prob.\ $2$: — adiciona um segmento à frente e Com prob.\ $2$: — remove um segmento da frente.
+
+--- DEST: 
+
+%
+\begin{equation*}
+D_c = \frac{b^2}{2\,\tau}
+\end{equation*}
+%
+
+\textbf{Formulação Estocástica do Reptation (2/2).}
+
+%
+\begin{equation*}
+D \propto \frac{D_c}{N^2} \sim \frac{1}{N^2}
+\end{equation*}
+%
+
+Predição chave
+
+O tempo de renovação do tubo escala como $\tau_ rep N^3$ — verificado experimentalmente por eletroforese em gel.
+
+--- IMP: 
+
+Quanto mais longo o DNA, mais lento o movimento — base da separação por tamanho em gel.
+
+\textbf{Reptation em Campo Elétrico (Eletroforese).}
+
+Biased Reptation (Duke, 1989)
+
+Na presença de campo elétrico $E$, a probabilidade de avanço/recuo nas extremidades se torna assimétrica:
+
+%
+\begin{align*}
+p_+ &= \frac{1}{2}\left(1 + \frac{qEb}{k_BT}\right) \quad \text{(avança)}\\
+p_- &= \frac{1}{2}\left(1 - \frac{qEb}{k_BT}\right) \quad \text{(recua)}
+\end{align*}
+%
+
+%
+\begin{equation*}
+\mu = \frac{v}{E} \propto \frac{1}{N}
+\end{equation*}
+%
+
+Fragmentos menores: maior mobilidade, Base da separação por gel eletroforese e Válido para DNA (regime de reptation).
+
+Limite do modelo
+
+Para campos altos ($qEb k_BT$): DNA se alinha com o campo e a separação por tamanho se perde.
+
+\textbf{Implementação: Simulação de Reptation.}
+
+%
+\begin{lstlisting}[language=Python, caption=Simulação estocástica de reptation, basicstyle=\ttfamily\footnotesize]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def simular_reptation(N, n_steps, E=0.0, kBT=1.0, q=1.0, b=1.0):
+    """
+    Simula reptation de DNA em campo eletrico E.
+    N       : numero de segmentos
+    n_steps : passos de Monte Carlo
+    E       : campo eletrico (0 = difusao pura)
+    """
+    # Posicao do centro de massa ao longo do tubo
+    pos_cm = np.zeros(n_steps)
+    pos = 0.0  # deslocamento acumulado
+
+    # Probabilidade de avanco
+    p_mais = 0.5 * (1.0 + q * E * b / kBT)
+    p_mais = np.clip(p_mais, 0.0, 1.0)
+
+    for t in range(1, n_steps):
+        # Sortear qual extremidade se move (frente ou tras)
+        r = np.random.rand()
+        if r < p_mais:
+            pos += b / N   # deslocamento do CM: b/N por passo
+        else:
+            pos -= b / N
+        pos_cm[t] = pos
+
+    return pos_cm
+\end{lstlisting}
+%
+
+\textbf{Implementação: Análise e Visualização.}
+
+%
+\begin{lstlisting}[language=Python, caption=Comparacao entre tamanhos de DNA, basicstyle=\ttfamily\footnotesize]
+n_steps = 50000
+tamanhos = [50, 100, 200]   # numero de segmentos
+E = 0.1                      # campo eletrico fraco
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+for N in tamanhos:
+    traj = simular_reptation(N, n_steps, E=E)
+    t = np.arange(n_steps)
+
+    # Trajetoria
+    axes[0].plot(t, traj, label=f'N={N}', alpha=0.7)
+
+    # MSD (mean squared displacement)
+    msd = np.cumsum((traj - traj[0])**2) / np.arange(1, n_steps+1)
+    axes[1].loglog(t[1:], msd[1:], label=f'N={N}')
+
+axes[0].set(xlabel='Passos', ylabel='Posicao CM', title='Trajetorias')
+axes[1].set(xlabel='Passos', ylabel='MSD', title='MSD (escala log-log)')
+for ax in axes:
+    ax.legend(); ax.grid(True)
+plt.tight_layout()
+\end{lstlisting}
+%
+
+\textbf{Predições e Verificação Experimental.}
+
+Escalonamentos do Modelo de Reptation
+
+Aplicações Biotecnológicas
+
+separação de fragmentos de DNA por tamanho, entender mobilidade de fragmentos, separação de cromossomos inteiros e translocação de DNA — extensão do modelo de reptation.
+
+\section{Boas Práticas em Modelagem}
+
+\textbf{Princípios de Modelagem.}
+
+1. Simplicidade vs Realismo
+
+Comece simples, adicione complexidade gradualmente, "Make things as simple as possible, but not simpler" --- Einstein e Balanceie entre descrição acurada e tratabilidade.
+
+2. Validação
+
+Compare com dados experimentais, Teste previsões em novos experimentos e Valide em múltiplas escalas/condições.
+
+3. Documentação
+
+Documente hipóteses claramente, Registre origem de parâmetros e Mantenha código reproduzível.
+
+\textbf{Armadilhas Comuns.}
+
+Erros Frequentes
+
+modelo complexo demais para os dados, múltiplas soluções, sempre verifique dimensões, valores negativos, etc, além do regime validado e sempre quantifique incerteza.
+
+--- IMP: 
+
+"Remember that all models are wrong; the practical question is how wrong do they have to be to not be useful" --- George Box
+
+\textbf{Ferramentas Computacionais.}
+
+Python
+
+NumPy, SciPy, Matplotlib, Seaborn, PyDSTool, Tellurium e COBRApy (metabolismo).
+
+R
+
+deSolve, FME (fitting) e ggplot2.
+
+MATLAB
+
+ode45, ode15s, SimBiology e Simbólico.
+
+Especializadas
+
+COPASI, CellDesigner, Virtual Cell e BioNetGen.
 
 \section{Exercícios}
 
-\begin{exercicio}
-Considere um modelo de crescimento logístico com colheita constante $H$:
+\textbf{Exercícios - Parte 1.}
+
+Questão 1: Modelo de Crescimento
+
+Considere um modelo de crescimento com colheita constante:
+
+%
 \begin{equation*}
-  \derivada{N}{t} = rN\!\left(1 - \frac{N}{K}\right) - H.
+\derivada{N}{t} = rN\left(1 - \frac{N}{K}\right) - H
 \end{equation*}
-(a) Encontre os pontos de equilíbrio em função de $r$, $K$ e $H$.
-(b) Analise a estabilidade para $H < rK/4$ e $H > rK/4$.
-(c) O que acontece biologicamente quando $H > rK/4$? Implemente e visualize.
-\end{exercicio}
+%
 
-\begin{exercicio}
-Implemente o método de Euler para resolver a EDO $dy/dt = -y + \sin(t)$, $y(0) = 1$.
-Compare com a solução analítica $y(t) = \frac{1}{2}(\sin t - \cos t) + \frac{3}{2}e^{-t}$
-para passos $h \in \{0.5, 0.1, 0.01\}$. Plote o erro absoluto em função do tempo
-para cada passo e verifique que o erro global é proporcional a $h$.
-\end{exercicio}
+Encontre os pontos de equilíbrio e Analise a estabilidade para $H < rK/4$ e $H > rK/4$.
 
-\begin{exercicio}
-Considere o sistema de competição entre duas espécies:
+\textbf{Exercícios - Parte 2.}
+
+Questão 2: Método Numérico
+
+Implemente o método de Euler para resolver:
+
+%
+\begin{equation*}
+\derivada{y}{t} = -y + \sin(t), \quad y(0) = 1
+\end{equation*}
+%
+
+Compare com a solução analítica para diferentes passos.
+
+\textbf{Exercícios - Parte 2.}
+
+Questão 3: Sistema Acoplado
+
+Considere o sistema de competição:
+
+%
 \begin{align*}
-  \derivada{N_1}{t} &= r_1 N_1\!\left(1 - \frac{N_1 + \alpha N_2}{K_1}\right), \\
-  \derivada{N_2}{t} &= r_2 N_2\!\left(1 - \frac{N_2 + \beta N_1}{K_2}\right).
+\derivada{N_1}{t} &= r_1 N_1 \left(1 - \frac{N_1 + \alpha N_2}{K_1}\right)\\
+\derivada{N_2}{t} &= r_2 N_2 \left(1 - \frac{N_2 + \beta N_1}{K_2}\right)
 \end{align*}
-(a) Implemente e simule para $\alpha = \beta = 0.5$ e $\alpha = \beta = 1.5$.
-(b) Encontre os pontos de equilíbrio analiticamente.
-(c) Demonstre numericamente que quando $\alpha\beta < 1$ a coexistência é possível,
-e quando $\alpha\beta > 1$ uma espécie exclui a outra (princípio de exclusão de Gause).
-\end{exercicio}
+%
 
-\begin{exercicio}
-Estenda o modelo SIR para incluir vacinação à taxa $\nu$ (fração de suscetíveis
-vacinados por unidade de tempo):
+Implemente o modelo em Python, Encontre os pontos de equilíbrio, Simule para diferentes valores de $$ e $$ e O que acontece quando $ > 1$ vs $ < 1$?.
+
+\textbf{Exercícios - Parte 3.}
+
+Projeto: Modelo SIR com Vacinação
+
+Estenda o modelo SIR para incluir vacinação:
+
+%
 \begin{align*}
-  \derivada{S}{t} &= -\beta \frac{SI}{N} - \nu S, \\
-  \derivada{I}{t} &= \beta \frac{SI}{N} - \gamma I, \\
-  \derivada{R}{t} &= \gamma I + \nu S.
+\derivada{S}{t} &= -\beta \frac{SI}{N} - \nu S, \quad \derivada{I}{t} = \beta \frac{SI}{N} - \gamma I, \quad \derivada{R}{t} = \gamma I + \nu S
 \end{align*}
-(a) Derive a expressão para o $R_0$ efetivo em função de $\nu$.
-(b) Determine a taxa de vacinação mínima $\nu^*$ para controlar a epidemia ($R_0^{\text{eff}} < 1$).
-(c) Simule e compare o pico de infectados com e sem vacinação.
-\end{exercicio}
+%
 
-\begin{exercicio}
-Simule o modelo de reptation para DNA com $N = 50$, $N = 100$ e $N = 200$ segmentos.
-(a) Para campo nulo ($E = 0$), calcule o deslocamento quadrático médio (MSD) em
-função do tempo e verifique o regime difusivo $\langle x^2 \rangle \propto t$.
-(b) Extraia os coeficientes de difusão $D(N)$ e verifique a relação $D \propto N^{-2}$.
-(c) Para campo elétrico $E = 0.2\,k_BT/(qb)$, calcule a velocidade de deriva e
-verifique $\mu \propto N^{-1}$.
-\end{exercicio}
+Implemente o modelo e calcule o $R_0$ efetivo, Determine $\nu$ necessária para controle ($R_0^{\text{eff}} < 1$) e Simule diferentes estratégias de vacinação.
 
 \section{Notas Bibliográficas}
 
-A obra de referência para modelagem matemática em biologia é Murray (2002),
-\textit{Mathematical Biology I: An Introduction}, Springer --- texto canônico
-com cobertura rigorosa de modelos populacionais, reação-difusão e padrões
-espaciais. Para biologia celular e molecular, Edelstein-Keshet (2005),
-\textit{Mathematical Models in Biology} (SIAM), é acessível e rica em exemplos.
+\textbf{Referências Principais.}
 
-O modelo SIR original está em Kermack e McKendrick (1927), \textit{A contribution
-to the mathematical theory of epidemics}, \textit{Proc. R. Soc. Lond. A}. Uma
-revisão moderna acessível encontra-se em Anderson e May (1992), \textit{Infectious
-Diseases of Humans}, Oxford University Press.
+99
 
-O modelo de reptation foi introduzido por de Gennes (1971), \textit{Reptation of
-a polymer chain in the presence of fixed obstacles}, \textit{J. Chem. Phys.}, e
-estendido ao caso com campo elétrico por Duke (1989), \textit{Tube model of field-inversion
-gel electrophoresis}, \textit{Phys. Rev. Lett.}
+ Strogatz S.H. (2018). Nonlinear Dynamics and Chaos, 2nd ed. CRC Press.
 
-Para métodos numéricos, Press et al.\ (2007), \textit{Numerical Recipes}, é a
-referência clássica. Em Python, a documentação do \texttt{scipy.integrate} cobre
-os integradores disponíveis com orientações práticas sobre a escolha do método
-mais adequado para diferentes regimes de rigidez.
+ Edelstein-Keshet L. (2005). Mathematical Models in Biology. SIAM.
+
+ Britton N.F. (2003). Essential Mathematical Biology. Springer.
+
+ Murray J.D. (2002). Mathematical Biology I: An Introduction, 3rd ed. Springer.
+
+ Keener J., Sneyd J. (2009). Mathematical Physiology, 2nd ed. Springer.
+
+\textbf{Leitura Complementar.}
+
+Livros Avançados
+
+Ellner S.P., Guckenheimer J. (2011). Dynamic Models in Biology, Alon U. (2019). An Introduction to Systems Biology, 2nd ed e Klipp E. et al. (2016). Systems Biology, 2nd ed.
+
+Recursos Online
+
+\textbf{-}
+
+Mathematical Biology course.
+
+\textbf{-}
+
+Tutoriais Python
+
+\textbf{-}
+
+\textbf{-}
+
+ Obrigado!
+
+ Capítulo 2: Introdução à Modelagem Matemática
+
+%
+
+Static Network Models
+
+Dúvidas? Perguntas?
