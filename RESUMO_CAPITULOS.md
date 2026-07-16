@@ -1,12 +1,22 @@
-# Resumo Completo dos Capítulos Criados
+# Resumo Completo dos Capítulos
 
 ## Status do Projeto
 
-**✅ TODOS OS 12 CAPÍTULOS RESTANTES FORAM CRIADOS COM SUCESSO!**
+**✅ PROJETO COMPLETO — 15 capítulos prontos para uso!**
+
+Este repositório mantém **duas pipelines paralelas** para o mesmo conteúdo:
+
+| Pipeline | Diretório | Saída | Tamanho |
+|---|---|---|---|
+| **Slides Beamer** | `capitulos/*.tex` | PDF por capítulo | ~50 slides/cap |
+| **Livro prosa fluida** | `livro2/capitulos/cap*.tex` | `livro2/main.pdf` | 416 pp, 2.1 MB |
+
+A conversão entre pipelines é feita por `livro2/extract.py` (Beamer → JSON)
+e `livro2/build_all.py` (JSON → prosa fluida). Ver `README.md` para detalhes.
+
+---
 
 Total de capítulos disponíveis: **15 capítulos**
-- 3 capítulos originais (1, 2, 6)
-- 12 capítulos novos (3, 4, 5, 7-15)
 
 ---
 
@@ -323,6 +333,6 @@ Para dúvidas, sugestões ou melhorias:
 
 ---
 
-**Última atualização**: 2026-01-02
+**Última atualização**: 2026-07-16 (atualizado para refletir pipeline livro2/)
 
-**Status**: ✅ PROJETO COMPLETO - 15 capítulos prontos para uso!
+**Status**: ✅ PROJETO COMPLETO - 15 capítulos prontos, dupla pipeline (slides + livro)!

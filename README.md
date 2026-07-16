@@ -1,364 +1,353 @@
-# Apresentações em Beamer: Bioinformática para Biologia de Sistemas
+# Bioinformática para Biologia de Sistemas
 
-Coleção completa de apresentações em LaTeX/Beamer baseadas no livro "Systems Biológicos e Modelagem Matemática".
+Material didático em LaTeX cobrindo Bioinformática, Biologia de Sistemas e
+Modelagem Matemática. O repositório contém **duas pipelines paralelas**:
+
+1. **Slides Beamer** (`capitulos/*.tex`) — apresentação modular por capítulo
+2. **Livro completo** (`livro2/`) — texto em prosa fluida com figuras TikZ e listagens Python
+
+---
 
 ## 📚 Estrutura do Repositório
 
 ```
-apresentacoes-bioinformatica/
-├── template/
-│   └── beamer-template.tex       # Template base reutilizável
-├── capitulos/
+bbs/
+├── README.md                          # Este arquivo
+├── RESUMO_CAPITULOS.md                # Lista dos 15 capítulos com sumário
+├── VEREDITO_FINAL.md                  # Histórico de decisões editoriais
+├── AGENTS.md                          # Guia para WARP/agentes de IA
+│
+├── capitulos/                         # 📽️ Slides Beamer (pipeline 1)
 │   ├── capitulo01-sistemas-biologicos.tex
 │   ├── capitulo02-modelagem-matematica.tex
-│   ├── capitulo06-sistemas-genicos.tex
-│   └── ... (outros capítulos)
-├── figuras/                      # Diretório para imagens
-├── codigos/                      # Scripts de exemplo
-└── README.md
+│   ├── capitulo03-static-networks.tex
+│   ├── capitulo04-mathematics.tex
+│   ├── ...                            # 15 capítulos no total
+│   └── capitulo15-emerging-topics.tex
+│
+├── livro2/                            # 📘 Livro completo (pipeline 2)
+│   ├── main.tex                       # Arquivo mestre (compile a partir daqui)
+│   ├── prefacio.tex                   # Prefácio do livro
+│   ├── capitulos/                     # 15 capítulos em prosa fluida
+│   │   ├── cap01.tex
+│   │   ├── cap02.tex
+│   │   └── ... cap15.tex
+│   ├── extracted/                     # JSONs intermediários (gerado)
+│   ├── images/                        # Imagens e TikZ
+│   ├── extract.py                     # Beamer → JSON
+│   ├── prose_writer.py                # JSON → prosa fluida
+│   ├── build_all.py                   # Construtor centralizado
+│   ├── compile.py                     # 3-pass compile driver
+│   ├── gerar_capitulos.py             # Alternativa ao build_all.py
+│   └── fix_orphan_dollars.py          # Limpa $$ órfãos do extractor
+│
+├── codigos/                           # 🐍 Notebooks e scripts Python
+│   ├── capitulo02_exemplos.ipynb
+│   ├── capitulo03-exemplos.ipynb
+│   ├── capitulo04-mathematics.ipynb
+│   ├── generate_notebook.py           # Script que gera cap04
+│   └── ...                            # Notebooks cap 05-06
+│
+├── template/                          # Templates Beamer e TikZ
+├── images/                            # Imagens globais
+├── graphs/                            # Outputs de graphify-out (não versionado)
+│
+├── Dockerfile.warp-env                # Ambiente isolado Docker
+├── compile_all.sh                     # Script batch para slides
+├── injeta_atividade.py                # Injeta atividades no Classroom
+├── injeta_classroom.py                # Classroom API helper
+├── credentials.json                   # ⚠️ Não versionado (gitignored)
+└── token.json                         # ⚠️ Não versionado (gitignored)
 ```
 
-## 🎯 Capítulos Disponíveis
+---
 
-### ✅ Completos
+## 🎯 Capítulos Disponíveis (15 total)
 
-1. **Capítulo 1: Sistemas Biológicos** (48 slides)
-   - Componentes biológicos fundamentais
-   - Estrutura de DNA, RNA e proteínas
-   - Processos metabólicos
-   - Organização celular
+| # | Título | Tópico |
+|---|---|---|
+| 01 | Sistemas Biológicos | Dogma central, hierarquia celular |
+| 02 | Modelagem Matemática | EDOs, estabilidade, métodos numéricos |
+| 03 | Redes Estáticas | Grafos, clustering, scale-free, motifs |
+| 04 | Matemática de Sistemas | EDOs não-lineares, bifurcações, oscilações |
+| 05 | Estimação de Parâmetros | OLS, gradiente, GA, identificabilidade |
+| 06 | Sistemas Gênicos | Regulação transcricional, RNA-seq |
+| 07 | Sistemas de Proteínas | Cinética, alostério, fosforilação, proteômica |
+| 08 | Sistemas Metabólicos | FBA, GEMs, metabolômica |
+| 09 | Sinalização Celular | Cascatas MAPK, PI3K, oscilações Ca²⁺ |
+| 10 | Sistemas Populacionais | LV, SIR, Turing, metapopulações |
+| 11 | Análise Multi-Ômica | Correlação, enriquecimento, modelos híbridos |
+| 12 | Fisiologia Cardíaca | Modelo cardíaco, arritmias, EC-coupling |
+| 13 | Medicina | Network pharmacology, digital twins, precisão |
+| 14 | Biologia Sintética | Biobricks, circuitos, xenobiologia |
+| 15 | Tópicos Emergentes | IA, células CAR-T, vacinas de design |
 
-2. **Capítulo 2: Introdução à Modelagem Matemática** (52 slides)
-   - Tipos de modelos matemáticos
-   - Equações diferenciais em biologia
-   - Métodos numéricos
-   - Análise de sensibilidade e ajuste de modelos
+Para sumário detalhado de cada capítulo, consulte [RESUMO_CAPITULOS.md](RESUMO_CAPITULOS.md).
 
-3. **Capítulo 6: Sistemas Gênicos** (50 slides)
-   - Dogma central da biologia molecular
-   - Regulação gênica
-   - Tipos de RNA
-   - Medição de expressão gênica
-   - GenBank e bancos de dados
-
-### 🔄 Em Desenvolvimento
-
-- Capítulos 3-5, 7-15 (use o template fornecido)
+---
 
 ## 🚀 Como Usar
 
 ### Pré-requisitos
 
-Você precisa ter instalado:
 - **TeX Live** (Linux) ou **MiKTeX** (Windows) ou **MacTeX** (macOS)
-- Pacotes LaTeX necessários (geralmente incluídos nas distribuições completas):
-  - `beamer`
-  - `tikz`
-  - `listings`
-  - `babel` (com suporte a português)
+- Pacotes LaTeX: `beamer`, `tikz`, `listings`, `babel` (com suporte a português)
+- **Python 3.8+** com `numpy`, `scipy`, `matplotlib`, `sympy`, `networkx`
 
-### Instalação no Linux
+#### Linux
 
 ```bash
-# Ubuntu/Debian
-sudo apt-get install texlive-full
+sudo apt-get install texlive-full texlive-lang-portuguese
+pip install numpy scipy matplotlib sympy networkx biopython
+```
 
-# Fedora
-sudo dnf install texlive-scheme-full
+#### macOS (testado 2026-07)
 
-# Arch Linux
-sudo pacman -S texlive-most
+```bash
+brew install --cask mactex
+pip install numpy scipy matplotlib sympy networkx biopython
 ```
 
 ### Compilação
 
-#### Compilar um capítulo específico
+#### Pipeline 1: Slides Beamer
 
 ```bash
-cd apresentacoes-bioinformatica/capitulos
-pdflatex capitulo01-sistemas-biologicos.tex
-
-# Para referências completas, compile 2x
-pdflatex capitulo01-sistemas-biologicos.tex
-pdflatex capitulo01-sistemas-biologicos.tex
-```
-
-#### Usando latexmk (recomendado)
-
-```bash
-# Compila automaticamente quantas vezes necessário
-latexmk -pdf capitulo01-sistemas-biologicos.tex
-
-# Modo watch (recompila ao salvar)
-latexmk -pdf -pvc capitulo01-sistemas-biologicos.tex
-```
-
-#### Script de compilação em lote
-
-```bash
-#!/bin/bash
-# compile_all.sh
-
+# Capítulo único (2 passadas para cross-refs)
 cd capitulos
-for file in capitulo*.tex; do
-    echo "Compilando $file..."
-    pdflatex -interaction=nonstopmode "$file"
-    pdflatex -interaction=nonstopmode "$file"
-done
+pdflatex -interaction=nonstopmode -halt-on-error capitulo01-sistemas-biologicos.tex
+pdflatex -interaction=nonstopmode -halt-on-error capitulo01-sistemas-biologicos.tex
 
-echo "Limpando arquivos auxiliares..."
-rm -f *.aux *.log *.nav *.out *.snm *.toc *.vrb
+# Watch mode (auto-recompila ao salvar)
+latexmk -pdf -pvc capitulos/capitulo01-sistemas-biologicos.tex
 
-echo "Concluído! PDFs gerados:"
-ls -lh *.pdf
+# Batch (todos os 15 capítulos)
+./compile_all.sh
 ```
+
+#### Pipeline 2: Livro completo
+
+```bash
+# Workflow padrão: extrair Beamer → escrever prosa → compilar livro
+python3 livro2/extract.py                          # Beamer → JSON (15 caps)
+python3 livro2/build_all.py                        # JSON → prosa fluida (15 .tex)
+python3 livro2/compile.py                         # 3-pass pdflatex → main.pdf
+
+# Output: livro2/main.pdf (~416 páginas)
+```
+
+O pipeline 2 é **portável** — todos os scripts usam `Path(__file__).resolve()`
+em vez de caminhos absolutos, funcionando em WSL/macOS/Linux/CI.
+
+#### Notebooks Jupyter
+
+```bash
+# Gera cap04-exemplos.ipynb (corrigido em 2026-07-16, ver dbf2c9a)
+python3 codigos/generate_notebook.py
+
+# Notebooks existentes podem ser executados diretamente
+jupyter notebook codigos/
+```
+
+---
 
 ## 🎨 Personalização
 
 ### Modificar Cores do Tema
 
-Edite o arquivo `template/beamer-template.tex`:
+Edite o arquivo de cores no template:
 
 ```latex
-% Definir suas próprias cores
 \definecolor{azulescuro}{RGB}{0, 51, 102}      % Cor principal
 \definecolor{azulclaro}{RGB}{51, 153, 255}     % Cor secundária
 \definecolor{verdeacido}{RGB}{102, 204, 0}     % Destaques
+\definecolor{verdebio}{RGB}{0, 128, 64}        % Biologia
+\definecolor{laranjacel}{RGB}{255, 153, 51}    % Otimização
+\definecolor{roxodna}{RGB}{153, 51, 255}       % Genômica
+\definecolor{cinzafundo}{RGB}{248, 248, 248}   % Fundo
 ```
 
-### Alterar Informações do Autor
-
-Em cada capítulo, modifique:
+### Comandos Personalizados Disponíveis
 
 ```latex
-\title[Título Curto]{Título Completo}
-\author{Seu Nome}
-\institute{Sua Instituição}
-\date{\today}  % ou data específica
-```
-
-### Adicionar Logo da Instituição
-
-No template ou em cada capítulo:
-
-```latex
-\logo{\includegraphics[height=1cm]{logo-instituicao.png}}
-```
-
-## 📝 Criando Novos Capítulos
-
-### 1. Copie o Template
-
-```bash
-cp template/beamer-template.tex capitulos/capitulo03-novo-capitulo.tex
-```
-
-### 2. Estrutura Básica
-
-```latex
-\input{../template/beamer-template.tex}
-
-\title[Cap. 3: Título]{Capítulo 3: Título Completo}
-\author{Seu Nome}
-\institute{Sua Instituição}
-\date{\today}
-
-\begin{document}
-
-\begin{frame}
-\titlepage
-\end{frame}
-
-\begin{frame}{Sumário}
-\tableofcontents
-\end{frame}
-
-\section{Primeira Seção}
-
-\begin{frame}{Título do Slide}
-Conteúdo aqui...
-\end{frame}
-
-\end{document}
-```
-
-## 🛠️ Comandos Personalizados Disponíveis
-
-### Blocos Especiais
-
-```latex
-% Definição
-\definicao{Título}{Conteúdo da definição}
-
-% Exemplo
-\exemplo{Título}{Conteúdo do exemplo}
-
-% Destaque importante
-\importante{Texto importante}
-
-% Equação em destaque
-\destaque{$E = mc^2$}
-```
-
-### Notação Matemática
-
-```latex
+% Matemática
 \derivada{f}{x}              % df/dx
 \parcial{f}{x}               % ∂f/∂x
 \vect{v}                     % vetor em negrito
 
-% Comandos para genes e proteínas
+% Genética
 \gene{lacZ}                  % gene em itálico
 \proteina{LacZ}              % proteína em small caps
 \especie{E. coli}            % espécie em itálico
+
+% Blocos pedagógicos
+\begin{definicaoenv}[título]  ... \end{definicaoenv}
+\begin{exemploenumv}[título] ... \end{exemploenumv}
 ```
 
 ### Diagramas TikZ
 
-```latex
-\begin{tikzpicture}
-\node[draw, circle, fill=azulclaro!30] at (0,0) {Nó};
-\node[draw, rectangle, fill=verdeacido!30] at (3,0) {Retângulo};
-\draw[->, thick] (0.5,0) -- (2.5,0);
-\end{tikzpicture}
+Diagramas seguem o padrão **0.08 gap, 1pt line width** com cores do tema.
+Veja exemplos em `livro2/capitulos/cap02.tex` (Figuras 2.1 a 2.5).
+
+---
+
+## 🛠️ Boas Práticas
+
+### Antes de Editar um Capítulo Grande
+
+```bash
+# Backup automático antes de edições pesadas
+cp capitulos/capituloXX.tex capitulos/capituloXX.tex.auto.beforeMinhaMudanca
 ```
 
-### Código Python
+(Todos os `*.tex.auto.before*` estão no `.gitignore` e não serão commitados.)
 
-```latex
-\begin{lstlisting}[language=Python, caption=Exemplo]
-import numpy as np
+### Workflow para Corrigir `$$` Órfãos
 
-def funcao(x):
-    return x**2
+Se aparecerem placeholders `$$` órfãos no livro2 (vindos do extractor JSON),
+use:
 
-resultado = funcao(10)
-print(resultado)
-\end{lstlisting}
+```bash
+python3 livro2/fix_orphan_dollars.py capitulos/capXX.tex
 ```
 
-## 📊 Elementos Visuais Incluídos
+Atualmente o script cobre 7 padrões para o cap02. Para outros capítulos,
+adicione novos pares `(regex, replacement)` em `livro2/fix_orphan_dollars.py`.
 
-### Tipos de Blocos
+### Validação de Build
 
-- `\begin{block}` - Bloco padrão (azul)
-- `\begin{alertblock}` - Alerta/atenção (vermelho)
-- `\begin{exampleblock}` - Exemplo (verde)
+```bash
+# Limpar todos os arquivos auxiliares antes de build limpo
+rm -f livro2/main.aux livro2/main.log livro2/main.toc livro2/main.out
+rm -f livro2/capitulos/*.aux livro2/capitulos/*.log livro2/capitulos/*.toc
 
-### Listas e Enumerações
-
-```latex
-% Lista não-ordenada
-\begin{itemize}
-    \item Primeiro item
-    \item Segundo item
-\end{itemize}
-
-% Lista ordenada
-\begin{enumerate}
-    \item Primeiro
-    \item Segundo
-\end{enumerate}
+# Reconstruir
+python3 livro2/compile.py
 ```
 
-### Tabelas
-
-```latex
-\begin{tabular}{lcc}
-\toprule
-\textbf{Header 1} & \textbf{Header 2} & \textbf{Header 3} \\
-\midrule
-Dado 1 & Dado 2 & Dado 3 \\
-Dado 4 & Dado 5 & Dado 6 \\
-\bottomrule
-\end{tabular}
-```
+---
 
 ## 🐍 Exemplos de Código Incluídos
 
 Todos os capítulos incluem exemplos práticos em Python:
 
-- **Capítulo 1**: Simulação de cinética enzimática (Michaelis-Menten)
-- **Capítulo 2**: Resolução de EDOs, modelos populacionais, ajuste de parâmetros
-- **Capítulo 6**: BioPython para GenBank, análise de RNA-seq, busca de ORFs
+- **Cap 1**: Cinética enzimática (Michaelis-Menten)
+- **Cap 2**: Resolução de EDOs, modelos SIR, ajuste de parâmetros
+- **Cap 3**: NetworkX para análise de redes biológicas
+- **Cap 4**: SymPy para Jacobianos analíticos, SciPy para autovalores
+- **Cap 5**: Grid search, Levenberg-Marquardt, GA, análise de Fisher
+- **Cap 6**: BioPython para GenBank, análise de RNA-seq
+- **Cap 7**: PyMOL para visualização de estruturas
+- **Cap 8**: COBRApy para FBA, análise de fluxos
+- **Cap 11**: Clustering, enriquecimento GO, FBA integrado
+- **Cap 13**: PK/PD, machine learning para medicina personalizada
+
+---
 
 ## 📚 Referências e Recursos
 
-### Documentação LaTeX/Beamer
+### LaTeX/Beamer/TikZ
 
 - [Beamer User Guide](https://tug.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf)
 - [TikZ & PGF Manual](https://tikz.dev/)
 - [LaTeX Wikibook](https://en.wikibooks.org/wiki/LaTeX)
 
-### Recursos de Bioinformática
+### Bioinformática
 
 - [BioPython Tutorial](http://biopython.org/DIST/docs/tutorial/Tutorial.html)
 - [NCBI Education](https://www.ncbi.nlm.nih.gov/guide/)
 - [EBI Training](https://www.ebi.ac.uk/training)
 
-## 🤝 Contribuindo
+### Referências Bibliográficas Citadas no Livro
 
-Para adicionar novos capítulos ou melhorar os existentes:
-
-1. Use o template fornecido
-2. Mantenha a estrutura consistente
-3. Inclua exemplos práticos
-4. Adicione exercícios ao final
-5. Documente referências
-
-## 📄 Licença
-
-Este material é disponibilizado para fins educacionais. Cite adequadamente ao usar.
-
-## ✉️ Contato
-
-Para dúvidas ou sugestões sobre as apresentações, entre em contato através do repositório.
+Livros-texto clássicos:
+- Alon, U. (2019). *An Introduction to Systems Biology*
+- Barabási, A. (2016). *Network Science* (CC-BY, networksciencebook.com)
+- Klipp, E. et al. (2016). *Systems Biology: A Textbook*
+- Newman, M. (2018). *Networks* (2ª ed)
+- Murray, J. (2002). *Mathematical Biology*
+- Strogatz, S. (2015). *Nonlinear Dynamics and Chaos*
 
 ---
 
-## 🔧 Troubleshooting
+## 🤝 Contribuindo
 
-### Problema: "Package babel Error"
+1. Use o template e mantenha consistência visual
+2. Inclua exemplos práticos em Python (executáveis)
+3. Adicione diagramas TikZ com cores do tema
+4. Inclua exercícios (2-5 slides/capítulo)
+5. Documente referências no padrão `\bibitem{YYYY}`
+6. Valide compilação ANTES de submeter:
+   ```bash
+   pdflatex -interaction=nonstopmode -halt-on-error capitulos/capituloXX.tex
+   ```
+
+---
+
+## 🐛 Troubleshooting
+
+### "Package babel Error"
 
 ```bash
-# Instale o suporte para português
 sudo apt-get install texlive-lang-portuguese
 ```
 
-### Problema: "Package tikz Error"
+### "Package tikz Error"
 
 ```bash
-# Instale pacotes gráficos
 sudo apt-get install texlive-pictures
 ```
 
-### Problema: Fontes não encontradas
+### Caracteres Acentuados em Math Mode Disparam Warnings
+
+**Causa**: `\mathrm{transcrição}` em math mode gera `Command \c invalid`.
+**Correção**: usar `\text{transcrição}` que aceita acentuação. Veja commit `7108423`.
+
+### `$$` Órfãos do Extractor
+
+**Sintoma**: `! Display math should end with $$` ou `Missing $ inserted`.
+**Causa**: O extractor substitui macros Beamer por `$$` em vez de preservar.
+**Correção**: substituir manualmente ou usar `livro2/fix_orphan_dollars.py`.
+
+### Fontes não Encontradas
 
 ```bash
-# Atualize o banco de dados de fontes
 sudo texhash
 sudo updmap-sys
 ```
 
-### Problema: Compilação lenta
-
-Use `pdflatex` com opções de otimização:
+### Compilação Lenta
 
 ```bash
 pdflatex -interaction=nonstopmode -halt-on-error arquivo.tex
 ```
 
+---
+
 ## 📈 Status do Projeto
 
-- ✅ Template base criado
-- ✅ 3 capítulos completos (1, 2, 6)
-- 🔄 12 capítulos restantes
-- 📊 ~150 slides por capítulo (média)
-- 🎯 Total estimado: ~750 slides quando completo
+| Pipeline | Status | Tamanho | Última atualização |
+|---|---|---|---|
+| 📽️ Slides Beamer | ✅ 15 capítulos completos | ~50 slides/cap | 2026-01-02 |
+| 📘 Livro prosa completa | ✅ 15 capítulos convertidos | 416 pp, 2.1 MB | 2026-07-16 |
+| 🐍 Notebooks Python | ✅ 7 notebooks | 5 MB | 2026-07-16 |
+
+### Última Sessão de Desenvolvimento (2026-07-08 a 2026-07-16)
+
+- **Enriquecimento cap02**: +3 seções, Figura 2.2 (convergência contínuo/discreta), labels corrigidos em Figuras 2.5
+- **Pipeline 2 portabilizado**: scripts `extract.py`, `compile.py`, `build_all.py`, `gerar_capitulos.py` agora funcionam em qualquer plataforma
+- **Sintaxe Python corrigida**: `generate_notebook.py:228` (string sem aspas)
+- **Casa aos `$$` órfãos**: 8+ correções manuais em cap01, cap02, cap09
+- **Arquitetura finalizada**: `livro2/main.pdf` e `*.tex.auto.before*` saíram do versionamento (3.7 MB liberados)
+
+Para detalhes de cada commit, ver `git log --oneline -10`.
+
+---
 
 ## 🎓 Uso Educacional
 
-Estas apresentações foram desenvolvidas para:
+Material desenvolvido para:
 
 - Cursos de graduação em Bioinformática
 - Pós-graduação em Biologia de Sistemas
@@ -367,4 +356,10 @@ Estas apresentações foram desenvolvidas para:
 
 ---
 
-**Última atualização**: 2026-01-01
+## 📄 Licença
+
+Este material é disponibilizado para fins educacionais. Cite adequadamente ao usar.
+
+---
+
+**Última atualização**: 2026-07-16 (após enriquecimento do cap02 + pipeline 2)
