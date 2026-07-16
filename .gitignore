@@ -192,3 +192,11 @@ livro/
 
 # Imagem solta sem origem
 capitulos/image.png
+
+# Artefatos gerados (livro2/, 2026-07-16)
+# - main.pdf: PDF final, regenerável via pdflatex
+# - extracted/*.json: JSONs intermediários, regeneráveis via extract.py
+# - *.tex.auto.before*: snapshots automáticos antes de edições pesadas
+livro2/main.pdf
+livro2/extracted/
+*.tex.auto.before*
