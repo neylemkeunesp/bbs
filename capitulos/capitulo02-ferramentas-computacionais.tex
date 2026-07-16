@@ -353,7 +353,7 @@ O terminal é como o pipetador automático da computação: a primeira vez parec
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile, shrink=20]{Comandos essenciais do terminal}
+\begin{frame}[fragile, shrink=15]{Comandos essenciais do terminal}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{lstlisting}[language=bash, caption=Navegação e arquivos, basicstyle=\ttfamily\footnotesize]
@@ -450,7 +450,7 @@ Uma linguagem de programação é como um protocolo de laboratório: você descr
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=20]{Python: a linguagem do cientista moderno}
+\begin{frame}[fragile, shrink=15]{Python: a linguagem do cientista moderno}
 \begin{columns}
 \column{0.52\textwidth}
 \textbf{Por que Python?}
@@ -697,7 +697,7 @@ Um diretório isolado com sua própria instalação do Python e pacotes. Cada pr
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=25]{Conda: o gerenciador de ambientes do cientista}
+\begin{frame}[fragile, shrink=15]{Conda: o gerenciador de ambientes do cientista}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{lstlisting}[language=bash, caption=Criando e usando ambientes, basicstyle=\ttfamily\footnotesize]
@@ -989,7 +989,7 @@ Ao submeter o artigo: crie uma \textbf{Release} no GitHub e registre no Zenodo p
 % ============================================================================
 \section{Docker: reprodutibilidade e ambientes portáteis}
 
-\begin{frame}[shrink=20]{O problema da reprodutibilidade}
+\begin{frame}[shrink=15]{O problema da reprodutibilidade}
 \begin{alertblock}{``Works on my machine'' — o pesadelo da ciência computacional}
 Você publica o código, o revisor tenta rodar, e nada funciona. Versão diferente do Python, biblioteca atualizada que quebrou a API, dependência que não existe mais.
 \end{alertblock}
@@ -1013,7 +1013,7 @@ Se funciona no seu container, funciona em \textbf{qualquer} computador que tenha
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=25]{Docker: conceitos fundamentais}
+\begin{frame}[fragile, shrink=15]{Docker: conceitos fundamentais}
 \begin{columns}
 \column{0.5\textwidth}
 \definicao{Imagem Docker}{
@@ -1049,7 +1049,7 @@ Isolamento & Total & Parcial \\
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile, shrink=25]{Dockerfile: descrevendo seu ambiente}
+\begin{frame}[fragile, shrink=15]{Dockerfile: descrevendo seu ambiente}
 \begin{lstlisting}[language=bash, caption=Exemplo de Dockerfile para análise bioinformática, basicstyle=\ttfamily\footnotesize]
 # Imagem base com Python 3.12
 FROM python:3.12-slim
@@ -1076,7 +1076,7 @@ CMD ["python", "scripts/analise_principal.py"]
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile, shrink=20]{Usando Docker na prática}
+\begin{frame}[fragile, shrink=15]{Usando Docker na prática}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{lstlisting}[language=bash, caption=Comandos Docker essenciais, basicstyle=\ttfamily\footnotesize]
@@ -1156,7 +1156,7 @@ Rodar cada etapa manualmente é lento, propenso a erros e impossível de reprodu
 }
 \end{frame}
 
-\begin{frame}[fragile, shrink=20]{Snakemake: workflows em Python}
+\begin{frame}[fragile, shrink=15]{Snakemake: workflows em Python}
 \definicao{Snakemake}{
 Gerenciador de workflows baseado em Python. Define \textbf{regras} que descrevem como gerar arquivos de saída a partir de entradas, e automaticamente determina a ordem de execução.
 }
