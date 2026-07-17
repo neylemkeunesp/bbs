@@ -313,12 +313,37 @@ uma distribuição de graus do tipo $P(k) \sim k^{-3}$.
         \node[above, font=\small] at (2, 3.3) {Aleatória (Erdős--Rényi)};
     \end{scope}
 
-    % Painel direito: rede scale-free (power law)
+    % Painel direito: rede scale-free (power law) com gamma=3
     \begin{scope}[xshift=5.5cm]
         \draw[->, thick] (0,0) -- (4.2,0) node[right, font=\small] {$k$};
         \draw[->, thick] (0,0) -- (0,2.8) node[above, font=\small] {$P(k)$};
+
+        % Curva power law P(k) ~ k^{-3} (gamma=3, Barabasi-Albert classico)
         \draw[thick, verdeacido, line width=1.2pt, domain=0.7:3.8, smooth]
-            plot (\x, {3/\x});
+            plot (\x, {0.5*pow(\x,-3)});
+
+        % Area hachurada abaixo da curva (enfatiza convergencia para gamma>2)
+        \begin{scope}
+            \clip (0,0) rectangle (4.2,2.8);
+            \fill[verdeacido!15] (0.7,0)
+                plot[domain=0.7:3.8, smooth] (\x, {0.5*pow(\x,-3)})
+                -- (3.8,0) -- cycle;
+        \end{scope}
+
+        % Marcador de k_min (onde a power law comeca)
+        \draw[dashed, gray] (1.0,0) -- (1.0,0.5);
+        \node[below, font=\footnotesize, gray] at (1.0,-0.05) {$k_{\min}$};
+
+        % Setas + labels para hubs vs nos perifericos
+        \draw[->, thick, orange] (3.3,1.6) -- (3.3,0.7)
+            node[right, font=\footnotesize, orange] {hubs};
+        \draw[->, thick, gray] (1.2,1.5) -- (1.2,0.4)
+            node[right, font=\footnotesize, gray] {periféricos};
+
+        % Equacao da lei de potencia no canto
+        \node[font=\small, anchor=west, align=left] at (2.4, 1.7)
+            {$P(k) \sim k^{-\gamma}$\\$\gamma \approx 3$};
+
         \node[above, font=\small] at (2, 3.3) {Scale-free (Barabási--Albert)};
     \end{scope}
 \end{tikzpicture}
